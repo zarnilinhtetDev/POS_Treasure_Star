@@ -103,7 +103,7 @@
                                                     <input type="email" class="form-control" id="email"
                                                         placeholder="Enter email" name="email" required>
                                                 </div>
-
+                                                {{--
                                                 <div class="form-group">
                                                     <label for="type">Type</label>
                                                     <select class="form-control" name="type" id="type">
@@ -113,17 +113,12 @@
                                                         <option value="Shop">Shop</option>
                                                         <option value="Cashier">Cashier</option>
                                                     </select>
-                                                </div>
-
-                                                {{-- <div class="form-group">
-                                                    <label for="level">level</label>
-                                                    <select class="form-control" name="level" id="level">
-
-                                                    </select>
                                                 </div> --}}
 
 
-                                                <div class="form-group ">
+
+
+                                                {{-- <div class="form-group ">
                                                     <label for="warehouse_id">Location<span
                                                             class="text-danger">*</span></label>
                                                     <input type="hidden" id="level" name="level">
@@ -137,7 +132,7 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                </div>
+                                                </div> --}}
 
                                                 <div class="form-group">
                                                     <label for="password">Password</label>
@@ -203,7 +198,12 @@
                                                     <td>{{ $no }}</td>
                                                     <td>{{ $showUser->name }}</td>
                                                     <td>{{ $showUser->email }}</td>
-                                                    <td>{{ $showUser->type }}</td>
+                                                    <td>
+                                                        @if ($showUser->user_type_id)
+                                                            {{ $showUser->userType->name }}
+                                                        @endif
+
+                                                    </td>
                                                     <td>
                                                         @if ($showUser->level == 'Default')
                                                             {{ $showUser->level }}
@@ -217,6 +217,14 @@
                                                     </td>
                                                     <td>{{ $showUser->created_at }}</td>
                                                     <td>
+
+                                                        <a href="{{ url('user_permission', $showUser->id) }}"
+                                                            class="btn btn-warning">
+                                                            <i
+                                                                class="fa-solid fa-person-circle-question text-white"></i>
+
+                                                        </a>
+
                                                         <a href="{{ url('userShow', $showUser->id) }}"
                                                             class="btn btn-success">
                                                             <i class="fa-solid fa-pen-to-square"></i>

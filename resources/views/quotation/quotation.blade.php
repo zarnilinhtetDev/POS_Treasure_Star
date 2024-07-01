@@ -166,7 +166,7 @@
                                                     <option value="Retail">Retail</option>
                                                 </select>
                                             </div>
-                                            @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin')
+                                            {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
                                             <div class="mt-4 frmSearch col-md-3">
                                                 <div class="frmSearch col-sm-12">
                                                     <span style="font-weight:bolder">
@@ -182,7 +182,7 @@
 
                                                 </div>
                                             </div>
-                                            @else
+                                            {{-- @else
                                             <div class="mt-4 frmSearch col-md-3">
                                                 <div class="frmSearch col-sm-12">
                                                     <span style="font-weight:bolder">
@@ -202,7 +202,7 @@
 
 
                                             </div>
-                                            @endif
+                                            @endif --}}
 
                                             <!-- <table class="table-responsive tfr my_stripe"> -->
                                             <table class="table table-bordered">

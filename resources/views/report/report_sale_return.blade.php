@@ -52,13 +52,13 @@
                     <div class="container-fluid">
                         <div class="mb-2 row">
                             <div class="col-sm-6">
-                                <h1>Sale Return Reports</h1>
+                                <h1>Sale Return (Invoice) Reports</h1>
                             </div>
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
                                     <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a>
                                     </li>
-                                    <li class="breadcrumb-item">Sale Return Reports
+                                    <li class="breadcrumb-item">Sale Return (Invoice) Reports
                                     </li>
                                 </ol>
                             </div>
@@ -71,15 +71,45 @@
                 <div class="ml-2 container-fluid">
 
 
-                    <div class="row">
-                        <a href="{{ url('report') }}" class="mx-1 ml-3 btn btn-primary">Invoices</a>
-                        <a href="{{ url('report_quotation') }}" class="btn btn-primary">Quotations</a>
-                        <a href="{{ url('report_po') }}" class="mx-1 btn btn-primary">Purchase Orders</a>
-                        <a href="{{ url('report_purchase_return') }}" class="mx-1 btn btn-primary">Purchase Return</a>
-                        <a href="{{ url('report_sale_return') }}" class="mx-1 btn btn-primary">Sale Return</a>
-                        <a href="{{ url('report_item') }}" class="btn btn-primary ">Items</a>
-                        <a href="{{ url('report_pos') }}" class="mx-1 btn btn-primary ">POS</a>
-
+                    <div class="container mt-4">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report') ? 'active' : '' }}"
+                                    href="{{ url('report') }}">Invoices</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_quotation') ? 'active' : '' }}"
+                                    href="{{ url('report_quotation') }}">Quotations</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_po') ? 'active' : '' }}"
+                                    href="{{ url('report_po') }}">Purchase Orders</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_purchase_return') ? 'active' : '' }}"
+                                    href="{{ url('report_purchase_return') }}">Purchase Return</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_sale_return') ? 'active' : '' }}"
+                                    href="{{ url('report_sale_return') }}">Sale Return (Invoice)</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_item') ? 'active' : '' }}"
+                                    href="{{ url('report_item') }}">Items</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}"
+                                    href="{{ url('report_pos') }}">POS</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('sale_return') ? 'active' : '' }}"
+                                    href="{{ url('sale_return') }}">Sale Return (POS)</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_expense') ? 'active' : '' }}"
+                                    href="{{ url('report_expense') }}">Expenses</a>
+                            </li>
+                        </ul>
                     </div>
                     <div class="my-5 container-fluid">
                         <div class="row">

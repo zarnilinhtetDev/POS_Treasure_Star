@@ -153,21 +153,20 @@
                                             value="{{ $items->category }}" placeholder="Enter Item Category" required>
                                     </div>
 
-                                    @if (auth()->user()->is_admin == '1' || Auth::user()->type == 'Admin')
-                                        <div class="form-group col-md-6">
-                                            <label for="warehouse_id">Location<span class="text-danger">*</span></label>
-                                            <input type="hidden" id="warehouse_id_from" name="warehouse_id_from">
-                                            <select name="warehouse_id" id="warehouse_id" class="form-control"
-                                                required>
-                                                <option value="{{ $items->warehouse_id }}" selected>
-                                                    {{ $items->warehouse->name }}
-                                                </option>
-                                                @foreach ($branchs as $branch)
-                                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    @elseif (auth()->user()->type == 'Warehouse')
+                                    {{-- @if (auth()->user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+                                    <div class="form-group col-md-6">
+                                        <label for="warehouse_id">Location<span class="text-danger">*</span></label>
+                                        <input type="hidden" id="warehouse_id_from" name="warehouse_id_from">
+                                        <select name="warehouse_id" id="warehouse_id" class="form-control" required>
+                                            <option value="{{ $items->warehouse_id }}" selected>
+                                                {{ $items->warehouse->name }}
+                                            </option>
+                                            @foreach ($branchs as $branch)
+                                                <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    {{-- @elseif (auth()->user()->type == 'Warehouse')
                                         <div class="form-group col-md-6" style="display: none;">
                                             <label for="warehouse_id">Location<span
                                                     class="text-danger">*</span></label>
@@ -175,7 +174,7 @@
                                             <input type="hidden" id="warehouse_id" name="warehouse_id"
                                                 class="form-control" value="{{ $items->warehouse_id }}" readonly>
                                         </div>
-                                    @endif
+                                    @endif --}}
                                 </div>
 
                                 <hr>

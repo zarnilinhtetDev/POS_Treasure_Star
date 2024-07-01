@@ -69,22 +69,47 @@
 
 
                 <div class="ml-2 container-fluid">
-                    <div class="row">
-                        @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin')
-                            <a href="{{ url('report') }}" class="mx-1 ml-3 btn btn-primary">Invoices</a>
-
-                            <a href="{{ url('report_quotation') }}" class="btn btn-primary">Quotations</a>
-                            <a href="{{ url('report_po') }}" class="mx-1 btn btn-primary">Purchase Orders</a>
-                            <a href="{{ url('report_purchase_return') }}" class="mx-1 btn btn-primary">Purchase Return</a>
-                            <a href="{{ url('report_sale_returns') }}" class="mx-1 btn btn-primary">Sale Return</a>
-                            <a href="{{ url('report_item') }}" class="btn btn-primary ">Items</a>
-                            <a href="{{ url('report_pos') }}" class="mx-1 btn btn-primary ">POS</a>
-                        @elseif (Auth::user()->type == 'Warehouse' || Auth::user()->type == 'Shop')
-                            <a href="{{ url('report_item') }}" class="btn btn-primary ">Items</a>
-                        @endif
-
-
+                    <div class="container mt-4">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report') ? 'active' : '' }}"
+                                    href="{{ url('report') }}">Invoices</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_quotation') ? 'active' : '' }}"
+                                    href="{{ url('report_quotation') }}">Quotations</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_po') ? 'active' : '' }}"
+                                    href="{{ url('report_po') }}">Purchase Orders</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_purchase_return') ? 'active' : '' }}"
+                                    href="{{ url('report_purchase_return') }}">Purchase Return</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_sale_return') ? 'active' : '' }}"
+                                    href="{{ url('report_sale_return') }}">Sale Return (Invoice)</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_item') ? 'active' : '' }}"
+                                    href="{{ url('report_item') }}">Items</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}"
+                                    href="{{ url('report_pos') }}">POS</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('sale_return') ? 'active' : '' }}"
+                                    href="{{ url('sale_return') }}">Sale Return (POS)</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_expense') ? 'active' : '' }}"
+                                    href="{{ url('report_expense') }}">Expenses</a>
+                            </li>
+                        </ul>
                     </div>
+
                     <div class="mt-3 col-md-12">
                         <div class="card ">
                             <div class="card-header">
@@ -92,6 +117,7 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
+
 
 
                                 <table id="example1" class="table table-bordered table-striped">
@@ -102,26 +128,55 @@
                                                 <th>{{ $warehouse->name }}</th>
                                             @endforeach
                                             <th>Total Quantity</th>
+                                            <th>လက်လီစျေး</th>
+                                            <th>လက်ကားစျေး</th>
+                                            <th>Total Amount (လက်လီ)</th>
+                                            <th>Total Amount (လက်ကား)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @php
+                                            $totalRetailPrice = 0;
+                                            $totalWholesalePrice = 0;
+                                            $totalRetailAmount = 0;
+                                            $totalWholesaleAmount = 0;
+                                        @endphp
                                         @foreach ($items as $item)
+                                            @php
+                                                $totalRetailPrice += (float) $item['retail_price'];
+                                                $totalWholesalePrice += (float) $item['wholesale_price'];
+                                                $totalRetailAmount +=
+                                                    (float) $item['total_quantity'] * (float) $item['retail_price'];
+                                                $totalWholesaleAmount +=
+                                                    (float) $item['total_quantity'] * (float) $item['wholesale_price'];
+                                            @endphp
                                             <tr>
                                                 <td>{{ $item['item_name'] }}</td>
                                                 @foreach ($warehouses as $warehouse)
-                                                    <td>
-
-                                                        @if (isset($item['warehouse_quantities'][$warehouse->id]))
-                                                            {{ $item['warehouse_quantities'][$warehouse->id] }}
-                                                        @else
-                                                            0
-                                                        @endif
-                                                    </td>
+                                                    <td>{{ $item['warehouse_quantities'][$warehouse->id] ?? 0 }}</td>
                                                 @endforeach
                                                 <td>{{ $item['total_quantity'] }}</td>
+                                                <td>{{ number_format((float) $item['retail_price']) }}</td>
+                                                <td>{{ number_format((float) $item['wholesale_price']) }}</td>
+                                                <td>{{ number_format((float) $item['total_quantity'] * (float) $item['retail_price']) }}
+                                                </td>
+                                                <td>{{ number_format((float) $item['total_quantity'] * (float) $item['wholesale_price']) }}
+                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+
+                                            <td colspan="{{ count($warehouses) + 2 }}" class="text-right">
+                                                Total</td>
+
+                                            <td>{{ number_format($totalRetailPrice) }}</td>
+                                            <td>{{ number_format($totalWholesalePrice) }}</td>
+                                            <td>{{ number_format($totalRetailAmount) }}</td>
+                                            <td>{{ number_format($totalWholesaleAmount) }}</td>
+                                        </tr>
+                                    </tfoot>
                                 </table>
 
 

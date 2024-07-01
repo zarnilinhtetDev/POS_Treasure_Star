@@ -2,7 +2,8 @@
 <HTML>
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
 
@@ -58,12 +59,14 @@
 
                 <div class="mt-3 col-md-3">
 
-                    <label for="invocieno" class="mt-1 caption" style="font-weight:bolder">{{ trans('Purchase Order Number') }}</label>
+                    <label for="invocieno" class="mt-1 caption"
+                        style="font-weight:bolder">{{ trans('Purchase Order Number') }}</label>
 
                     <div class="input-group">
                         <div class="input-group-addon"><span class="icon-file-text-o" aria-hidden="true"></span>
                         </div>
-                        <input type="text" id="invoice_number" name="po_number" class="form-control round" value="{{ $po_no }}" readonly>
+                        <input type="text" id="invoice_number" name="po_number" class="form-control round"
+                            value="{{ $po_no }}" readonly>
                     </div>
                 </div>
 
@@ -71,25 +74,29 @@
 
 
                 <div class="mt-3 col-md-3">
-                    <label for="invociedate" class="mt-1 caption" style="font-weight:bolder">{{ trans('Purchase Order Date') }}</label>
+                    <label for="invociedate" class="mt-1 caption"
+                        style="font-weight:bolder">{{ trans('Purchase Order Date') }}</label>
 
                     <div class="mb-2 input-group">
                         <div class="input-group-addon"><span class="icon-calendar4" aria-hidden="true"></span>
                         </div>
 
-                        <input type="date" name="po_date" id="invoice_date" class="form-control round " autocomplete="off" max="<?php echo date('Y-m-d'); ?>" value="<?php echo date('Y-m-d'); ?>" required>
+                        <input type="date" name="po_date" id="invoice_date" class="form-control round "
+                            autocomplete="off" max="<?php echo date('Y-m-d'); ?>" value="<?php echo date('Y-m-d'); ?>" required>
 
 
                     </div>
                 </div>
 
                 <div class="mt-3 col-md-3">
-                    <label for="overdue" class="mt-1 caption" style="font-weight:bolder">{{ trans('Payment OverDue Date') }}</label>
+                    <label for="overdue" class="mt-1 caption"
+                        style="font-weight:bolder">{{ trans('Payment OverDue Date') }}</label>
                     <div class="mb-2 input-group">
                         <div class="input-group-addon"><span class="icon-calendar4" aria-hidden="true"></span>
                         </div>
 
-                        <input type="date" name="overdue_date" id="overdue_date" class="form-control round " autocomplete="off" min="<?= date('Y-m-d') ?>" value="<?= date('Y-m-d') ?>">
+                        <input type="date" name="overdue_date" id="overdue_date" class="form-control round "
+                            autocomplete="off" min="<?= date('Y-m-d') ?>" value="<?= date('Y-m-d') ?>">
 
 
                     </div>
@@ -98,7 +105,8 @@
                 <div class="mt-3 col-md-3">
                     <label for="remark" class="mt-1" style="font-weight:bolder">{{ trans('Payment Method') }}
                     </label>
-                    <select class="mb-4 form-control round" aria-label="Default select example" name="payment_method" required>
+                    <select class="mb-4 form-control round" aria-label="Default select example" name="payment_method"
+                        required>
 
                         <option value="Cash">Cash</option>
                         <option value="Credit">Credit</option>
@@ -112,20 +120,20 @@
             </div>
 
             @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>{{ session('success') }}</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>{{ session('success') }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
             @endif
             @if (session('error'))
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>{{ session('error') }}</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>{{ session('error') }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
             @endif
 
             <div class="content-wrapper" style="background-color:aqua">
@@ -141,34 +149,36 @@
 
                                             <div class="frmSearch col-sm-4" id="supplier_box">
                                                 <span style="font-weight:bolder">
-                                                    <label for="cst" class="caption">{{ trans('Supplier Name') }}</label>
+                                                    <label for="cst"
+                                                        class="caption">{{ trans('Supplier Name') }}</label>
                                                 </span>
                                                 <select name="supplier_id" id="" class="form-control">
                                                     <option value="" selected disabled>Choose Supplier
                                                     </option>
                                                     @foreach ($suppliers as $supplier)
-                                                    <option value="{{ $supplier->id }}">{{ $supplier->name }}
-                                                    </option>
+                                                        <option value="{{ $supplier->id }}">{{ $supplier->name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
 
 
 
-                                            @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin')
+                                            {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
                                             <div class="frmSearch col-sm-4">
                                                 <label for="location" style="font-weight:bolder">
                                                     Location</label>
-                                                <select name="location" id="location" class="mb-4 form-control" required>
+                                                <select name="location" id="location" class="mb-4 form-control"
+                                                    required>
 
                                                     @foreach ($warehouses as $warehouse)
-                                                    <option value="{{ $warehouse->id }}">
-                                                        {{ $warehouse->name }}
-                                                    </option>
+                                                        <option value="{{ $warehouse->id }}">
+                                                            {{ $warehouse->name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            @elseif (Auth::user()->type == 'Warehouse')
+                                            {{-- @elseif (Auth::user()->type == 'Warehouse')
                                             <div class="frmSearch col-sm-6" style="display: none;">
                                                 <label for="location" style="font-weight:bolder">
                                                     Location</label>
@@ -183,7 +193,7 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-                                            @endif
+                                            @endif --}}
 
 
                                             <div class="frmSearch col-sm-4">
@@ -193,7 +203,8 @@
                                                             <label for="cst" class="caption">Receiving Mode
                                                             </label>
                                                         </span>
-                                                        <select name="balance_due" id="balance_due" class="mb-4 form-control balance_due" required>
+                                                        <select name="balance_due" id="balance_due"
+                                                            class="mb-4 form-control balance_due" required>
 
                                                             <option value="PO">PO</option>
                                                             <option value="Sale Return">Sale Return</option>
@@ -230,7 +241,8 @@
                                     <!-- <table class="table-responsive tfr my_stripe"> -->
                                     <table class="table mt-3">
                                         <thead style="background-color:#0047AA;color:white; border: 1px solid white;">
-                                            <tr class="item_header bg-gradient-directional-blue white" style="margin-bottom:10px;">
+                                            <tr class="item_header bg-gradient-directional-blue white"
+                                                style="margin-bottom:10px;">
                                                 <th width="5%" class="text-center">{{ trans('No') }}</th>
                                                 <th width="18%" class="text-center">{{ trans('Item Name') }}
                                                 </th>
@@ -258,22 +270,36 @@
                                         <tbody id="showitem123">
                                             <tr>
                                                 <td class="text-center" id="count">1</td>
-                                                <td><input type="text" class="form-control productname typeahead" name="part_number[]" placeholder="{{ trans('Enter Part Number') }}" id='productname-0' autocomplete="off">
+                                                <td><input type="text" class="form-control productname typeahead"
+                                                        name="part_number[]"
+                                                        placeholder="{{ trans('Enter Part Number') }}"
+                                                        id='productname-0' autocomplete="off">
                                                 </td>
-                                                <td><input type="text" class="form-control description typeahead" name="part_description[]" placeholder="{{ trans('') }}" id='description-0' autocomplete="off"></td>
-                                                <td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-0" autocomplete="off" value="1"><input type="hidden" id="alert-0" value="" name="alert[]"></td>
+                                                <td><input type="text" class="form-control description typeahead"
+                                                        name="part_description[]" placeholder="{{ trans('') }}"
+                                                        id='description-0' autocomplete="off"></td>
+                                                <td><input type="text" class="form-control req amnt"
+                                                        name="product_qty[]" id="amount-0" autocomplete="off"
+                                                        value="1"><input type="hidden" id="alert-0"
+                                                        value="" name="alert[]"></td>
                                                 <!-- <td><input type="text" class="form-control unit " name="unit[]" id="unit-0" autocomplete="off">  </td> -->
                                                 <td>
-                                                    <input type="text" name="item_unit[]" class="form-control item_unit" id="item_unit-0">
+                                                    <input type="text" name="item_unit[]"
+                                                        class="form-control item_unit" id="item_unit-0">
                                                 </td>
 
 
 
-                                                <td><input type="text" class="form-control price" name="product_price[]" id="price-0" autocomplete="off" value="0">
+                                                <td><input type="text" class="form-control price"
+                                                        name="product_price[]" id="price-0" autocomplete="off"
+                                                        value="0">
                                                 </td>
-                                                <td><input type="text" class="form-control exp_date " name="exp_date[]" id="exp_date-0" autocomplete="off">
+                                                <td><input type="text" class="form-control exp_date "
+                                                        name="exp_date[]" id="exp_date-0" autocomplete="off">
                                                 </td>
-                                                <td style="display: none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-0" autocomplete="off">
+                                                <td style="display: none;"><input type="text"
+                                                        class="form-control warehouse " name="warehouse[]"
+                                                        id="warehouse-0" autocomplete="off">
                                                 </td>
 
 
@@ -284,11 +310,16 @@
                                                         <span class='ttlText' id="result-0"></span>
                                                     </strong>
                                                 </td>
-                                                <input type="hidden" class="form-control vat " name="product_tax[]" id="vat-0" value="0">
-                                                <input type="hidden" name="total_tax[]" id="taxa-0" value="0">
-                                                <input type="hidden" name="total_discount[]" id="disca-0" value="0">
-                                                <input type="hidden" class="ttInput" name="product_subtotal[]" id="total-0" value="0">
-                                                <input type="hidden" class="pdIn" name="product_id[]" id="pid-0" value="0">
+                                                <input type="hidden" class="form-control vat " name="product_tax[]"
+                                                    id="vat-0" value="0">
+                                                <input type="hidden" name="total_tax[]" id="taxa-0"
+                                                    value="0">
+                                                <input type="hidden" name="total_discount[]" id="disca-0"
+                                                    value="0">
+                                                <input type="hidden" class="ttInput" name="product_subtotal[]"
+                                                    id="total-0" value="0">
+                                                <input type="hidden" class="pdIn" name="product_id[]"
+                                                    id="pid-0" value="0">
 
                                                 <input type="hidden" name="unit_m[]" id="unit_m-0" value="1">
                                                 <input type="hidden" name="code[]" id="hsn-0" value="">
@@ -319,7 +350,8 @@
                                             <tr class="last-item-row sub_c">
                                                 <td></td>
                                                 <td class="add-row">
-                                                    <button type="button" class="btn btn-success" id="addproduct" style="margin-top:20px;margin-bottom:20px;">
+                                                    <button type="button" class="btn btn-success" id="addproduct"
+                                                        style="margin-top:20px;margin-bottom:20px;">
                                                         <i class="fa fa-plus-square"></i>
                                                         {{ trans('Add row') }}
                                                     </button>
@@ -345,19 +377,19 @@
                                             <tr class="sub_c" style="display: table-row;">
                                                 <td colspan="2">
                                                     @if (isset($employees[0]))
-                                                    {{ trans('general.employee') }}
-                                                    <select name="user_id" class="selectpicker form-control">
-                                                        <option value="{{ $logged_in_user->id }}">
-                                                            {{ $logged_in_user->first_name }}
-                                                        </option>
-                                                        @foreach ($employees as $employee)
-                                                        <option value="{{ $employee->id }}">
-                                                            {{ $employee->first_name }}
-                                                            {{ $employee->last_name }}
-                                                        </option>
-                                                        @endforeach
+                                                        {{ trans('general.employee') }}
+                                                        <select name="user_id" class="selectpicker form-control">
+                                                            <option value="{{ $logged_in_user->id }}">
+                                                                {{ $logged_in_user->first_name }}
+                                                            </option>
+                                                            @foreach ($employees as $employee)
+                                                                <option value="{{ $employee->id }}">
+                                                                    {{ $employee->first_name }}
+                                                                    {{ $employee->last_name }}
+                                                                </option>
+                                                            @endforeach
 
-                                                    </select>
+                                                        </select>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -373,7 +405,10 @@
                                                 <td colspan="3" align="right"><strong>Sub Total
                                                     </strong>
                                                 </td>
-                                                <td align="left" colspan="2" class="col-md-4"><input type="text" name="sub_total" class="form-control" id="invoiceyoghtml" readonly style="background-color: #E9ECEF">
+                                                <td align="left" colspan="2" class="col-md-4"><input
+                                                        type="text" name="sub_total" class="form-control"
+                                                        id="invoiceyoghtml" readonly
+                                                        style="background-color: #E9ECEF">
 
                                                 </td>
 
@@ -385,7 +420,9 @@
                                                 <td colspan="3" align="right"><strong>Discount
                                                     </strong>
                                                 </td>
-                                                <td align="left" colspan="2" class="col-md-4"><input type="text" name="discount" class="form-control" id="total_discount">
+                                                <td align="left" colspan="2" class="col-md-4"><input
+                                                        type="text" name="discount" class="form-control"
+                                                        id="total_discount">
 
                                                 </td>
 
@@ -397,7 +434,9 @@
                                                 <td colspan="3" align="right"><strong>Total
                                                     </strong>
                                                 </td>
-                                                <td align="left" colspan="2" class="col-md-4"><input type="text" name="total" class="form-control" id="total_total" readonly style="background-color: #E9ECEF">
+                                                <td align="left" colspan="2" class="col-md-4"><input
+                                                        type="text" name="total" class="form-control"
+                                                        id="total_total" readonly style="background-color: #E9ECEF">
 
                                                 </td>
 
@@ -412,7 +451,9 @@
                                                 <td colspan="3" align="right"><strong>Deposit
                                                     </strong>
                                                 </td>
-                                                <td align="left" colspan="2"><input type="text" name="paid" class="form-control" id="paid" onchange="paidFunction()">
+                                                <td align="left" colspan="2"><input type="text"
+                                                        name="paid" class="form-control" id="paid"
+                                                        onchange="paidFunction()">
 
                                                 </td>
 
@@ -424,7 +465,9 @@
                                                 <td colspan="3" align="right"><strong>Remaining Balance
                                                     </strong>
                                                 </td>
-                                                <td align="left" colspan="2"><input type="text" name="balance" class="form-control" id="balance" readonly="">
+                                                <td align="left" colspan="2"><input type="text"
+                                                        name="balance" class="form-control" id="balance"
+                                                        readonly="">
 
                                                 </td>
                                             </tr>
@@ -440,10 +483,12 @@
 
                                                 <td align="right" colspan="9">
 
-                                                    <button id="submitButton" class="mt-3 btn btn-primary" type="submit">Save</button>
+                                                    <button id="submitButton" class="mt-3 btn btn-primary"
+                                                        type="submit">Save</button>
 
 
-                                                    <a href="{{ url('purchase_order_manage') }}" type="submit" class="mt-3 btn btn-danger">Cancel
+                                                    <a href="{{ url('purchase_order_manage') }}" type="submit"
+                                                        class="mt-3 btn btn-danger">Cancel
                                                     </a>
 
                                                 </td>
@@ -469,9 +514,7 @@
             // You can add more logic here to respond to the event
         }
     </script>
-    <script>
-
-    </script>
+    <script></script>
 
 
 

@@ -108,6 +108,7 @@
                                                 <input type="text" class="form-control" id="unit"
                                                     placeholder="Enter Unit" required autofocus name="unit">
                                             </div>
+
                                             <button type="button" class="btn btn-default"
                                                 data-dismiss="modal">Close</button>
                                             <button type="submit" class="btn btn-primary">Save </button>

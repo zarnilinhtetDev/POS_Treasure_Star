@@ -94,7 +94,7 @@
                                                 placeholder="Enter email" required value="{{ $userShow->email }}">
                                         </div>
 
-                                        <div class="form-group">
+                                        {{-- <div class="form-group">
                                             <label for="type">Type</label>
                                             <select class="form-control" name="type" id="type">
                                                 <option value="{{ $userShow->type }}" selected>{{ $userShow->type }}
@@ -117,7 +117,7 @@
                                                     <option value="{{ $branch->id }}">{{ $branch->name }}</option>
                                                 @endforeach
                                             </select>
-                                        </div>
+                                        </div> --}}
 
                                         <div class="form-group">
                                             <label for="new_password">New Password</label>
@@ -130,7 +130,7 @@
                                     <!-- /.card-body -->
 
                                     <div class="card-footer">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                        <button type="submit" class="btn btn-primary">Update</button>
                                     </div>
                                 </form>
 

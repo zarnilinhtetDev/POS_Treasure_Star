@@ -7,7 +7,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
 
                 <li class="nav-item">
@@ -31,7 +32,8 @@
 
 
                 <div class="btn-group">
-                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         {{ auth()->user()->name }}
                     </button>
                     <div class="dropdown-menu ">
@@ -73,46 +75,46 @@
                 </section>
 
                 @if (session('delete'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>{{ session('delete') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>{{ session('delete') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @endif
 
 
                 @if (session('excelimport'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>{{ session('excelimport') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span dangeraria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>{{ session('excelimport') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span dangeraria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @endif
 
                 @if (session('error'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>{{ session('error') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>{{ session('error') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @elseif (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>{{ session('success') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>{{ session('success') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @endif
                 @if ($errors->has('file'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Error:</strong> {{ $errors->first('file') }}
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Error:</strong> {{ $errors->first('file') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @endif
                 <div class="container-fluid">
                     <div class="ml-2 row d-flex">
@@ -122,39 +124,37 @@
 
                                 <div class="text-left custom-file">
 
-                                    @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin' ||
-                                    Auth::user()->type == 'Warehouse')
+                                    {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin' || Auth::user()->type == 'Warehouse') --}}
                                     <label for="warehouse">Choose Location</label>
                                     <select name="warehouse_id" id="warehouse" class="form-control" required>
                                         @foreach ($warehouses as $warehouse)
-                                        <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                                            <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
                                         @endforeach
                                     </select>
 
 
-                                    <div class="p-1 mt-2 text-left custom-file col" style="border:#d0d0db 1px solid;background-color: white">
+                                    <div class="p-1 mt-2 text-left custom-file col"
+                                        style="border:#d0d0db 1px solid;background-color: white">
                                         <input type="file" name="file" class="" id="customFile">
                                     </div>
                                     <button class="mt-3 btn btn-primary">Import </button>
-                                    @endif
+                                    {{-- @endif --}}
                                     <a class="mt-3 btn btn-success" href="{{ route('file-export') }}">Export </a>
                                 </div>
                             </div>
-                            @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin' || Auth::user()->type ==
-                            'Warehouse')
+                            {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin' || Auth::user()->type == 'Warehouse') --}}
                             <a class="" href="{{ route('file-import-template') }}">Download
                                 Import CSV Template</a>
-                            @endif
+                            {{-- @endif --}}
 
                         </form>
                     </div>
-                    @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin' || Auth::user()->type ==
-                    'Warehouse')
+                    {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin' || Auth::user()->type == 'Warehouse') --}}
                     <div class="mt-5 mr-auto col">
                         <a href="{{ url('items_register') }}" type="button" class="mr-auto btn btn-primary ">
                             Item Register</a>
                     </div>
-                    @endif
+                    {{-- @endif --}}
 
                     <div class="container-fluid">
 
@@ -168,7 +168,8 @@
 
                                 <!-- /.card-header -->
                                 <div class="card-body">
-                                    <table id="example1" class="table table-bordered table-striped table-responsive-lg">
+                                    <table id="example1"
+                                        class="table table-bordered table-striped table-responsive-lg">
                                         <thead>
                                             <tr>
                                                 <th>No.</th>
@@ -190,152 +191,180 @@
                                         </thead>
                                         <tbody>
                                             @php
-                                            $no = '1';
+                                                $no = '1';
                                             @endphp
-                                            @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin')
+                                            {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
                                             @foreach ($items as $item)
-                                            <tr>
-                                                <td>{{ $no }}</td>
-                                                <td>{{ $item->item_name }}</td>
-                                                <td>{{ $item->category }}</td>
-                                                <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
-                                                <td>{{ $item->retail_price ?? '0' }}</td>
-                                                <td>{{ $item->wholesale_price ?? '0' }}</td>
-                                                <td>{{ $item->buy_price ?? '0' }}</td>
-                                                <td>{{ $item->barcode }}</td>
+                                                <tr>
+                                                    <td>{{ $no }}</td>
+                                                    <td>{{ $item->item_name }}</td>
+                                                    <td>{{ $item->category }}</td>
+                                                    <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
+                                                    <td>{{ $item->retail_price ?? '0' }}</td>
+                                                    <td>{{ $item->wholesale_price ?? '0' }}</td>
+                                                    <td>{{ $item->buy_price ?? '0' }}</td>
+                                                    <td>{{ $item->barcode }}</td>
 
-                                                <td>
-                                                    @if ($item->expired_date)
-                                                    {{ $item->expired_date }}
-                                                    @else
-                                                    No Expired Date
-                                                    @endif
-                                                </td>
-
-                                                <td style="background-color: rgb(221, 215, 215)">
-                                                    @if ($item->quantity <= $item->reorder_level_stock)
-                                                        <span class="text-danger">{{ $item->quantity }}</span>
+                                                    <td>
+                                                        @if ($item->expired_date)
+                                                            {{ $item->expired_date }}
                                                         @else
-                                                        {{ $item->quantity }}
+                                                            No Expired Date
+                                                        @endif
+                                                    </td>
+
+                                                    <td style="background-color: rgb(221, 215, 215)">
+                                                        @if ($item->quantity <= $item->reorder_level_stock)
+                                                            <span class="text-danger">{{ $item->quantity }}</span>
+                                                        @else
+                                                            {{ $item->quantity }}
                                                         @endif
 
-                                                </td>
-                                                <td><a href="{{ url('barcode', $item->id) }}" class="mt-1 text-white btn btn-warning btn-sm">Generate</a>
-                                                </td>
-                                                <td>
-                                                    <a href="{{ url('item_details', $item->id) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></a>
+                                                    </td>
+                                                    <td><a href="{{ url('barcode', $item->id) }}"
+                                                            class="mt-1 text-white btn btn-warning btn-sm">Generate</a>
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ url('item_details', $item->id) }}"
+                                                            class="btn btn-primary btn-sm"><i
+                                                                class="fa-solid fa-eye"></i></a>
 
-                                                    <a href="{{ url('item_edit', $item->id) }}" class="btn btn-success btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
-                                                    <a href="{{ url('item_delete', $item->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this Item ?')"><i class="fa-solid fa-trash"></i></a>
-                                                    <a href="{{ url('in_out', $item->id) }}" class="mt-1 btn btn-info btn-sm">In/Out
-                                                        History </a>
+                                                        <a href="{{ url('item_edit', $item->id) }}"
+                                                            class="btn btn-success btn-sm"><i
+                                                                class="fa-solid fa-pen-to-square"></i></a>
+                                                        <a href="{{ url('item_delete', $item->id) }}"
+                                                            class="btn btn-danger btn-sm"
+                                                            onclick="return confirm('Are you sure you want to delete this Item ?')"><i
+                                                                class="fa-solid fa-trash"></i></a>
+                                                        <a href="{{ url('in_out', $item->id) }}"
+                                                            class="mt-1 btn btn-info btn-sm">In/Out
+                                                            History </a>
 
-                                                </td>
-                                            </tr>
-                                            @php
-                                            $no++;
-                                            @endphp
+                                                    </td>
+                                                </tr>
+                                                @php
+                                                    $no++;
+                                                @endphp
                                             @endforeach
-                                            @elseif (auth()->user()->type == 'Shop')
-                                            @foreach ($items as $item)
-                                            @if ($item->warehouse_id == Auth::user()->level)
-                                            <tr>
-                                                <td>{{ $no }}</td>
-                                                <td>{{ $item->item_name }}</td>
-                                                <td>{{ $item->category }}</td>
-                                                <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
-                                                <td>{{ $item->retail_price ?? '0' }}</td>
-                                                <td>{{ $item->wholesale_price ?? '0' }}</td>
-                                                <td>{{ $item->buy_price ?? '0' }}</td>
-                                                <td>{{ $item->barcode }}</td>
+                                            {{-- @elseif (auth()->user()->type == 'Shop')
+                                                @foreach ($items as $item)
+                                                    @if ($item->warehouse_id == Auth::user()->level)
+                                                        <tr>
+                                                            <td>{{ $no }}</td>
+                                                            <td>{{ $item->item_name }}</td>
+                                                            <td>{{ $item->category }}</td>
+                                                            <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
+                                                            <td>{{ $item->retail_price ?? '0' }}</td>
+                                                            <td>{{ $item->wholesale_price ?? '0' }}</td>
+                                                            <td>{{ $item->buy_price ?? '0' }}</td>
+                                                            <td>{{ $item->barcode }}</td>
 
-                                                <td>
-                                                    @if ($item->expired_date)
-                                                    {{ $item->expired_date }}
-                                                    @else
-                                                    No Expired Date
+                                                            <td>
+                                                                @if ($item->expired_date)
+                                                                    {{ $item->expired_date }}
+                                                                @else
+                                                                    No Expired Date
+                                                                @endif
+                                                            </td>
+
+                                                            <td>
+                                                                @if ($item->quantity <= $item->reorder_level_stock)
+                                                                    <span
+                                                                        class="text-danger">{{ $item->quantity }}</span>
+                                                                @else
+                                                                    {{ $item->quantity }}
+                                                                @endif
+
+                                                            </td>
+                                                            <td><a href="{{ url('barcode', $item->id) }}"
+                                                                    class="mt-1 text-white btn btn-warning btn-sm">Generate</a>
+                                                            </td>
+                                                            <td>
+
+                                                                <a href="{{ url('item_edit', $item->id) }}"
+                                                                    class="btn btn-success btn-sm"><i
+                                                                        class="fa-solid fa-pen-to-square"></i></a>
+
+                                                                @if (Auth::user()->type == 'Warehouse')
+                                                                    <a href="{{ url('item_details', $item->id) }}"
+                                                                        class="btn btn-primary btn-sm"><i
+                                                                            class="fa-solid fa-eye"></i></a>
+
+
+                                                                    <a href="{{ url('item_delete', $item->id) }}"
+                                                                        class="btn btn-danger btn-sm"
+                                                                        onclick="return confirm('Are you sure you want to delete this Item ?')"><i
+                                                                            class="fa-solid fa-trash"></i></a>
+                                                                    <a href="{{ url('in_out', $item->id) }}"
+                                                                        class="mt-1 btn btn-info btn-sm">In/Out
+                                                                        History </a>
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                        @php
+                                                            $no++;
+                                                        @endphp
                                                     @endif
-                                                </td>
-
-                                                <td>
-                                                    @if ($item->quantity <= $item->reorder_level_stock)
-                                                        <span class="text-danger">{{ $item->quantity }}</span>
-                                                        @else
-                                                        {{ $item->quantity }}
-                                                        @endif
-
-                                                </td>
-                                                <td><a href="{{ url('barcode', $item->id) }}" class="mt-1 text-white btn btn-warning btn-sm">Generate</a>
-                                                </td>
-                                                <td>
-
-                                                    <a href="{{ url('item_edit', $item->id) }}" class="btn btn-success btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
-
-                                                    @if (Auth::user()->type == 'Warehouse')
-                                                    <a href="{{ url('item_details', $item->id) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></a>
-
-
-                                                    <a href="{{ url('item_delete', $item->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this Item ?')"><i class="fa-solid fa-trash"></i></a>
-                                                    <a href="{{ url('in_out', $item->id) }}" class="mt-1 btn btn-info btn-sm">In/Out
-                                                        History </a>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            @php
-                                            $no++;
-                                            @endphp
-                                            @endif
-                                            @endforeach
+                                                @endforeach
                                             @elseif (Auth::user()->type == 'Warehouse')
-                                            @foreach ($items as $item)
-                                            <tr>
-                                                <td>{{ $no }}</td>
-                                                <td>{{ $item->item_name }}</td>
-                                                <td>{{ $item->category }}</td>
-                                                <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
-                                                <td>{{ $item->retail_price ?? '0' }}</td>
-                                                <td>{{ $item->wholesale_price ?? '0' }}</td>
-                                                <td>{{ $item->buy_price ?? '0' }}</td>
-                                                <td>{{ $item->barcode }}</td>
+                                                @foreach ($items as $item)
+                                                    <tr>
+                                                        <td>{{ $no }}</td>
+                                                        <td>{{ $item->item_name }}</td>
+                                                        <td>{{ $item->category }}</td>
+                                                        <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
+                                                        <td>{{ $item->retail_price ?? '0' }}</td>
+                                                        <td>{{ $item->wholesale_price ?? '0' }}</td>
+                                                        <td>{{ $item->buy_price ?? '0' }}</td>
+                                                        <td>{{ $item->barcode }}</td>
 
-                                                <td>
-                                                    @if ($item->expired_date)
-                                                    {{ $item->expired_date }}
-                                                    @else
-                                                    No Expired Date
-                                                    @endif
-                                                </td>
+                                                        <td>
+                                                            @if ($item->expired_date)
+                                                                {{ $item->expired_date }}
+                                                            @else
+                                                                No Expired Date
+                                                            @endif
+                                                        </td>
 
-                                                <td>
-                                                    @if ($item->quantity <= $item->reorder_level_stock)
-                                                        <span class="text-danger">{{ $item->quantity }}</span>
-                                                        @else
-                                                        {{ $item->quantity }}
-                                                        @endif
+                                                        <td>
+                                                            @if ($item->quantity <= $item->reorder_level_stock)
+                                                                <span class="text-danger">{{ $item->quantity }}</span>
+                                                            @else
+                                                                {{ $item->quantity }}
+                                                            @endif
 
-                                                </td>
-                                                <td><a href="{{ url('barcode', $item->id) }}" class="mt-1 text-white btn btn-warning btn-sm">Generate</a>
-                                                </td>
-                                                <td>
+                                                        </td>
+                                                        <td><a href="{{ url('barcode', $item->id) }}"
+                                                                class="mt-1 text-white btn btn-warning btn-sm">Generate</a>
+                                                        </td>
+                                                        <td>
 
-                                                    <a href="{{ url('item_edit', $item->id) }}" class="btn btn-success btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+                                                            <a href="{{ url('item_edit', $item->id) }}"
+                                                                class="btn btn-success btn-sm"><i
+                                                                    class="fa-solid fa-pen-to-square"></i></a>
 
-                                                    @if (Auth::user()->type == 'Warehouse')
-                                                    <a href="{{ url('item_details', $item->id) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></a>
+                                                            @if (Auth::user()->type == 'Warehouse')
+                                                                <a href="{{ url('item_details', $item->id) }}"
+                                                                    class="btn btn-primary btn-sm"><i
+                                                                        class="fa-solid fa-eye"></i></a>
 
 
-                                                    <a href="{{ url('item_delete', $item->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this Item ?')"><i class="fa-solid fa-trash"></i></a>
-                                                    <a href="{{ url('in_out', $item->id) }}" class="mt-1 btn btn-info btn-sm">In/Out
-                                                        History </a>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                            @php
-                                            $no++;
-                                            @endphp
-                                            @endforeach
+                                                                <a href="{{ url('item_delete', $item->id) }}"
+                                                                    class="btn btn-danger btn-sm"
+                                                                    onclick="return confirm('Are you sure you want to delete this Item ?')"><i
+                                                                        class="fa-solid fa-trash"></i></a>
+                                                                <a href="{{ url('in_out', $item->id) }}"
+                                                                    class="mt-1 btn btn-info btn-sm">In/Out
+                                                                    History </a>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                    @php
+                                                        $no++;
+                                                    @endphp
+                                                @endforeach
 
-                                            @endif
+                                            @endif --}}
                                         </tbody>
 
                                     </table>

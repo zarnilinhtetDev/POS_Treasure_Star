@@ -7,7 +7,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
 
                 <li class="nav-item">
@@ -23,7 +24,8 @@
 
 
                 <div class="btn-group">
-                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         {{ auth()->user()->name }}
                     </button>
                     <div class="dropdown-menu ">
@@ -72,20 +74,20 @@
                     <!-- /.modal -->
                     <div class="mt-3 col-md-12">
                         @if (session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <strong>{{ session('success') }}</strong>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>{{ session('success') }}</strong>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
                         @endif
                         @if (session('delete'))
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>{{ session('delete') }}</strong>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>{{ session('delete') }}</strong>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
                         @endif
                         <div class="card ">
                             <div class="card-header">
@@ -111,63 +113,77 @@
                                     </thead>
                                     <tbody>
                                         @php
-                                        $no = '1';
+                                            $no = '1';
                                         @endphp
 
-                                        @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin')
+                                        {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
                                         @foreach ($po as $pos)
-                                        <tr>
+                                            <tr>
 
-                                            <td>{{ $no }}</td>
-                                            <td>{{ $pos->quote_no }}</td>
+                                                <td>{{ $no }}</td>
+                                                <td>{{ $pos->quote_no }}</td>
 
-                                            <td>{{ $pos->supplier->name ?? 'N/A' }}</td>
-                                            <td>{{ $pos->balance_due }}</td>
-
-
-                                            <td>{{ $pos->total }}</td>
-                                            <td>
-                                                <a href="{{ route('purchase_order_details', $pos->id) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></a>
-
-                                                <a href="{{ route('purchase_order_edit', $pos->id) }}" class="btn btn-success btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+                                                <td>{{ $pos->supplier->name ?? 'N/A' }}</td>
+                                                <td>{{ $pos->balance_due }}</td>
 
 
-                                                <a href="{{ url('purchase_order_delete', $pos->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this Purchase Order ?')"><i class="fa-solid fa-trash"></i></a>
-                                            </td>
-                                        </tr>
-                                        @php
-                                        $no++;
-                                        @endphp
+                                                <td>{{ $pos->total }}</td>
+                                                <td>
+                                                    <a href="{{ route('purchase_order_details', $pos->id) }}"
+                                                        class="btn btn-primary btn-sm"><i
+                                                            class="fa-solid fa-eye"></i></a>
+
+                                                    <a href="{{ route('purchase_order_edit', $pos->id) }}"
+                                                        class="btn btn-success btn-sm"><i
+                                                            class="fa-solid fa-pen-to-square"></i></a>
+
+
+                                                    <a href="{{ url('purchase_order_delete', $pos->id) }}"
+                                                        class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Are you sure you want to delete this Purchase Order ?')"><i
+                                                            class="fa-solid fa-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                            @php
+                                                $no++;
+                                            @endphp
                                         @endforeach
-                                        @elseif (Auth::user()->type == 'Warehouse')
+                                        {{-- @elseif (Auth::user()->type == 'Warehouse')
                                         @foreach ($po as $pos)
-                                        @foreach ($pos->po_sells as $sell)
-                                        @if ($sell->warehouse == Auth::user()->level)
-                                        <tr>
+                                            @foreach ($pos->po_sells as $sell)
+                                                @if ($sell->warehouse == Auth::user()->level)
+                                                    <tr>
 
-                                            <td>{{ $no }}</td>
-                                            <td>{{ $pos->quote_no }}</td>
+                                                        <td>{{ $no }}</td>
+                                                        <td>{{ $pos->quote_no }}</td>
 
-                                            <td>{{ $pos->supplier->name ?? 'N/A' }}</td>
-
-
-                                            <td>{{ $pos->total }}</td>
-                                            <td>
-                                                <a href="{{ route('purchase_order_details', $pos->id) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></a>
-
-                                                <a href="{{ route('purchase_order_edit', $pos->id) }}" class="btn btn-success btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+                                                        <td>{{ $pos->supplier->name ?? 'N/A' }}</td>
 
 
-                                                <a href="{{ url('purchase_order_delete', $pos->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this Purchase Order ?')"><i class="fa-solid fa-trash"></i></a>
-                                            </td>
-                                        </tr>
-                                        @php
-                                        $no++;
-                                        @endphp
-                                        @endif
-                                        @endforeach
-                                        @endforeach
-                                        @endif
+                                                        <td>{{ $pos->total }}</td>
+                                                        <td>
+                                                            <a href="{{ route('purchase_order_details', $pos->id) }}"
+                                                                class="btn btn-primary btn-sm"><i
+                                                                    class="fa-solid fa-eye"></i></a>
+
+                                                            <a href="{{ route('purchase_order_edit', $pos->id) }}"
+                                                                class="btn btn-success btn-sm"><i
+                                                                    class="fa-solid fa-pen-to-square"></i></a>
+
+
+                                                            <a href="{{ url('purchase_order_delete', $pos->id) }}"
+                                                                class="btn btn-danger btn-sm"
+                                                                onclick="return confirm('Are you sure you want to delete this Purchase Order ?')"><i
+                                                                    class="fa-solid fa-trash"></i></a>
+                                                        </td>
+                                                    </tr>
+                                                    @php
+                                                        $no++;
+                                                    @endphp
+                                                @endif --}}
+                                        {{-- @endforeach
+                                        @endforeach --}}
+                                        {{-- @endif --}}
                                     </tbody>
                                 </table>
                             </div>

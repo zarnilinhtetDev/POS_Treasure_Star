@@ -52,4 +52,9 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Warehouse::class, 'level');
     }
+
+    public function userType()
+    {
+        return $this->belongsTo(UserType::class);
+    }
 }

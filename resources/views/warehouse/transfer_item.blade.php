@@ -107,22 +107,22 @@
                                             <div class="form-group row">
                                                 <div class="frmSearch col-sm-12">
                                                     <div class="row">
-                                                        @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin')
-                                                            <div class="frmSearch col-sm-3">
-                                                                <label for="from" style="font-weight:bolder">From
-                                                                    Location</label>
-                                                                <select name="from_location" id="from_location"
-                                                                    class="form-control">
-                                                                    <option value="" selected disabled>Choose
-                                                                        Location
-                                                                    </option>
-                                                                    @foreach ($warehouses as $warehouse)
-                                                                        <option value="{{ $warehouse->id }}">
-                                                                            {{ $warehouse->name }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                        @else
+                                                        {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+                                                        <div class="frmSearch col-sm-3">
+                                                            <label for="from" style="font-weight:bolder">From
+                                                                Location</label>
+                                                            <select name="from_location" id="from_location"
+                                                                class="form-control">
+                                                                <option value="" selected disabled>Choose
+                                                                    Location
+                                                                </option>
+                                                                @foreach ($warehouses as $warehouse)
+                                                                    <option value="{{ $warehouse->id }}">
+                                                                        {{ $warehouse->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        {{-- @else
                                                             <div class="frmSearch col-sm-3">
                                                                 <label for="from" style="font-weight:bolder">From
                                                                     Location</label>
@@ -139,7 +139,7 @@
                                                                     @endforeach
                                                                 </select>
                                                             </div>
-                                                        @endif
+                                                        @endif --}}
                                                         <div class="frmSearch col-sm-3">
                                                             <label for="to" style="font-weight:bolder">To
                                                                 Location</label>

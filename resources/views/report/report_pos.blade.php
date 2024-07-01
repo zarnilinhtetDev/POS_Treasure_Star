@@ -70,17 +70,45 @@
 
                 <div class="ml-2 container-fluid">
 
-                    <div class="row">
-
-                        <a href="{{ url('report') }}" class="mx-1 ml-3 btn btn-primary">Invoices</a>
-                        <a href="{{ url('report_quotation') }}" class="btn btn-primary">Quotations</a>
-                        <a href="{{ url('report_po') }}" class="mx-1 btn btn-primary">Purchase Orders</a>
-                        <a href="{{ url('report_purchase_return') }}" class="mx-1 btn btn-primary">Purchase Return</a>
-                        <a href="{{ url('report_sale_return') }}" class="mx-1 btn btn-primary">Sale Return</a>
-                        <a href="{{ url('report_item') }}" class="btn btn-primary ">Items</a>
-                        <a href="{{ url('report_pos') }}" class="mx-1 btn btn-primary ">POS</a>
-
-
+                    <div class="container mt-4">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report') ? 'active' : '' }}"
+                                    href="{{ url('report') }}">Invoices</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_quotation') ? 'active' : '' }}"
+                                    href="{{ url('report_quotation') }}">Quotations</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_po') ? 'active' : '' }}"
+                                    href="{{ url('report_po') }}">Purchase Orders</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_purchase_return') ? 'active' : '' }}"
+                                    href="{{ url('report_purchase_return') }}">Purchase Return</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_sale_return') ? 'active' : '' }}"
+                                    href="{{ url('report_sale_return') }}">Sale Return (Invoice)</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_item') ? 'active' : '' }}"
+                                    href="{{ url('report_item') }}">Items</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}"
+                                    href="{{ url('report_pos') }}">POS</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('sale_return') ? 'active' : '' }}"
+                                    href="{{ url('sale_return') }}">Sale Return (POS)</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_expense') ? 'active' : '' }}"
+                                    href="{{ url('report_expense') }}">Expenses</a>
+                            </li>
+                        </ul>
                     </div>
                     <div class="my-5 container-fluid">
                         <div class="row">
@@ -122,6 +150,7 @@
                                             <th>Sub Total</th>
                                             <th>Discount</th>
                                             <th>Total Amount</th>
+                                            <th>Sale By</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -132,50 +161,56 @@
                                             $discounttotal = 0; // Initialize subtotal variable
                                             $amounttotal = 0;
                                         @endphp
-                                        @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin')
-                                            @if (!empty($search_pos))
-                                                @foreach ($search_pos as $pos)
-                                                    <tr>
-                                                        <td>{{ $no }}</td>
-                                                        <td><a href="{{ url('invoice_detail', $pos->id) }}">
-                                                                {{ $pos->invoice_no }}</a>
-                                                        </td>
+                                        {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+                                        @if (!empty($search_pos))
+                                            @foreach ($search_pos as $pos)
+                                                <tr>
+                                                    <td>{{ $no }}</td>
+                                                    <td><a href="{{ url('invoice_detail', $pos->id) }}">
+                                                            {{ $pos->invoice_no }}</a>
+                                                    </td>
 
-                                                        <td>{{ $pos->invoice_date }}</td>
-                                                        <td>{{ $pos->discount_total + $pos->total }}</td>
-                                                        <td>{{ $pos->discount_total ?? 0 }}</td>
-                                                        <td>{{ $pos->total }}</td>
-                                                    </tr>
-                                                    @php
-                                                        $no++;
-                                                        $subtotal += $pos->discount_total + $pos->total; // Add subtotal for each   $discounttotal += $pos_datas->discount_total;
-                                                        $discounttotal += $pos->discount_total;
-                                                        $amounttotal += $pos->total;
+                                                    <td>{{ $pos->invoice_date }}</td>
+                                                    <td>{{ number_format($pos->discount_total + $pos->total) }}
+                                                    </td>
 
-                                                    @endphp
-                                                @endforeach
-                                            @else
-                                                @foreach ($pos_data as $pos_datas)
-                                                    <tr>
-                                                        <td>{{ $no }}</td>
-                                                        <td><a
-                                                                href="{{ url('invoice_detail', $pos_datas->id) }}">{{ $pos_datas->invoice_no }}</a>
-                                                        </td>
+                                                    <td>{{ $pos->discount_total ?? 0 }}</td>
+                                                    <td>{{ number_format($pos->total) }}</td>
+                                                    <td>{{ $pos->sale_by }}</td>
+                                                </tr>
+                                                @php
+                                                    $no++;
+                                                    $subtotal += $pos->discount_total + $pos->total; // Add subtotal for each $discounttotal += $pos_datas->discount_total;
+                                                    $discounttotal += $pos->discount_total;
+                                                    $amounttotal += $pos->total;
 
-                                                        <td>{{ $pos_datas->invoice_date }}</td>
-                                                        <td>{{ $pos_datas->discount_total + $pos_datas->total }}</td>
-                                                        <td>{{ $pos_datas->discount_total ?? 0 }}</td>
-                                                        <td>{{ $pos_datas->total }}</td>
-                                                    </tr>
-                                                    @php
-                                                        $no++;
-                                                        $subtotal += $pos_datas->discount_total + $pos_datas->total; // Add subtotal for each row
-                                                        $discounttotal += $pos_datas->discount_total;
-                                                        $amounttotal += $pos_datas->total;
-                                                    @endphp
-                                                @endforeach
-                                            @endif
-                                        @elseif (Auth::user()->type == 'Warehouse')
+                                                @endphp
+                                            @endforeach
+                                        @else
+                                            @foreach ($pos_data as $pos_datas)
+                                                <tr>
+                                                    <td>{{ $no }}</td>
+                                                    <td><a
+                                                            href="{{ url('invoice_detail', $pos_datas->id) }}">{{ $pos_datas->invoice_no }}</a>
+                                                    </td>
+
+                                                    <td>{{ $pos_datas->invoice_date }}</td>
+                                                    <td>{{ number_format($pos_datas->discount_total + $pos_datas->total) }}
+                                                    </td>
+
+                                                    <td>{{ $pos_datas->discount_total ?? 0 }}</td>
+                                                    <td>{{ number_format($pos_datas->total) }}</td>
+                                                    <td>{{ $pos_datas->sale_by }}</td>
+                                                </tr>
+                                                @php
+                                                    $no++;
+                                                    $subtotal += $pos_datas->discount_total + $pos_datas->total; // Add subtotal for each row
+                                                    $discounttotal += $pos_datas->discount_total;
+                                                    $amounttotal += $pos_datas->total;
+                                                @endphp
+                                            @endforeach
+                                        @endif
+                                        {{-- @elseif (Auth::user()->type == 'Warehouse')
                                             @if (!empty($search_pos))
                                                 @foreach ($search_pos as $pos)
                                                     @foreach ($pos->sells as $sell)
@@ -187,13 +222,16 @@
                                                                 </td>
 
                                                                 <td>{{ $pos->invoice_date }}</td>
-                                                                <td>{{ $pos->discount_total + $pos->total }}</td>
-                                                                <td>{{ $pos->discount_total ?? 0 }}</td>
-                                                                <td>{{ $pos->total }}</td>
+                                                                <td>{{ number_format($pos->discount_total + $pos->total) }}
+                                                                </td>
+
+                                                                <td>{{ number_format($pos->discount_total ?? 0) }}</td>
+                                                                <td>{{ number_format($pos->total) }}</td>
+                                                                <td>{{ $pos->sale_by }}</td>
                                                             </tr>
                                                             @php
                                                                 $no++;
-                                                                $subtotal += $pos->discount_total + $pos->total; // Add subtotal for each   $discounttotal += $pos_datas->discount_total;
+                                                                $subtotal += $pos->discount_total + $pos->total; // Add subtotal for each $discounttotal += $pos_datas->discount_total;
                                                                 $discounttotal += $pos->discount_total;
                                                                 $amounttotal += $pos->total;
                                                             @endphp
@@ -211,10 +249,12 @@
                                                                 </td>
 
                                                                 <td>{{ $pos_datas->invoice_date }}</td>
-                                                                <td>{{ $pos_datas->discount_total + $pos_datas->total }}
+                                                                <td>{{ number_format($pos_datas->discount_total + $pos_datas->total) }}
                                                                 </td>
-                                                                <td>{{ $pos_datas->discount_total ?? 0 }}</td>
-                                                                <td>{{ $pos_datas->total }}</td>
+
+                                                                <td>{{ number_format($pos_datas->discount_total ?? 0) }}
+                                                                </td>
+                                                                <td>{{ number_format($pos_datas->total) }}</td>
                                                             </tr>
                                                             @php
                                                                 $no++;
@@ -227,14 +267,15 @@
                                                     @endforeach
                                                 @endforeach
                                             @endif
-                                        @endif
+                                        @endif --}}
 
                                     <tfoot>
                                         <tr>
                                             <td colspan="3" style="text-align:right">Total</td>
-                                            <td colspan="">{{ $subtotal }}</td>
-                                            <td colspan="">{{ $discounttotal }}</td>
-                                            <td colspan="">{{ $amounttotal }}</td>
+                                            <td colspan="">{{ number_format($subtotal) }}</td>
+                                            <td colspan="">{{ number_format($discounttotal) }}</td>
+                                            <td colspan="">{{ number_format($amounttotal) }}</td>
+                                            <td></td>
 
 
 
@@ -246,6 +287,34 @@
 
 
 
+                                </table>
+                                <table id="example1" class="table table-bordered table-striped my-3">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Sale By</th>
+                                            <!-- <th>Number Of POS</th> -->
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    @php
+                                        $no = 1;
+                                    @endphp
+                                    @foreach ($sale_totals as $sale_total)
+                                        <tr>
+                                            <td>{{ $no }}</td>
+                                            <td colspan="">{{ $sale_total->sale_by }}</td>
+                                            <!-- <td colspan="">{{ $sale_total->total_invoices }}</td> -->
+
+                                            <td>{{ number_format($sale_total->sale_total) }}</td>
+
+
+                                            <!-- Display the subtotal here -->
+                                        </tr>
+                                        @php
+                                            $no++;
+                                        @endphp
+                                    @endforeach
                                 </table>
                             </div>
                             <!-- /.card-body -->

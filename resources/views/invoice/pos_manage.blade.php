@@ -7,7 +7,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
 
                 <li class="nav-item">
@@ -23,7 +24,8 @@
 
 
                 <div class="btn-group">
-                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         {{ auth()->user()->name }}
                     </button>
                     <div class="dropdown-menu ">
@@ -78,24 +80,25 @@
                     <!-- /.modal -->
                     <div class="mt-3 col-md-12">
                         @if (session('success'))
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <strong>{{ session('success') }}</strong>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <strong>{{ session('success') }}</strong>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
                         @endif
                         @if (session('delete'))
-                        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                            <strong>{{ session('delete') }}</strong>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <strong>{{ session('delete') }}</strong>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
                         @endif
-                        @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin')
-                        <a href="{{ route('daily_sales') }}" class="mb-3 btn btn-primary" style="border-radius:10px;"><i class="fa-regular fa-calendar-days"></i> Daily Sales</a>
-                        @endif
+
+                        <a href="{{ route('daily_sales') }}" class="mb-3 btn btn-primary" style="border-radius:10px;"><i
+                                class="fa-regular fa-calendar-days"></i> Daily Sales</a>
+
                         <div class="card ">
                             <div class="card-header">
                                 <h3 class="card-title">POS List</h3>
@@ -118,80 +121,93 @@
                                     </thead>
                                     <tbody>
                                         @php
-                                        $no = '1';
+                                            $no = '1';
                                         @endphp
 
 
-                                        @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin')
+                                        {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
                                         @foreach ($invoices as $invoice)
-                                        <tr>
+                                            <tr>
 
-                                            <td>{{ $no }}</td>
-                                            <td> {{ $invoice->invoice_no }}</td>
+                                                <td>{{ $no }}</td>
+                                                <td> {{ $invoice->invoice_no }}</td>
 
-                                            <td>{{ $invoice->customer_name ?? ' N/A' }}</td>
+                                                <td>{{ $invoice->customer_name ?? ' N/A' }}</td>
 
-                                            <td>{{ $invoice->total }}</td>
-
-                                            <td><span class="badge badge-success">Paid</span></td>
-
-                                            <td>{{ $invoice->invoice_date }}</td>
-                                            <td>{{ $invoice->sale_by }}</td>
-                                            <td>
-                                                <a href="{{ url('/invoice_detail', $invoice->id) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></a>
-
-                                                @if ($invoice->status == 'invoice')
-                                                <a href="{{ url('invoice_edit', $invoice->id) }}" class="btn btn-success btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
-                                                @else
-                                                @endif
-
-                                                <a href="{{ url('pos_delete', $invoice->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this pos ?')"><i class="fa-solid fa-trash"></i></a>
-
-                                            </td>
+                                                <td>{{ number_format($invoice->total) }}</td>
 
 
-                                        </tr>
-                                        @php
-                                        $no++;
-                                        @endphp
+                                                <td><span class="badge badge-success">Paid</span></td>
+
+                                                <td>{{ $invoice->invoice_date }}</td>
+                                                <td>{{ $invoice->sale_by }}</td>
+                                                <td>
+                                                    <a href="{{ url('/invoice_detail', $invoice->id) }}"
+                                                        class="btn btn-primary btn-sm"><i
+                                                            class="fa-solid fa-eye"></i></a>
+
+                                                    @if ($invoice->status == 'invoice')
+                                                        <a href="{{ url('invoice_edit', $invoice->id) }}"
+                                                            class="btn btn-success btn-sm"><i
+                                                                class="fa-solid fa-pen-to-square"></i></a>
+                                                    @else
+                                                    @endif
+
+                                                    <a href="{{ url('pos_delete', $invoice->id) }}"
+                                                        class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Are you sure you want to delete this pos ?')"><i
+                                                            class="fa-solid fa-trash"></i></a>
+
+                                                </td>
+
+
+                                            </tr>
+                                            @php
+                                                $no++;
+                                            @endphp
                                         @endforeach
-                                        @else
-                                        @foreach ($invoices as $invoice)
-                                        {{-- @foreach ($invoice->sells as $sell)
-                                                    @if ($sell->warehouse == Auth::user()->level) --}}
-                                        <tr>
+                                        {{-- @else
+                                            @foreach ($invoices as $invoice)
 
-                                            <td>{{ $no }}</td>
-                                            <td> {{ $invoice->invoice_no }}</td>
+                                                <tr>
 
-                                            <td>{{ $invoice->customer_name ?? ' N/A' }}</td>
+                                                    <td>{{ $no }}</td>
+                                                    <td> {{ $invoice->invoice_no }}</td>
 
-                                            <td>{{ $invoice->total }}</td>
-                                            <td><span class="badge badge-success">Paid</span></td>
-                                            <td>{{ $invoice->invoice_date }}</td>
-                                            <td>{{ $invoice->sale_by }}</td>
-                                            <td>
-                                                <a href="{{ url('/invoice_detail', $invoice->id) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></a>
+                                                    <td>{{ $invoice->customer_name ?? ' N/A' }}</td>
 
-                                                @if ($invoice->status == 'invoice')
-                                                <a href="{{ url('invoice_edit', $invoice->id) }}" class="btn btn-success btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
-                                                @else
-                                                @endif
+                                                    <td>{{ $invoice->total }}</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
+                                                    <td>{{ $invoice->invoice_date }}</td>
+                                                    <td>{{ $invoice->sale_by }}</td>
+                                                    <td>
+                                                        <a href="{{ url('/invoice_detail', $invoice->id) }}"
+                                                            class="btn btn-primary btn-sm"><i
+                                                                class="fa-solid fa-eye"></i></a>
 
-                                                <a href="{{ url('invoice_delete', $invoice->id) }}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this Invoice ?')"><i class="fa-solid fa-trash"></i></a>
+                                                        @if ($invoice->status == 'invoice')
+                                                            <a href="{{ url('invoice_edit', $invoice->id) }}"
+                                                                class="btn btn-success btn-sm"><i
+                                                                    class="fa-solid fa-pen-to-square"></i></a>
+                                                        @else
+                                                        @endif
 
-                                            </td>
+                                                        <a href="{{ url('invoice_delete', $invoice->id) }}"
+                                                            class="btn btn-danger btn-sm"
+                                                            onclick="return confirm('Are you sure you want to delete this Invoice ?')"><i
+                                                                class="fa-solid fa-trash"></i></a>
+
+                                                    </td>
 
 
-                                        </tr>
+                                                </tr>
 
-                                        @php
-                                        $no++;
-                                        @endphp
-                                        {{-- @endif
-                                                @endforeach --}}
-                                        @endforeach
-                                        @endif
+                                                @php
+                                                    $no++;
+                                                @endphp
+
+                                            @endforeach
+                                        @endif --}}
 
                                     </tbody>
 

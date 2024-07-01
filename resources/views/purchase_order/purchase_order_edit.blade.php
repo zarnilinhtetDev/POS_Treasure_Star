@@ -2,7 +2,8 @@
 <HTML>
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
 
@@ -51,17 +52,20 @@
         <h1 class="mt-3">
             Purchase Order Edit
         </h1>
-        <form method="post" id="data_form" action=" {{ URL('purchase_order_update', $purchase_orders->id) }}" enctype="multipart/form-data">
+        <form method="post" id="data_form" action=" {{ URL('purchase_order_update', $purchase_orders->id) }}"
+            enctype="multipart/form-data">
             @csrf
             <div class="row">
 
                 <div class="mt-3 col-md-3">
-                    <label for="invocieno" class="mt-1 caption" style="font-weight:bolder">{{ trans('Purchase Order Number') }}</label>
+                    <label for="invocieno" class="mt-1 caption"
+                        style="font-weight:bolder">{{ trans('Purchase Order Number') }}</label>
 
                     <div class="input-group">
                         <div class="input-group-addon"><span class="icon-file-text-o" aria-hidden="true"></span>
                         </div>
-                        <input type="text" id="invoice_number" name="po_number" class="form-control round" value="{{ $purchase_orders->quote_no }}" readonly>
+                        <input type="text" id="invoice_number" name="po_number" class="form-control round"
+                            value="{{ $purchase_orders->quote_no }}" readonly>
 
 
                     </div>
@@ -71,25 +75,30 @@
 
 
                 <div class="mt-3 col-md-3">
-                    <label for="invociedate" class="mt-1 caption" style="font-weight:bolder">{{ trans('Purchase Order Date') }}</label>
+                    <label for="invociedate" class="mt-1 caption"
+                        style="font-weight:bolder">{{ trans('Purchase Order Date') }}</label>
 
                     <div class="mb-2 input-group">
                         <div class="input-group-addon"><span class="icon-calendar4" aria-hidden="true"></span>
                         </div>
                         <!-- <input type="date" name="invoice_date" id="invoice_date" class="form-control round required" placeholder="{{ trans('invoicedate') }}" data-toggle="datepicker" autocomplete="off" value="<?= date('Y-m-d') ?>" max="<?= date('Y-m-d') ?>"> -->
-                        <input type="date" name="po_date" id="invoice_date" class="form-control round required" autocomplete="off" max="<?= date('Y-m-d') ?> " value="{{ $purchase_orders->po_date }}" required>
+                        <input type="date" name="po_date" id="invoice_date" class="form-control round required"
+                            autocomplete="off" max="<?= date('Y-m-d') ?> " value="{{ $purchase_orders->po_date }}"
+                            required>
 
 
                     </div>
                 </div>
 
                 <div class="mt-3 col-md-3">
-                    <label for="overdue" class="mt-1 caption" style="font-weight:bolder">{{ trans('Payment OverDue Date') }}</label>
+                    <label for="overdue" class="mt-1 caption"
+                        style="font-weight:bolder">{{ trans('Payment OverDue Date') }}</label>
                     <div class="mb-2 input-group">
                         <div class="input-group-addon"><span class="icon-calendar4" aria-hidden="true"></span>
                         </div>
 
-                        <input type="date" name="overdue_date" id="overdue_date" class="form-control round " autocomplete="off" min="<?= date('Y-m-d') ?>" value="{{ $purchase_orders->overdue_date }}">
+                        <input type="date" name="overdue_date" id="overdue_date" class="form-control round "
+                            autocomplete="off" min="<?= date('Y-m-d') ?>" value="{{ $purchase_orders->overdue_date }}">
 
 
                     </div>
@@ -99,7 +108,8 @@
                     <label for="remark" style="font-weight:bolder">{{ trans('Payment Method') }}
                     </label>
 
-                    <select class="mt-1 mb-3 form-control round" aria-label="Default select example" name="payment_method" required>
+                    <select class="mt-1 mb-3 form-control round" aria-label="Default select example"
+                        name="payment_method" required>
 
                         <option selected value="{{ $purchase_orders->payment_method }}">
                             {{ $purchase_orders->payment_method }}
@@ -109,20 +119,19 @@
                         <option value="Consignment Terms">Consignment Terms</option>
                     </select>
                 </div>
-                @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin')
+                {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
                 <div class="frmSearch col-md-3 col-sm-6">
                     <label for="location" style="font-weight:bolder">Location</label>
                     <select name="location" id="location" class="mb-4 form-control" required>
 
                         @foreach ($warehouses as $warehouse)
-                        <option value="{{ $warehouse->id }}" @if ($warehouse->id == $purchase_orders->location) @endif
-                            selected>
-                            {{ $warehouse->name }}
-                        </option>
+                            <option value="{{ $warehouse->id }}" @if ($warehouse->id == $purchase_orders->location)  @endif selected>
+                                {{ $warehouse->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
-                @elseif (Auth::user()->type == 'Warehouse')
+                {{-- @elseif (Auth::user()->type == 'Warehouse')
                 <div class="frmSearch col-md-3 col-sm-6" style="display: none;">
                     <label for="location" style="font-weight:bolder"> Location</label>
                     <select name="location" id="location" class="mb-4 form-control" required>
@@ -136,7 +145,7 @@
                         @endforeach
                     </select>
                 </div>
-                @endif
+                @endif --}}
 
                 <div class="frmSearch col-md-3 col-sm-6">
                     <div class="frmSearch col-sm-12">
@@ -147,12 +156,9 @@
                             </span>
                             <select name="balance_due" id="balance_due" class="mb-4 form-control balance_due">
 
-                                <option value="PO" @if ($purchase_orders->balance_due == 'PO')
-                                    selected
-                                    @endif>PO</option>
-                                <option value="Sale Return" @if ($purchase_orders->balance_due == 'Sale Return') selected
-
-                                    @endif>Sale Return</option>
+                                <option value="PO" @if ($purchase_orders->balance_due == 'PO') selected @endif>PO</option>
+                                <option value="Sale Return" @if ($purchase_orders->balance_due == 'Sale Return') selected @endif>Sale
+                                    Return</option>
 
                             </select>
 
@@ -170,20 +176,20 @@
             </div>
 
             @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <strong>{{ session('success') }}</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <strong>{{ session('success') }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
             @endif
             @if (session('error'))
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>{{ session('error') }}</strong>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>{{ session('error') }}</strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
             @endif
 
             <div class="content-wrapper" style="background-color:aqua">
@@ -205,20 +211,24 @@
 
                                                         <div class="frmSearch col-sm-4" id="supplier_box">
                                                             <span style="font-weight:bolder">
-                                                                <label for="cst" class="caption">{{ trans('Supplier Name') }}</label>
+                                                                <label for="cst"
+                                                                    class="caption">{{ trans('Supplier Name') }}</label>
                                                             </span>
 
-                                                            <select name="supplier_id" id="supplier_id" class="form-control">
-                                                                <option value="" selected disabled>{{$purchase_orders->supplier->name??'N/A'}}</option>
-                                                                @foreach ($suppliers as $supplier)
-
-                                                                <option value="{{ $supplier->id }}">{{ $supplier->name }}
+                                                            <select name="supplier_id" id="supplier_id"
+                                                                class="form-control">
+                                                                <option value="" selected disabled>
+                                                                    {{ $purchase_orders->supplier->name ?? 'N/A' }}
                                                                 </option>
+                                                                @foreach ($suppliers as $supplier)
+                                                                    <option value="{{ $supplier->id }}">
+                                                                        {{ $supplier->name }}
+                                                                    </option>
                                                                 @endforeach
                                                             </select>
 
                                                         </div>
-                                                        @if($purchase_orders->balance_due == 'PO')
+                                                        @if ($purchase_orders->balance_due == 'PO')
                                                         @endif
                                                     </span>
 
@@ -229,8 +239,10 @@
                                                 </div>
                                             </div>
                                             <input type="hidden" id="service_id" name="service_id" value="0">
-                                            <input type="hidden" name="advisor_name" value="{{ Auth::user()->name }}">
-                                            <input type="hidden" name="manager_type" value="{{ Auth::user()->type }}">
+                                            <input type="hidden" name="advisor_name"
+                                                value="{{ Auth::user()->name }}">
+                                            <input type="hidden" name="manager_type"
+                                                value="{{ Auth::user()->type }}">
 
                                         </div>
                                     </div>
@@ -251,7 +263,8 @@
 
                                     <table class="table">
                                         <thead style="background-color:#0047AA;color:white;">
-                                            <tr class="item_header bg-gradient-directional-blue white" style="margin-bottom:10px;">
+                                            <tr class="item_header bg-gradient-directional-blue white"
+                                                style="margin-bottom:10px;">
                                                 <th width="5%" class="text-center">{{ trans('No') }}</th>
                                                 <th width="18%" class="text-center">{{ trans('Item Name') }}
                                                 </th>
@@ -278,49 +291,77 @@
                                         </thead>
                                         <tbody id="showitem123">
                                             @foreach ($purchase_sells as $key => $po)
-                                            <tr>
-                                                <td class="text-center" id="count">{{ $key + 1 }}</td>
-                                                <td><input type="text" class="form-control productname typeahead" name="part_number[]" value="{{ $po->part_number }}" id='productname-0' autocomplete="off">
-                                                </td>
-                                                <td><input type="text" class="form-control description typeahead" name="part_description[]" value="{{ $po->description }}" id='description-0' autocomplete="off"></td>
-                                                <td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-{{ $key }}" autocomplete="off" value="{{ $po->product_qty }}"><input type="hidden" id="alert-{{ $key }}" name="alert[]">
-                                                </td>
-                                                <td><input type="text" class="form-control item_unit " name="item_unit[]" id="item_unit-0" autocomplete="off" value="{{ $po->unit }}">
-                                                </td>
+                                                <tr>
+                                                    <td class="text-center" id="count">{{ $key + 1 }}</td>
+                                                    <td><input type="text"
+                                                            class="form-control productname typeahead"
+                                                            name="part_number[]" value="{{ $po->part_number }}"
+                                                            id='productname-0' autocomplete="off">
+                                                    </td>
+                                                    <td><input type="text"
+                                                            class="form-control description typeahead"
+                                                            name="part_description[]" value="{{ $po->description }}"
+                                                            id='description-0' autocomplete="off"></td>
+                                                    <td><input type="text" class="form-control req amnt"
+                                                            name="product_qty[]" id="amount-{{ $key }}"
+                                                            autocomplete="off" value="{{ $po->product_qty }}"><input
+                                                            type="hidden" id="alert-{{ $key }}"
+                                                            name="alert[]">
+                                                    </td>
+                                                    <td><input type="text" class="form-control item_unit "
+                                                            name="item_unit[]" id="item_unit-0" autocomplete="off"
+                                                            value="{{ $po->unit }}">
+                                                    </td>
 
 
-                                                <td><input type="text" class="form-control price" name="product_price[]" id="price-{{ $key }}" autocomplete="off" value="{{ $po->product_price }}">
-                                                </td>
-                                                <td><input type="text" class="form-control exp_date " name="exp_date[]" id="exp_date-0" autocomplete="off" value="{{ $po->exp_date }}">
-                                                </td>
-                                                <td style="display: none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-0" autocomplete="off" value="{{ $po->warehouse }}">
-                                                </td>
+                                                    <td><input type="text" class="form-control price"
+                                                            name="product_price[]" id="price-{{ $key }}"
+                                                            autocomplete="off" value="{{ $po->product_price }}">
+                                                    </td>
+                                                    <td><input type="text" class="form-control exp_date "
+                                                            name="exp_date[]" id="exp_date-0" autocomplete="off"
+                                                            value="{{ $po->exp_date }}">
+                                                    </td>
+                                                    <td style="display: none;"><input type="text"
+                                                            class="form-control warehouse " name="warehouse[]"
+                                                            id="warehouse-0" autocomplete="off"
+                                                            value="{{ $po->warehouse }}">
+                                                    </td>
 
 
-                                                <td style="text-align:center">
-                                                    <strong>
-                                                        <span class='ttlText1' id="foc-0"></span>
-                                                    </strong>
-                                                    <span class="currenty">{{ config('currency.symbol') }}</span>
-                                                    <strong>
-                                                        <span class='ttlText' id="result-{{ $key }}">
-                                                            {{ intval($po->product_qty) * floatval($po->product_price) - (intval($po->product_qty) * floatval($po->product_price) * intval($po->discount)) / 100 }}
-                                                        </span>
-                                                    </strong>
-                                                </td>
+                                                    <td style="text-align:center">
+                                                        <strong>
+                                                            <span class='ttlText1' id="foc-0"></span>
+                                                        </strong>
+                                                        <span class="currenty">{{ config('currency.symbol') }}</span>
+                                                        <strong>
+                                                            <span class='ttlText' id="result-{{ $key }}">
+                                                                {{ intval($po->product_qty) * floatval($po->product_price) - (intval($po->product_qty) * floatval($po->product_price) * intval($po->discount)) / 100 }}
+                                                            </span>
+                                                        </strong>
+                                                    </td>
 
-                                                <input type="hidden" class="form-control vat " name="product_tax[]" id="vat-0" value="0">
-                                                <input type="hidden" name="total_tax[]" id="taxa-0" value="0">
-                                                <input type="hidden" name="total_discount[]" id="disca-0" value="0">
-                                                <input type="hidden" class="ttInput" name="product_subtotal[]" id="total-0" value="0">
-                                                <input type="hidden" class="pdIn" name="product_id[]" id="pid-0" value="0">
+                                                    <input type="hidden" class="form-control vat "
+                                                        name="product_tax[]" id="vat-0" value="0">
+                                                    <input type="hidden" name="total_tax[]" id="taxa-0"
+                                                        value="0">
+                                                    <input type="hidden" name="total_discount[]" id="disca-0"
+                                                        value="0">
+                                                    <input type="hidden" class="ttInput" name="product_subtotal[]"
+                                                        id="total-0" value="0">
+                                                    <input type="hidden" class="pdIn" name="product_id[]"
+                                                        id="pid-0" value="0">
 
-                                                <input type="hidden" name="unit_m[]" id="unit_m-0" value="1">
-                                                <input type="hidden" name="code[]" id="hsn-0" value="">
-                                                <input type="hidden" name="serial[]" id="serial-0" value="">
-                                                {{-- <td></td> --}}
-                                                <td><button type="submit" class="btn btn-danger remove_item_btn" id="removebutton">Remove</button></td>
-                                            </tr>
+                                                    <input type="hidden" name="unit_m[]" id="unit_m-0"
+                                                        value="1">
+                                                    <input type="hidden" name="code[]" id="hsn-0"
+                                                        value="">
+                                                    <input type="hidden" name="serial[]" id="serial-0"
+                                                        value="">
+                                                    {{-- <td></td> --}}
+                                                    <td><button type="submit" class="btn btn-danger remove_item_btn"
+                                                            id="removebutton">Remove</button></td>
+                                                </tr>
                                             @endforeach
                                         </tbody>
 
@@ -346,7 +387,8 @@
                                             <tr class="last-item-row sub_c">
                                                 <td></td>
                                                 <td class="add-row">
-                                                    <button type="button" class="btn btn-success" id="addproduct" style="margin-top:20px;margin-bottom:20px;">
+                                                    <button type="button" class="btn btn-success" id="addproduct"
+                                                        style="margin-top:20px;margin-bottom:20px;">
                                                         <i class="fa fa-plus-square"></i>
                                                         {{ trans('Add row') }}
                                                     </button>
@@ -372,19 +414,19 @@
                                             <tr class="sub_c" style="display: table-row;">
                                                 <td colspan="2">
                                                     @if (isset($employees[0]))
-                                                    {{ trans('general.employee') }}
-                                                    <select name="user_id" class="selectpicker form-control">
-                                                        <option value="{{ $logged_in_user->id }}">
-                                                            {{ $logged_in_user->first_name }}
-                                                        </option>
-                                                        @foreach ($employees as $employee)
-                                                        <option value="{{ $employee->id }}">
-                                                            {{ $employee->first_name }}
-                                                            {{ $employee->last_name }}
-                                                        </option>
-                                                        @endforeach
+                                                        {{ trans('general.employee') }}
+                                                        <select name="user_id" class="selectpicker form-control">
+                                                            <option value="{{ $logged_in_user->id }}">
+                                                                {{ $logged_in_user->first_name }}
+                                                            </option>
+                                                            @foreach ($employees as $employee)
+                                                                <option value="{{ $employee->id }}">
+                                                                    {{ $employee->first_name }}
+                                                                    {{ $employee->last_name }}
+                                                                </option>
+                                                            @endforeach
 
-                                                    </select>
+                                                        </select>
                                                     @endif
                                                 </td>
                                             </tr>
@@ -400,7 +442,10 @@
                                                 <td colspan="3" align="right"><strong>Sub Total
                                                     </strong>
                                                 </td>
-                                                <td align="left" colspan="2" class="col-md-4"><input type="text" name="sub_total" class="form-control" id="invoiceyoghtml" readonly style="background-color: #E9ECEF" value="{{ $purchase_orders->sub_total }}">
+                                                <td align="left" colspan="2" class="col-md-4"><input
+                                                        type="text" name="sub_total" class="form-control"
+                                                        id="invoiceyoghtml" readonly style="background-color: #E9ECEF"
+                                                        value="{{ $purchase_orders->sub_total }}">
 
                                                 </td>
 
@@ -412,7 +457,10 @@
                                                 <td colspan="3" align="right"><strong>Discount
                                                     </strong>
                                                 </td>
-                                                <td align="left" colspan="2" class="col-md-4"><input type="text" name="discount" class="form-control" id="total_discount" value="{{ $purchase_orders->discount_total }}">
+                                                <td align="left" colspan="2" class="col-md-4"><input
+                                                        type="text" name="discount" class="form-control"
+                                                        id="total_discount"
+                                                        value="{{ $purchase_orders->discount_total }}">
 
                                                 </td>
 
@@ -424,7 +472,10 @@
                                                 <td colspan="3" align="right"><strong>Total
                                                     </strong>
                                                 </td>
-                                                <td align="left" colspan="2" class="col-md-4"><input type="text" name="total" class="form-control" id="total_total" readonly style="background-color: #E9ECEF" value="{{ $purchase_orders->total }}">
+                                                <td align="left" colspan="2" class="col-md-4"><input
+                                                        type="text" name="total" class="form-control"
+                                                        id="total_total" readonly style="background-color: #E9ECEF"
+                                                        value="{{ $purchase_orders->total }}">
 
                                                 </td>
 
@@ -439,7 +490,10 @@
                                                 <td colspan="3" align="right"><strong>Deposit
                                                     </strong>
                                                 </td>
-                                                <td align="left" colspan="2"><input type="text" name="paid" class="form-control" id="paid" onchange="paidFunction()" value="{{ $purchase_orders->deposit }}">
+                                                <td align="left" colspan="2"><input type="text"
+                                                        name="paid" class="form-control" id="paid"
+                                                        onchange="paidFunction()"
+                                                        value="{{ $purchase_orders->deposit }}">
 
                                                 </td>
 
@@ -451,7 +505,9 @@
                                                 <td colspan="3" align="right"><strong>Remaining Balance
                                                     </strong>
                                                 </td>
-                                                <td align="left" colspan="2"><input type="text" name="balance" class="form-control" id="balance" readonly value="{{ $purchase_orders->remain_balance }}">
+                                                <td align="left" colspan="2"><input type="text"
+                                                        name="balance" class="form-control" id="balance" readonly
+                                                        value="{{ $purchase_orders->remain_balance }}">
 
                                                 </td>
                                             </tr>
@@ -467,10 +523,12 @@
 
                                                 <td align="right" colspan="9">
 
-                                                    <button id="submitButton" class="mt-3 btn btn-primary" type="submit">Save</button>
+                                                    <button id="submitButton" class="mt-3 btn btn-primary"
+                                                        type="submit">Save</button>
 
 
-                                                    <a href="{{ url('purchase_order_manage') }}" type="submit" class="mt-3 btn btn-danger">Cancel
+                                                    <a href="{{ url('purchase_order_manage') }}" type="submit"
+                                                        class="mt-3 btn btn-danger">Cancel
                                                     </a>
 
                                                 </td>

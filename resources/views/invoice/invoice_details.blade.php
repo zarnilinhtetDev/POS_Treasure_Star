@@ -44,14 +44,23 @@
 <body style="margin:25px;">
 
     <div>
-        <div class="row" style="margin-top: 10px;">
-            <h4 class="text-center fw-bold">Invoice</h4>
-            <p class="text-center fw-bold" style="font-size: 14px;">
-                အမှတ်(၃)၊ လမ်းမတော်လမ်း၊အနောက်ရပ်၊သီပေါမြို့
-                <br>
-                09453131493 , 09679007355 , 09421099135
-            </p>
-        </div>
+        @foreach ($profile as $pic)
+            <div class="mt-1 text-center">
+
+
+                <img src="{{ asset('logos/' . ($pic->logos ?? 'null')) }}" width="180" height="120">
+            </div>
+            <div class="row" style="margin-top: 10px;">
+                <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
+
+                <p class="text-center fw-bold" style="font-size: 14px;">
+                    {{ $pic->address }}
+                    <br>
+                    {{ $pic->phno1 }}, {{ $pic->phno2 }}
+                </p>
+            </div>
+        @endforeach
+
         {{-- <h1>
             Invoice
         </h1> --}}

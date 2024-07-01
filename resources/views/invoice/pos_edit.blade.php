@@ -56,7 +56,7 @@
             @csrf
 
             <div class="mx-3 row ">
-                <input type='hidden' name='sale_by' id="sale_by" value="{{ auth()->user()->name }}" class="form-control">
+                {{-- <input type='hidden' name='sale_by' id="sale_by" value="{{ auth()->user()->name }}" class="form-control"> --}}
                 <div class="mt-4 row">
                     <div class="col-md-3">
                         <label for="invoice_no" style="font-weight:bolder">POS Number</label>

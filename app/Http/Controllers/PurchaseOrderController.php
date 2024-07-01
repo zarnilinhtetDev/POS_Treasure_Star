@@ -15,15 +15,15 @@ class PurchaseOrderController extends Controller
 {
     public function index()
     {
-        $po = PurchaseOrder::latest()->get();
+        $po = PurchaseOrder::where('quote_no', 'like', 'PO%')->latest()->get();
         return view('purchase_order.purchase_order_manage', compact('po'));
     }
     public function purchase_order_register()
     {
         $suppliers = Supplier::all();
-        $po_number = PurchaseOrder::whereNotNull('quote_no')->latest()->get();
+        $po_number = PurchaseOrder::where('quote_no', 'like', 'PO%')->latest()->get();
         $units = Unit::all();
-        $po_no = 'PO-' . count($po_number) + 1;
+        $po_no = 'PO-' . (count($po_number) + 1);
         $warehouses = Warehouse::all();
         return view('purchase_order.purchase_order', compact('po_no', 'suppliers', 'units', 'warehouses'));
     }
@@ -130,8 +130,11 @@ class PurchaseOrderController extends Controller
             }
         }
 
-
-        return redirect('/purchase_order_manage')->with('success', 'Purchase Order Added Successful!');
+        if ($invoice->balance_due == 'PO') {
+            return redirect('/purchase_order_manage')->with('success', 'Purchase Order Added Successful!');
+        } else {
+            return redirect('/sale_return')->with('success', 'Sale Return Added Successful!');
+        }
     }
 
     public function edit($id)
@@ -204,10 +207,11 @@ class PurchaseOrderController extends Controller
             $result->save();
         }
 
-
-
-
-        return redirect('/purchase_order_manage')->with('success', 'Purchase Order Updated Successful!');
+        if ($invoice->quote_no == 'PO') {
+            return redirect('/purchase_order_manage')->with('success', 'Purchase Order Updated Successful!');
+        } else {
+            return redirect('/sale_return')->with('success', 'Sale Return Updated Successful!');
+        }
     }
 
     public function po_delete($id)

@@ -32,9 +32,10 @@ class ItemsImport implements ToModel
         }
         if (empty($row[2])) {
             $row[2] = $this->generateRandomBarcode();
-        } else {
-            $row[2] = $this->formatBarcode($row[2]);
         }
+        //  else {
+        //     $row[2] = $this->formatBarcode($row[2]);
+        // }
 
         return new Item([
             'warehouse_id' => $this->warehouseId, // Use the warehouse_id passed from the controller

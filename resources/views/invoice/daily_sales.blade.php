@@ -7,7 +7,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
 
                 <li class="nav-item">
@@ -23,7 +24,8 @@
 
 
                 <div class="btn-group">
-                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         {{ auth()->user()->name }}
                     </button>
                     <div class="dropdown-menu ">
@@ -81,16 +83,9 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>POS No.</th>
-
-
-
                                             <th>Date</th>
                                             <th>Sub Total</th>
                                             <th>Discount</th>
-
-
-
-
                                             <th>Total Amount</th>
                                             <th>Sale By</th>
                                             <th>Action</th>
@@ -98,36 +93,39 @@
                                     </thead>
                                     <tbody>
                                         @php
-                                        $no = 1;
-                                        $subtotal = 0; // Initialize subtotal variable
-                                        $discounttotal = 0;
-                                        $amounttotal = 0;
+                                            $no = 1;
+                                            $subtotal = 0; // Initialize subtotal variable
+                                            $discounttotal = 0;
+                                            $amounttotal = 0;
                                         @endphp
                                         @foreach ($daily_pos as $pos)
-                                        <tr>
-                                            <td>{{ $no }}</td>
-                                            <td>{{ $pos->invoice_no }}</td>
+                                            <tr>
+                                                <td>{{ $no }}</td>
+                                                <td>{{ $pos->invoice_no }}</td>
 
-                                            <td>{{ $pos->created_at->format('m-d-y') }}</td>
-                                            <td>{{ $pos->discount_total + $pos->total }}</td>
-                                            <td>{{ $pos->discount_total ?? 0 }}</td>
+                                                <td>{{ $pos->created_at->format('m-d-y') }}</td>
+                                                <td>{{ number_format($pos->discount_total + $pos->total) }}</td>
+                                                <td>{{ number_format($pos->discount_total ?? 0) }}</td>
 
-                                            <td>{{ $pos->total }}</td>
-                                            <td>{{ $pos->sale_by }}</td>
+                                                <td>{{ number_format($pos->total) }}</td>
+                                                <td>{{ $pos->sale_by }}</td>
 
-                                            <td> <a href="{{ url('/invoice_detail', $pos->id) }}" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></a></td>
-                                        </tr>
-                                        @php
-                                        $no++;
-                                        $subtotal += $pos->discount_total + $pos->total;
-                                        $discounttotal += $pos->discount_total;
-                                        $amounttotal += $pos->total;
-                                        @endphp
+                                                <td> <a href="{{ url('/invoice_detail', $pos->id) }}"
+                                                        class="btn btn-primary btn-sm"><i
+                                                            class="fa-solid fa-eye"></i></a></td>
+                                            </tr>
+                                            @php
+                                                $no++;
+                                                $subtotal += $pos->discount_total + $pos->total;
+                                                $discounttotal += $pos->discount_total;
+                                                $amounttotal += $pos->total;
+                                            @endphp
                                         @endforeach
                                         <td colspan="3" style="text-align:right">Total</td>
-                                        <td colspan="">{{ $subtotal }}</td>
-                                        <td colspan="">{{ $discounttotal }}</td>
-                                        <td colspan="">{{ $amounttotal }}</td>
+                                        <td colspan="">{{ number_format($subtotal) }}</td>
+                                        <td colspan="">{{ number_format($discounttotal) }}</td>
+                                        <td colspan="">{{ number_format($amounttotal) }}</td>
+                                        <td></td>
                                         <td></td>
 
 
@@ -154,8 +152,8 @@
     <script src="{{ asset('plugins/jquery/jquery.min.js ') }}"></script>
     <!-- Bootstrap 4 -->
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-    <!-- DataTables  & Plugins -->
-    <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <!--           DataTables  & Plugins -->
+    <script ipt src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js ') }}"></script>
@@ -169,27 +167,27 @@
     <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
-    <!-- AdminLTE for demo purposes -->
+    <!-- AdminLTE for demo purposes             -->
     {{-- <script src="../../dist/js/demo.js"></script> --}}
     <!-- Page specific script -->
     <script>
         $(function() {
-            $("#example1").DataTable({
+            $("#exam       ple1").DataTable({
                 "scrollX": true,
                 "lengthChange": false,
                 "autoWidth": false,
                 "pageLength": 30,
                 // "buttons": ["excel", "pdf", "print"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-            $('#example2').DataTable({
+            $('#exam                ple2').DataTable({
                 "paging": true,
-                "lengthChange": false,
-                "searching": true,
-                "ordering": true,
+                "lengthC hange": false,
+                "searchi   ng": true,
+                "orderin      g": true,
                 "info": true,
-                "autoWidth": false,
-                "responsive": true,
-                "pageLength": 30,
+                "autoWid           th": false,
+                "respons              ive": true,
+                "pageLen                 gth": 30,
                 "buttons": ["excel", "pdf", "print"]
             }).buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
         });

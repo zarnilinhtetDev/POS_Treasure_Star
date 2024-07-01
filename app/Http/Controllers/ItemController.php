@@ -12,7 +12,11 @@ use App\Imports\ItemsImport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Exports\ItemsImportTemplate;
+use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
+//use File;
+use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
@@ -37,8 +41,18 @@ class ItemController extends Controller
     }
     public function generateRandomBarcode()
     {
-        $barcode = rand(1000000000000, 9999999999999);
-        return (string)$barcode;
+        // Generate 12 random digits
+        $barcode = rand(100000000000, 999999999999);
+        // Calculate the check digit
+        $digits = str_split($barcode);
+        $sum = 0;
+        foreach ($digits as $key => $digit) {
+            $sum += ($key % 2 === 0) ? $digit : $digit * 3;
+        }
+        $checkDigit = (10 - ($sum % 10)) % 10;
+        // Append check digit to the barcode
+        $barcode = $barcode . $checkDigit;
+        return $barcode;
     }
     public function store(Request $request)
     {
@@ -47,18 +61,32 @@ class ItemController extends Controller
         ], [
             'item_unit.required' => 'Please Select Unit',
         ]);
-        $barcode = '';
         if (empty($request->barcode)) {
             $randomBarcode = $this->generateRandomBarcode();
-
             $request->merge(['barcode' => $randomBarcode]);
+        } else {
+            $barcodeWithoutCheckDigit = $request->barcode;
+            if (strlen($barcodeWithoutCheckDigit) < 12) {
+                $paddingLength = 12 - strlen($barcodeWithoutCheckDigit);
+                for ($i = 0; $i < $paddingLength; $i++) {
+                    $barcodeWithoutCheckDigit .= rand(1, 9);
+                }
+            } elseif (strlen($barcodeWithoutCheckDigit) > 12) {
+                $barcodeWithoutCheckDigit = substr($barcodeWithoutCheckDigit, 0, 12);
+            }
+            $digits = str_split($barcodeWithoutCheckDigit);
+            $sum = 0;
+            foreach ($digits as $key => $digit) {
+                $sum += ($key % 2 === 0) ? $digit : $digit * 3;
+            }
+            $checkDigit = (10 - ($sum % 10)) % 10;
+            $barcodeWithCheckDigit = $barcodeWithoutCheckDigit . $checkDigit;
+            $request->merge(['barcode' => $barcodeWithCheckDigit]);
         }
-        //dd($request->barcode);
         $items = new Item();
         $items->fill($validate);
         $items->fill($request->all());
         $items->warehouse_id = $request->warehouse_id;
-        $items->barcode = $request->barcode;
         $items->save();
         return redirect(url('items'))->with('success', 'Item Register is Successfully');
     }
@@ -104,6 +132,40 @@ class ItemController extends Controller
     //Excel
     public function fileImport(Request $request)
     {
+
+        $file = fopen(base_path('public/update2.csv'), 'r');
+
+        // $data = fgetcsv($file, 200, ",");
+        // print_r($data);
+        // dd($data);
+        $all_data = array();
+        $array = array();
+        while (($data = fgetcsv($file, 500, ","))) {
+
+            $warehouse = $data[0];
+            $name = $data[1];
+            $bcode = $data[2];
+            $all_data = $warehouse . "," . $name . "," . $bcode;
+            // echo $name;
+            array_push($array, $all_data);
+        }
+        fclose($file);
+        // array_push($array, $all_data);
+        $new_arr = array();
+        foreach ($array as $key => $val) {
+            $new_arr[$key] = explode(",", $val);
+        }
+
+
+        foreach ($new_arr as $key => $val) {
+
+            echo $val[2] . "<br>";
+            $priceupdate = Item::findorfail($val[0]);
+            $priceupdate->price = $val[2];
+            $priceupdate->save();
+        }
+        //print_r($new_arr);
+        dd($new_arr);
         try {
             $request->validate([
                 'warehouse_id' => 'required|exists:warehouses,id',
@@ -117,8 +179,34 @@ class ItemController extends Controller
             $warehouseId = $request->warehouse_id;
             // Get the file from the request
             $file = $request->file('file');
+            ///sayar start///////////////////////////////////////////////////////////////////////////////////
+            // try {
+            //     Excel::load(Input::file('file'), function ($reader) {
+
+            //         foreach ($reader->toArray() as $row) {
+            //             User::firstOrCreate($row);
+            //         }
+            //     });
+            //     \Session::flash('success', 'Users uploaded successfully.');
+            //     return redirect(route('users.index'));
+            // } catch (\Exception $e) {
+            //     \Session::flash('error', $e->getMessage());
+            //     return redirect(route('users.index'));
+            // }
+
+
+
+
+            // If you would like to retrieve a list of
+            // all files within a given directory including all sub-directories
+            //$files = File::allFiles(public_path());
+            ///sayar end///////////////////////////////////////////////////////////////////////////////////
+
+
             // Import the file and associate it with the warehouse
-            $import = new ItemsImport($warehouseId);
+            //  $import = new ItemsImport($warehouseId);
+
+
             Excel::import($import, $file->store('temp'));
             return back()->with('success', 'File Import Is Successfully!');
         } catch (\Exception $e) {
@@ -144,5 +232,46 @@ class ItemController extends Controller
     {
         DB::table('items')->truncate();
         return redirect()->back()->with('success', 'Table dropped successfully!');
+    }
+    public function update_barcode()
+    {
+        $items = Item::all();
+        $item_oribc = [];
+        $item_genbc = [];
+        foreach ($items as $key => $item) {
+            if (strlen($item->barcode) < 13) {
+                // echo $item->barcode . "<br>";
+                $item_oribc[$key] = $item->barcode;
+            } else {
+                //  echo $item->barcode . "<br>";
+                // $item_genbc[$key] = $item->barcode;
+                // $ff = DB::table('items_server')->where('id', $item->id)->first();
+                // $eeee = Item::find($item->id);
+                // $eeee->barcode = $ff->barcode;
+                // $eeee->update();
+
+                $aa = DB::table('items_server')->where("warehouse_id", "2")->get();
+
+                foreach ($aa as $key => $bb) {
+                    if ($item->item_name == $bb->item_name) {
+                        $bb->barcode = $item->barcode;
+                        $bb->save();
+                        DB::table('items_server')
+                            ->where($bb->id, $item->id)
+                            ->update([$bb->barcode => $item->barcode]);
+                    }
+                }
+                // $item_oribc = $item->barcode;
+                // $item_genbc = $item->barcode;
+
+            }
+            dd($item_genbc);
+            dd('asdf');
+            DB::statement('
+        UPDATE items
+        JOIN items_new ON items.id = items_new.id
+        SET items.barcode = items_new.barcode
+    ');
+        }
     }
 }

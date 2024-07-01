@@ -5,22 +5,27 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Item;
 use App\Models\Sell;
+use App\Models\Unit;
 use App\Models\Invoice;
 use App\Models\Customer;
-use Illuminate\Http\Request;
-
-use App\Models\Unit;
+use App\Models\PO_sells;
+use App\Models\Supplier;
 use App\Models\Warehouse;
+
+use App\Models\UserProfile;
+use Illuminate\Http\Request;
+use App\Models\PurchaseOrder;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
     //
     public function index()
     {
+
         $invoices = Invoice::where('status', 'invoice')->latest()->get();
-        return view('invoice.invoice_manage', compact(
-            'invoices'
-        ));
+
+        return view('invoice.invoice_manage', compact('invoices'));
     }
 
 
@@ -58,39 +63,20 @@ class InvoiceController extends Controller
         $warehouses = Warehouse::all();
         return view('invoice.pos', compact('invoice_no', 'units', 'warehouses', 'suspends'));
     }
-    //    public function pos()
-    //     {
-    //         if (auth()->user()->is_admin == '1' || auth()->user()->type == 'Admin') {
-    //             $invoices = Invoice::where('status', 'pos')->latest()->get();
-    //             return view('invoice.pos_manage', compact(
-    //                 'invoices'
-    //             ));
-    //         } else {
-    //             $invoices = Invoice::with(['sells' => function ($query) {
-    //                 $query->where('warehouse', auth()->user()->level);
-    //             }])
-    //                 ->where('status', 'pos')
-    //                 ->whereHas('sells', function ($query) {
-    //                     $query->where('warehouse', auth()->user()->level);
-    //                 })
-    //                 ->latest()
-    //                 ->get();
-    //             return view('invoice.pos_manage', compact('invoices'));
-    //         }
-    //     }
+
     public function pos()
     {
-        if (auth()->user()->is_admin == '1' || auth()->user()->type == 'Admin') {
-            $invoices = Invoice::where('status', 'pos')->latest()->get();
-            return view('invoice.pos_manage', compact(
-                'invoices'
-            ));
-        } else {
-            $invoices = Invoice::where('status', 'pos')->where('sale_by', auth()->user()->name)->latest()->get();
-            return view('invoice.pos_manage', compact(
-                'invoices'
-            ));
-        }
+        // if (auth()->user()->is_admin == '1' || auth()->user()->type == 'Admin') {
+        $invoices = Invoice::where('status', 'pos')->latest()->get();
+        return view('invoice.pos_manage', compact(
+            'invoices'
+        ));
+        // } else {
+        //     $invoices = Invoice::where('status', 'pos')->where('sale_by', auth()->user()->name)->latest()->get();
+        //     return view('invoice.pos_manage', compact(
+        //         'invoices'
+        //     ));
+        // }
     }
 
     public function invoice_register(Request $request)
@@ -117,7 +103,8 @@ class InvoiceController extends Controller
         $invoice->sale_price_category = $request->sale_price_category;
         $invoice->phno  = $request->phno;
         $invoice->status  = $request->status;
-        $invoice->sale_by  = $request->sale_by;
+        // $invoice->sale_by  = $request->sale_by;
+        $invoice->sale_by = auth()->user()->name;
         $invoice->location = $request->location;
         $invoice->type  = $request->type;
         $invoice->address  = $request->address;
@@ -318,7 +305,8 @@ class InvoiceController extends Controller
         $invoice->quote_date = $request->quote_date;
         $invoice->quote_no  = $request->quote_no;
         $invoice->overdue_date  = $request->overdue_date;
-        $invoice->sale_by  = $request->sale_by;
+        // $invoice->sale_by  = $request->sale_by;
+        $invoice->sale_by = auth()->user()->name;
         $invoice->sub_total  = $request->sub_total;
         $invoice->total  = $request->total;
         $invoice->location = $request->location;
@@ -494,25 +482,34 @@ class InvoiceController extends Controller
     {
 
         if ($invoice->status === 'pos') {
+            $profile = UserProfile::all();
             $sells = Sell::where('invoiceid', $invoice->id)->get();
             $invoices = Invoice::where('id', $invoice->id)->get();
             return view('invoice.pos_detail', [
                 'invoice' => $invoice,
                 'invoices' => $invoices,
-                'sells' => $sells
+                'sells' => $sells,
+                'profile' => $profile
             ]);
         } else {
+            $profile = UserProfile::all();
             $sells = Sell::where('invoiceid', $invoice->id)->get();
             return view('invoice.invoice_details', [
                 'invoice' => $invoice,
-                'sells' => $sells
+                'sells' => $sells,
+                'profile' => $profile
+
             ]);
         }
     }
     public function daily_sales()
     {
+        // if (auth()->user()->type == '0' || auth()->user()->type == 'Admin') {
         $daily_pos = Invoice::whereDate('created_at', Carbon::today())->where('status', 'pos')->get();
-
+        // } else {
+        //     $daily_pos = Invoice::whereDate('created_at', Carbon::today())->where('status', 'pos')->where('sale_by', auth()->user()->name)->get();
+        // }
+        // $daily_pos = Invoice::whereDate('created_at', Carbon::today())->where('status', 'pos')->get();
         return view('invoice.daily_sales', compact('daily_pos'));
     }
     public function item_search(Request $request)
@@ -543,5 +540,90 @@ class InvoiceController extends Controller
         $quotation = Invoice::find($id);
         $sells = Sell::where('invoiceid', $id)->get();
         return view('quotation.quotation_details', compact('quotation', 'sells'));
+    }
+
+    public function sale_return()
+    {
+        $today = Carbon::today();
+        $po = PurchaseOrder::where('quote_no', 'like', 'SR%')
+            ->whereDate('created_at', $today)
+            ->latest()
+            ->get();
+
+        $po_total = PurchaseOrder::where('quote_no', 'like', 'SR%')
+            ->whereDate('created_at', $today)
+            ->sum('total');
+
+        return view('invoice.sale_return', compact('po', 'po_total'));
+    }
+
+    public function sale_return_search(Request $request)
+    {
+        $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
+        $endDate = Carbon::parse($request->input('end_date'))->endOfDay();
+
+        $po = PurchaseOrder::where('quote_no', 'like', 'SR%')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->latest()
+            ->get();
+
+        $po_total = PurchaseOrder::where('quote_no', 'like', 'SR%')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->sum('total');
+
+        return view('invoice.sale_return', compact('po', 'po_total'));
+    }
+
+
+
+    public function sale_return_register()
+    {
+        $po_number = PurchaseOrder::where('quote_no', 'like', 'SR%')->latest()->get();
+        $units = Unit::all();
+        $po_no = 'SR-' . (count($po_number) + 1);
+        $warehouses = Warehouse::all();
+        return view('invoice.sale_return_register', compact('po_no', 'units', 'warehouses'));
+    }
+
+    public function sale_return_edit($id)
+    {
+        $suppliers = Supplier::all();
+        $purchase_orders = PurchaseOrder::find($id);
+        $purchase_sells = PO_sells::where('invoiceid', $id)->get();
+        $warehouses = Warehouse::all();
+        return view('invoice.sale_return_edit', compact('purchase_orders', 'suppliers', 'purchase_sells', 'warehouses'));
+    }
+
+    public function sale_return_detail($id)
+    {
+        $purchase_order = PurchaseOrder::find($id);
+        $purchase_sells = PO_sells::where('invoiceid', $id)->get();
+        return view('invoice.sale_return_detail', compact('purchase_order', 'purchase_sells'));
+    }
+
+    public function sale_return_delete($id)
+    {
+
+        DB::beginTransaction();
+
+        try {
+
+            PurchaseOrder::findOrFail($id)->delete();
+
+
+            PO_sells::where('invoiceid', $id)->delete();
+
+
+            DB::commit();
+
+            return redirect('/sale_return')->with('success', 'Sale Return Deleted Successfully!');
+        } catch (\Exception $e) {
+
+            DB::rollback();
+
+            return redirect('/sale_return')->with('error', 'Failed to delete sale return.');
+        }
+
+        // return redirect('/quotation')->with('success', 'Quotation Deleted Successful!');
     }
 }
