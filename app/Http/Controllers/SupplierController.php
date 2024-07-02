@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Supplier;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 
 class SupplierController extends Controller
@@ -10,8 +11,17 @@ class SupplierController extends Controller
     //
     public function index()
     {
-        $suppliers = Supplier::latest()->get();
-        return view('supplier.supplier', compact('suppliers'));
+
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+
+        if (auth()->user()->is_admin == '1') {
+            $suppliers = Supplier::latest()->get();
+            $branchs = Warehouse::all();
+        } else {
+            $suppliers = Supplier::whereIn('branch', $warehousePermission)->latest()->get();
+            $branchs = Warehouse::all();
+        }
+        return view('supplier.supplier', compact('suppliers', 'branchs'));
     }
     public function store(Request $request)
     {
@@ -20,6 +30,7 @@ class SupplierController extends Controller
                 'name' => 'required|unique:suppliers,name',
                 'phno' => 'required|unique:suppliers,phno',
                 'address' => 'required',
+                'branch' => 'required',
             ]);
 
             Supplier::create($validate);
@@ -32,10 +43,11 @@ class SupplierController extends Controller
     public function edit(Request $request, $id)
     {
         $supplier = Supplier::find($id);
+        $branchs = Warehouse::all();
 
         return view(
             'supplier.supplier_edit',
-            compact('supplier')
+            compact('supplier', 'branchs')
         );
     }
     public function update(Request $request, $id)

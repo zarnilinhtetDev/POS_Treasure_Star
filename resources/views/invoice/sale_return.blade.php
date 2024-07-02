@@ -1,5 +1,23 @@
 @include('layouts.header')
 
+<style>
+    .nav-tabs .nav-link {
+        color: #007FFF;
+        transition: color 0.3s, background-color 0.3s;
+    }
+
+    .nav-tabs .nav-link:hover {
+        color: #0056b3;
+        background-color: #e6f7ff;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #ffffff;
+        background-color: #007FFF;
+        border-color: #007FFF;
+    }
+</style>
+
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
         <!-- Navbar -->
@@ -45,26 +63,7 @@
             <section class="content">
 
                 <section class="content-header">
-                    <div class="container-fluid">
-                        <div class="mb-2 row">
-                            <div class="col-sm-6">
-                                <h1>Sale Return (POS) Manage</h1>
-                            </div>
-                            <div class="col-sm-6">
-                                <ol class="breadcrumb float-sm-right">
-                                    <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a>
-                                    </li>
-
-                                    </li>
-                                    <li class="breadcrumb-item">Sale Return (POS) Manage</li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div><!-- /.container-fluid -->
-                </section>
-
-                <div class="container-fluid">
-                    <div class="container mt-4">
+                    <div class="container mt-3">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('report') ? 'active' : '' }}"
@@ -103,7 +102,11 @@
                                     href="{{ url('report_expense') }}">Expenses</a>
                             </li>
                         </ul>
-                    </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+
+                <div class="container-fluid">
+
 
                     <div class="my-5 container-fluid">
                         <div class="row">
@@ -158,6 +161,7 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Sale Return Number</th>
+                                            <th>Location</th>
                                             <th>Receiving Mode</th>
                                             <th>Total</th>
                                             <th>Action</th>
@@ -173,6 +177,13 @@
                                             <tr>
                                                 <td>{{ $no }}</td>
                                                 <td>{{ $pos->quote_no }}</td>
+                                                <td>
+                                                    @foreach ($branchs as $branch)
+                                                        @if ($branch->id == $pos->branch)
+                                                            {{ $branch->name }}
+                                                        @endif
+                                                    @endforeach
+                                                </td>
                                                 <td>{{ $pos->balance_due }}</td>
                                                 <td>{{ $pos->total }}</td>
                                                 <td>
@@ -195,38 +206,10 @@
                                                 $no++;
                                             @endphp
                                         @endforeach
-                                        {{-- @elseif (Auth::user()->type == 'Warehouse')
-                                            @foreach ($po as $pos)
-                                                @foreach ($pos->po_sells as $sell)
-                                                    @if ($sell->warehouse == Auth::user()->level)
-                                                        <tr>
-                                                            <td>{{ $no }}</td>
-                                                            <td>{{ $pos->quote_no }}</td>
-                                                            <td>{{ $pos->total }}</td>
-                                                            <td>
-                                                                <a href="{{ url('sale_return_detail', $pos->id) }}"
-                                                                    class="btn btn-primary btn-sm"><i
-                                                                        class="fa-solid fa-eye"></i></a>
 
-                                                                <a href="{{ url('sale_return_edit', $pos->id) }}"
-                                                                    class="btn btn-success btn-sm"><i
-                                                                        class="fa-solid fa-pen-to-square"></i></a>
-
-                                                                <a href="{{ url('sale_return_delete', $pos->id) }}"
-                                                                    class="btn btn-danger btn-sm"
-                                                                    onclick="return confirm('Are you sure you want to delete this Sale Return ?')"><i
-                                                                        class="fa-solid fa-trash"></i></a>
-                                                            </td>
-                                                        </tr>
-                                                        @php
-                                                            $no++;
-                                                        @endphp
-                                                    @endif
-                                                @endforeach
-                                            @endforeach
-                                        @endif --}}
                                     <tfoot>
                                         <tr>
+                                            <td></td>
                                             <td colspan="3">Total</td>
                                             <td>{{ $po_total }}</td>
                                             <td></td>

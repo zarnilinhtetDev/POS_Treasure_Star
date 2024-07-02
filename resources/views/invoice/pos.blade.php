@@ -258,47 +258,52 @@
                                             </table>
                                         </div>
                                         <hr>
-                                        {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
-                                        <div class="mt-4 frmSearch col-md-3">
-                                            <div class="frmSearch col-sm-12">
-                                                <span style="font-weight:bolder">
-                                                    <label for="cst"
-                                                        class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                </span> <select name="location" id="location"
-                                                    class="mb-4 form-control location" required>
-
-                                                    @foreach ($warehouses as $warehouse)
-                                                        <option value="{{ $warehouse->id }}">
-                                                            {{ $warehouse->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-
-                                            </div>
-                                        </div>
-                                        {{-- @elseif (Auth::user()->type == 'Cashier')
-                                            <div class="mt-4 frmSearch col-md-3" style="display: none;">
+                                        @if (auth()->user()->is_admin == '1')
+                                            <div class="mt-4 frmSearch col-md-3">
                                                 <div class="frmSearch col-sm-12">
                                                     <span style="font-weight:bolder">
                                                         <label for="cst"
                                                             class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                    </span> <select name="location" id="location"
+                                                    </span>
+                                                    <select name="branch" id="location"
                                                         class="mb-4 form-control location" required>
-
                                                         @foreach ($warehouses as $warehouse)
-                                                            @if (auth()->user()->level == $warehouse->id)
-                                                                <option value="{{ $warehouse->id }}" selected>
-                                                                    {{ $warehouse->name }}
-                                                                </option>
-                                                            @endif
+                                                            <option value="{{ $warehouse->id }}">
+                                                                {{ $warehouse->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
 
                                                 </div>
-
-
                                             </div>
-                                        @endif --}}
+                                        @else
+                                            <div class="mt-4 frmSearch col-md-3">
+                                                <div class="frmSearch col-sm-12">
+                                                    <span style="font-weight:bolder">
+                                                        <label for="cst"
+                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
+
+                                                        <select name="branch" id="location"
+                                                            class="form-control location" required>
+                                                            @php
+                                                                $userPermissions = auth()->user()->level
+                                                                    ? json_decode(auth()->user()->level)
+                                                                    : [];
+                                                            @endphp
+                                                            <option value="" selected disabled>Select
+                                                                Location
+                                                            </option>
+                                                            @foreach ($warehouses as $branch)
+                                                                @if (in_array($branch->id, $userPermissions))
+                                                                    <option value="{{ $branch->id }}">
+                                                                        {{ $branch->name }}
+                                                                    </option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                </div>
+                                            </div>
+                                        @endif
 
                                         <div class="mt-4 frmSearch col-md-3">
                                             <div class="frmSearch col-sm-12">
@@ -1132,12 +1137,13 @@
         <script>
             $(document).ready(function() {
                 var path = "{{ route('customer_service_search') }}";
-
-
                 $('#customer').typeahead({
                     source: function(query, process) {
+                        var Selectedlocation = $('#location').val();
+
                         return $.get(path, {
-                            query: query
+                            query: query,
+                            location: Selectedlocation,
                         }, function(data) {
                             // Format the data for Typeahead
                             var formattedData = [];
@@ -1156,6 +1162,7 @@
                         });
                     }
                 });
+
 
 
 

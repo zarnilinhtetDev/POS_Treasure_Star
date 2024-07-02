@@ -7,7 +7,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
 
                 <li class="nav-item text-white">
@@ -23,7 +24,8 @@
 
 
                 <div class="btn-group">
-                    <button type="button" class="btn dropdown-toggle text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn dropdown-toggle text-white" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         {{ auth()->user()->name }}
                     </button>
                     <div class="dropdown-menu ">
@@ -65,29 +67,29 @@
                     </div><!-- /.container-fluid -->
                 </section>
                 @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>{{ session('success') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>{{ session('success') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @endif
                 @if (session('error'))
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong>{{ session('error') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>{{ session('error') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @endif
 
                 @if ($errors->has('phno'))
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong> {{ $errors->first('phno') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong> {{ $errors->first('phno') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @endif
 
 
@@ -100,7 +102,8 @@
 
 
                     <div class="row">
-                        <div class="mr-auto col"> <button type="button" class="mr-auto btn btn-primary " data-toggle="modal" data-target="#modal-lg">
+                        <div class="mr-auto col"> <button type="button" class="mr-auto btn btn-primary "
+                                data-toggle="modal" data-target="#modal-lg">
                                 Register New Customer </button>
 
                         </div>
@@ -129,19 +132,21 @@
 
                                             <div class="form-group">
                                                 <label for="name">Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="name" placeholder="Enter Name" required autofocus name="name">
+                                                <input type="text" class="form-control" id="name"
+                                                    placeholder="Enter Name" required autofocus name="name">
                                             </div>
 
 
                                             <div class="form-group">
-                                                <label for="phno">Phone Number <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="phone number" placeholder="Enter Phone Number" name="phno" required>
+                                                <label for="phno">Phone Number <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="phone number"
+                                                    placeholder="Enter Phone Number" name="phno" required>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="crc">Customer Type </label>
-                                                <!-- <input type="text" class="form-control"
-                                                    placeholder="Enter Customer Type" name="type"> -->
+
                                                 <select name="type" id="type" class="form-control" required>
                                                     <option selected disabled>Select Customer Type</option>
                                                     <option value="Retail">Retail</option>
@@ -149,25 +154,60 @@
                                                 </select>
                                             </div>
 
+
+                                            @if (auth()->user()->is_admin == '1')
+                                                <div class="form-group">
+                                                    <label for="branch">Location<span
+                                                            class="text-danger">*</span></label>
+
+                                                    <select name="branch" id="branch" class="form-control"
+                                                        required>
+                                                        <option value="" selected disabled>Select Location
+                                                        </option>
+                                                        @foreach ($branchs as $branch)
+                                                            <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @else
+                                                <div class="form-group">
+                                                    <label for="branch">Location<span
+                                                            class="text-danger">*</span></label>
+
+                                                    <select name="branch" id="branch" class="form-control"
+                                                        required>
+                                                        @php
+                                                            $userPermissions = auth()->user()->level
+                                                                ? json_decode(auth()->user()->level)
+                                                                : [];
+                                                        @endphp
+                                                        <option value="" selected disabled>Select Location
+                                                        </option>
+                                                        @foreach ($branchs as $branch)
+                                                            @if (in_array($branch->id, $userPermissions))
+                                                                <option value="{{ $branch->id }}">
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @endif
                                             <div class="form-group">
-                                                <label for="address">Address <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="phone number" placeholder="Enter Address" name="address" required>
+                                                <label for="address">Address <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="phone number"
+                                                    placeholder="Enter Address" name="address" required>
                                             </div>
-
-
-
-
-
-
-
-
                                         </div>
 
 
 
                                 </div>
                                 <div class="modal-footer justify-content-between">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-default"
+                                        data-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary">Save </button>
                                 </div>
                                 </form>
@@ -189,59 +229,60 @@
                                     <thead>
                                         <tr>
                                             <th>No.</th>
-
                                             <th>Name</th>
-
                                             <th>Phone Number</th>
                                             <th>Customer Type</th>
-
+                                            <th>Location</th>
                                             <th>Address</th>
-
-
                                             <th>Action</th>
 
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php
-                                        $no = '1';
+                                            $no = '1';
                                         @endphp
                                         @foreach ($customers as $customer)
-                                        <tr>
-                                            <td>{{ $no }}</td>
-
-
-                                            <td>{{ $customer->name }}</a></td>
-
-                                            <td>{{ $customer->phno }}</td>
-                                            <td>{{ $customer->type }}</td>
-
-
-
-                                            <td>{{ $customer->address }}</td>
-
-                                            <td>
-                                                <div class="row">
-
-
-
-
-
-                                                    <a href="{{ url('customer_edit', $customer->id) }}" title="Customer Edit" class="mx-2 btn btn-success"><i class="fa-solid fa-pen-to-square"></i></a>
-                                                    <a href="{{ url('customer_delete', $customer->id) }}" title="Customer Delete" class=" btn btn-danger"><i class="fa-solid fa-trash"></i></a>
-                                                    <a href="{{ url('customer_credit', $customer->id) }}" type="button" class="mx-2 btn btn-warning ">
-                                                        Credit</a>
-
-
-                                                </div>
+                                            <tr>
+                                                <td>{{ $no }}</td>
+                                                <td>{{ $customer->name }}</a></td>
+                                                <td>{{ $customer->phno }}</td>
+                                                <td>{{ $customer->type }}</td>
+                                                <td>
+                                                    @foreach ($branchs as $branch)
+                                                        @if ($branch->id == $customer->branch)
+                                                            {{ $branch->name }}
+                                                        @endif
+                                                    @endforeach
+                                                </td>
+                                                <td>{{ $customer->address }}</td>
+                                                <td>
+                                                    <div class="row">
 
 
 
-                                            </td>
-                                        </tr>
-                                        @php
-                                        $no++;
-                                        @endphp
+
+
+                                                        <a href="{{ url('customer_edit', $customer->id) }}"
+                                                            title="Customer Edit" class="mx-2 btn btn-success"><i
+                                                                class="fa-solid fa-pen-to-square"></i></a>
+                                                        <a href="{{ url('customer_delete', $customer->id) }}"
+                                                            title="Customer Delete" class=" btn btn-danger"><i
+                                                                class="fa-solid fa-trash"></i></a>
+                                                        <a href="{{ url('customer_credit', $customer->id) }}"
+                                                            type="button" class="mx-2 btn btn-warning ">
+                                                            Credit</a>
+
+
+                                                    </div>
+
+
+
+                                                </td>
+                                            </tr>
+                                            @php
+                                                $no++;
+                                            @endphp
                                         @endforeach
 
                                     </tbody>

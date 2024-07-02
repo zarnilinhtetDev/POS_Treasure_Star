@@ -1,6 +1,22 @@
 @include('layouts.header')
 
+<style>
+    .nav-tabs .nav-link {
+        color: #007FFF;
+        transition: color 0.3s, background-color 0.3s;
+    }
 
+    .nav-tabs .nav-link:hover {
+        color: #0056b3;
+        background-color: #e6f7ff;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #ffffff;
+        background-color: #007FFF;
+        border-color: #007FFF;
+    }
+</style>
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -51,33 +67,7 @@
             <section class="content">
 
                 <section class="content-header">
-                    <div class="container-fluid">
-                        <div class="mb-2 row">
-                            <div class="col-sm-6">
-                                <h1>Invoices Reports</h1>
-                            </div>
-                            <div class="col-sm-6">
-                                <ol class="breadcrumb float-sm-right">
-                                    <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a>
-                                    </li>
-                                    <li class="breadcrumb-item">Invoices Reports
-                                    </li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div><!-- /.container-fluid -->
-                </section>
-
-
-
-                <div class="ml-2 container-fluid">
-
-                    <!-- left column -->
-
-                    <!-- general form elements -->
-
-                    <!-- /.modal -->
-                    <div class="container mt-4">
+                    <div class="container mt-3">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('report') ? 'active' : '' }}"
@@ -116,7 +106,18 @@
                                     href="{{ url('report_expense') }}">Expenses</a>
                             </li>
                         </ul>
-                    </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+
+
+
+                <div class="ml-2 container-fluid">
+
+                    <!-- left column -->
+
+                    <!-- general form elements -->
+
+                    <!-- /.modal -->
 
 
                     <div class="my-5 container-fluid">
@@ -156,6 +157,7 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Invoice No.</th>
+                                            <th>Location</th>
                                             <th>Customer Name</th>
                                             <th>Phone Number</th>
                                             <th>Customer Type</th>
@@ -173,6 +175,13 @@
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td>{{ $invoice->invoice_no }}</td>
+                                                    <td>
+                                                        @foreach ($branchs as $branch)
+                                                            @if ($branch->id == $invoice->branch)
+                                                                {{ $branch->name }}
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
                                                     <td>{{ $invoice->customer_name }}</td>
                                                     <td>{{ $invoice->phno }}</td>
                                                     <td>{{ $invoice->type }}</td>
@@ -189,6 +198,13 @@
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td>{{ $invoice->invoice_no }}</td>
+                                                    <td>
+                                                        @foreach ($branchs as $branch)
+                                                            @if ($branch->id == $invoice->branch)
+                                                                {{ $branch->name }}
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
                                                     <td>{{ $invoice->customer_name }}</td>
                                                     <td>{{ $invoice->phno }}</td>
                                                     <td>{{ $invoice->type }}</td>
@@ -202,11 +218,9 @@
                                             @endforeach
                                         @endif
 
-
-
-
                                     <tfoot>
                                         <tr>
+                                            <td></td>
                                             <td colspan="7" style="text-align:right">Total</td>
                                             <td colspan="">
                                                 @if (!empty($search_invoices))

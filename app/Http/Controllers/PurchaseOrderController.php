@@ -9,14 +9,25 @@ use App\Models\Supplier;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\PurchaseOrder;
+use App\Models\UserProfile;
 use Illuminate\Support\Facades\DB;
 
 class PurchaseOrderController extends Controller
 {
     public function index()
     {
-        $po = PurchaseOrder::where('quote_no', 'like', 'PO%')->latest()->get();
-        return view('purchase_order.purchase_order_manage', compact('po'));
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+
+        if (auth()->user()->is_admin == '1') {
+            $po = PurchaseOrder::where('quote_no', 'like', 'PO%')->latest()->get();
+            $branchs = Warehouse::all();
+        } else {
+
+            $po = PurchaseOrder::where('quote_no', 'like', 'PO%')->whereIn('branch', $warehousePermission)->latest()->get();
+            $branchs = Warehouse::all();
+        }
+
+        return view('purchase_order.purchase_order_manage', compact('po', 'branchs'));
     }
     public function purchase_order_register()
     {
@@ -93,6 +104,7 @@ class PurchaseOrderController extends Controller
         $invoice->invoice_no  = $request->invoice_no;
         $invoice->overdue_date = $request->overdue_date;
         $invoice->po_date = $request->po_date;
+        $invoice->branch = $request->branch;
         $invoice->quote_no  = $request->po_number;
         $invoice->sub_total  = $request->sub_total;
         $invoice->total  = $request->total;
@@ -159,6 +171,7 @@ class PurchaseOrderController extends Controller
         $invoice->invoice_no  = $request->invoice_no;
         $invoice->overdue_date = $request->overdue_date;
         $invoice->po_date = $request->po_date;
+        $invoice->branch = $request->branch;
         $invoice->quote_no  = $request->po_number;
         $invoice->sub_total  = $request->sub_total;
         $invoice->total  = $request->total;
@@ -207,7 +220,7 @@ class PurchaseOrderController extends Controller
             $result->save();
         }
 
-        if ($invoice->quote_no == 'PO') {
+        if ($invoice->status == 'PO') {
             return redirect('/purchase_order_manage')->with('success', 'Purchase Order Updated Successful!');
         } else {
             return redirect('/sale_return')->with('success', 'Sale Return Updated Successful!');
@@ -222,18 +235,11 @@ class PurchaseOrderController extends Controller
         try {
 
             PurchaseOrder::findOrFail($id)->delete();
-
-
             PO_sells::where('invoiceid', $id)->delete();
-
-
             DB::commit();
-
             return redirect('/purchase_order_manage')->with('success', 'Purchase Order Deleted Successfully!');
         } catch (\Exception $e) {
-
             DB::rollback();
-
             return redirect('/purchase_order_manage')->with('error', 'Failed to delete purchase order.');
         }
 
@@ -244,6 +250,7 @@ class PurchaseOrderController extends Controller
     {
         $purchase_order = PurchaseOrder::find($id);
         $purchase_sells = PO_sells::where('invoiceid', $id)->get();
-        return view('purchase_order.purchase_order_details', compact('purchase_order', 'purchase_sells'));
+        $profile = UserProfile::all();
+        return view('purchase_order.purchase_order_details', compact('purchase_order', 'purchase_sells', 'profile'));
     }
 }

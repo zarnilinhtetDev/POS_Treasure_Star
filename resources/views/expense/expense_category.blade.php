@@ -127,25 +127,44 @@
                                                     name="category" rows="3"></textarea>
                                             </div>
 
-                                            {{-- @if (auth()->user()->is_admin == '1' || auth()->user()->type == 'Admin') --}}
-                                            <div class="form-group">
-                                                <label for="branch">Location<span class="text-danger">*</span></label>
-                                                <select name="branch" id="branch" class="form-control" required>
-                                                    <option selected disabled>Select Location</option>
-                                                    @foreach ($branches as $branch)
-                                                        <option value="{{ $branch->id }}">{{ $branch->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            {{-- @else
-                                                <div class="form-group" style="display: none;">
+                                            @if (auth()->user()->is_admin == '1')
+                                                <div class="form-group">
                                                     <label for="branch">Location<span
                                                             class="text-danger">*</span></label>
-                                                    <input class="form-control" type="text" name="branch"
-                                                        id="branch" value="{{ auth()->user()->level }}" required>
+
+                                                    <select name="branch" id="branch" class="form-control" required>
+                                                        <option value="" selected disabled>Select Location
+                                                        </option>
+                                                        @foreach ($branches as $branch)
+                                                            <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
-                                            @endif --}}
+                                            @else
+                                                <div class="form-group">
+                                                    <label for="branch">Location<span
+                                                            class="text-danger">*</span></label>
+
+                                                    <select name="branch" id="branch" class="form-control"
+                                                        required>
+                                                        @php
+                                                            $userPermissions = auth()->user()->level
+                                                                ? json_decode(auth()->user()->level)
+                                                                : [];
+                                                        @endphp
+                                                        <option value="" selected disabled>Select Location
+                                                        </option>
+                                                        @foreach ($branches as $branch)
+                                                            @if (in_array($branch->id, $userPermissions))
+                                                                <option value="{{ $branch->id }}">
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @endif
                                             <button type="button" class="btn btn-default"
                                                 data-dismiss="modal">Close</button>
                                             <button type="submit" class="btn btn-primary">Save </button>

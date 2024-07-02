@@ -12,17 +12,25 @@ class ExpenseController extends Controller
     public function index()
     {
         // if (auth()->user()->is_admin == '1' || auth()->user()->type == 'Admin') {
-        $expenses = Expense::latest()->get();
-        $categories = ExpenseCategory::latest()->get();
-        $branches = Warehouse::latest()->get();
+
         // } else {
         //     $expenses = Expense::where('branch', auth()->user()->level)->latest()->get();
         //     $categories = ExpenseCategory::latest()->get();
         //     $branches = Warehouse::latest()->get();
         // }
 
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
-        // dd($categories[0]);
+        if (auth()->user()->is_admin == '1') {
+            $expenses = Expense::latest()->get();
+            $categories = ExpenseCategory::all();
+            $branches = Warehouse::latest()->get();
+        } else {
+            $expenses = Expense::whereIn('branch', $warehousePermission)->latest()->get();
+            $categories = ExpenseCategory::all();
+            $branches = Warehouse::latest()->get();
+        }
+
         return view('expense.expense', [
             "expenses" => $expenses,
             "categories" => $categories,

@@ -103,36 +103,7 @@
                                                     <input type="email" class="form-control" id="email"
                                                         placeholder="Enter email" name="email" required>
                                                 </div>
-                                                {{--
-                                                <div class="form-group">
-                                                    <label for="type">Type</label>
-                                                    <select class="form-control" name="type" id="type">
-                                                        <option>Select user Type</option>
-                                                        <option value="Admin">Admin</option>
-                                                        <option value="Warehouse">Warehouse</option>
-                                                        <option value="Shop">Shop</option>
-                                                        <option value="Cashier">Cashier</option>
-                                                    </select>
-                                                </div> --}}
 
-
-
-
-                                                {{-- <div class="form-group ">
-                                                    <label for="warehouse_id">Location<span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="hidden" id="level" name="level">
-                                                    <select name="level" id="level" class="form-control" required>
-                                                        <option value="" selected>Select Location
-                                                        </option>
-                                                        <option>Default
-                                                        </option>
-                                                        @foreach ($branchs as $branch)
-                                                            <option value="{{ $branch->id }}">{{ $branch->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div> --}}
 
                                                 <div class="form-group">
                                                     <label for="password">Password</label>
@@ -205,16 +176,27 @@
 
                                                     </td>
                                                     <td>
-                                                        @if ($showUser->level == 'Default')
-                                                            {{ $showUser->level }}
-                                                        @else
-                                                            @foreach ($branchs as $branch)
-                                                                @if ($showUser->level == $branch->id)
-                                                                    {{ $branch->name }}
-                                                                @endif
+                                                        @php
+                                                            $levelIds = json_decode($showUser->level, true); //
+                                                        @endphp
+
+                                                        @if (is_array($levelIds) && count($levelIds) > 0)
+                                                            @foreach ($levelIds as $key => $levelId)
+                                                                @foreach ($branchs as $branch)
+                                                                    @if ($levelId == $branch->id)
+                                                                        {{ $branch->name }}
+                                                                        @if ($key < count($levelIds) - 1)
+                                                                            ,
+                                                                        @endif
+                                                                    @endif
+                                                                @endforeach
                                                             @endforeach
+                                                        @else
+                                                            {{ $showUser->level }}
                                                         @endif
                                                     </td>
+
+
                                                     <td>{{ $showUser->created_at }}</td>
                                                     <td>
 

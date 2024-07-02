@@ -124,13 +124,30 @@
 
                                 <div class="text-left custom-file">
 
-                                    {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin' || Auth::user()->type == 'Warehouse') --}}
-                                    <label for="warehouse">Choose Location</label>
-                                    <select name="warehouse_id" id="warehouse" class="form-control" required>
-                                        @foreach ($warehouses as $warehouse)
-                                            <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    @if (Auth::user()->is_admin == '1')
+                                        <label for="warehouse">Choose Location</label>
+                                        <select name="warehouse_id" id="warehouse" class="form-control" required>
+                                            @foreach ($warehouses as $warehouse)
+                                                <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    @else
+                                        <label for="warehouse">Choose Location</label>
+                                        <select name="warehouse_id" id="warehouse" class="form-control" required>
+                                            @php
+                                                $userPermissions = auth()->user()->level
+                                                    ? json_decode(auth()->user()->level)
+                                                    : [];
+                                            @endphp
+                                            @foreach ($warehouses as $warehouse)
+                                                @if (in_array($warehouse->id, $userPermissions))
+                                                    <option value="{{ $warehouse->id }}">{{ $warehouse->name }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+
+                                    @endif
 
 
                                     <div class="p-1 mt-2 text-left custom-file col"
@@ -236,9 +253,9 @@
                                                             class="btn btn-danger btn-sm"
                                                             onclick="return confirm('Are you sure you want to delete this Item ?')"><i
                                                                 class="fa-solid fa-trash"></i></a>
-                                                        <a href="{{ url('in_out', $item->id) }}"
+                                                        {{-- <a href="{{ url('in_out', $item->id) }}"
                                                             class="mt-1 btn btn-info btn-sm">In/Out
-                                                            History </a>
+                                                            History </a> --}}
 
                                                     </td>
                                                 </tr>

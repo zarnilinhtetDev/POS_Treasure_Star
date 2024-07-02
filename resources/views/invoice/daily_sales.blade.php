@@ -83,6 +83,7 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>POS No.</th>
+                                            <th>Location</th>
                                             <th>Date</th>
                                             <th>Sub Total</th>
                                             <th>Discount</th>
@@ -102,7 +103,13 @@
                                             <tr>
                                                 <td>{{ $no }}</td>
                                                 <td>{{ $pos->invoice_no }}</td>
-
+                                                <td>
+                                                    @foreach ($branchs as $branch)
+                                                        @if ($branch->id == $pos->branch)
+                                                            {{ $branch->name }}
+                                                        @endif
+                                                    @endforeach
+                                                </td>
                                                 <td>{{ $pos->created_at->format('m-d-y') }}</td>
                                                 <td>{{ number_format($pos->discount_total + $pos->total) }}</td>
                                                 <td>{{ number_format($pos->discount_total ?? 0) }}</td>
@@ -121,7 +128,7 @@
                                                 $amounttotal += $pos->total;
                                             @endphp
                                         @endforeach
-                                        <td colspan="3" style="text-align:right">Total</td>
+                                        <td colspan="4" style="text-align:right">Total</td>
                                         <td colspan="">{{ number_format($subtotal) }}</td>
                                         <td colspan="">{{ number_format($discounttotal) }}</td>
                                         <td colspan="">{{ number_format($amounttotal) }}</td>

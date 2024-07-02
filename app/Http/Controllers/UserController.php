@@ -18,12 +18,28 @@ class UserController extends Controller
 {
     public function user_register()
     {
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
-        $showUser_datas =  User::latest()->get();
-        $branchs = Warehouse::all();
+        if (auth()->user()->is_admin == '1') {
+            $showUser_datas = User::latest()->get();
+            $branchs = Warehouse::all();
+        } else {
+
+            $allUsers = User::latest()->get();
+            $showUser_datas = $allUsers->filter(function ($user) use ($warehousePermission) {
+                $userPermissions = json_decode($user->level, true);
+                if (is_array($userPermissions)) {
+                    return !empty(array_intersect($userPermissions, $warehousePermission));
+                }
+                return false;
+            });
+
+            $branchs = Warehouse::all();
+        }
 
         return view('user.user', compact('showUser_datas', 'branchs'));
     }
+
 
     public function user_store(Request $request)
     {
@@ -114,7 +130,8 @@ class UserController extends Controller
         $userShow = User::find($id);
 
         $userShow->user_type_id = $request->user_type_id;
-        $userShow->level = $request->level;
+        $userShow->level = $request->input('level', []);
+        $userShow->is_admin = $request->is_admin ?? 0;
         $userShow->permission = $request->input('permission', []);
         $userShow->update();
 

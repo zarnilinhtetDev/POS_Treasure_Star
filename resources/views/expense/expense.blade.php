@@ -120,17 +120,42 @@
                                                     placeholder="Enter name" required autofocus name="name">
                                             </div>
 
-                                            <div class="form-group">
-                                                <label for="category">Category<span class="text-danger">*</span></label>
-                                                <select class="form-control" id="category" required autofocus
-                                                    name="category">
-                                                    <option disabled selected>Select Category</option>
-                                                    @foreach ($categories as $key => $category)
-                                                        <option value="{{ $category['id'] }}">{{ $category['name'] }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                            @if (auth()->user()->is_admin == '1')
+                                                <div class="form-group">
+                                                    <label for="category">Category<span
+                                                            class="text-danger">*</span></label>
+                                                    <select class="form-control" id="category" required autofocus
+                                                        name="category">
+                                                        <option disabled selected>Select Category</option>
+                                                        @foreach ($categories as $key => $category)
+                                                            <option value="{{ $category['id'] }}">
+                                                                {{ $category['name'] }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @else
+                                                <div class="form-group">
+                                                    <label for="category">Category<span
+                                                            class="text-danger">*</span></label>
+                                                    @php
+                                                        $userPermissions = auth()->user()->level
+                                                            ? json_decode(auth()->user()->level)
+                                                            : [];
+                                                    @endphp
+                                                    <select class="form-control" id="category" required autofocus
+                                                        name="category">
+                                                        <option disabled selected>Select Category</option>
+                                                        @foreach ($categories as $key => $category)
+                                                            @if (in_array($category->id, $userPermissions))
+                                                                <option value="{{ $category['id'] }}">
+                                                                    {{ $category['name'] }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @endif
 
                                             <div class="form-group">
                                                 <label for="amount">Amount<span class="text-danger">*</span></label>
@@ -144,26 +169,45 @@
                                                     autofocus name="date">
                                             </div>
 
-                                            {{-- @if (auth()->user()->is_admin == '1' || auth()->user()->type == 'Admin') --}}
-                                            <div class="form-group">
-                                                <label for="branch">Location<span
-                                                        class="text-danger">*</span></label>
-                                                <select name="branch" id="branch" class="form-control" required>
-                                                    <option selected disabled>Select Location</option>
-                                                    @foreach ($branches as $branch)
-                                                        <option value="{{ $branch->id }}">{{ $branch->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            {{-- @else
-                                                <div class="form-group" style="display: none;">
+                                            @if (auth()->user()->is_admin == '1')
+                                                <div class="form-group">
                                                     <label for="branch">Location<span
                                                             class="text-danger">*</span></label>
-                                                    <input class="form-control" type="text" name="branch"
-                                                        id="branch" value="{{ auth()->user()->level }}" required>
+
+                                                    <select name="branch" id="branch" class="form-control"
+                                                        required>
+                                                        <option value="" selected disabled>Select Location
+                                                        </option>
+                                                        @foreach ($branches as $branch)
+                                                            <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
-                                            @endif --}}
+                                            @else
+                                                <div class="form-group">
+                                                    <label for="branch">Location<span
+                                                            class="text-danger">*</span></label>
+
+                                                    <select name="branch" id="branch" class="form-control"
+                                                        required>
+                                                        @php
+                                                            $userPermissions = auth()->user()->level
+                                                                ? json_decode(auth()->user()->level)
+                                                                : [];
+                                                        @endphp
+                                                        <option value="" selected disabled>Select Location
+                                                        </option>
+                                                        @foreach ($branches as $branch)
+                                                            @if (in_array($branch->id, $userPermissions))
+                                                                <option value="{{ $branch->id }}">
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @endif
 
                                             <div class="form-group">
                                                 <label for="amount">Description<span

@@ -28,11 +28,19 @@ class ItemController extends Controller
     // }
     public function index()
     {
-        // Use eager loading to retrieve items along with their related warehouse data
-        $warehouses = Warehouse::all();
-        $items = Item::with('warehouse')->latest()->get();
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+
+        if (auth()->user()->is_admin == '1') {
+            $warehouses = Warehouse::all();
+            $items = Item::with('warehouse')->latest()->get();
+        } else {
+            $warehouses = Warehouse::all();
+            $items = Item::whereIn('warehouse_id', $warehousePermission)->with('warehouse')->latest()->get();
+        }
+
         return view('item.item', compact('items', 'warehouses'));
     }
+
     public function register()
     {
         $units = Unit::all();
@@ -132,40 +140,6 @@ class ItemController extends Controller
     //Excel
     public function fileImport(Request $request)
     {
-
-        $file = fopen(base_path('public/update2.csv'), 'r');
-
-        // $data = fgetcsv($file, 200, ",");
-        // print_r($data);
-        // dd($data);
-        $all_data = array();
-        $array = array();
-        while (($data = fgetcsv($file, 500, ","))) {
-
-            $warehouse = $data[0];
-            $name = $data[1];
-            $bcode = $data[2];
-            $all_data = $warehouse . "," . $name . "," . $bcode;
-            // echo $name;
-            array_push($array, $all_data);
-        }
-        fclose($file);
-        // array_push($array, $all_data);
-        $new_arr = array();
-        foreach ($array as $key => $val) {
-            $new_arr[$key] = explode(",", $val);
-        }
-
-
-        foreach ($new_arr as $key => $val) {
-
-            echo $val[2] . "<br>";
-            $priceupdate = Item::findorfail($val[0]);
-            $priceupdate->price = $val[2];
-            $priceupdate->save();
-        }
-        //print_r($new_arr);
-        dd($new_arr);
         try {
             $request->validate([
                 'warehouse_id' => 'required|exists:warehouses,id',
@@ -179,34 +153,8 @@ class ItemController extends Controller
             $warehouseId = $request->warehouse_id;
             // Get the file from the request
             $file = $request->file('file');
-            ///sayar start///////////////////////////////////////////////////////////////////////////////////
-            // try {
-            //     Excel::load(Input::file('file'), function ($reader) {
-
-            //         foreach ($reader->toArray() as $row) {
-            //             User::firstOrCreate($row);
-            //         }
-            //     });
-            //     \Session::flash('success', 'Users uploaded successfully.');
-            //     return redirect(route('users.index'));
-            // } catch (\Exception $e) {
-            //     \Session::flash('error', $e->getMessage());
-            //     return redirect(route('users.index'));
-            // }
-
-
-
-
-            // If you would like to retrieve a list of
-            // all files within a given directory including all sub-directories
-            //$files = File::allFiles(public_path());
-            ///sayar end///////////////////////////////////////////////////////////////////////////////////
-
-
             // Import the file and associate it with the warehouse
-            //  $import = new ItemsImport($warehouseId);
-
-
+            $import = new ItemsImport($warehouseId);
             Excel::import($import, $file->store('temp'));
             return back()->with('success', 'File Import Is Successfully!');
         } catch (\Exception $e) {

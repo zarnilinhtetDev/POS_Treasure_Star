@@ -100,13 +100,10 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Purchase Order Number</th>
+                                            <th>Location</th>
                                             <th>Supplier Name</th>
                                             <th>Receiving Mode</th>
-                                            <!-- <th>Phone Number</th> -->
-
                                             <th>Total</th>
-
-
                                             <th>Action</th>
 
                                         </tr>
@@ -116,13 +113,19 @@
                                             $no = '1';
                                         @endphp
 
-                                        {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+                                     
                                         @foreach ($po as $pos)
                                             <tr>
 
                                                 <td>{{ $no }}</td>
                                                 <td>{{ $pos->quote_no }}</td>
-
+                                                <td>
+                                                    @foreach ($branchs as $branch)
+                                                        @if ($branch->id == $pos->branch)
+                                                            {{ $branch->name }}
+                                                        @endif
+                                                    @endforeach
+                                                </td>
                                                 <td>{{ $pos->supplier->name ?? 'N/A' }}</td>
                                                 <td>{{ $pos->balance_due }}</td>
 
@@ -148,42 +151,7 @@
                                                 $no++;
                                             @endphp
                                         @endforeach
-                                        {{-- @elseif (Auth::user()->type == 'Warehouse')
-                                        @foreach ($po as $pos)
-                                            @foreach ($pos->po_sells as $sell)
-                                                @if ($sell->warehouse == Auth::user()->level)
-                                                    <tr>
-
-                                                        <td>{{ $no }}</td>
-                                                        <td>{{ $pos->quote_no }}</td>
-
-                                                        <td>{{ $pos->supplier->name ?? 'N/A' }}</td>
-
-
-                                                        <td>{{ $pos->total }}</td>
-                                                        <td>
-                                                            <a href="{{ route('purchase_order_details', $pos->id) }}"
-                                                                class="btn btn-primary btn-sm"><i
-                                                                    class="fa-solid fa-eye"></i></a>
-
-                                                            <a href="{{ route('purchase_order_edit', $pos->id) }}"
-                                                                class="btn btn-success btn-sm"><i
-                                                                    class="fa-solid fa-pen-to-square"></i></a>
-
-
-                                                            <a href="{{ url('purchase_order_delete', $pos->id) }}"
-                                                                class="btn btn-danger btn-sm"
-                                                                onclick="return confirm('Are you sure you want to delete this Purchase Order ?')"><i
-                                                                    class="fa-solid fa-trash"></i></a>
-                                                        </td>
-                                                    </tr>
-                                                    @php
-                                                        $no++;
-                                                    @endphp
-                                                @endif --}}
-                                        {{-- @endforeach
-                                        @endforeach --}}
-                                        {{-- @endif --}}
+                                   
                                     </tbody>
                                 </table>
                             </div>

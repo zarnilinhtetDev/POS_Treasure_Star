@@ -2,8 +2,11 @@
 <HTML>
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
 
@@ -49,29 +52,39 @@
             <div class="col-6">
             </div>
             <div class="gap-2 pt-2 col-6 d-flex align-items-center justify-content-end">
-                <a href="javascript:void(0);" onclick="printReceipt({{ json_encode($invoice) }},{{ json_encode($sells) }})" class="btn btn-primary" style="border-radius:10px;"><i class="fa-solid fa-print"></i> Print</a>
-                <a href="{{ url('daily_sales') }}" class="btn btn-primary" style="border-radius:10px;"><i class="fa-regular fa-calendar-days"></i> Daily Sales</a>
-                <a href="{{ url('pos_register') }}" class="text-white btn btn-primary" style="border-radius:10px;"><i class="fa-solid fa-circle-plus"></i> POS Register</a>
+                <a href="javascript:void(0);"
+                    onclick="printReceipt({{ json_encode($invoice) }},{{ json_encode($sells) }})"
+                    class="btn btn-primary" style="border-radius:10px;"><i class="fa-solid fa-print"></i> Print</a>
+                <a href="{{ url('daily_sales') }}" class="btn btn-primary" style="border-radius:10px;"><i
+                        class="fa-regular fa-calendar-days"></i> Daily Sales</a>
+                <a href="{{ url('pos_register') }}" class="text-white btn btn-primary" style="border-radius:10px;"><i
+                        class="fa-solid fa-circle-plus"></i> POS Register</a>
             </div>
         </div>
-        <div class="mt-5 text-center">
-            <img src="{{ asset('img/tharaphulogo.png') }}" alt="sse pos" width="100" height="60">
-        </div>
-        <div class="row" style="margin-top: 30px;">
-            <h4 class="text-center fw-bold">သရဖူစတိုး</h4>
-            <p class="text-center fw-bold" style="font-size: 14px;">
-                အမှတ်(၃)၊ လမ်းမတော်လမ်း၊အနောက်ရပ်၊သီပေါမြို့။
-                <br>
-                09453131493 , 09679007355 , 09421099135
-            </p>
-        </div>
+        @foreach ($profile as $pic)
+            <div class="mt-5 text-center">
+                <img src="{{ asset('logos/' . ($pic->logos ?? 'null')) }}" width="180" height="120">
+
+            </div>
+            <div class="row" style="margin-top: 30px;">
+                <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
+
+                <p class="text-center fw-bold" style="font-size: 14px;">
+                    {{ $pic->address }}
+                    <br>
+                    {{ $pic->phno1 }}, {{ $pic->phno2 }}
+                </p>
+            </div>
+        @endforeach
+
         <div class="mt-3 row">
             <h6 class="text-center">Sales Receipt<br>
                 <?= $currentDate = date('d-m-Y') ?></h6>
         </div>
 
         <div class="mt-3 row">
-            <p class="fw-bold" style="font-size: 12px;">Sale ID: {{ $invoice->invoice_no }}<br>Employee : {{auth()->user()->name}}</p>
+            <p class="fw-bold" style="font-size: 12px;">Sale ID: {{ $invoice->invoice_no }}<br>Employee :
+                {{ auth()->user()->name }}</p>
             <div class="mt-1 table-responsive">
                 <table class="mt-1" style="font-size: 14px;width:100%">
                     <thead>
@@ -85,42 +98,42 @@
                     <tbody class="text-center" style="height:30px">
 
                         @foreach ($invoices as $invoice)
-                        @foreach ($invoice->sells as $key => $sell)
-                        <tr class="text-start">
-                            <td>{{ $sell->part_number }}</td>
-                            <td>
-                                @if ($invoice->sale_price_category == 'Default')
-                                @if ($invoice->type == 'Whole Sale')
-                                {{ $sell->product_price }}
-                                @else
-                                {{ $sell->retail_price }}
-                                @endif
-                                @elseif ($invoice->sale_price_category == 'Whole Sale')
-                                {{ $sell->product_price }}
-                                @elseif ($invoice->sale_price_category == 'Retail')
-                                {{ $sell->retail_price }}
-                                @else
-                                {{ $sell->retail_price }}
-                                @endif
-                            </td>
-                            <td>{{ $sell->product_qty }}</td>
-                            <td class="text-end">
-                                @if ($invoice->sale_price_category == 'Default')
-                                @if ($invoice->type == 'Whole Sale')
-                                {{ $sell->product_price * $sell->product_qty }}
-                                @else
-                                {{ $sell->retail_price * $sell->product_qty }}
-                                @endif
-                                @elseif ($invoice->sale_price_category == 'Whole Sale')
-                                {{ $sell->product_price * $sell->product_qty }}
-                                @elseif ($invoice->sale_price_category == 'Retail')
-                                {{ $sell->retail_price * $sell->product_qty }}
-                                @else
-                                {{ $sell->retail_price * $sell->product_qty }}
-                                @endif
-                            </td>
-                        </tr>
-                        @endforeach
+                            @foreach ($invoice->sells as $key => $sell)
+                                <tr class="text-start">
+                                    <td>{{ $sell->part_number }}</td>
+                                    <td>
+                                        @if ($invoice->sale_price_category == 'Default')
+                                            @if ($invoice->type == 'Whole Sale')
+                                                {{ $sell->product_price }}
+                                            @else
+                                                {{ $sell->retail_price }}
+                                            @endif
+                                        @elseif ($invoice->sale_price_category == 'Whole Sale')
+                                            {{ $sell->product_price }}
+                                        @elseif ($invoice->sale_price_category == 'Retail')
+                                            {{ $sell->retail_price }}
+                                        @else
+                                            {{ $sell->retail_price }}
+                                        @endif
+                                    </td>
+                                    <td>{{ $sell->product_qty }}</td>
+                                    <td class="text-end">
+                                        @if ($invoice->sale_price_category == 'Default')
+                                            @if ($invoice->type == 'Whole Sale')
+                                                {{ $sell->product_price * $sell->product_qty }}
+                                            @else
+                                                {{ $sell->retail_price * $sell->product_qty }}
+                                            @endif
+                                        @elseif ($invoice->sale_price_category == 'Whole Sale')
+                                            {{ $sell->product_price * $sell->product_qty }}
+                                        @elseif ($invoice->sale_price_category == 'Retail')
+                                            {{ $sell->retail_price * $sell->product_qty }}
+                                        @else
+                                            {{ $sell->retail_price * $sell->product_qty }}
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
                         @endforeach
                     </tbody>
                     <tfoot style="border-top: 2px solid black !important;">

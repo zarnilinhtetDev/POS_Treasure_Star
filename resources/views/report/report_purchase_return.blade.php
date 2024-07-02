@@ -1,5 +1,24 @@
 @include('layouts.header')
 
+
+<style>
+    .nav-tabs .nav-link {
+        color: #007FFF;
+        transition: color 0.3s, background-color 0.3s;
+    }
+
+    .nav-tabs .nav-link:hover {
+        color: #0056b3;
+        background-color: #e6f7ff;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #ffffff;
+        background-color: #007FFF;
+        border-color: #007FFF;
+    }
+</style>
+
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
         <!-- Navbar -->
@@ -49,33 +68,7 @@
             <section class="content">
 
                 <section class="content-header">
-                    <div class="container-fluid">
-                        <div class="mb-2 row">
-                            <div class="col-sm-6">
-                                <h1>Purchase Return Reports</h1>
-                            </div>
-                            <div class="col-sm-6">
-                                <ol class="breadcrumb float-sm-right">
-                                    <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a>
-                                    </li>
-                                    <li class="breadcrumb-item">Purchase Return Reports
-                                    </li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div><!-- /.container-fluid -->
-                </section>
-
-
-
-                <div class="ml-2 container-fluid">
-
-                    <!-- left column -->
-
-                    <!-- general form elements -->
-
-                    <!-- /.modal -->
-                    <div class="container mt-4">
+                    <div class="container mt-3">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('report') ? 'active' : '' }}"
@@ -114,7 +107,19 @@
                                     href="{{ url('report_expense') }}">Expenses</a>
                             </li>
                         </ul>
-                    </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+
+
+
+                <div class="ml-2 container-fluid">
+
+                    <!-- left column -->
+
+                    <!-- general form elements -->
+
+                    <!-- /.modal -->
+
                     <div class="my-5 container-fluid">
                         <div class="row">
                             <div class="col-md-6">
@@ -150,24 +155,17 @@
                                     <thead>
                                         <tr>
                                             <th>No.</th>
-
                                             <th>Purchase Order No.</th>
-                                            <th>Supplier Name</th>
-                                            <th>Phone Number</th>
-                                            <th>Address</th>
+                                            <th>Location</th>
                                             <th>Purchase Return</th>
                                             <th>Total Amount</th>
-
-
-
-
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php
                                             $no = '1';
                                         @endphp
-                                        {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+
                                         @if (!empty($search_pos))
                                             @foreach ($search_pos as $po)
                                                 <tr>
@@ -175,9 +173,14 @@
                                                     <td><a
                                                             href="{{ url('purchase_order_details', $po->id) }}">{{ $po->quote_no }}</a>
                                                     </td>
-                                                    <td>{{ $po->supplier->name ?? 'N/A' }}</td>
-                                                    <td>{{ $po->supplier->phno ?? 'N/A' }}</td>
-                                                    <td>{{ $po->supplier->address ?? 'N/A' }}</td>
+                                                    <td>
+                                                        @foreach ($branchs as $branch)
+                                                            @if ($branch->id == $po->branch)
+                                                                {{ $branch->name }}
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+
                                                     <td>{{ $po->balance_due }}</td>
                                                     <td>{{ $po->total }}</td>
                                                 </tr>
@@ -192,9 +195,14 @@
                                                     <td><a
                                                             href="{{ url('purchase_order_details', $po->id) }}">{{ $po->quote_no }}</a>
                                                     </td>
-                                                    <td>{{ $po->supplier->name ?? 'N/A' }}</td>
-                                                    <td>{{ $po->supplier->phno ?? 'N/A' }}</td>
-                                                    <td>{{ $po->supplier->address ?? 'N/A' }}</td>
+                                                    <td>
+                                                        @foreach ($branchs as $branch)
+                                                            @if ($branch->id == $po->branch)
+                                                                {{ $branch->name }}
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+
                                                     <td>{{ $po->balance_due }}</td>
 
                                                     <td>{{ $po->total }}</td>
@@ -205,61 +213,11 @@
                                             @endforeach
 
                                         @endif
-                                        {{-- @elseif (Auth::user()->type == 'Warehouse' || Auth::user()->type == 'Shop')
-                                        @if (!empty($search_pos))
-                                            @foreach ($search_pos as $po)
-                                                @foreach ($po->po_sells as $po_sell)
-                                                    @if ($po_sell->warehouse == Auth::user()->level)
-                                                        <tr>
-                                                            <td>{{ $no }}</td>
-                                                            <td><a
-                                                                    href="{{ url('purchase_order_details', $po->id) }}">{{ $po->quote_no }}</a>
-                                                            </td>
-                                                            <td>{{ $po->supplier->name ?? 'N/A' }}</td>
-                                                            <td>{{ $po->supplier->phno ?? 'N/A' }}</td>
-                                                            <td>{{ $po->supplier->address ?? 'N/A' }}</td>
-                                                            <td>{{ $po->balance_due }}</td>
-
-                                                            <td>{{ $po->total }}</td>
-                                                        </tr>
-                                                    @endif
-                                                    @php
-                                                        $no++;
-                                                    @endphp
-                                                @endforeach
-                                            @endforeach
-                                        @else
-                                            @foreach ($pos as $po)
-                                                @foreach ($po->po_sells as $po_sell)
-                                                    @if ($po_sell->warehouse == Auth::user()->level)
-                                                        <tr>
-                                                            <td>{{ $no }}</td>
-                                                            <td><a
-                                                                    href="{{ url('purchase_order_details', $po->id) }}">{{ $po->quote_no }}</a>
-                                                            </td>
-                                                            <td>{{ $po->supplier->name ?? 'N/A' }}</td>
-                                                            <td>{{ $po->supplier->phno ?? 'N/A' }}</td>
-                                                            <td>{{ $po->supplier->address ?? 'N/A' }}</td>
-                                                            <td>{{ $po->balance_due }}</td>
-
-                                                            <td>{{ $po->total }}</td>
-                                                        </tr>
-                                                    @endif
-                                                    @php
-                                                        $no++;
-                                                    @endphp
-                                                @endforeach
-                                            @endforeach
-
-                                        @endif
-
-                                        @endif --}}
-
-
 
                                     <tfoot>
                                         <tr>
-                                            <td colspan="6" style="text-align:right">Total</td>
+                                            <td></td>
+                                            <td colspan="3" style="text-align:right">Total</td>
                                             <td colspan="">
                                                 @if (!empty($search_pos))
                                                     {{ $search_total }}

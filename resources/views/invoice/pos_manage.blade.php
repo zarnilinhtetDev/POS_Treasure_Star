@@ -110,6 +110,7 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>POS No.</th>
+                                            <th>Location</th>
                                             <th>Customer Name</th>
                                             <th>Total</th>
                                             <th>Payment Status</th>
@@ -131,7 +132,13 @@
 
                                                 <td>{{ $no }}</td>
                                                 <td> {{ $invoice->invoice_no }}</td>
-
+                                                <td>
+                                                    @foreach ($branchs as $branch)
+                                                        @if ($branch->id == $invoice->branch)
+                                                            {{ $branch->name }}
+                                                        @endif
+                                                    @endforeach
+                                                </td>
                                                 <td>{{ $invoice->customer_name ?? ' N/A' }}</td>
 
                                                 <td>{{ number_format($invoice->total) }}</td>

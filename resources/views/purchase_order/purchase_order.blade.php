@@ -152,48 +152,59 @@
                                                     <label for="cst"
                                                         class="caption">{{ trans('Supplier Name') }}</label>
                                                 </span>
-                                                <select name="supplier_id" id="" class="form-control">
-                                                    <option value="" selected disabled>Choose Supplier
-                                                    </option>
+                                                <select name="supplier_id" id="supplier" class="form-control">
+                                                    <option value="" selected disabled>Choose Supplier</option>
                                                     @foreach ($suppliers as $supplier)
-                                                        <option value="{{ $supplier->id }}">{{ $supplier->name }}
-                                                        </option>
+                                                        <option value="{{ $supplier->id }}"
+                                                            data-location="{{ $supplier->branch }}">
+                                                            {{ $supplier->name }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>
 
 
 
-                                            {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
-                                            <div class="frmSearch col-sm-4">
-                                                <label for="location" style="font-weight:bolder">
-                                                    Location</label>
-                                                <select name="location" id="location" class="mb-4 form-control"
-                                                    required>
+                                            @if (auth()->user()->is_admin == '1')
+                                                <div class="frmSearch col-md-4">
+                                                    <div class="frmSearch col-sm-12">
+                                                        <span style="font-weight:bolder">
+                                                            <label for="cst"
+                                                                class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                        </span>
+                                                        <select name="branch" id="location"
+                                                            class="mb-4 form-control location" required>
+                                                            @foreach ($warehouses as $warehouse)
+                                                                <option value="{{ $warehouse->id }}">
+                                                                    {{ $warehouse->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            @else
+                                                <div class="frmSearch col-md-4">
+                                                    <div class="frmSearch col-sm-12">
+                                                        <span style="font-weight:bolder">
+                                                            <label for="cst"
+                                                                class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                        </span>
+                                                        <select name="branch" id="location"
+                                                            class="form-control location" required>
+                                                            @php
+                                                                $userPermissions = auth()->user()->level
+                                                                    ? json_decode(auth()->user()->level)
+                                                                    : [];
+                                                            @endphp
 
-                                                    @foreach ($warehouses as $warehouse)
-                                                        <option value="{{ $warehouse->id }}">
-                                                            {{ $warehouse->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            {{-- @elseif (Auth::user()->type == 'Warehouse')
-                                            <div class="frmSearch col-sm-6" style="display: none;">
-                                                <label for="location" style="font-weight:bolder">
-                                                    Location</label>
-                                                <select name="location" id="location" class="mb-4 form-control" required>
-
-                                                    @foreach ($warehouses as $warehouse)
-                                                    @if (auth()->user()->level == $warehouse->id)
-                                                    <option value="{{ $warehouse->id }}" selected>
-                                                        {{ $warehouse->name }}
-                                                    </option>
-                                                    @endif
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            @endif --}}
+                                                            @foreach ($warehouses as $branch)
+                                                                @if (in_array($branch->id, $userPermissions))
+                                                                    <option value="{{ $branch->id }}">
+                                                                        {{ $branch->name }}</option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            @endif
 
 
                                             <div class="frmSearch col-sm-4">
@@ -235,7 +246,7 @@
 
 
 
-                                <input type="hidden" value="invoice" name="status">
+                                <input type="hidden" value="PO" name="status">
 
                                 <div class="row " style="margin-top:1vh;">
                                     <!-- <table class="table-responsive tfr my_stripe"> -->
@@ -841,6 +852,34 @@
                     $("#supplier_box").hide(); // Hide the supplier_box if balance_due is not empty
                 }
             });
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const locationSelect = document.getElementById('location');
+            const supplierSelect = document.getElementById('supplier');
+            const allSuppliers = Array.from(supplierSelect.options);
+
+            const filterSuppliers = (selectedLocation) => {
+                // Clear existing supplier options except the first one
+                supplierSelect.innerHTML = '<option value="" selected disabled>Choose Supplier</option>';
+
+                // Filter suppliers based on the selected location
+                allSuppliers.forEach(option => {
+                    if (option.dataset.location === selectedLocation) {
+                        supplierSelect.appendChild(option);
+                    }
+                });
+            };
+
+            locationSelect.addEventListener('change', function() {
+                filterSuppliers(this.value);
+            });
+
+            // Trigger filtering if a location is pre-selected
+            if (locationSelect.value) {
+                filterSuppliers(locationSelect.value);
+            }
         });
     </script>
 

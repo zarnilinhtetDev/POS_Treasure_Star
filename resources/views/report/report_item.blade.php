@@ -1,5 +1,23 @@
 @include('layouts.header')
 
+<style>
+    .nav-tabs .nav-link {
+        color: #007FFF;
+        transition: color 0.3s, background-color 0.3s;
+    }
+
+    .nav-tabs .nav-link:hover {
+        color: #0056b3;
+        background-color: #e6f7ff;
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #ffffff;
+        background-color: #007FFF;
+        border-color: #007FFF;
+    }
+</style>
+
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
         <!-- Navbar -->
@@ -49,27 +67,7 @@
             <section class="content">
 
                 <section class="content-header">
-                    <div class="container-fluid">
-                        <div class="mb-2 row">
-                            <div class="col-sm-6">
-                                <h1>Item Reports</h1>
-                            </div>
-                            <div class="col-sm-6">
-                                <ol class="breadcrumb float-sm-right">
-                                    <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a>
-                                    </li>
-                                    <li class="breadcrumb-item">Item Reports
-                                    </li>
-                                </ol>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-
-
-                <div class="ml-2 container-fluid">
-                    <div class="container mt-4">
+                    <div class="container mt-3">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('report') ? 'active' : '' }}"
@@ -108,7 +106,12 @@
                                     href="{{ url('report_expense') }}">Expenses</a>
                             </li>
                         </ul>
-                    </div>
+                    </div><!-- /.container-fluid -->
+                </section>
+
+
+                <div class="ml-2 container-fluid">
+
 
                     <div class="mt-3 col-md-12">
                         <div class="card ">

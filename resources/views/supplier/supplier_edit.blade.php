@@ -7,7 +7,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
 
                 <li class="nav-item">
@@ -23,7 +24,8 @@
 
 
                 <div class="btn-group">
-                    <button type="button" class="btn dropdown-toggle text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn dropdown-toggle text-white" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         {{ auth()->user()->name }}
                     </button>
                     <div class="dropdown-menu ">
@@ -84,18 +86,69 @@
 
                                             <div class="form-group">
                                                 <label for="name">Name</label>
-                                                <input type="text" class="form-control" id="name" required autofocus name="name" value="{{ $supplier->name }}">
+                                                <input type="text" class="form-control" id="name" required
+                                                    autofocus name="name" value="{{ $supplier->name }}">
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="phno">Phone Number</label>
-                                                <input type="text" class="form-control" id="phone number" name="phno" value="{{ $supplier->phno }}" required>
+                                                <input type="text" class="form-control" id="phone number"
+                                                    name="phno" value="{{ $supplier->phno }}" required>
                                             </div>
 
+                                            @if (auth()->user()->is_admin == '1')
+                                                <div class="form-group">
+                                                    <label for="branch">Location<span
+                                                            class="text-danger">*</span></label>
+
+                                                    <select name="branch" id="branch" class="form-control" required>
+
+                                                        @foreach ($branchs as $branch)
+                                                            @if ($branch->id == $supplier->branch)
+                                                                <option value="{{ $branch->id }}" selected>
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                        @foreach ($branchs as $branch)
+                                                            <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @else
+                                                <div class="form-group">
+                                                    <label for="branch">Location<span
+                                                            class="text-danger">*</span></label>
+
+                                                    <select name="branch" id="branch" class="form-control" required>
+                                                        @php
+                                                            $userPermissions = auth()->user()->level
+                                                                ? json_decode(auth()->user()->level)
+                                                                : [];
+                                                        @endphp
+                                                        @foreach ($branchs as $branch)
+                                                            @if ($branch->id == $supplier->branch)
+                                                                <option value="{{ $branch->id }}" selected>
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                        @foreach ($branchs as $branch)
+                                                            @if (in_array($branch->id, $userPermissions))
+                                                                <option value="{{ $branch->id }}">
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @endif
 
                                             <div class="form-group">
                                                 <label for="address">Address</label>
-                                                <input type="text" class="form-control" id="phone number" name="address" value="{{ $supplier->address }}" required>
+                                                <input type="text" class="form-control" id="phone number"
+                                                    name="address" value="{{ $supplier->address }}" required>
                                             </div>
 
 

@@ -23,17 +23,36 @@ class InvoiceController extends Controller
     public function index()
     {
 
-        $invoices = Invoice::where('status', 'invoice')->latest()->get();
 
-        return view('invoice.invoice_manage', compact('invoices'));
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+
+        if (auth()->user()->is_admin == '1') {
+            $invoices = Invoice::where('status', 'invoice')->latest()->get();
+            $branchs = Warehouse::all();
+        } else {
+            $invoices = Invoice::whereIn('branch', $warehousePermission)->where('status', 'invoice')->latest()->get();
+            $branchs = Warehouse::all();
+        }
+
+        return view('invoice.invoice_manage', compact('invoices', 'branchs'));
     }
 
 
     public function quotation()
     {
-        $quotations = Invoice::where('status', 'quotation')->latest()->get();
+
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+
+        if (auth()->user()->is_admin == '1') {
+            $quotations = Invoice::where('status', 'quotation')->latest()->get();
+            $branchs = Warehouse::all();
+        } else {
+            $quotations = Invoice::whereIn('branch', $warehousePermission)->where('status', 'quotation')->latest()->get();
+            $branchs = Warehouse::all();
+        }
         return view('quotation.quotation_manage', compact(
-            'quotations'
+            'quotations',
+            'branchs'
         ));
     }
 
@@ -66,17 +85,21 @@ class InvoiceController extends Controller
 
     public function pos()
     {
-        // if (auth()->user()->is_admin == '1' || auth()->user()->type == 'Admin') {
-        $invoices = Invoice::where('status', 'pos')->latest()->get();
+
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+
+        if (auth()->user()->is_admin == '1') {
+            $invoices = Invoice::where('status', 'pos')->latest()->get();
+            $branchs = Warehouse::all();
+        } else {
+            $invoices = Invoice::whereIn('branch', $warehousePermission)->where('status', 'pos')->latest()->get();
+            $branchs = Warehouse::all();
+        }
+
         return view('invoice.pos_manage', compact(
-            'invoices'
+            'invoices',
+            'branchs'
         ));
-        // } else {
-        //     $invoices = Invoice::where('status', 'pos')->where('sale_by', auth()->user()->name)->latest()->get();
-        //     return view('invoice.pos_manage', compact(
-        //         'invoices'
-        //     ));
-        // }
     }
 
     public function invoice_register(Request $request)
@@ -103,6 +126,7 @@ class InvoiceController extends Controller
         $invoice->sale_price_category = $request->sale_price_category;
         $invoice->phno  = $request->phno;
         $invoice->status  = $request->status;
+        $invoice->branch  = $request->branch;
         // $invoice->sale_by  = $request->sale_by;
         $invoice->sale_by = auth()->user()->name;
         $invoice->location = $request->location;
@@ -189,10 +213,11 @@ class InvoiceController extends Controller
     public function customer_service_search(Request $request)
     {
         $data = Customer::select('name', 'phno')
+            ->where('branch', $request->location)
             ->where('name', 'LIKE', '%' . $request->get('query') . '%')
             ->orWhere('phno', 'LIKE', '%' . $request->get('query') . '%')
             ->get(); // Retrieve all matching records
-
+        info($request->location);
         return response()->json($data);
     }
 
@@ -201,7 +226,7 @@ class InvoiceController extends Controller
     {
 
         $product = Customer::where('name', $request->model)->orWhere('phno', $request->model)
-
+            ->where('branch', $request->location)
             ->orderBy('created_at', 'desc')
             ->first();
         if (!$product) {
@@ -209,7 +234,6 @@ class InvoiceController extends Controller
         }
         $responseData = [
             'customer' => $product,
-
         ];
 
         return response()->json($responseData);
@@ -225,25 +249,19 @@ class InvoiceController extends Controller
     }
     public function invoice_delete($id)
     {
-        // Find the invoice by its ID
         $invoice = Invoice::find($id);
 
-        // Check if the invoice exists
         if ($invoice) {
-            // Delete related Sell records
             Sell::where('invoiceid', $id)->delete();
 
-            // Delete the invoice
             $invoice->delete();
 
-            // Determine the redirection based on the invoice status
             if ($invoice->status == 'pos') {
                 return back()->with('success', 'POS Deleted Successful!');
             } else {
                 return redirect('/invoice')->with('success', 'Invoice Deleted Successful!');
             }
         } else {
-            // Handle the case where the invoice does not exist
             return redirect('/invoice')->with('error', 'Invoice Not Found!');
         }
     }
@@ -310,6 +328,7 @@ class InvoiceController extends Controller
         $invoice->sub_total  = $request->sub_total;
         $invoice->total  = $request->total;
         $invoice->location = $request->location;
+        $invoice->branch  = $request->branch;
         $invoice->balance_due  = $request->balance_due;
         $invoice->discount_total  = $request->discount;
         $invoice->deposit  = $request->paid;
@@ -390,9 +409,8 @@ class InvoiceController extends Controller
                 continue;
             }
         }
-        $invoice_no = count($invoice) + 1;
+        $invoice_no =  "Invoice-" . count($invoice) + 1;
         $quotation = Invoice::find($id);
-
         $quotation->status = 'invoice';
         $quotation->invoice_no = $invoice_no;
         $quotation->invoice_date = Carbon::today()->format('Y-m-d');
@@ -504,13 +522,19 @@ class InvoiceController extends Controller
     }
     public function daily_sales()
     {
-        // if (auth()->user()->type == '0' || auth()->user()->type == 'Admin') {
-        $daily_pos = Invoice::whereDate('created_at', Carbon::today())->where('status', 'pos')->get();
-        // } else {
-        //     $daily_pos = Invoice::whereDate('created_at', Carbon::today())->where('status', 'pos')->where('sale_by', auth()->user()->name)->get();
-        // }
-        // $daily_pos = Invoice::whereDate('created_at', Carbon::today())->where('status', 'pos')->get();
-        return view('invoice.daily_sales', compact('daily_pos'));
+
+
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+
+        if (auth()->user()->is_admin == '1') {
+            $daily_pos = Invoice::whereDate('created_at', Carbon::today())->where('status', 'pos')->get();
+            $branchs = Warehouse::all();
+        } else {
+            $daily_pos = Invoice::whereDate('created_at', Carbon::today())->whereIn('branch', $warehousePermission)->where('status', 'pos')->get();
+            $branchs = Warehouse::all();
+        }
+
+        return view('invoice.daily_sales', compact('daily_pos', 'branchs'));
     }
     public function item_search(Request $request)
     {
@@ -539,39 +563,83 @@ class InvoiceController extends Controller
     {
         $quotation = Invoice::find($id);
         $sells = Sell::where('invoiceid', $id)->get();
-        return view('quotation.quotation_details', compact('quotation', 'sells'));
+        $profile = UserProfile::all();
+        return view('quotation.quotation_details', compact('quotation', 'sells', 'profile'));
     }
 
     public function sale_return()
     {
-        $today = Carbon::today();
-        $po = PurchaseOrder::where('quote_no', 'like', 'SR%')
-            ->whereDate('created_at', $today)
-            ->latest()
-            ->get();
 
-        $po_total = PurchaseOrder::where('quote_no', 'like', 'SR%')
-            ->whereDate('created_at', $today)
-            ->sum('total');
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
-        return view('invoice.sale_return', compact('po', 'po_total'));
+        if (auth()->user()->is_admin == '1') {
+            $today = Carbon::today();
+            $po = PurchaseOrder::where('quote_no', 'like', 'SR%')
+                ->whereDate('created_at', $today)
+                ->latest()
+                ->get();
+
+            $po_total = PurchaseOrder::where('quote_no', 'like', 'SR%')
+                ->whereDate('created_at', $today)
+                ->sum('total');
+            $branchs = Warehouse::all();
+        } else {
+            $today = Carbon::today();
+            $po = PurchaseOrder::where('quote_no', 'like', 'SR%')
+                ->whereDate('created_at', $today)
+                ->whereIn('branch', $warehousePermission)
+                ->latest()
+                ->get();
+
+            $po_total = PurchaseOrder::where('quote_no', 'like', 'SR%')
+                ->whereDate('created_at', $today)
+                ->whereIn('branch', $warehousePermission)
+                ->sum('total');
+            $branchs = Warehouse::all();
+        }
+
+        return view('invoice.sale_return', compact('po', 'po_total', 'branchs'));
     }
 
     public function sale_return_search(Request $request)
     {
-        $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
-        $endDate = Carbon::parse($request->input('end_date'))->endOfDay();
 
-        $po = PurchaseOrder::where('quote_no', 'like', 'SR%')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->latest()
-            ->get();
 
-        $po_total = PurchaseOrder::where('quote_no', 'like', 'SR%')
-            ->whereBetween('created_at', [$startDate, $endDate])
-            ->sum('total');
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
-        return view('invoice.sale_return', compact('po', 'po_total'));
+        if (auth()->user()->is_admin == '1') {
+            $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
+            $endDate = Carbon::parse($request->input('end_date'))->endOfDay();
+
+            $po = PurchaseOrder::where('quote_no', 'like', 'SR%')
+                ->whereBetween('po_date', [$startDate, $endDate])
+                ->latest()
+                ->get();
+
+            $po_total = PurchaseOrder::where('quote_no', 'like', 'SR%')
+                ->whereBetween('po_date', [$startDate, $endDate])
+                ->sum('total');
+            $branchs = Warehouse::all();
+        } else {
+
+            $startDate = Carbon::parse($request->input('start_date'))->startOfDay();
+            $endDate = Carbon::parse($request->input('end_date'))->endOfDay();
+
+            $po = PurchaseOrder::where('quote_no', 'like', 'SR%')
+                ->whereBetween('po_date', [$startDate, $endDate])
+                ->whereIn('branch', $warehousePermission)
+                ->latest()
+                ->get();
+
+            $po_total = PurchaseOrder::where('quote_no', 'like', 'SR%')
+                ->whereBetween('po_date', [$startDate, $endDate])
+                ->whereIn('branch', $warehousePermission)
+                ->sum('total');
+            $branchs = Warehouse::all();
+        }
+
+
+        return view('invoice.sale_return', compact('po', 'po_total', 'branchs'));
     }
 
 

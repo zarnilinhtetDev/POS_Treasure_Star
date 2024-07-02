@@ -13,7 +13,14 @@ class WarehouseController extends Controller
 {
     public function index()
     {
-        $warehouses = Warehouse::all();
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+
+        if (auth()->user()->is_admin == '1') {
+            $warehouses = Warehouse::all();
+        } else {
+            $warehouses = Warehouse::whereIn('id', $warehousePermission)->get();
+        }
+
         return view('warehouse.warehouse', compact('warehouses'));
     }
     public function warehouse_register(Request $request, Warehouse $warehouse)
@@ -113,9 +120,10 @@ class WarehouseController extends Controller
                 $item->reorder_level_stock = $item_from->reorder_level_stock;
                 $item->retail_price = $item_from->retail_price;
                 $item->wholesale_price = $item_from->wholesale_price;
+                $item->buy_price = $item_from->buy_price;
+                $item->item_unit = $item_from->item_unit;
                 $item->parent_id
                     = $lastItem->id + 1;
-
 
                 $item->quantity = $request->product_qty[$i];
                 $item->warehouse_id = $request->to_location;
@@ -161,32 +169,41 @@ class WarehouseController extends Controller
     }
     public function show_history()
     {
-        // $location_from_name = "";
-        // $location_to_name = "";
-        // $histories = TransferHistory::all();
-        // foreach ($histories as $history)
-        //     $from = Warehouse::find($history->from_location);
 
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
-        // $to = Warehouse::find($history->to_location);
-        $location_names = [];
-        $histories = TransferHistory::all();
+        if (auth()->user()->is_admin == '1') {
+            $location_names = [];
+            $histories = TransferHistory::all();
 
-        foreach ($histories as $history) {
-            $from = Warehouse::find($history->from_location);
-            $to = Warehouse::find($history->to_location);
+            foreach ($histories as $history) {
+                $from = Warehouse::find($history->from_location);
+                $to = Warehouse::find($history->to_location);
 
-            // Check if $from and $to are not null before accessing their properties
-            if ($from && $to) {
-                // Store location names along with history ID in the associative array
-                $location_names[$history->id] = [
-                    'from' => $from->name,
-                    'to' => $to->name
-                ];
+                // Check if $from and $to are not null before accessing their properties
+                if ($from && $to) {
+                    // Store location names along with history ID in the associative array
+                    $location_names[$history->id] = [
+                        'from' => $from->name,
+                        'to' => $to->name
+                    ];
+                }
+            }
+        } else {
+            $location_names = [];
+            $histories = TransferHistory::whereIn('from_location', $warehousePermission)->get();
+
+            foreach ($histories as $history) {
+                $from = Warehouse::find($history->from_location);
+                $to = Warehouse::find($history->to_location);
+                if ($from && $to) {
+                    $location_names[$history->id] = [
+                        'from' => $from->name,
+                        'to' => $to->name
+                    ];
+                }
             }
         }
-
-
 
         return view('warehouse.transfer_history', compact('histories', 'location_names'));
     }

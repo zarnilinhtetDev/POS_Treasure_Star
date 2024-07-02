@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\Invoice;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
@@ -11,8 +12,20 @@ class CustomerController extends Controller
     //index
     public function index()
     {
-        $customers = Customer::latest()->get();
-        return view('customer.customer', compact('customers'));
+
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+
+        if (auth()->user()->is_admin == '1') {
+            $customers = Customer::latest()->get();
+            $branchs = Warehouse::all();
+        } else {
+            $branchs = Warehouse::all();
+            $customers = Customer::whereIn('branch', $warehousePermission)->latest()->get();
+            $branchs = Warehouse::all();
+        }
+
+
+        return view('customer.customer', compact('customers', 'branchs'));
     }
 
     public function credit($id)
@@ -34,6 +47,7 @@ class CustomerController extends Controller
                     'phno' => 'required',
                     'type' => 'required',
                     'address' => 'required',
+                    'branch' => 'required',
                 ],
                 ['type.required' => 'Customer Type is required']
             );
@@ -48,7 +62,8 @@ class CustomerController extends Controller
     public function edit(Request $request, $id)
     {
         $showCustomer = Customer::find($id);
-        return view('customer.customer_edit', compact('showCustomer'));
+        $branchs = Warehouse::all();
+        return view('customer.customer_edit', compact('showCustomer', 'branchs'));
     }
     public function update($id, Request $request)
     {

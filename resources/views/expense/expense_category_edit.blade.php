@@ -121,27 +121,58 @@
                                                 <textarea class="form-control" id="category" placeholder="Enter category description" required autofocus
                                                     name="category" rows="3">{{ $expense->category }}</textarea>
                                             </div>
-                                            {{-- @if (auth()->user()->is_admin == '1' || auth()->user()->type == 'Admin') --}}
-                                            <div class="form-group">
-                                                <label for="branch">Location<span class="text-danger">*</span></label>
-                                                <select name="branch" id="branch" class="form-control" required>
-                                                    <option selected disabled>Select Location</option>
-                                                    @foreach ($branches as $branch)
-                                                        <option value="{{ $branch->id }}"
-                                                            {{ $branch->id == $expense->branch ? 'selected' : '' }}>
-                                                            {{ $branch->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            {{-- @else
-                                                <div class="form-group" style="display: none;">
+
+                                            @if (auth()->user()->is_admin == '1')
+                                                <div class="form-group">
                                                     <label for="branch">Location<span
                                                             class="text-danger">*</span></label>
-                                                    <input class="form-control" type="text" name="branch"
-                                                        id="branch" value="{{ auth()->user()->level }}">
+
+                                                    <select name="branch" id="branch" class="form-control" required>
+                                                        @foreach ($branches as $branch)
+                                                            @if ($branch->id == $expense->branch)
+                                                                <option value="{{ $branch->id }}" selected>
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                        @foreach ($branches as $branch)
+                                                            <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
-                                            @endif --}}
+                                            @else
+                                                <div class="form-group">
+                                                    <label for="branch">Location<span
+                                                            class="text-danger">*</span></label>
+
+                                                    <select name="branch" id="branch" class="form-control" required>
+                                                        @php
+                                                            $userPermissions = auth()->user()->level
+                                                                ? json_decode(auth()->user()->level)
+                                                                : [];
+                                                        @endphp
+                                                        @foreach ($branches as $branch)
+                                                            @if ($branch->id == $expense->branch)
+                                                                <option value="{{ $branch->id }}" selected>
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                        @foreach ($branches as $branch)
+                                                            @if (in_array($branch->id, $userPermissions))
+                                                                <option value="{{ $branch->id }}">
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @endif
+
+
+
+
                                             <div class="modal-footer justify-content-between">
                                                 <a href="{{ url('expense_category') }}"><button type="button"
                                                         class="btn btn-dark">Back</button></a>

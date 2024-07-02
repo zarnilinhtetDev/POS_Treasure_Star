@@ -109,14 +109,11 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Quotation No.</th>
+                                            <th>Location</th>
                                             <th>Customer Name</th>
-
-
                                             <th>Quotation Date</th>
-
                                             <th>Total</th>
                                             <th>Tools</th>
-
                                             <th>Action</th>
 
                                         </tr>
@@ -130,7 +127,13 @@
 
                                                 <td>{{ $no }}</td>
                                                 <td>{{ $quotation->quote_no }}</td>
-
+                                                <td>
+                                                    @foreach ($branchs as $branch)
+                                                        @if ($branch->id == $quotation->branch)
+                                                            {{ $branch->name }}
+                                                        @endif
+                                                    @endforeach
+                                                </td>
                                                 <td>{{ $quotation->customer_name }}</td>
 
                                                 <td>{{ $quotation->quote_date }}</td>
