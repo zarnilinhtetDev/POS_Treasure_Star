@@ -162,7 +162,7 @@
                                             <th>Phone Number</th>
                                             <th>Customer Type</th>
                                             <th>Address</th>
-                                            <th>Sale Return</th>
+                                            <th>Date</th>
                                             <th>Payment Method</th>
 
                                             <th>Total Amount</th>
@@ -188,7 +188,7 @@
                                                     <td>{{ $invoice->phno }}</td>
                                                     <td>{{ $invoice->type }}</td>
                                                     <td>{{ $invoice->address }}</td>
-                                                    <td>{{ $invoice->balance_due }}</td>
+                                                    <td>{{ $invoice->invoice_date }}</td>
                                                     <td>{{ $invoice->payment_method }}</td>
                                                     <td>{{ $invoice->total }}</td>
                                                 </tr>
@@ -212,7 +212,8 @@
                                                     <td>{{ $invoice->phno }}</td>
                                                     <td>{{ $invoice->type }}</td>
                                                     <td>{{ $invoice->address }}</td>
-                                                    <td>{{ $invoice->balance_due }}</td>
+                                                                                                        <td>{{ $invoice->invoice_date }}</td>
+
                                                     <td>{{ $invoice->payment_method }}</td>
 
                                                     <td>{{ $invoice->total }}</td>
