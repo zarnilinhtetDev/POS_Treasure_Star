@@ -29,7 +29,7 @@
 </head>
 <style>
     body {
-        background-image: linear-gradient(#A8F0FD, #0047AA);
+        background-image: linear-gradient(#0047AA,#A8F0FD );
         background-size: cover;
         background-repeat: no-repeat;
 
@@ -42,14 +42,18 @@
 
 <body class="">
     <div class="">
-        {{-- <div>
+        <div>
             <a href="/">
-                <img src="{{ asset('image/prime.png') }}" alt="" width="130px">
-        </a>
-    </div> --}}
+                {{-- <img src="{{ asset('img/navlogo.png') }}" alt="" width="130px"> --}}
+            </a>
+        </div>
         <div class="container">
-            <div class="row justify-content-center" style="margin-top: 15%">
+            <div class="p-2 text-center" style="margin-top: 13%">
+                        <img src="{{ asset('img/navlogo.png') }}" alt="Login Image" width="200px">
+                    </div>
+            <div class="row justify-content-center" >
                 <div class="mx-auto my-auto card col-md-5" style="border-radius: 10px">
+
                     <div class="p-2">
                         {{ $slot }}
                     </div>
@@ -57,11 +61,6 @@
             </div>
         </div>
 
-
-
-        {{-- <div class="mt-5 card col-md-4"> --}}
-
-        {{-- </div> --}}
     </div>
 </body>
 
