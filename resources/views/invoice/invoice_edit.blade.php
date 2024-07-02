@@ -83,9 +83,9 @@
                             name="payment_method" required>
                             <option value="{{ $invoice->payment_method }}" selected>{{ $invoice->payment_method }}
                             </option>
-                            <option value="Cash">Cash</option>
-                            <option value="Credit">Credit</option>
-                            <option value="Consignment Terms">Consignment Terms</option>
+                         <option value="Cash">Cash</option>
+                            <option value="K Pay">K Pay</option>
+                            <option value="Wave">Wave</option>
                         </select>
                     </div>
 

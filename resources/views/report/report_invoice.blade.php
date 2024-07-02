@@ -163,6 +163,8 @@
                                             <th>Customer Type</th>
                                             <th>Address</th>
                                             <th>Sale Return</th>
+                                            <th>Payment Method</th>
+
                                             <th>Total Amount</th>
                                         </tr>
                                     </thead>
@@ -187,6 +189,7 @@
                                                     <td>{{ $invoice->type }}</td>
                                                     <td>{{ $invoice->address }}</td>
                                                     <td>{{ $invoice->balance_due }}</td>
+                                                    <td>{{ $invoice->payment_method }}</td>
                                                     <td>{{ $invoice->total }}</td>
                                                 </tr>
                                                 @php
@@ -210,6 +213,8 @@
                                                     <td>{{ $invoice->type }}</td>
                                                     <td>{{ $invoice->address }}</td>
                                                     <td>{{ $invoice->balance_due }}</td>
+                                                    <td>{{ $invoice->payment_method }}</td>
+
                                                     <td>{{ $invoice->total }}</td>
                                                 </tr>
                                                 @php
@@ -221,7 +226,7 @@
                                     <tfoot>
                                         <tr>
                                             <td></td>
-                                            <td colspan="7" style="text-align:right">Total</td>
+                                            <td colspan="8" style="text-align:right">Total</td>
                                             <td colspan="">
                                                 @if (!empty($search_invoices))
                                                     {{ $search_total }}@else{{ $total }}
@@ -267,13 +272,23 @@
 
 
 
-    <script>
+   <script>
         $(function() {
             $("#example1").DataTable({
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
                 "pageLength": 30,
+                "buttons": [{
+                        extend: 'excelHtml5',
+                        text: 'Excel',
+                        filename: 'report_invoices', // Set filename here
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: ' PDF'
+                    }
+                ]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         });
     </script>

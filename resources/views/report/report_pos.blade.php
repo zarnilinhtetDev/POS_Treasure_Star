@@ -305,17 +305,26 @@
 
 
 
-    <script>
+  <script>
         $(function() {
             $("#example1").DataTable({
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
                 "pageLength": 30,
+                "buttons": [{
+                        extend: 'excelHtml5',
+                        text: 'Excel',
+                        filename: 'report_pos', // Set filename here
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: ' PDF'
+                    }
+                ]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         });
     </script>
-
 
 </body>
 

@@ -71,12 +71,7 @@
                 <div class="container-fluid">
                     <div class="row justify-content-center d-flex">
 
-
                     </div>
-
-
-
-                    <!-- /.modal -->
                     <div class="mt-3 col-md-12">
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -109,7 +104,9 @@
                                             <th>Customer Name</th>
                                             <th>Register Mode</th>
                                             <th>Total</th>
-                                            <th>Payment Status</th>
+                                            <th> Status</th>
+                                            <th>Payment Method</th>
+
                                             <th> Date</th>
                                             <th>Action</th>
 
@@ -136,12 +133,17 @@
 
                                                 <td>{{ $invoice->total }}</td>
                                                 @if ($invoice->total == $invoice->deposit)
-                                                    <td>Paid</td>
+                                                       <td>  <span class="badge badge-success text-white"> Paid</span>
+                                                   </td>
                                                 @elseif($invoice->total > $invoice->deposit && $invoice->deposit > 0)
-                                                    <td>Partial Paid</td>
+                                                    <td>
+
+                                                        <span class="badge badge-warning text-white">Partial Paid</span>
+                                                    </td>
                                                 @else
-                                                    <td>Unpaid</td>
+                                                    <td><span class="badge badge-danger text-white">UnPaid</span></td>
                                                 @endif
+                                                <td>{{ $invoice->payment_method }}</td>
                                                 <td>{{ $invoice->invoice_date }}</td>
                                                 <td>
                                                     <a href="{{ url('/invoice_detail', $invoice->id) }}"

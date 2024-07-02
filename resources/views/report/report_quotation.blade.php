@@ -259,14 +259,23 @@
     <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
 
 
-
-    <script>
+<script>
         $(function() {
             $("#example1").DataTable({
                 "responsive": true,
                 "lengthChange": false,
                 "autoWidth": false,
                 "pageLength": 30,
+                "buttons": [{
+                        extend: 'excelHtml5',
+                        text: 'Excel',
+                        filename: 'report_quotation', // Set filename here
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: ' PDF'
+                    }
+                ]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         });
     </script>
