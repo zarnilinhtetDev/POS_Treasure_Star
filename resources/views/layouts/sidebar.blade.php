@@ -162,15 +162,7 @@
                 @endif
 
 
-                @if (in_array('Location', $userPermissions) || auth()->user()->is_admin == '1')
-                    <li class="nav-item">
-                        <a href="{{ url('/warehouse') }}" class="nav-link">
-                            <i class="text-white fa-solid fa-house nav-icon "></i>
-                            <p class="pl-3 text-white">
-                                Location </p>
-                        </a>
-                    </li>
-                @endif
+
 
                 @if (in_array('Transfer Item', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
@@ -221,7 +213,15 @@
                         </ul>
                     </li>
                 @endif
-
+  @if (in_array('Location', $userPermissions) || auth()->user()->is_admin == '1')
+                    <li class="nav-item">
+                        <a href="{{ url('/warehouse') }}" class="nav-link">
+                            <i class="text-white fa-solid fa-house nav-icon "></i>
+                            <p class="pl-3 text-white">
+                                Location </p>
+                        </a>
+                    </li>
+                @endif
                 @if (in_array('Unit', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
                         <a href="{{ url('unit') }}" class="nav-link">

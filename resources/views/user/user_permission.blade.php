@@ -204,10 +204,10 @@
 
                                                     <div class="col-md-6 col-sm-6" style="margin-top: 30px;">
                                                         <button id="addRowBtn" type="button"
-                                                            class="btn btn-primary ">Add Row</button>
+                                                            class="btn btn-primary " title="Add Location Row"><i class="fa-solid fa-plus"></i></button>
 
-                                                        <button id="removeRowBtn" type="button"
-                                                            class="btn btn-danger ">Remove Row</button>
+                                                        <button id="removeRowBtn" type="button" title="Remove Location Row"
+                                                            class="btn btn-danger "><i class="fa-solid fa-xmark"></i></button>
                                                     </div>
 
 
