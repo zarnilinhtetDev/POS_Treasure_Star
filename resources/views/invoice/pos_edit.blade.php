@@ -355,7 +355,7 @@
                                                                     class="form-control productname typeahead"
                                                                     name="part_number[]"
                                                                     value="{{ $sell->part_number }}"
-                                                                    placeholder="{{ trans('Enter Part Number') }}"
+                                                                    placeholder="{{ trans('Enter Item Name') }}"
                                                                     id='item_name-0' autocomplete="off">
                                                             </td>
 

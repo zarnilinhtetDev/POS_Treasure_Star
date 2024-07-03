@@ -283,7 +283,7 @@
                                                         <td><input type="text"
                                                                 class="form-control productname typeahead"
                                                                 name="part_number[]" value="{{ old('part_number') }}"
-                                                                placeholder="{{ trans('Enter Part Number') }}"
+                                                                placeholder="{{ trans('Enter Item Name') }}"
                                                                 id='productname-0' autocomplete="off">
                                                         </td>
 
