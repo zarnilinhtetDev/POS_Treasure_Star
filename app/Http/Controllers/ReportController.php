@@ -12,22 +12,39 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
-    public function report_invoice()
+    public function report_invoice($branch = null)
     {
+        $today = Carbon::today();
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
-        if (auth()->user()->is_admin == '1') {
-            $invoices = Invoice::whereDate('created_at', today())->where('status', 'invoice')->where('balance_due', 'Invoice')->get();
-            $branchs = Warehouse::all();
-            $total = $invoices->sum('total');
-        } else {
-            $invoices = Invoice::whereDate('created_at', today())->where('status', 'invoice')->where('balance_due', 'Invoice')->whereIn('branch', $warehousePermission)->get();
-            $branchs = Warehouse::all();
-            $total = $invoices->sum('total');
+        $invoicesQuery = Invoice::whereDate('created_at', $today)
+            ->where('status', 'invoice');
+
+        if ($branch) {
+            $invoicesQuery->where('branch', $branch);
         }
 
-        return view('report.report_invoice', compact('invoices', 'total', 'branchs'));
+        if (auth()->user()->is_admin == '1' || auth()->user()->level == 'Admin') {
+            $invoices = $invoicesQuery->get();
+        } else {
+            $invoicesQuery->whereIn('branch', $warehousePermission);
+            $invoices = $invoicesQuery->get();
+        }
+
+        $total = $invoices->sum('total');
+        $totalCash = $invoices->where('payment_method', 'Cash')->sum('total');
+        $totalKbz = $invoices->where('payment_method', 'KBZ Pay')->sum('total');
+        $totalCB = $invoices->where('payment_method', 'CB Pay')->sum('total');
+        $totalOther = $invoices->where('payment_method', 'Others')->sum('total');
+
+        $branchs = Warehouse::all();
+        $branchNames = $branchs->pluck('name', 'id');
+
+        $currentBranchName = $branch ? $branchNames[$branch] : 'All Invoices';
+
+        return view('report.report_invoice', compact('invoices', 'total', 'totalCash', 'totalKbz', 'totalCB', 'totalOther', 'branch', 'branchs', 'currentBranchName'));
     }
+
 
     public function report_sale_return()
     {
@@ -75,16 +92,40 @@ class ReportController extends Controller
                 ->where('balance_due', 'PO')
                 ->get();
             $branchs = Warehouse::all();
+            $totalCash = $pos->where('payment_method', 'Cash')->where('balance_due', 'PO')->sum('total');
+            $totalKbz = $pos->where('payment_method', 'K Pay')->where('balance_due', 'PO')->sum('total');
+            $totalCB =  $pos->where('payment_method', 'Wave')->where('balance_due', 'PO')->sum('total');
+            $totalOther =  $pos->where('payment_method', 'Others')->where('balance_due', 'PO')->sum('total');
         } else {
             $pos = PurchaseOrder::whereDate('created_at', today())
                 ->whereIn('branch', $warehousePermission)
                 ->where('balance_due', 'PO')
                 ->get();
             $branchs = Warehouse::all();
+            $totalCash = $pos->where('payment_method', 'Cash')->where('balance_due', 'PO')
+                ->whereIn('branch', $warehousePermission)
+                ->sum('total');
+            $totalKbz = $pos->where('payment_method', 'K Pay')->where('balance_due', 'PO')
+                ->whereIn('branch', $warehousePermission)
+                ->sum('total');
+            $totalCB =  $pos->where('payment_method', 'Wave')->where('balance_due', 'PO')
+                ->whereIn('branch', $warehousePermission)
+                ->sum('total');
+            $totalOther =  $pos->where('payment_method', 'Others')->where('balance_due', 'PO')
+                ->whereIn('branch', $warehousePermission)
+                ->sum('total');
         }
 
         $total = $pos->sum('total');
-        return view('report.report_po', compact('pos', 'total', 'branchs'));
+        return view('report.report_po', compact(
+            'pos',
+            'total',
+            'branchs',
+            'totalCash',
+            'totalKbz',
+            'totalCB',
+            'totalOther',
+        ));
     }
 
     public function report_purchase_return()
@@ -159,31 +200,49 @@ class ReportController extends Controller
     {
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
-        if (auth()->user()->is_admin == '1') {
-            $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
-            $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
-            $search_invoices = Invoice::where('status', 'invoice')
-                ->where('balance_due', 'Invoice')
-                ->whereDate('invoice_date', '>=', $start_date)
-                ->whereDate('invoice_date', '<=', $end_date)
-                ->get();
-            $search_total = $search_invoices->sum('total');
-            $branchs = Warehouse::all();
+        $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
+        $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
+
+        $invoicesQuery = Invoice::where('status', 'invoice')
+            ->where('balance_due', 'Invoice')
+            ->whereDate('invoice_date', '>=', $start_date)
+            ->whereDate('invoice_date', '<=', $end_date);
+
+        if (auth()->user()->is_admin == '1' || auth()->user()->level == 'Admin') {
+            if ($request->has('branch') && !empty($request->input('branch'))) {
+                $invoicesQuery->where('branch', $request->input('branch'));
+            }
         } else {
-            $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
-            $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
-            $search_invoices = Invoice::where('status', 'invoice')
-                ->whereIn('branch', $warehousePermission)
-                ->where('balance_due', 'Invoice')
-                ->whereDate('invoice_date', '>=', $start_date)
-                ->whereDate('invoice_date', '<=', $end_date)
-                ->get();
-            $search_total = $search_invoices->sum('total');
-            $branchs = Warehouse::all();
+            $invoicesQuery->whereIn('branch', $warehousePermission);
         }
 
-        return view('report.report_invoice', compact('search_invoices', 'search_total', 'branchs'));
+        $search_invoices = $invoicesQuery->get();
+
+        $totalCash = $search_invoices->where('payment_method', 'Cash')->sum('total');
+        $totalKbz = $search_invoices->where('payment_method', 'KBZ Pay')->sum('total');
+        $totalCB = $search_invoices->where('payment_method', 'CB Pay')->sum('total');
+        $totalOther = $search_invoices->where('payment_method', 'Others')->sum('total');
+        $search_total = $search_invoices->sum('total');
+
+        $branchs = Warehouse::all();
+        $branchNames = $branchs->pluck('name', 'id');
+
+        $branch = $request->input('branch');
+        $currentBranchName = $branch ? $branchNames->get($branch, 'Unknown Branch') : 'All Invoices';
+
+        return view('report.report_invoice', compact(
+            'search_invoices',
+            'search_total',
+            'branchs',
+            'totalCash',
+            'totalKbz',
+            'totalCB',
+            'totalOther',
+            'currentBranchName'
+        ));
     }
+
+
 
     public function monthly_sale_return(Request $request)
     {
@@ -257,6 +316,10 @@ class ReportController extends Controller
                 ->get();
             $search_total = $search_pos->sum('total');
             $branchs = Warehouse::all();
+            $totalCash = $search_pos->where('payment_method', 'Cash')->where('balance_due', 'PO')->sum('total');
+            $totalKbz = $search_pos->where('payment_method', 'K Pay')->where('balance_due', 'PO')->sum('total');
+            $totalCB =  $search_pos->where('payment_method', 'Wave')->where('balance_due', 'PO')->sum('total');
+            $totalOther =  $search_pos->where('payment_method', 'Others')->where('balance_due', 'PO')->sum('total');
         } else {
             $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
             $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
@@ -267,10 +330,22 @@ class ReportController extends Controller
                 ->get();
             $search_total = $search_pos->sum('total');
             $branchs = Warehouse::all();
+            $totalCash = $search_pos->where('payment_method', 'Cash')->where('balance_due', 'PO')->sum('total');
+            $totalKbz = $search_pos->where('payment_method', 'K Pay')->where('balance_due', 'PO')->sum('total');
+            $totalCB =  $search_pos->where('payment_method', 'Wave')->where('balance_due', 'PO')->sum('total');
+            $totalOther =  $search_pos->where('payment_method', 'Others')->where('balance_due', 'PO')->sum('total');
         }
 
 
-        return view('report.report_po', compact('search_pos', 'search_total', 'branchs'));
+        return view('report.report_po', compact(
+            'search_pos',
+            'search_total',
+            'branchs',
+            'totalCash',
+            'totalKbz',
+            'totalCB',
+            'totalOther',
+        ));
     }
 
     public function monthly_purchase_return(Request $request)
@@ -320,6 +395,10 @@ class ReportController extends Controller
                 ->get();
             $total = $pos_data->sum('pos_data');
             $branchs = Warehouse::all();
+            $totalCash = $pos_data->where('payment_method', 'Cash')->sum('total');
+            $totalKbz = $pos_data->where('payment_method', 'K Pay')->sum('total');
+            $totalCB =  $pos_data->where('payment_method', 'Wave')->sum('total');
+            $totalOther =  $pos_data->where('payment_method', 'Others')->sum('total');
         } else {
             $pos_data = Invoice::whereDate('created_at', today())->where('status', 'POS')->whereIn('branch', $warehousePermission)->get();
             $today = Carbon::today();
@@ -332,9 +411,21 @@ class ReportController extends Controller
                 ->get();
             $total = $pos_data->sum('pos_data');
             $branchs = Warehouse::all();
+            $totalCash = $pos_data->where('payment_method', 'Cash')
+                ->whereIn('branch', $warehousePermission)
+                ->sum('total');
+            $totalKbz = $pos_data->where('payment_method', 'K Pay')
+                ->whereIn('branch', $warehousePermission)
+                ->sum('total');
+            $totalCB =  $pos_data->where('payment_method', 'Wave')
+                ->whereIn('branch', $warehousePermission)
+                ->sum('total');
+            $totalOther =  $pos_data->where('payment_method', 'Others')
+                ->whereIn('branch', $warehousePermission)
+                ->sum('total');
         }
 
-        return view('report.report_pos', compact('pos_data', 'total', 'sale_totals', 'branchs'));
+        return view('report.report_pos', compact('pos_data', 'total', 'sale_totals', 'branchs', 'totalCash', 'totalKbz', 'totalCB', 'totalOther'));
     }
     public function monthly_pos_search(Request $request)
     {
@@ -357,6 +448,10 @@ class ReportController extends Controller
                 ->groupBy('sale_by')
                 ->get();
             $branchs = Warehouse::all();
+            $totalCash = $search_pos->where('payment_method', 'Cash')->sum('total');
+            $totalKbz = $search_pos->where('payment_method', 'K Pay')->sum('total');
+            $totalCB =  $search_pos->where('payment_method', 'Wave')->sum('total');
+            $totalOther =  $search_pos->where('payment_method', 'Others')->sum('total');
         } else {
             $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
             $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
@@ -375,9 +470,13 @@ class ReportController extends Controller
                 ->groupBy('sale_by')
                 ->get();
             $branchs = Warehouse::all();
+            $totalCash = $search_pos->where('payment_method', 'Cash')->sum('total');
+            $totalKbz = $search_pos->where('payment_method', 'K Pay')->sum('total');
+            $totalCB =  $search_pos->where('payment_method', 'Wave')->sum('total');
+            $totalOther =  $search_pos->where('payment_method', 'Others')->sum('total');
         }
 
-        return view('report.report_pos', compact('search_pos', 'search_total', 'sale_totals', 'branchs'));
+        return view('report.report_pos', compact('search_pos', 'search_total', 'sale_totals', 'branchs', 'totalCash', 'totalKbz', 'totalCB', 'totalOther'));
     }
 
 

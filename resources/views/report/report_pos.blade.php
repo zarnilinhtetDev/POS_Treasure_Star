@@ -79,6 +79,10 @@
                                     href="{{ url('report_quotation') }}">Quotations</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}"
+                                    href="{{ url('report_pos') }}">POS</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link {{ request()->is('report_po') ? 'active' : '' }}"
                                     href="{{ url('report_po') }}">Purchase Orders</a>
                             </li>
@@ -94,10 +98,7 @@
                                 <a class="nav-link {{ request()->is('report_item') ? 'active' : '' }}"
                                     href="{{ url('report_item') }}">Items</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}"
-                                    href="{{ url('report_pos') }}">POS</a>
-                            </li>
+
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('sale_return') ? 'active' : '' }}"
                                     href="{{ url('sale_return') }}">Sale Return (POS)</a>
@@ -273,6 +274,47 @@
                             </div>
                             <!-- /.card-body -->
                         </div>
+
+                        <div class="card">
+                            <div class="card-body">
+                                <table class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Payment Method</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1.</td>
+                                            <td>Cash</td>
+                                            <td>{{ number_format($totalCash) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>2.</td>
+                                            <td>K Pay</td>
+                                            <td>{{ number_format($totalKbz) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>3.</td>
+                                            <td>Wave</td>
+                                            <td>{{ number_format($totalCB) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>4.</td>
+                                            <td>Other</td>
+                                            <td>{{ number_format($totalOther) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td colspan="2" style="text-align:right">Total</td>
+                                            <td>{{ number_format($totalCash + $totalKbz + $totalCB + $totalOther) }}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
         </div>
@@ -305,7 +347,7 @@
 
 
 
-  <script>
+    <script>
         $(function() {
             $("#example1").DataTable({
                 "responsive": true,

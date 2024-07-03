@@ -135,7 +135,99 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" id="modal-lg">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"> Register New Customer</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url('customer_register') }}" method="POST">
+                            @csrf
+                            <div class="card-body">
 
+                                <div class="form-group">
+                                    <label for="name">Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="" placeholder="Enter Name"
+                                        required autofocus name="name">
+                                </div>
+
+
+                                <div class="form-group mt-3">
+                                    <label for="phno">Phone Number <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id=""
+                                        placeholder="Enter Phone Number" name="phno" required>
+                                </div>
+
+                                <div class="form-group mt-3">
+                                    <label for="crc">Customer Type </label>
+
+                                    <select name="type" id="" class="form-control" required>
+                                        <option selected disabled>Select Customer Type</option>
+                                        <option value="Retail">Retail</option>
+                                        <option value="Whole Sale">Whole Sale</option>
+                                    </select>
+                                </div>
+
+
+                                @if (auth()->user()->is_admin == '1')
+                                    <div class="form-group mt-3">
+                                        <label for="branch">Location<span class="text-danger">*</span></label>
+
+                                        <select name="branch" id="" class="form-control" required>
+                                            <option value="" selected disabled>Select Location
+                                            </option>
+                                            @foreach ($warehouses as $branch)
+                                                <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @else
+                                    <div class="form-group mt-3">
+                                        <label for="branch">Location<span class="text-danger">*</span></label>
+
+                                        <select name="branch" id="" class="form-control" required>
+                                            @php
+                                                $userPermissions = auth()->user()->level
+                                                    ? json_decode(auth()->user()->level)
+                                                    : [];
+                                            @endphp
+                                            <option value="" selected disabled>Select Location
+                                            </option>
+                                            @foreach ($warehouses as $branch)
+                                                @if (in_array($branch->id, $userPermissions))
+                                                    <option value="{{ $branch->id }}">
+                                                        {{ $branch->name }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
+                                <div class="form-group mt-3">
+                                    <label for="address">Address <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="phone number"
+                                        placeholder="Enter Address" name="address" required>
+                                </div>
+                            </div>
+
+
+
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save </button>
+                    </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
         <form method="post" id="myForm" action="{{ url('invoice_register') }}" enctype="multipart/form-data">
             @csrf
 
@@ -163,10 +255,10 @@
                         <label for="payment_method" style="font-weight:bolder">{{ trans('Payment Methods') }}</label>
                         <select class="mb-4 form-control round" aria-label="Default select example"
                             name="payment_method" required>
-
                             <option value="Cash">Cash</option>
                             <option value="K Pay">K Pay</option>
                             <option value="Wave">Wave</option>
+                            <option value="Others">Others</option>
                         </select>
                     </div>
 
@@ -201,7 +293,12 @@
                                                             <div id="customer-box-result"></div>
                                                         </div>
                                                     </div>
-
+                                                    <div class="col-sm-4 mt-4">
+                                                        <button type="button" data-toggle="modal"
+                                                            data-target="#modal-lg"
+                                                            class="btn btn-info text-white">Customer
+                                                            Register</button>
+                                                    </div>
                                                     <input type="hidden" id="service_id" name="service_id"
                                                         value="0">
 
@@ -663,6 +760,7 @@
 
         </form>
 
+        <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script>
             $(document).ready(function() {
                 let count = 0;

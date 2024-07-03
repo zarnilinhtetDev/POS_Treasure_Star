@@ -65,7 +65,6 @@
         @include('layouts.sidebar') <div class="content-wrapper">
             <!-- Main content -->
             <section class="content">
-
                 <section class="content-header">
                     <div class="container mt-3">
                         <ul class="nav nav-tabs">
@@ -76,6 +75,10 @@
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('report_quotation') ? 'active' : '' }}"
                                     href="{{ url('report_quotation') }}">Quotations</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}"
+                                    href="{{ url('report_pos') }}">POS</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('report_po') ? 'active' : '' }}"
@@ -93,10 +96,7 @@
                                 <a class="nav-link {{ request()->is('report_item') ? 'active' : '' }}"
                                     href="{{ url('report_item') }}">Items</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}"
-                                    href="{{ url('report_pos') }}">POS</a>
-                            </li>
+
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('sale_return') ? 'active' : '' }}"
                                     href="{{ url('sale_return') }}">Sale Return (POS)</a>

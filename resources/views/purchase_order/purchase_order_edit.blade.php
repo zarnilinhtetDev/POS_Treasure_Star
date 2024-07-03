@@ -115,8 +115,9 @@
                             {{ $purchase_orders->payment_method }}
                         </option>
                         <option value="Cash">Cash</option>
-                        <option value="Credit">Credit</option>
-                        <option value="Consignment Terms">Consignment Terms</option>
+                        <option value="K Pay">K Pay</option>
+                        <option value="Wave">Wave</option>
+                        <option value="Others">Others</option>
                     </select>
                 </div>
 

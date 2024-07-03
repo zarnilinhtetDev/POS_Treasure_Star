@@ -172,9 +172,12 @@ Route::middleware('auth')->group(function () {
     Route::get('pos_delete/{id}', [InvoiceController::class, 'pos_delete']);
     Route::post('/suspended', [InvoiceController::class, 'suspended'])->name('suspended');
     Route::get('/suspend_delete/{id}', [InvoiceController::class, 'suspend_delete']);
+
+
     //report
     Route::get('report_expense', [ReportController::class, 'reportExpense']);
     Route::get('report', [ReportController::class, 'report_invoice']);
+    Route::get('/report_invoice/{branch?}', [ReportController::class, 'report_invoice'])->name('report_invoice');
     Route::get('report_quotation', [ReportController::class, 'report_quotation']);
     Route::get('report_po', [ReportController::class, 'report_po']);
     Route::get('report_item', [ReportController::class, 'report_item']);

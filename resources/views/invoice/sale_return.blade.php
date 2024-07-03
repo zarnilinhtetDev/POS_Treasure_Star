@@ -74,6 +74,10 @@
                                     href="{{ url('report_quotation') }}">Quotations</a>
                             </li>
                             <li class="nav-item">
+                                <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}"
+                                    href="{{ url('report_pos') }}">POS</a>
+                            </li>
+                            <li class="nav-item">
                                 <a class="nav-link {{ request()->is('report_po') ? 'active' : '' }}"
                                     href="{{ url('report_po') }}">Purchase Orders</a>
                             </li>
@@ -89,10 +93,7 @@
                                 <a class="nav-link {{ request()->is('report_item') ? 'active' : '' }}"
                                     href="{{ url('report_item') }}">Items</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}"
-                                    href="{{ url('report_pos') }}">POS</a>
-                            </li>
+
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->is('sale_return') ? 'active' : '' }}"
                                     href="{{ url('sale_return') }}">Sale Return (POS)</a>
