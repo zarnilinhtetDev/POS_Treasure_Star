@@ -296,7 +296,7 @@
                                                     <div class="col-sm-4 mt-4">
                                                         <button type="button" data-toggle="modal"
                                                             data-target="#modal-lg"
-                                                            class="btn btn-info text-white">Customer
+                                                            class="btn btn-primary text-white">Customer
                                                             Register</button>
                                                     </div>
                                                     <input type="hidden" id="service_id" name="service_id"

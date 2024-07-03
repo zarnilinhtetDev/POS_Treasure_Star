@@ -247,7 +247,7 @@
                                                     <div class="col-sm-2 mt-4">
                                                         <button type="button" data-toggle="modal"
                                                             data-target="#modal-lg"
-                                                            class="btn btn-info text-white">Customer
+                                                            class="btn btn-primary text-white">Customer
                                                             Register</button>
                                                     </div>
                                                     <div class="frmSearch col-sm-3">
