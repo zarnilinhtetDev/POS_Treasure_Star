@@ -49,9 +49,13 @@
     <div class="container-fluid " id="content">
 
 
-        <h1 class="mx-4 mt-3">
-            Suspend
-        </h1>
+
+        <div class="row">
+            <div class="col d-flex justify-content-between align-items-center mx-4 mt-3">
+                <h1>Suspend</h1>
+                <a href="{{ url('pos') }}" class="btn btn-danger">Back</a>
+            </div>
+        </div>
 
         <form method="post" id="myForm" action="{{ url('/invoice_update', $invoice->id) }}"
             enctype="multipart/form-data">
@@ -606,7 +610,7 @@
                                                                 type="submit">Confirm</button>
 
 
-                                                            <a href="{{ url('invoice') }}" type="submit"
+                                                            <a href="{{ url('pos') }}" type="submit"
                                                                 class="mt-3 btn btn-danger">Cancel
                                                             </a>
 
@@ -953,6 +957,10 @@
                 });
                 // Initialize typeahead for the first row
                 initializeTypeahead(count);
+
+                $(document).ready(function() {
+                    calculateTotals();
+                });
 
                 function calculateTotals() {
                     let total = 0;

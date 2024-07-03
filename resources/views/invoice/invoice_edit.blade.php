@@ -49,9 +49,13 @@
     <div class="container-fluid" id="content">
 
 
-        <h1 class="mx-4 mt-3">
-            Invoice Edit
-        </h1>
+        <div class="row">
+            <div class="col d-flex justify-content-between align-items-center mx-4 mt-3">
+                <h1>Invoice Edit</h1>
+                <a href="{{ url('invoice') }}" class="btn btn-danger">Back</a>
+            </div>
+        </div>
+
 
         <form method="post" id="myForm" action="{{ url('/invoice_update', $invoice->id) }}"
             enctype="multipart/form-data">
@@ -408,6 +412,9 @@
                                                                     </span>
                                                                 </strong>
                                                             </td>
+                                                            <td><button type="submit"
+                                                                    class="btn btn-danger remove_item_btn"
+                                                                    id="removebutton">Remove</button></td>
                                                             <input type="hidden" class="form-control vat "
                                                                 name="product_tax[]" id="vat-0" value="0">
                                                             <input type="hidden" name="total_tax[]" id="taxa-0"
@@ -669,8 +676,7 @@
                         location: Selectedlocation,
                     },
                     success: function(data) {
-                        //  itemNameInput.val(data.retail_price);
-
+                       
                         itemNameInput.val(data.wholesale_price);
 
                         partDesc.val(data.descriptions);
@@ -882,19 +888,24 @@
             //     $('#total_total').val(total_total);
             //     $('#total_discount').val('');
             // });
-            $(document).on("click", '#calculate', function(e) {
-                e.preventDefault();
+
+            $(document).ready(function() {
+                calculateTotal();
+
+            });
+
+            function calculateTotal() {
                 let salePriceCategory = $('#sale_price_category').val();
 
-                $('#showitem123 tr').each(function(index) {
+                // Iterate through each row to calculate subtotal for each item
+                $('#showitem123 tr').each(function() {
                     let row = $(this);
                     let qty = parseInt(row.find('.req.amnt').val()) || 0;
                     let price;
 
                     if (salePriceCategory === 'Default') {
                         let cuz_name = $("#type").val();
-                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
-                                .val()) || 0 :
+                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price').val()) || 0 :
                             parseFloat(row.find('.retail_price').val()) || 0;
                     } else if (salePriceCategory === 'Whole Sale') {
                         price = parseFloat(row.find('.price').val()) || 0;
@@ -914,15 +925,15 @@
                 let total = 0;
                 let totalTax = 0;
 
-                $('#showitem123 tr').each(function(index) {
+                // Iterate through each row to calculate the grand total and total tax
+                $('#showitem123 tr').each(function() {
                     let row = $(this);
                     let qty = parseInt(row.find('.req.amnt').val()) || 0;
                     let price;
 
                     if (salePriceCategory === 'Default') {
                         let cuz_name = $("#type").val();
-                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
-                                .val()) || 0 :
+                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price').val()) || 0 :
                             parseFloat(row.find('.retail_price').val()) || 0;
                     } else if (salePriceCategory === 'Whole Sale') {
                         price = parseFloat(row.find('.price').val()) || 0;
@@ -946,7 +957,7 @@
 
                     total += itemTotal;
 
-                    row.find('.ttlText1').text(itemTotal.toFixed(2));
+                    row.find('.ttlText1').text(itemTotal);
                     if (price > 0) {
                         row.find('.ttlText1').show();
                         row.find('.ttlText').hide();
@@ -961,14 +972,19 @@
 
                 let totalTotal = total - totalTax;
 
-                $('#invoiceyoghtml').val(total.toFixed(2));
+                $('#invoiceyoghtml').val(total);
                 $('#commercial_text').val(totalTax.toFixed(2));
                 $('#total').val(totalTotal.toFixed(2));
                 $('#extra_discount').val('');
                 $('#paid').val('');
+                $('#total_total').val(total);
                 $('#balance').val('');
-            });
+            }
 
+            $(document).on("click", '#calculate', function(e) {
+                e.preventDefault();
+                calculateTotal();
+            });
 
         });
     </script>
@@ -1057,12 +1073,6 @@
             });
         });
     </script>
-
-
-
-
-
-
 
     <script>
         $("input").on("change", function() {

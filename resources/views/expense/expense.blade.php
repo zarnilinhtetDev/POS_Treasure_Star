@@ -122,13 +122,50 @@
 
                                             @if (auth()->user()->is_admin == '1')
                                                 <div class="form-group">
+                                                    <label for="branch">Location<span
+                                                            class="text-danger">*</span></label>
+
+                                                    <select name="branch" id="branch" class="form-control" required>
+                                                        <option value="" selected disabled>Select Location
+                                                        </option>
+                                                        @foreach ($branches as $branch)
+                                                            <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @else
+                                                <div class="form-group">
+                                                    <label for="branch">Location<span
+                                                            class="text-danger">*</span></label>
+
+                                                    <select name="branch" id="branch" class="form-control" required>
+                                                        @php
+                                                            $userPermissions = auth()->user()->level
+                                                                ? json_decode(auth()->user()->level)
+                                                                : [];
+                                                        @endphp
+                                                        @foreach ($branches as $branch)
+                                                            @if (in_array($branch->id, $userPermissions))
+                                                                <option value="{{ $branch->id }}">
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @endif
+
+                                            @if (auth()->user()->is_admin == '1')
+                                                <div class="form-group">
                                                     <label for="category">Category<span
                                                             class="text-danger">*</span></label>
                                                     <select class="form-control" id="category" required autofocus
                                                         name="category">
                                                         <option disabled selected>Select Category</option>
                                                         @foreach ($categories as $key => $category)
-                                                            <option value="{{ $category['id'] }}">
+                                                            <option value="{{ $category['id'] }}"
+                                                                data-branch="{{ $category->branch }}">
                                                                 {{ $category['name'] }}
                                                             </option>
                                                         @endforeach
@@ -148,7 +185,8 @@
                                                         <option disabled selected>Select Category</option>
                                                         @foreach ($categories as $key => $category)
                                                             @if (in_array($category->id, $userPermissions))
-                                                                <option value="{{ $category['id'] }}">
+                                                                <option value="{{ $category['id'] }}"
+                                                                    data-branch="{{ $category->branch }}">
                                                                     {{ $category['name'] }}
                                                                 </option>
                                                             @endif
@@ -169,45 +207,6 @@
                                                     autofocus name="date">
                                             </div>
 
-                                            @if (auth()->user()->is_admin == '1')
-                                                <div class="form-group">
-                                                    <label for="branch">Location<span
-                                                            class="text-danger">*</span></label>
-
-                                                    <select name="branch" id="branch" class="form-control"
-                                                        required>
-                                                        <option value="" selected disabled>Select Location
-                                                        </option>
-                                                        @foreach ($branches as $branch)
-                                                            <option value="{{ $branch->id }}">{{ $branch->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            @else
-                                                <div class="form-group">
-                                                    <label for="branch">Location<span
-                                                            class="text-danger">*</span></label>
-
-                                                    <select name="branch" id="branch" class="form-control"
-                                                        required>
-                                                        @php
-                                                            $userPermissions = auth()->user()->level
-                                                                ? json_decode(auth()->user()->level)
-                                                                : [];
-                                                        @endphp
-                                                        <option value="" selected disabled>Select Location
-                                                        </option>
-                                                        @foreach ($branches as $branch)
-                                                            @if (in_array($branch->id, $userPermissions))
-                                                                <option value="{{ $branch->id }}">
-                                                                    {{ $branch->name }}
-                                                                </option>
-                                                            @endif
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            @endif
 
                                             <div class="form-group">
                                                 <label for="amount">Description<span
@@ -338,7 +337,21 @@
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         });
     </script>
+    <script>
+        $(document).ready(function() {
+            $('#branch').on('change', function() {
+                var selectedBranch = $(this).val();
 
+                $('#category option').hide();
+
+                $('#category option[value=""]').show();
+
+                $('#category option[data-branch="' + selectedBranch + '"]').show();
+
+                $('#category').val('');
+            });
+        });
+    </script>
 
 </body>
 

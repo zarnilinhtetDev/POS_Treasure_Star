@@ -349,6 +349,9 @@
                                                                 </span>
                                                             </strong>
                                                         </td>
+                                                        <td><button type="submit"
+                                                                class="btn btn-danger remove_item_btn"
+                                                                id="removebutton">Remove</button></td>
                                                         <input type="hidden" class="form-control vat "
                                                             name="product_tax[]" id="vat-0" value="0">
                                                         <input type="hidden" name="total_tax[]" id="taxa-0"
@@ -595,11 +598,10 @@
                 let itemNameInput = row.find('.price');
                 let partDesc = row.find('.description');
                 let exp_date = row.find('.exp_date');
+                let warehouse = row.find('.warehouse');
                 let item_unit = row.find('.item_unit');
                 let retail_price = row.find('.retail_price');
                 var Selectedlocation = $('#location').val();
-                let warehouse = row.find('.warehouse');
-
                 $.ajax({
                     type: 'POST',
                     url: "{{ route('get-part-data-invoice') }}",
@@ -614,9 +616,9 @@
                         itemNameInput.val(data.wholesale_price);
 
                         partDesc.val(data.descriptions);
-                        warehouse.val(data.warehouse_id);
                         exp_date.val(data.expired_date);
                         item_unit.val(data.item_unit);
+                        warehouse.val(data.warehouse_id);
                         retail_price.val(data.retail_price);
                         if (parseFloat(data.reorder_level_stock) >= parseFloat(data.quantity)) {
                             alert(data.quantity + " quantity!");
@@ -691,11 +693,12 @@
                     '<td><input type="text" class="form-control exp_date " name="exp_date[]" id="exp_date-' +
                     count +
                     '"   autocomplete="off"></td>' +
-                    '<td style ="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
+
+                    '<td style="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
                     count +
                     '"   autocomplete="off"></td>' +
 
-                    '<td style="text-align:center"><span class="currenty"></span><strong><span  class="ttlText1" id="result-' +
+                    '<td style="text-align:center"><span class="currenty"></span><strong><span class="ttlText1" id="result-' +
                     count + '">0</span></strong></td>' +
                     '<input type="hidden" name="total_tax[]" id="taxa-' + count + '" value="0">' +
 
@@ -733,19 +736,25 @@
             });
             // Initialize typeahead for the first row
             initializeTypeahead(count);
-            $(document).on("click", '#calculate', function(e) {
-                e.preventDefault();
+
+
+            $(document).ready(function() {
+                calculateTotal();
+
+            });
+
+            function calculateTotal() {
                 let salePriceCategory = $('#sale_price_category').val();
 
-                $('#showitem123 tr').each(function(index) {
+                // Iterate through each row to calculate subtotal for each item
+                $('#showitem123 tr').each(function() {
                     let row = $(this);
                     let qty = parseInt(row.find('.req.amnt').val()) || 0;
                     let price;
 
                     if (salePriceCategory === 'Default') {
                         let cuz_name = $("#type").val();
-                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
-                                .val()) || 0 :
+                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price').val()) || 0 :
                             parseFloat(row.find('.retail_price').val()) || 0;
                     } else if (salePriceCategory === 'Whole Sale') {
                         price = parseFloat(row.find('.price').val()) || 0;
@@ -765,15 +774,15 @@
                 let total = 0;
                 let totalTax = 0;
 
-                $('#showitem123 tr').each(function(index) {
+                // Iterate through each row to calculate the grand total and total tax
+                $('#showitem123 tr').each(function() {
                     let row = $(this);
                     let qty = parseInt(row.find('.req.amnt').val()) || 0;
                     let price;
 
                     if (salePriceCategory === 'Default') {
                         let cuz_name = $("#type").val();
-                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
-                                .val()) || 0 :
+                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price').val()) || 0 :
                             parseFloat(row.find('.retail_price').val()) || 0;
                     } else if (salePriceCategory === 'Whole Sale') {
                         price = parseFloat(row.find('.price').val()) || 0;
@@ -797,7 +806,7 @@
 
                     total += itemTotal;
 
-                    row.find('.ttlText1').text(itemTotal.toFixed(2));
+                    row.find('.ttlText1').text(itemTotal);
                     if (price > 0) {
                         row.find('.ttlText1').show();
                         row.find('.ttlText').hide();
@@ -813,13 +822,17 @@
                 let totalTotal = total - totalTax;
 
                 $('#invoiceyoghtml').val(total);
-                $('#commercial_text').val(totalTax);
-                $('#total').val(totalTota);
+                $('#commercial_text').val(totalTax.toFixed(2));
+                $('#total').val(totalTotal.toFixed(2));
                 $('#extra_discount').val('');
                 $('#paid').val('');
+                $('#total_total').val(total);
                 $('#balance').val('');
-                $('#total_total').val(totalTotal);
-                $('#total_discount').val('');
+            }
+
+            $(document).on("click", '#calculate', function(e) {
+                e.preventDefault();
+                calculateTotal();
             });
 
 
@@ -844,7 +857,7 @@
 
             let paid = document.getElementById("paid").value;
             let total_p = document.getElementById("total_total").value;
-            let balance = (total_p) - paid;
+            let balance = total_p - paid;
             $("#balance").val(balance); //update balance
         }
     </script>
@@ -910,12 +923,6 @@
             });
         });
     </script>
-
-
-
-
-
-
 
     <script>
         $("input").on("change", function() {

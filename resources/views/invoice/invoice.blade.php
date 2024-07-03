@@ -74,9 +74,13 @@
             </div>
         @endif
 
-        <h1 class="mx-4 mt-3">
-            Invoice
-        </h1>
+        <div class="row">
+            <div class="col d-flex justify-content-between align-items-center mx-4 mt-3">
+                <h1>Invoice</h1>
+                <a href="{{ url('invoice') }}" class="btn btn-danger">Back</a>
+            </div>
+        </div>
+
         <div class="modal fade" id="modal-lg">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -138,8 +142,7 @@
                                                     ? json_decode(auth()->user()->level)
                                                     : [];
                                             @endphp
-                                            <option value="" selected disabled>Select Location
-                                            </option>
+                                           
                                             @foreach ($warehouses as $branch)
                                                 @if (in_array($branch->id, $userPermissions))
                                                     <option value="{{ $branch->id }}">

@@ -49,26 +49,31 @@
 <body>
     <!-- As a link -->
     <nav class="navbar navbar-light bg-light justify-content-between">
-        <h1 class="mx-4">POS</h1>
+        <h1 class="mx-2">POS</h1>
         @if (session('success'))
             <h4 class="text-success">{{ session('success') }}</h4>
         @endif
         @if (session('delete'))
             <h4 class="text-danger">{{ session('delete') }}</h4>
         @endif
-        <form class="form-inline">
+        <form class="form-inline mx-5">
 
             {{-- <button class="my-2 btn btn-outline-success my-sm-0" type="submit">Search</button> --}}
             <div class="row">
+                <div class="col-md-2 mx-4">
+                    <a href="{{ url('invoice') }}" class="btn btn-danger">Back</a>
+                </div>
+
                 <div class="col">
                     <a href="{{ url('sale_return_register') }}" type="button" class="mr-auto btn btn-primary ">
                         Sale Return</a>
                 </div>
                 <div class="col">
-                    <button type="button" class="mx-2 btn btn-primary" data-toggle="modal" data-target="#modal-xl">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-xl">
                         Suspended
                     </button>
                 </div>
+
             </div>
         </form>
     </nav>
@@ -196,8 +201,7 @@
                                                     ? json_decode(auth()->user()->level)
                                                     : [];
                                             @endphp
-                                            <option value="" selected disabled>Select Location
-                                            </option>
+                                            
                                             @foreach ($warehouses as $branch)
                                                 @if (in_array($branch->id, $userPermissions))
                                                     <option value="{{ $branch->id }}">

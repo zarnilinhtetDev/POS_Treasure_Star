@@ -56,18 +56,7 @@ class UserController extends Controller
         if ($existingUser) {
             return redirect()->back()->with('error', 'Email address already exists.');
         } else {
-            // dd($request->input('userRole', true));
-            // var_dump($request->input('userRole', true));
-            // return $request->userRole;
-            // User::create([
-            //     'name' => $data['name'],
-            //     'email' => $data['email'],
-            //     // 'is_admin' => $request['userRole'],
-            //     // 'is_admin' => $request->userRole,
-            //     'is_admin' => $request->input('userRole', true),
-            //     'password' => Hash::make($data['password']),
 
-            // ]);
             $user = new User();
             $user->name = $data['name'];
             $user->email = $data['email'];
@@ -105,14 +94,16 @@ class UserController extends Controller
         $user = User::find($id);
         $user->name = $request->name;
         $user->email = $request->email;
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+        if ($request->filled('new_password')) {
+            $user->password = Hash::make($request->new_password);
         }
 
         $user->save();
 
         return redirect(url('user'))->with('success', 'User update is successful');
     }
+
+
 
 
     public function permission($id)

@@ -79,8 +79,7 @@
                                     <div class="input-group"><span style="font-weight:bolder"> Name :&nbsp;
                                         </span>{{ $invoice->customer_name }} </div>
 
-                                    <div class="input-group"><span style="font-weight:bolder"> Sale Return :&nbsp;
-                                        </span>{{ $invoice->balance_due }} </div>
+
                                     <br>
                                     <br>
                                 </div>

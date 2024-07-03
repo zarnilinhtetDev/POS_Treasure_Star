@@ -103,6 +103,7 @@
                                             <th>Location</th>
                                             <th>Supplier Name</th>
                                             <th>Receiving Mode</th>
+                                            <th>Remaining Balance</th>
                                             <th>Total</th>
                                             <th>Action</th>
 
@@ -113,7 +114,7 @@
                                             $no = '1';
                                         @endphp
 
-                                     
+
                                         @foreach ($po as $pos)
                                             <tr>
 
@@ -128,8 +129,7 @@
                                                 </td>
                                                 <td>{{ $pos->supplier->name ?? 'N/A' }}</td>
                                                 <td>{{ $pos->balance_due }}</td>
-
-
+                                                <td>{{ $pos->remain_balance }}</td>
                                                 <td>{{ $pos->total }}</td>
                                                 <td>
                                                     <a href="{{ route('purchase_order_details', $pos->id) }}"
@@ -151,7 +151,7 @@
                                                 $no++;
                                             @endphp
                                         @endforeach
-                                   
+
                                     </tbody>
                                 </table>
                             </div>

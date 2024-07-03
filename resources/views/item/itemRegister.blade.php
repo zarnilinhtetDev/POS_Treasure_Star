@@ -155,7 +155,7 @@
                                                         ? json_decode(auth()->user()->level)
                                                         : [];
                                                 @endphp
-                                                <option value="" selected disabled>Select Location</option>
+
                                                 @foreach ($branchs as $branch)
                                                     @if (in_array($branch->id, $userPermissions))
                                                         <option value="{{ $branch->id }}">{{ $branch->name }}

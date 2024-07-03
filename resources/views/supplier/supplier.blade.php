@@ -149,8 +149,7 @@
 
                                                     <select name="branch" id="branch" class="form-control"
                                                         required>
-                                                        <option value="" selected disabled>Select Location
-                                                        </option>
+
                                                         @foreach ($branchs as $branch)
                                                             <option value="{{ $branch->id }}">{{ $branch->name }}
                                                             </option>

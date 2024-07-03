@@ -10,8 +10,6 @@
                     <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
                             class="fas fa-bars text-white"></i></a>
                 </li>
-
-
             </ul>
 
             <!-- Right navbar links -->
@@ -217,7 +215,6 @@
                                                             class="btn btn-danger"
                                                             onclick="return confirm('Are you sure you want to delete this user ?')">
                                                             <i class="fa-solid fa-trash"></i></a>
-
                                                     </td>
                                                 </tr>
                                                 @php

@@ -79,8 +79,6 @@
                                 <i class="fa-solid fa-right-from-bracket "></i> Logout</button>
 
                         </form>
-
-
                     </div>
                 </div>
 
@@ -90,6 +88,8 @@
         </nav>
         @include('layouts.sidebar')
         <div class="container-fluid">
+
+
             <form action=" {{ url('store_transfer_item') }}" method="POST">
                 @csrf
                 <div class="content-wrapper">
@@ -232,7 +232,7 @@
                                                     <td><input type="text"
                                                             class="form-control productname typeahead"
                                                             name="part_number[]"
-                                                            placeholder="{{ trans('Enter Part Number') }}"
+                                                            placeholder="{{ trans('Enter Item Name') }}"
                                                             id='productname-0' autocomplete="off">
                                                     </td>
                                                     <td><input type="text" class="form-control total_product_qty"
@@ -346,9 +346,9 @@
                                                             type="submit">Transfer</button>
 
 
-                                                        <a href="{{ url('create_vehicle') }}" type="submit"
+                                                        {{-- <a href="{{ url('create_vehicle') }}" type="submit"
                                                             class="mt-3 btn btn-warning">Cancel
-                                                        </a>
+                                                        </a> --}}
 
                                                     </td>
                                                 </tr>

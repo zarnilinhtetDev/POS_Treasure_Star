@@ -108,15 +108,25 @@ class InvoiceController extends Controller
         $invoice_number = Invoice::where('invoice_no', $request->invoice_no)->get();
         $count = count($invoice_number);
 
+        // if ($count < 1) {
+        //     $inv_number = $request->invoice_no;
+        // } else {
 
+        //     $inv_number = (int)str_replace("POS-", "", $request->invoice_no) + 1;
+        //     $inv_number = "POS-" . $inv_number;
+        // }
 
         if ($count < 1) {
             $inv_number = $request->invoice_no;
         } else {
-
-            $inv_number = (int)str_replace("POS-", "", $request->invoice_no) + 1;
-            $inv_number = "POS-" . $inv_number;
+            $inv_number = $request->invoice_no;
+            do {
+                $inv_number++;
+                $count = Invoice::where('invoice_no', $inv_number)->count();
+            } while ($count > 0);
         }
+        
+
         $count = count($request->part_description);
         $invoice = new Invoice();
 
@@ -163,9 +173,6 @@ class InvoiceController extends Controller
             $result->exp_date = $request->exp_date[$i];
             $result->unit = $request->item_unit[$i];
             $result->warehouse = $request->warehouse[$i];
-
-
-
             $result->save();
         }
 
@@ -173,7 +180,9 @@ class InvoiceController extends Controller
             return redirect('/quotation')->with('success', 'Quotation Added Successful!');
         } elseif ($request->status == 'invoice') {
             foreach ($invoice->sells as $sell) {
-                $item = Item::where('item_name', $sell->part_number)->first();
+                $item = Item::where('item_name', $sell->part_number)
+                    ->where('warehouse_id', $sell->warehouse)
+                    ->first();
                 if ($item) {
                     $item->quantity -= $sell->product_qty;
                     $item->save();
@@ -185,7 +194,9 @@ class InvoiceController extends Controller
         } elseif ($invoice->status === 'pos') {
 
             foreach ($invoice->sells as $sell) {
-                $item = Item::where('item_name', $sell->part_number)->first();
+                $item = Item::where('item_name', $sell->part_number)
+                    ->where('warehouse_id', $sell->warehouse)
+                    ->first();
                 if ($item) {
                     $item->quantity -= $sell->product_qty;
                     $item->save();
@@ -198,7 +209,9 @@ class InvoiceController extends Controller
             return redirect()->back()->with('success', 'Suspend Added Successful!');
         } else {
             foreach ($invoice->sells as $sell) {
-                $item = Item::where('item_name', $sell->part_number)->first();
+                $item = Item::where('item_name', $sell->part_number)
+                    ->where('warehouse_id', $sell->warehouse)
+                    ->first();
                 if ($item) {
                     $item->quantity -= $sell->product_qty;
                     $item->save();
@@ -339,6 +352,8 @@ class InvoiceController extends Controller
         $invoice->save();
 
         $sellsData = [];
+        $now = Carbon::now();
+
         if ($request->input('part_description')) {
             foreach ($request->input('part_description') as $key => $partDescription) {
                 $sellsData[] = [
@@ -350,8 +365,9 @@ class InvoiceController extends Controller
                     'unit' => $request->input('item_unit')[$key],
                     'exp_date' => $request->input('exp_date')[$key],
                     'warehouse' => $request->input('warehouse')[$key],
-
                     'invoiceid' => $id,
+                    'created_at' => $now, // Add created_at field
+                    'updated_at' => $now, // Add updated_at field
                 ];
             }
         }
@@ -360,14 +376,20 @@ class InvoiceController extends Controller
 
             $oldQuantities = [];
             foreach ($invoice->sells as $key => $sell) {
-
                 $oldQuantities[$key] = $sell->product_qty;
-                // info($key);
-                // info($oldQuantities[$key]);
             }
 
+
             foreach ($request->input('part_number') as $key => $partNumber) {
-                $item = Item::where('item_name', $partNumber)->first();
+                $sell = $invoice->sells[$key] ?? null;
+
+                if (!$sell) {
+                    continue;
+                }
+
+                $item = Item::where('item_name', $partNumber)
+                    ->where('warehouse_id', $sell->warehouse)
+                    ->first();
 
                 if (!$item) {
                     continue;
@@ -377,8 +399,6 @@ class InvoiceController extends Controller
                 $newQuantity = $currentQuantity + ($oldQuantities[$key] ?? 0) - $request->input('product_qty')[$key];
                 $item->quantity = $newQuantity;
                 $item->save();
-                // info($key);
-                // info($request->product_qty[$key]);
             }
         }
 
@@ -401,7 +421,9 @@ class InvoiceController extends Controller
         $invoice = Invoice::where('status', 'invoice')->get();
         $invoices = Invoice::find($id);
         foreach ($invoices->sells as $sell) {
-            $item = Item::where('item_name', $sell->part_number)->first();
+            $item = Item::where('item_name', $sell->part_number)
+                ->where('warehouse_id', $sell->warehouse)
+                ->first();
             if ($item) {
                 $item->quantity -= $sell->product_qty;
                 $item->save();

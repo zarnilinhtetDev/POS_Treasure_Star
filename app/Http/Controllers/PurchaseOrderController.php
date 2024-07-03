@@ -133,7 +133,9 @@ class PurchaseOrderController extends Controller
 
 
         foreach ($invoice->po_sells as $po_sell) {
-            $item = Item::where('item_name', $po_sell->part_number)->first();
+            $item = Item::where('item_name', $po_sell->part_number)
+                ->where('warehouse_id', $po_sell->warehouse)
+                ->first();
             if ($item) {
                 $item->quantity += $po_sell->product_qty;
                 $item->save();
@@ -190,7 +192,12 @@ class PurchaseOrderController extends Controller
             $oldQuantities[$key] = $po_sell->product_qty;
         }
         foreach ($request->input('part_number') as $key => $partNumber) {
-            $item = Item::where('item_name', $partNumber)->first();
+            $po_sell = $invoice->po_sells[$key] ?? null;
+
+            $item = Item::where('item_name', $partNumber)
+                ->where('warehouse_id', $po_sell->warehouse)
+                ->first();
+            // info($item);
             if (!$item) {
                 continue;
             }
@@ -214,9 +221,6 @@ class PurchaseOrderController extends Controller
             $result->exp_date = $request->exp_date[$i];
             $result->product_price = $request->product_price[$i];
             $result->warehouse = $request->warehouse[$i];
-
-
-
             $result->save();
         }
 

@@ -106,7 +106,6 @@
                                             <th>Total</th>
                                             <th> Status</th>
                                             <th>Payment Method</th>
-
                                             <th> Date</th>
                                             <th>Action</th>
 

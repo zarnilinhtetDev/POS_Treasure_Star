@@ -114,6 +114,7 @@
                                             <th>Customer Name</th>
                                             <th>Total</th>
                                             <th>Payment Status</th>
+                                            <th>Payment Method</th>
                                             <th> Date</th>
                                             <th>Sale By</th>
                                             <th>Action</th>
@@ -126,7 +127,7 @@
                                         @endphp
 
 
-                                        {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+
                                         @foreach ($invoices as $invoice)
                                             <tr>
 
@@ -145,7 +146,7 @@
 
 
                                                 <td><span class="badge badge-success">Paid</span></td>
-
+                                                <td>{{ $invoice->payment_method }}</td>
                                                 <td>{{ $invoice->invoice_date }}</td>
                                                 <td>{{ $invoice->sale_by }}</td>
                                                 <td>
@@ -173,48 +174,7 @@
                                                 $no++;
                                             @endphp
                                         @endforeach
-                                        {{-- @else
-                                            @foreach ($invoices as $invoice)
 
-                                                <tr>
-
-                                                    <td>{{ $no }}</td>
-                                                    <td> {{ $invoice->invoice_no }}</td>
-
-                                                    <td>{{ $invoice->customer_name ?? ' N/A' }}</td>
-
-                                                    <td>{{ $invoice->total }}</td>
-                                                    <td><span class="badge badge-success">Paid</span></td>
-                                                    <td>{{ $invoice->invoice_date }}</td>
-                                                    <td>{{ $invoice->sale_by }}</td>
-                                                    <td>
-                                                        <a href="{{ url('/invoice_detail', $invoice->id) }}"
-                                                            class="btn btn-primary btn-sm"><i
-                                                                class="fa-solid fa-eye"></i></a>
-
-                                                        @if ($invoice->status == 'invoice')
-                                                            <a href="{{ url('invoice_edit', $invoice->id) }}"
-                                                                class="btn btn-success btn-sm"><i
-                                                                    class="fa-solid fa-pen-to-square"></i></a>
-                                                        @else
-                                                        @endif
-
-                                                        <a href="{{ url('invoice_delete', $invoice->id) }}"
-                                                            class="btn btn-danger btn-sm"
-                                                            onclick="return confirm('Are you sure you want to delete this Invoice ?')"><i
-                                                                class="fa-solid fa-trash"></i></a>
-
-                                                    </td>
-
-
-                                                </tr>
-
-                                                @php
-                                                    $no++;
-                                                @endphp
-
-                                            @endforeach
-                                        @endif --}}
 
                                     </tbody>
 
