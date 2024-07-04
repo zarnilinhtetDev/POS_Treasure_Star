@@ -33,8 +33,8 @@ class ReportController extends Controller
 
         $total = $invoices->sum('total');
         $totalCash = $invoices->where('payment_method', 'Cash')->sum('total');
-        $totalKbz = $invoices->where('payment_method', 'KBZ Pay')->sum('total');
-        $totalCB = $invoices->where('payment_method', 'CB Pay')->sum('total');
+        $totalKbz = $invoices->where('payment_method', 'K Pay')->sum('total');
+        $totalCB = $invoices->where('payment_method', 'Wave')->sum('total');
         $totalOther = $invoices->where('payment_method', 'Others')->sum('total');
 
         $branchs = Warehouse::all();
@@ -291,8 +291,8 @@ class ReportController extends Controller
         $search_invoices = $invoicesQuery->get();
 
         $totalCash = $search_invoices->where('payment_method', 'Cash')->sum('total');
-        $totalKbz = $search_invoices->where('payment_method', 'KBZ Pay')->sum('total');
-        $totalCB = $search_invoices->where('payment_method', 'CB Pay')->sum('total');
+        $totalKbz = $search_invoices->where('payment_method', 'K Pay')->sum('total');
+        $totalCB = $search_invoices->where('payment_method', 'Wave')->sum('total');
         $totalOther = $search_invoices->where('payment_method', 'Others')->sum('total');
         $search_total = $search_invoices->sum('total');
 
