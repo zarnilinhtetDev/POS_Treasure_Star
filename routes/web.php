@@ -179,10 +179,13 @@ Route::middleware('auth')->group(function () {
     Route::get('report', [ReportController::class, 'report_invoice']);
     Route::get('/report_invoice/{branch?}', [ReportController::class, 'report_invoice'])->name('report_invoice');
     Route::get('report_quotation', [ReportController::class, 'report_quotation']);
+    Route::get('/report_quotation_branch/{branch?}', [ReportController::class, 'report_quotation'])->name('report_quotation_branch');
     Route::get('report_po', [ReportController::class, 'report_po']);
+    Route::get('report_po_branch/{branch?}', [ReportController::class, 'report_po'])->name('report_po_branch');
     Route::get('report_item', [ReportController::class, 'report_item']);
     Route::get('monthly_item_search', [ReportController::class, 'monthly_item_search']);
     Route::get('report_pos', [ReportController::class, 'report_pos']);
+    Route::get('report_pos_branch', [ReportController::class, 'report_pos'])->name('report_pos_branch');
     Route::get('report_purchase_return', [ReportController::class, 'report_purchase_return']);
     Route::get('report_sale_return', [ReportController::class, 'report_sale_return']);
     Route::get('monthly_purchase_return', [ReportController::class, 'monthly_purchase_return']);

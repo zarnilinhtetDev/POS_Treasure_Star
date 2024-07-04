@@ -118,31 +118,99 @@
 
                     <div class="my-5 container-fluid">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-10">
                                 <form action="{{ url('monthly_pos_search') }}" method="get">
                                     <div class="row">
-                                        <div class="col-md-5 form-group">
-                                            <label for="">Date From :</label>
+                                        <div class="col-md-3 form-group">
+                                            <label for="start_date">Date From:</label>
                                             <input type="date" name="start_date" class="form-control" required>
                                         </div>
-                                        <div class="col-md-5 form-group">
-                                            <label for="">Date To :</label>
+                                        <div class="col-md-3 form-group">
+                                            <label for="end_date">Date To:</label>
                                             <input type="date" name="end_date" class="form-control" required>
                                         </div>
-                                        <div class="mt-3 col-md-3 form-group">
+                                        @if (auth()->user()->is_admin == '1')
+                                            <div class="form-group col-md-3">
+                                                <label for="branch">Location<span class="text-danger">*</span></label>
+
+                                                <select name="branch" id="branch" class="form-control" required>
+
+                                                    @foreach ($branchs as $branch)
+                                                        <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        @else
+                                            <div class="form-group col-md-3">
+                                                <label for="branch">Location<span class="text-danger">*</span></label>
+
+                                                <select name="branch" id="branch" class="form-control" required>
+                                                    @php
+                                                        $userPermissions = auth()->user()->level
+                                                            ? json_decode(auth()->user()->level)
+                                                            : [];
+                                                    @endphp
+                                                    <option value="" selected disabled>Select Location
+                                                    </option>
+                                                    @foreach ($branchs as $branch)
+                                                        @if (in_array($branch->id, $userPermissions))
+                                                            <option value="{{ $branch->id }}">
+                                                                {{ $branch->name }}
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        @endif
+
+                                        <div class="col-md-2 form-group">
+                                            <label for="">&nbsp;</label>
                                             <input type="submit" class="btn btn-primary form-control" value="Search"
                                                 style="background-color: #218838">
                                         </div>
-
                                     </div>
                                 </form>
+
                             </div>
                         </div>
                     </div>
                     <div class="mt-3 col-md-12">
                         <div class="card ">
-                            <div class="card-header">
+                            <div class="card-header d-flex justify-content-between align-items-center">
                                 <h3 class="card-title">POS Report</h3>
+                                <div class="dropdown ml-auto mr-5">
+                                    <div id="branchDropdown" class="dropdown ml-auto"
+                                        style="display:inline-block; margin-left: 10px;">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                            {{ $currentBranchName }}
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a href="{{ route('report_pos_branch') }}" class="dropdown-item">All POS
+                                            </a>
+                                            @if (auth()->user()->is_admin == '1')
+                                                @foreach ($branchs as $drop)
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('report_pos_branch', ['branch' => $drop->id]) }}">{{ $drop->name }}</a>
+                                                @endforeach
+                                            @else
+                                                @php
+                                                    $userPermissions = auth()->user()->level
+                                                        ? json_decode(auth()->user()->level)
+                                                        : [];
+                                                @endphp
+                                                @foreach ($branchs as $drop)
+                                                    @if (in_array($drop->id, $userPermissions))
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('report_pos_branch', ['branch' => $drop->id]) }}">{{ $drop->name }}</a>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">

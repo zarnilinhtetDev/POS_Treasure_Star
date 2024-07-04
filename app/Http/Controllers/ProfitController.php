@@ -100,7 +100,7 @@ class ProfitController extends Controller
 
         $branchs = Warehouse::all();
         $branchNames = $branchs->pluck('name', 'id');
-        $currentBranchName = $branch ? $branchNames[$branch] : 'All Invoices';
+        $currentBranchName = $branch ? $branchNames[$branch] : 'All Profits';
 
         return view('profit.profit', compact('invoices', 'totalSum', 'totalPurchase', 'totalExpense', 'branchs', 'currentBranchName'));
     }
@@ -141,7 +141,7 @@ class ProfitController extends Controller
         // Get the branch name
         $branchs = Warehouse::all();
         $branchNames = $branchs->pluck('name', 'id');
-        $currentBranchName = $branch ? $branchNames->get($branch, 'Unknown Branch') : 'All Invoices';
+        $currentBranchName = $branch ? $branchNames->get($branch, 'Unknown Branch') : 'All Profits';
 
         return view('profit.profit', compact('invoices', 'totalSum', 'totalPurchase', 'totalExpense', 'currentBranchName', 'branchs'));
     }

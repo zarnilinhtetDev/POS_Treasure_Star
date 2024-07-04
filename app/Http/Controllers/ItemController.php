@@ -175,11 +175,8 @@ class ItemController extends Controller
                 'file.mimes' => 'The file must be a valid Excel or CSV file.',
             ]);
 
-            // Get the warehouse_id from the request
             $warehouseId = $request->warehouse_id;
-            // Get the file from the request
             $file = $request->file('file');
-            // Import the file and associate it with the warehouse
             $import = new ItemsUpdateImport($warehouseId);
             Excel::import($import, $file->store('temp'));
 

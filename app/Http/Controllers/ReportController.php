@@ -64,59 +64,78 @@ class ReportController extends Controller
         return view('report.report_sale_return', compact('invoices', 'total', 'branchs'));
     }
 
-    public function report_quotation()
-    {
+    // public function report_quotation()
+    // {
 
+    //     $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+
+    //     if (auth()->user()->is_admin == '1') {
+    //         $quotations = Invoice::whereDate('created_at', today())->where('status', 'quotation')->get();
+    //         $total = $quotations->sum('total');
+    //         $branchs = Warehouse::all();
+    //     } else {
+    //         $quotations = Invoice::whereDate('created_at', today())->where('status', 'quotation')->whereIn('branch', $warehousePermission)->get();
+    //         $total = $quotations->sum('total');
+    //         $branchs = Warehouse::all();
+    //     }
+
+
+    //     return view('report.report_quotation', compact('quotations', 'total', 'branchs'));
+    // }
+    public function report_quotation($branch = null)
+    {
+        $today = Carbon::today();
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
-        if (auth()->user()->is_admin == '1') {
-            $quotations = Invoice::whereDate('created_at', today())->where('status', 'quotation')->get();
-            $total = $quotations->sum('total');
-            $branchs = Warehouse::all();
-        } else {
-            $quotations = Invoice::whereDate('created_at', today())->where('status', 'quotation')->whereIn('branch', $warehousePermission)->get();
-            $total = $quotations->sum('total');
-            $branchs = Warehouse::all();
+        $quotationsQuery = Invoice::whereDate('created_at', $today)
+            ->where('status', 'quotation');
+
+        if ($branch) {
+            $quotationsQuery->where('branch', $branch);
         }
 
+        if (auth()->user()->is_admin == '1') {
+            $quotations = $quotationsQuery->get();
+        } else {
+            $quotationsQuery->whereIn('branch', $warehousePermission);
+            $quotations = $quotationsQuery->get();
+        }
 
-        return view('report.report_quotation', compact('quotations', 'total', 'branchs'));
+        $total = $quotations->sum('total');
+        $branchs = Warehouse::all();
+        $branchNames = $branchs->pluck('name', 'id');
+        $currentBranchName = $branch ? $branchNames[$branch] : 'All Quotations';
+
+        return view('report.report_quotation', compact('quotations', 'total', 'branchs', 'currentBranchName'));
     }
 
-    public function report_po()
+    public function report_po(Request $request)
     {
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+        $branch = $request->input('branch');
+        $currentBranchName = "All Branches";
 
-        if (auth()->user()->is_admin == '1') {
-            $pos = PurchaseOrder::whereDate('created_at', today())
-                ->where('balance_due', 'PO')
-                ->get();
-            $branchs = Warehouse::all();
-            $totalCash = $pos->where('payment_method', 'Cash')->where('balance_due', 'PO')->sum('total');
-            $totalKbz = $pos->where('payment_method', 'K Pay')->where('balance_due', 'PO')->sum('total');
-            $totalCB =  $pos->where('payment_method', 'Wave')->where('balance_due', 'PO')->sum('total');
-            $totalOther =  $pos->where('payment_method', 'Others')->where('balance_due', 'PO')->sum('total');
-        } else {
-            $pos = PurchaseOrder::whereDate('created_at', today())
-                ->whereIn('branch', $warehousePermission)
-                ->where('balance_due', 'PO')
-                ->get();
-            $branchs = Warehouse::all();
-            $totalCash = $pos->where('payment_method', 'Cash')->where('balance_due', 'PO')
-                ->whereIn('branch', $warehousePermission)
-                ->sum('total');
-            $totalKbz = $pos->where('payment_method', 'K Pay')->where('balance_due', 'PO')
-                ->whereIn('branch', $warehousePermission)
-                ->sum('total');
-            $totalCB =  $pos->where('payment_method', 'Wave')->where('balance_due', 'PO')
-                ->whereIn('branch', $warehousePermission)
-                ->sum('total');
-            $totalOther =  $pos->where('payment_method', 'Others')->where('balance_due', 'PO')
-                ->whereIn('branch', $warehousePermission)
-                ->sum('total');
+        $query = PurchaseOrder::whereDate('created_at', today())->where('balance_due', 'PO');
+
+        if (auth()->user()->is_admin != '1') {
+            $query->whereIn('branch', $warehousePermission);
         }
 
+        if ($branch) {
+            $query->where('branch', $branch);
+            $currentBranchName = Warehouse::find($branch)->name;
+        }
+
+        $pos = $query->get();
+
+        $totalCash = $pos->where('payment_method', 'Cash')->sum('total');
+        $totalKbz = $pos->where('payment_method', 'K Pay')->sum('total');
+        $totalCB = $pos->where('payment_method', 'Wave')->sum('total');
+        $totalOther = $pos->where('payment_method', 'Others')->sum('total');
         $total = $pos->sum('total');
+
+        $branchs = Warehouse::all();
+
         return view('report.report_po', compact(
             'pos',
             'total',
@@ -125,8 +144,10 @@ class ReportController extends Controller
             'totalKbz',
             'totalCB',
             'totalOther',
+            'currentBranchName'
         ));
     }
+
 
     public function report_purchase_return()
     {
@@ -329,64 +350,57 @@ class ReportController extends Controller
     {
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
-        if (auth()->user()->is_admin == '1') {
-            $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
-            $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
-            $search_quotations = Invoice::where('status', 'quotation')
-                ->whereDate('quote_date', '>=', $start_date)
-                ->whereDate('quote_date', '<=', $end_date)
-                ->get();
-            $search_total = $search_quotations->sum('total');
-            $branchs = Warehouse::all();
-        } else {
-            $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
-            $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
-            $search_quotations = Invoice::where('status', 'quotation')
-                ->whereIn('branch', $warehousePermission)
-                ->whereDate('quote_date', '>=', $start_date)
-                ->whereDate('quote_date', '<=', $end_date)
-                ->get();
-            $search_total = $search_quotations->sum('total');
-            $branchs = Warehouse::all();
+        $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
+        $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
+        $branch = $request->input('branch');
+
+        $quotationsQuery = Invoice::where('status', 'quotation')
+            ->whereDate('quote_date', '>=', $start_date)
+            ->whereDate('quote_date', '<=', $end_date);
+
+        if ($branch) {
+            $quotationsQuery->where('branch', $branch);
         }
 
-        return view('report.report_quotation', compact('search_quotations', 'search_total', 'branchs'));
-    }
+        if (auth()->user()->is_admin != '1') {
+            $quotationsQuery->whereIn('branch', $warehousePermission);
+        }
 
+        $search_quotations = $quotationsQuery->get();
+        $search_total = $search_quotations->sum('total');
+        $branchs = Warehouse::all();
+        $branchNames = $branchs->pluck('name', 'id');
+        $currentBranchName = $branch ? $branchNames[$branch] : 'All Quotations';
+
+        return view('report.report_quotation', compact('search_quotations', 'search_total', 'branchs', 'currentBranchName'));
+    }
     public function monthly_po_search(Request $request)
     {
-
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
-        if (auth()->user()->is_admin == '1') {
-            $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
-            $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
-            $search_pos = PurchaseOrder::whereDate('po_date', '>=', $start_date)
-                ->whereDate('po_date', '<=', $end_date)
-                ->where('balance_due', 'PO')
-                ->get();
-            $search_total = $search_pos->sum('total');
-            $branchs = Warehouse::all();
-            $totalCash = $search_pos->where('payment_method', 'Cash')->where('balance_due', 'PO')->sum('total');
-            $totalKbz = $search_pos->where('payment_method', 'K Pay')->where('balance_due', 'PO')->sum('total');
-            $totalCB =  $search_pos->where('payment_method', 'Wave')->where('balance_due', 'PO')->sum('total');
-            $totalOther =  $search_pos->where('payment_method', 'Others')->where('balance_due', 'PO')->sum('total');
-        } else {
-            $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
-            $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
-            $search_pos = PurchaseOrder::whereDate('po_date', '>=', $start_date)
-                ->whereIn('branch', $warehousePermission)
-                ->whereDate('po_date', '<=', $end_date)
-                ->where('balance_due', 'PO')
-                ->get();
-            $search_total = $search_pos->sum('total');
-            $branchs = Warehouse::all();
-            $totalCash = $search_pos->where('payment_method', 'Cash')->where('balance_due', 'PO')->sum('total');
-            $totalKbz = $search_pos->where('payment_method', 'K Pay')->where('balance_due', 'PO')->sum('total');
-            $totalCB =  $search_pos->where('payment_method', 'Wave')->where('balance_due', 'PO')->sum('total');
-            $totalOther =  $search_pos->where('payment_method', 'Others')->where('balance_due', 'PO')->sum('total');
-        }
+        $branchs = Warehouse::all();
+        $branch = $request->input('branch');
+        $branchNames = $branchs->pluck('name', 'id');
+        $currentBranchName = $branch ? $branchNames[$branch] : 'All Quotations';
 
+        $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
+        $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
+
+        $search_pos = PurchaseOrder::whereDate('po_date', '>=', $start_date)
+            ->whereDate('po_date', '<=', $end_date)
+            ->where('balance_due', 'PO')
+            ->when(!auth()->user()->is_admin, function ($query) use ($warehousePermission) {
+                return $query->whereIn('branch', $warehousePermission);
+            })
+            ->when($request->has('branch') && $request->input('branch'), function ($query) use ($request) {
+                return $query->where('branch', $request->input('branch'));
+            })
+            ->get();
+        $totalCash = $search_pos->where('payment_method', 'Cash')->sum('total');
+        $totalKbz = $search_pos->where('payment_method', 'K Pay')->sum('total');
+        $totalCB =  $search_pos->where('payment_method', 'Wave')->sum('total');
+        $totalOther =  $search_pos->where('payment_method', 'Others')->sum('total');
+        $search_total = $search_pos->sum('total');
 
         return view('report.report_po', compact(
             'search_pos',
@@ -396,8 +410,11 @@ class ReportController extends Controller
             'totalKbz',
             'totalCB',
             'totalOther',
+            'currentBranchName'
         ));
     }
+
+
 
     public function monthly_purchase_return(Request $request)
     {
@@ -430,106 +447,99 @@ class ReportController extends Controller
     }
 
 
-    public function report_pos()
+    public function report_pos(Request $request)
     {
-
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+        $branch = $request->input('branch');
 
-        if (auth()->user()->is_admin == '1') {
-            $pos_data = Invoice::whereDate('created_at', today())->where('status', 'POS')->get();
-            $today = Carbon::today();
-            $sale_totals = DB::table('invoices')
-                ->select('sale_by', DB::raw('count(*) as total_invoices'), DB::raw('sum(total) as sale_total'))
-                ->whereDate('created_at', $today)
-                ->where('status', 'POS')
-                ->groupBy('sale_by')
-                ->get();
-            $total = $pos_data->sum('pos_data');
-            $branchs = Warehouse::all();
-            $totalCash = $pos_data->where('payment_method', 'Cash')->sum('total');
-            $totalKbz = $pos_data->where('payment_method', 'K Pay')->sum('total');
-            $totalCB =  $pos_data->where('payment_method', 'Wave')->sum('total');
-            $totalOther =  $pos_data->where('payment_method', 'Others')->sum('total');
-        } else {
-            $pos_data = Invoice::whereDate('created_at', today())->where('status', 'POS')->whereIn('branch', $warehousePermission)->get();
-            $today = Carbon::today();
-            $sale_totals = DB::table('invoices')
-                ->select('sale_by', DB::raw('count(*) as total_invoices'), DB::raw('sum(total) as sale_total'))
-                ->whereDate('created_at', $today)
-                ->where('status', 'POS')
-                ->whereIn('branch', $warehousePermission)
-                ->groupBy('sale_by')
-                ->get();
-            $total = $pos_data->sum('pos_data');
-            $branchs = Warehouse::all();
-            $totalCash = $pos_data->where('payment_method', 'Cash')
-                ->whereIn('branch', $warehousePermission)
-                ->sum('total');
-            $totalKbz = $pos_data->where('payment_method', 'K Pay')
-                ->whereIn('branch', $warehousePermission)
-                ->sum('total');
-            $totalCB =  $pos_data->where('payment_method', 'Wave')
-                ->whereIn('branch', $warehousePermission)
-                ->sum('total');
-            $totalOther =  $pos_data->where('payment_method', 'Others')
-                ->whereIn('branch', $warehousePermission)
-                ->sum('total');
+        $today = Carbon::today();
+        $posQuery = Invoice::whereDate('created_at', $today)
+            ->where('status', 'POS');
+
+        if ($branch) {
+            $posQuery->where('branch', $branch);
         }
 
-        return view('report.report_pos', compact('pos_data', 'total', 'sale_totals', 'branchs', 'totalCash', 'totalKbz', 'totalCB', 'totalOther'));
+        if (auth()->user()->is_admin != '1') {
+            $posQuery->whereIn('branch', $warehousePermission);
+        }
+
+        $pos_data = $posQuery->get();
+        $sale_totals = DB::table('invoices')
+            ->select('sale_by', DB::raw('count(*) as total_invoices'), DB::raw('sum(total) as sale_total'))
+            ->whereDate('created_at', $today)
+            ->where('status', 'POS')
+            ->when($branch, function ($query, $branch) {
+                return $query->where('branch', $branch);
+            })
+            ->when(auth()->user()->is_admin != '1', function ($query) use ($warehousePermission) {
+                return $query->whereIn('branch', $warehousePermission);
+            })
+            ->groupBy('sale_by')
+            ->get();
+
+        $total = $pos_data->sum('total');
+        $branchs = Warehouse::all();
+        $branchNames = $branchs->pluck('name', 'id');
+        $currentBranchName = $branch ? $branchNames[$branch] : 'All POS';
+
+        $totalCash = $pos_data->where('payment_method', 'Cash')->sum('total');
+        $totalKbz = $pos_data->where('payment_method', 'K Pay')->sum('total');
+        $totalCB =  $pos_data->where('payment_method', 'Wave')->sum('total');
+        $totalOther =  $pos_data->where('payment_method', 'Others')->sum('total');
+
+        return view('report.report_pos', compact('pos_data', 'total', 'sale_totals', 'branchs', 'totalCash', 'totalKbz', 'totalCB', 'totalOther', 'currentBranchName'));
     }
     public function monthly_pos_search(Request $request)
     {
-
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
-        if (auth()->user()->is_admin == '1') {
-            $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
-            $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
-            $search_pos = Invoice::where('status', 'POS')
-                ->whereDate('invoice_date', '>=', $start_date)
-                ->whereDate('invoice_date', '<=', $end_date)
-                ->get();
-            $search_total = $search_pos->sum('total');
-            $sale_totals = DB::table('invoices')
-                ->select('sale_by', DB::raw('count(*) as total_invoices'), DB::raw('sum(total) as sale_total'))
-                ->whereDate('invoice_date', '>=', $start_date)
-                ->whereDate('invoice_date', '<=', $end_date)
-                ->where('status', 'POS')
-                ->groupBy('sale_by')
-                ->get();
-            $branchs = Warehouse::all();
-            $totalCash = $search_pos->where('payment_method', 'Cash')->sum('total');
-            $totalKbz = $search_pos->where('payment_method', 'K Pay')->sum('total');
-            $totalCB =  $search_pos->where('payment_method', 'Wave')->sum('total');
-            $totalOther =  $search_pos->where('payment_method', 'Others')->sum('total');
-        } else {
-            $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
-            $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
-            $search_pos = Invoice::where('status', 'POS')
-                ->whereIn('branch', $warehousePermission)
-                ->whereDate('invoice_date', '>=', $start_date)
-                ->whereDate('invoice_date', '<=', $end_date)
-                ->get();
-            $search_total = $search_pos->sum('total');
-            $sale_totals = DB::table('invoices')
-                ->select('sale_by', DB::raw('count(*) as total_invoices'), DB::raw('sum(total) as sale_total'))
-                ->whereDate('invoice_date', '>=', $start_date)
-                ->whereDate('invoice_date', '<=', $end_date)
-                ->whereIn('branch', $warehousePermission)
-                ->where('status', 'POS')
-                ->groupBy('sale_by')
-                ->get();
-            $branchs = Warehouse::all();
-            $totalCash = $search_pos->where('payment_method', 'Cash')->sum('total');
-            $totalKbz = $search_pos->where('payment_method', 'K Pay')->sum('total');
-            $totalCB =  $search_pos->where('payment_method', 'Wave')->sum('total');
-            $totalOther =  $search_pos->where('payment_method', 'Others')->sum('total');
+        $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
+        $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
+        $branch = $request->input('branch');
+
+        $query = Invoice::where('status', 'POS')
+            ->whereDate('invoice_date', '>=', $start_date)
+            ->whereDate('invoice_date', '<=', $end_date);
+
+        if (auth()->user()->is_admin != '1') {
+            $query->whereIn('branch', $warehousePermission);
         }
 
-        return view('report.report_pos', compact('search_pos', 'search_total', 'sale_totals', 'branchs', 'totalCash', 'totalKbz', 'totalCB', 'totalOther'));
-    }
+        if ($branch) {
+            $query->where('branch', $branch);
+            $currentBranchName = Warehouse::find($branch)->name;
+        } else {
+            $currentBranchName = "All Locations"; // Default value if no branch is selected
+        }
 
+        $search_pos = $query->get();
+        $search_total = $search_pos->sum('total');
+
+        $sale_totals = DB::table('invoices')
+            ->select('sale_by', DB::raw('count(*) as total_invoices'), DB::raw('sum(total) as sale_total'))
+            ->whereDate('invoice_date', '>=', $start_date)
+            ->whereDate('invoice_date', '<=', $end_date)
+            ->where('status', 'POS');
+
+        if (auth()->user()->is_admin != '1') {
+            $sale_totals->whereIn('branch', $warehousePermission);
+        }
+
+        if ($branch) {
+            $sale_totals->where('branch', $branch);
+        }
+
+        $sale_totals = $sale_totals->groupBy('sale_by')->get();
+
+        $branchs = Warehouse::all();
+        $totalCash = $search_pos->where('payment_method', 'Cash')->sum('total');
+        $totalKbz = $search_pos->where('payment_method', 'K Pay')->sum('total');
+        $totalCB = $search_pos->where('payment_method', 'Wave')->sum('total');
+        $totalOther = $search_pos->where('payment_method', 'Others')->sum('total');
+
+        return view('report.report_pos', compact('search_pos', 'search_total', 'sale_totals', 'branchs', 'totalCash', 'totalKbz', 'totalCB', 'totalOther', 'currentBranchName'));
+    }
 
     public function reportExpense()
     {
