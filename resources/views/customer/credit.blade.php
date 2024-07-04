@@ -142,29 +142,16 @@
 
                                                 <td>{{ $invoice->invoice_no }}</td>
                                                 <td>
-
-                                                    @if ($invoice->deposit == $invoice->total || $invoice->deposit == null)
-                                                        <span class="px-4 py-1"
+                                                    @if ($invoice->total == $invoice->deposit)
+                                                        <span class="px-4 py-1 text-white"
                                                             style="background-color:#1FC600; border-radius:5px;">Paid</span>
+                                                    @elseif($invoice->total > $invoice->deposit && $invoice->deposit > 0)
+                                                        <span class="px-4 py-1 text-white"
+                                                            style="background-color:#FFFD8D; border-radius:5px;">Patial</span>
+                                                    @else
+                                                        <span class="px-4 py-1 text-white"
+                                                            style="background-color:#FF6B6B; border-radius:5px;">Unpaid</span>
                                                     @endif
-
-                                                    @if ($invoice->deposit <= 0)
-                                                        @if ($invoice->deposit == null)
-                                                        @else
-                                                            <span class="px-4 py-1"
-                                                                style="background-color:#FF6B6B; border-radius:5px;">Unpaid</span>
-                                                        @endif
-                                                    @endif
-
-                                                    @if ($invoice->deposit !== $invoice->total)
-                                                        @if ($invoice->deposit >= 1)
-                                                            <span class="px-4 py-1"
-                                                                style="background-color:#FFFD8D; border-radius:5px;">Patial</span>
-                                                        @endif
-                                                    @endif
-
-
-
                                                 </td>
                                                 <td>
                                                     @if ($invoice->deposit !== null)
