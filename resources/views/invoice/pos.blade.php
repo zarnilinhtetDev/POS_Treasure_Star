@@ -201,7 +201,7 @@
                                                     ? json_decode(auth()->user()->level)
                                                     : [];
                                             @endphp
-                                            
+
                                             @foreach ($warehouses as $branch)
                                                 @if (in_array($branch->id, $userPermissions))
                                                     <option value="{{ $branch->id }}">
@@ -391,9 +391,7 @@
                                                                     ? json_decode(auth()->user()->level)
                                                                     : [];
                                                             @endphp
-                                                            <option value="" selected disabled>Select
-                                                                Location
-                                                            </option>
+
                                                             @foreach ($warehouses as $branch)
                                                                 @if (in_array($branch->id, $userPermissions))
                                                                     <option value="{{ $branch->id }}">
