@@ -125,7 +125,7 @@ class InvoiceController extends Controller
                 $count = Invoice::where('invoice_no', $inv_number)->count();
             } while ($count > 0);
         }
-        
+
 
         $count = count($request->part_description);
         $invoice = new Invoice();
