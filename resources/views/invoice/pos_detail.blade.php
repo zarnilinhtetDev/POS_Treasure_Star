@@ -98,14 +98,15 @@
             <div class="gap-2 pt-2 col-6 d-flex align-items-center justify-content-end">
 
                 <a onclick="printPage()" id="printButton" class=" btn btn-success" class="btn btn-primary"
-                    style="border-radius:10px;">Print</a>
+                    style="border-radius:10px;"><i class="fa-solid fa-print text-white"></i> Print</a>
                 <a href="{{ url('daily_sales') }}" class="btn btn-primary" style="border-radius:10px;" id="print2"><i
                         class="fa-regular fa-calendar-days"></i> Daily Sales</a>
 
-                <a id="test" href="{{ url('pos') }}" class="btn btn-primary"
-                    style="border-radius:10px;">Back</a>
                 <a href="{{ url('pos_register') }}" class="text-white btn btn-primary" style="border-radius:10px;"
                     id="print3"><i class="fa-solid fa-circle-plus"></i> POS Register</a>
+
+                <a id="test" href="{{ url('pos') }}" class="btn btn-danger"
+                    style="border-radius:10px;"><i class="fa-solid fa-backward text-white"></i> Back</a>
             </div>
         </div>
         @foreach ($profile as $pic)
