@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expense;
+use App\Models\ExpenseCategory;
 use App\Models\Invoice;
 use App\Models\PurchaseOrder;
 use App\Models\Warehouse;
@@ -64,24 +65,7 @@ class ReportController extends Controller
         return view('report.report_sale_return', compact('invoices', 'total', 'branchs'));
     }
 
-    // public function report_quotation()
-    // {
 
-    //     $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
-
-    //     if (auth()->user()->is_admin == '1') {
-    //         $quotations = Invoice::whereDate('created_at', today())->where('status', 'quotation')->get();
-    //         $total = $quotations->sum('total');
-    //         $branchs = Warehouse::all();
-    //     } else {
-    //         $quotations = Invoice::whereDate('created_at', today())->where('status', 'quotation')->whereIn('branch', $warehousePermission)->get();
-    //         $total = $quotations->sum('total');
-    //         $branchs = Warehouse::all();
-    //     }
-
-
-    //     return view('report.report_quotation', compact('quotations', 'total', 'branchs'));
-    // }
     public function report_quotation($branch = null)
     {
         $today = Carbon::today();
@@ -547,23 +531,22 @@ class ReportController extends Controller
 
         if (auth()->user()->is_admin == '1') {
             $branchs = Warehouse::all();
-            $expenses = Expense::whereBetween('created_at', [
-                Carbon::now()->startOfMonth(),
-                Carbon::now()->endOfMonth()
-            ])->get();
-            $total = $expenses->sum('amount');
-        } else {
-            $branchs = Warehouse::all();
-            $expenses = Expense::whereBetween('created_at', [
-                Carbon::now()->startOfMonth(),
-                Carbon::now()->endOfMonth()
-            ])->whereIn('branch', $warehousePermission)
+            $expenses = Expense::whereDate('created_at', today())
                 ->get();
             $total = $expenses->sum('amount');
+            $categorys = ExpenseCategory::all();
+        } else {
+            $branchs = Warehouse::all();
+            $expenses = Expense::whereDate('created_at', today())
+                ->whereIn('branch', $warehousePermission)
+                ->get();
+            $total = $expenses->sum('amount');
+            $categorys = ExpenseCategory::all();
         }
 
-        return view('report.report_expense', compact('expenses', 'total', 'branchs'));
+        return view('report.report_expense', compact('expenses', 'total', 'branchs', 'categorys'));
     }
+
 
     public function expenseSearch(Request $request)
     {
@@ -578,6 +561,7 @@ class ReportController extends Controller
                 ->whereDate('date', '<=', $end_date)->get();
 
             $search_total = $search_expenses->sum('amount');
+            $categorys = ExpenseCategory::all();
         } else {
             $branchs = Warehouse::all();
             $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
@@ -586,8 +570,9 @@ class ReportController extends Controller
                 ->whereDate('date', '<=', $end_date)->whereIn('branch', $warehousePermission)->get();
 
             $search_total = $search_expenses->sum('amount');
+            $categorys = ExpenseCategory::all();
         }
 
-        return view('report.report_expense', compact('search_expenses', 'search_total', 'branchs'));
+        return view('report.report_expense', compact('search_expenses', 'search_total', 'branchs', 'categorys'));
     }
 }

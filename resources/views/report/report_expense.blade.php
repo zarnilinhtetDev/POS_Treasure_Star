@@ -195,7 +195,15 @@
                                                             @endif
                                                         @endforeach
                                                     </td>
-                                                    <td>{{ $expense->category }}</td>
+                                                    <td>
+
+                                                        @foreach ($categorys as $cat)
+                                                            @if ($cat->id == $expense->category)
+                                                                {{ $cat->name }}
+                                                            @endif
+                                                        @endforeach
+
+                                                    </td>
                                                     <td>{{ $expense->description }}</td>
                                                     <td>{{ $expense->created_at->format('d M Y') }}
                                                     </td>
@@ -217,7 +225,13 @@
                                                             @endif
                                                         @endforeach
                                                     </td>
-                                                    <td>{{ $expense->category }}</td>
+                                                    <td>
+                                                        @foreach ($categorys as $cat)
+                                                            @if ($cat->id == $expense->category)
+                                                                {{ $cat->name }}
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
                                                     <td>{{ $expense->description }}</td>
                                                     <td>{{ $expense->created_at->format('d M Y') }}
                                                     </td>
