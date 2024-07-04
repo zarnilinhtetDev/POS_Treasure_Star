@@ -31,7 +31,7 @@
         input::-webkit-datetime-edit,
         input::-webkit-inner-spin-button,
         input::-webkit-clear-button {
-            display: none;
+            display: none;tr
         }
 
         input::-webkit-calendar-picker-indicator {
