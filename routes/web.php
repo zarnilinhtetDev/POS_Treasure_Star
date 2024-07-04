@@ -181,6 +181,7 @@ Route::middleware('auth')->group(function () {
     Route::get('report_quotation', [ReportController::class, 'report_quotation']);
     Route::get('report_po', [ReportController::class, 'report_po']);
     Route::get('report_item', [ReportController::class, 'report_item']);
+    Route::get('monthly_item_search', [ReportController::class, 'monthly_item_search']);
     Route::get('report_pos', [ReportController::class, 'report_pos']);
     Route::get('report_purchase_return', [ReportController::class, 'report_purchase_return']);
     Route::get('report_sale_return', [ReportController::class, 'report_sale_return']);

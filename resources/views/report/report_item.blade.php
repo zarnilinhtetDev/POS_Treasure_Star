@@ -112,7 +112,29 @@
 
                 <div class="ml-2 container-fluid">
 
+                    <div class="my-5 container-fluid">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form action="{{ url('monthly_item_search') }}" method="get">
+                                    <div class="row">
+                                        <div class="col-md-5 form-group">
+                                            <label for="">Date From :</label>
+                                            <input type="date" name="start_date" class="form-control" required>
+                                        </div>
+                                        <div class="col-md-5 form-group">
+                                            <label for="">Date To :</label>
+                                            <input type="date" name="end_date" class="form-control" required>
+                                        </div>
+                                        <div class="mt-3 col-md-3 form-group">
+                                            <input type="submit" class="btn btn-primary form-control" value="Search"
+                                                style="background-color: #218838">
+                                        </div>
 
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                     <div class="mt-3 col-md-12">
                         <div class="card ">
                             <div class="card-header">

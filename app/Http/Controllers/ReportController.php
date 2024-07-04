@@ -196,6 +196,57 @@ class ReportController extends Controller
         return view('report.report_item', compact('items', 'warehouse_name', 'warehouses'));
     }
 
+    public function monthly_item_search(Request $request)
+    {
+        $warehouse_name = [];
+        $warehouses = Warehouse::all();
+        foreach ($warehouses as $key => $ware) {
+            $warehouse_name[$key] = $ware->name;
+        }
+
+        $query = DB::table('items')
+            ->select('items.item_name', 'warehouses.id as warehouse_id', 'warehouses.name as warehouse_name', DB::raw('SUM(items.quantity) AS total_quantity'), 'items.retail_price', 'items.wholesale_price')
+            ->join('warehouses', 'items.warehouse_id', '=', 'warehouses.id')
+            ->groupBy('items.item_name', 'warehouses.id', 'items.retail_price', 'items.wholesale_price');
+
+        // Date filter
+        if ($request->has('start_date') && $request->has('end_date')) {
+            $start_date = Carbon::parse($request->start_date)->startOfDay();
+            $end_date = Carbon::parse($request->end_date)->endOfDay();
+
+            $query->whereBetween('items.created_at', [$start_date, $end_date]);
+        }
+
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+
+        if (auth()->user()->is_admin == '1') {
+            $items = $query->get();
+        } else {
+            $items = $query->whereIn('warehouses.id', $warehousePermission)->get();
+        }
+
+        $groupedItems = [];
+        foreach ($items as $item) {
+            $itemId = $item->item_name;
+            if (!isset($groupedItems[$itemId])) {
+                $groupedItems[$itemId] = [
+                    'item_name' => $item->item_name,
+                    'total_quantity' => 0,
+                    'warehouse_quantities' => [],
+                    'retail_price' => $item->retail_price,
+                    'wholesale_price' => $item->wholesale_price,
+                ];
+            }
+            $groupedItems[$itemId]['total_quantity'] += $item->total_quantity;
+            $groupedItems[$itemId]['warehouse_quantities'][$item->warehouse_id] = $item->total_quantity;
+        }
+
+        $items = collect($groupedItems)->values();
+
+        return view('report.report_item', compact('items', 'warehouse_name', 'warehouses'));
+    }
+
+
     public function monthly_invoice_search(Request $request)
     {
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
