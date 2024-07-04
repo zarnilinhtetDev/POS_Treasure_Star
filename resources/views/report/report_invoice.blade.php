@@ -149,7 +149,7 @@
                                             <div class="col-md-3 form-group" style="display: none;">
                                                 <label for="branch">Branch:</label>
                                                 <select name="branch" id="branch" class="form-control">
-                                                    @foreach ($branch_drop as $drop)
+                                                    @foreach ($branchs as $drop)
                                                         @if ($drop->id == auth()->user()->level)
                                                             <option value="{{ $drop->id }}">
                                                                 {{ $drop->name }}

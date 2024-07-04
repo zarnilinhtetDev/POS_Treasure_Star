@@ -207,6 +207,7 @@ Route::middleware('auth')->group(function () {
     //Excel_Item_Export & Import
     Route::get('file-import-export', [ItemController::class, 'fileImportExport']);
     Route::post('file-import', [ItemController::class, 'fileImport'])->name('file-import');
+    Route::post('file-update-import', [ItemController::class, 'fileUpdateImport'])->name('file-update-import');
     Route::get('file-export', [ItemController::class, 'fileExport'])->name('file-export');
     Route::get('file-import-template', [ItemController::class, 'fileImportTemplate'])->name('file-import-template');
 

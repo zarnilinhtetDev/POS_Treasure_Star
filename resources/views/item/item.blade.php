@@ -117,61 +117,114 @@
                     </div>
                 @endif
                 <div class="container-fluid">
-                    <div class="ml-2 row d-flex">
-                        <form action="{{ route('file-import') }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            <div class="mb-4 form-group" style="max-width: 500px; margin: 0 auto;">
+                    <div class="row">
+                        <div class="ml-2 col row d-flex">
+                            <form action="{{ route('file-import') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="mb-4 form-group" style="max-width: 500px; margin: 0 auto;">
 
-                                <div class="text-left custom-file">
+                                    <div class="text-left custom-file">
 
-                                    @if (Auth::user()->is_admin == '1')
-                                        <label for="warehouse">Choose Location</label>
-                                        <select name="warehouse_id" id="warehouse" class="form-control" required>
-                                            @foreach ($warehouses as $warehouse)
-                                                <option value="{{ $warehouse->id }}">{{ $warehouse->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    @else
-                                        <label for="warehouse">Choose Location</label>
-                                        <select name="warehouse_id" id="warehouse" class="form-control" required>
-                                            @php
-                                                $userPermissions = auth()->user()->level
-                                                    ? json_decode(auth()->user()->level)
-                                                    : [];
-                                            @endphp
-                                            @foreach ($warehouses as $warehouse)
-                                                @if (in_array($warehouse->id, $userPermissions))
+                                        @if (Auth::user()->is_admin == '1')
+                                            <label for="warehouse">Choose Location</label>
+                                            <select name="warehouse_id" id="warehouse" class="form-control" required>
+                                                @foreach ($warehouses as $warehouse)
                                                     <option value="{{ $warehouse->id }}">{{ $warehouse->name }}
                                                     </option>
-                                                @endif
-                                            @endforeach
-                                        </select>
+                                                @endforeach
+                                            </select>
+                                        @else
+                                            <label for="warehouse">Choose Location</label>
+                                            <select name="warehouse_id" id="warehouse" class="form-control" required>
+                                                @php
+                                                    $userPermissions = auth()->user()->level
+                                                        ? json_decode(auth()->user()->level)
+                                                        : [];
+                                                @endphp
+                                                @foreach ($warehouses as $warehouse)
+                                                    @if (in_array($warehouse->id, $userPermissions))
+                                                        <option value="{{ $warehouse->id }}">{{ $warehouse->name }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
 
-                                    @endif
+                                        @endif
 
 
-                                    <div class="p-1 mt-2 text-left custom-file col"
-                                        style="border:#d0d0db 1px solid;background-color: white">
-                                        <input type="file" name="file" class="" id="customFile">
+                                        <div class="p-1 mt-2 text-left custom-file col"
+                                            style="border:#d0d0db 1px solid;background-color: white">
+                                            <input type="file" name="file" class="" id="customFile">
+                                        </div>
+                                        <button class="mt-3 btn btn-primary">Import </button>
+                                        {{-- @endif --}}
+                                        <a class="mt-3 btn btn-success" href="{{ route('file-export') }}">Export </a>
                                     </div>
-                                    <button class="mt-3 btn btn-primary">Import </button>
-                                    {{-- @endif --}}
-                                    <a class="mt-3 btn btn-success" href="{{ route('file-export') }}">Export </a>
                                 </div>
-                            </div>
-                            {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin' || Auth::user()->type == 'Warehouse') --}}
-                            <a class="" href="{{ route('file-import-template') }}">Download
-                                Import CSV Template</a>
-                            {{-- @endif --}}
+                                {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin' || Auth::user()->type == 'Warehouse') --}}
+                                <a class="" href="{{ route('file-import-template') }}">Download
+                                    Import CSV Template</a>
+                                {{-- @endif --}}
 
-                        </form>
+                            </form>
+                        </div>
+                        <div class="ml-2 col row d-flex">
+                            <form action="{{ route('file-update-import') }}" method="POST"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <div class="mb-4 form-group" style="max-width: 500px; margin: 0 auto;">
+
+                                    <div class="text-left custom-file">
+
+
+                                        @if (Auth::user()->is_admin == '1')
+                                            <label for="warehouse">Choose Location</label>
+                                            <select name="warehouse_id" id="warehouse" class="form-control" required>
+                                                @foreach ($warehouses as $warehouse)
+                                                    <option value="{{ $warehouse->id }}">{{ $warehouse->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        @else
+                                            <label for="warehouse">Choose Location</label>
+                                            <select name="warehouse_id" id="warehouse" class="form-control" required>
+                                                @php
+                                                    $userPermissions = auth()->user()->level
+                                                        ? json_decode(auth()->user()->level)
+                                                        : [];
+                                                @endphp
+                                                @foreach ($warehouses as $warehouse)
+                                                    @if (in_array($warehouse->id, $userPermissions))
+                                                        <option value="{{ $warehouse->id }}">{{ $warehouse->name }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+
+                                        @endif
+
+
+                                        <div class="p-1 mt-2 text-left custom-file col"
+                                            style="border:#d0d0db 1px solid;background-color: white">
+                                            <input type="file" name="file" class="" id="customFile">
+                                        </div>
+                                        <button class="mt-3 btn btn-primary">Update Price</button>
+
+
+                                    </div>
+                                </div>
+
+
+                            </form>
+                        </div>
                     </div>
-                    {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin' || Auth::user()->type == 'Warehouse') --}}
+
+
                     <div class="mt-5 mr-auto col">
                         <a href="{{ url('items_register') }}" type="button" class="mr-auto btn btn-primary ">
                             Item Register</a>
                     </div>
-                    {{-- @endif --}}
+
 
                     <div class="container-fluid">
 
@@ -199,7 +252,7 @@
                                                 <th>Barcode</th>
 
                                                 <th>Expired Date</th>
-                                                <!-- <th>Market</th> -->
+
                                                 <th style="background-color: rgb(221, 215, 215)">Quantity</th>
                                                 <th>Bar Code
                                                 </th>
@@ -210,7 +263,7 @@
                                             @php
                                                 $no = '1';
                                             @endphp
-                                            {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+
                                             @foreach ($items as $item)
                                                 <tr>
                                                     <td>{{ $no }}</td>
@@ -263,125 +316,7 @@
                                                     $no++;
                                                 @endphp
                                             @endforeach
-                                            {{-- @elseif (auth()->user()->type == 'Shop')
-                                                @foreach ($items as $item)
-                                                    @if ($item->warehouse_id == Auth::user()->level)
-                                                        <tr>
-                                                            <td>{{ $no }}</td>
-                                                            <td>{{ $item->item_name }}</td>
-                                                            <td>{{ $item->category }}</td>
-                                                            <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
-                                                            <td>{{ $item->retail_price ?? '0' }}</td>
-                                                            <td>{{ $item->wholesale_price ?? '0' }}</td>
-                                                            <td>{{ $item->buy_price ?? '0' }}</td>
-                                                            <td>{{ $item->barcode }}</td>
 
-                                                            <td>
-                                                                @if ($item->expired_date)
-                                                                    {{ $item->expired_date }}
-                                                                @else
-                                                                    No Expired Date
-                                                                @endif
-                                                            </td>
-
-                                                            <td>
-                                                                @if ($item->quantity <= $item->reorder_level_stock)
-                                                                    <span
-                                                                        class="text-danger">{{ $item->quantity }}</span>
-                                                                @else
-                                                                    {{ $item->quantity }}
-                                                                @endif
-
-                                                            </td>
-                                                            <td><a href="{{ url('barcode', $item->id) }}"
-                                                                    class="mt-1 text-white btn btn-warning btn-sm">Generate</a>
-                                                            </td>
-                                                            <td>
-
-                                                                <a href="{{ url('item_edit', $item->id) }}"
-                                                                    class="btn btn-success btn-sm"><i
-                                                                        class="fa-solid fa-pen-to-square"></i></a>
-
-                                                                @if (Auth::user()->type == 'Warehouse')
-                                                                    <a href="{{ url('item_details', $item->id) }}"
-                                                                        class="btn btn-primary btn-sm"><i
-                                                                            class="fa-solid fa-eye"></i></a>
-
-
-                                                                    <a href="{{ url('item_delete', $item->id) }}"
-                                                                        class="btn btn-danger btn-sm"
-                                                                        onclick="return confirm('Are you sure you want to delete this Item ?')"><i
-                                                                            class="fa-solid fa-trash"></i></a>
-                                                                    <a href="{{ url('in_out', $item->id) }}"
-                                                                        class="mt-1 btn btn-info btn-sm">In/Out
-                                                                        History </a>
-                                                                @endif
-                                                            </td>
-                                                        </tr>
-                                                        @php
-                                                            $no++;
-                                                        @endphp
-                                                    @endif
-                                                @endforeach
-                                            @elseif (Auth::user()->type == 'Warehouse')
-                                                @foreach ($items as $item)
-                                                    <tr>
-                                                        <td>{{ $no }}</td>
-                                                        <td>{{ $item->item_name }}</td>
-                                                        <td>{{ $item->category }}</td>
-                                                        <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
-                                                        <td>{{ $item->retail_price ?? '0' }}</td>
-                                                        <td>{{ $item->wholesale_price ?? '0' }}</td>
-                                                        <td>{{ $item->buy_price ?? '0' }}</td>
-                                                        <td>{{ $item->barcode }}</td>
-
-                                                        <td>
-                                                            @if ($item->expired_date)
-                                                                {{ $item->expired_date }}
-                                                            @else
-                                                                No Expired Date
-                                                            @endif
-                                                        </td>
-
-                                                        <td>
-                                                            @if ($item->quantity <= $item->reorder_level_stock)
-                                                                <span class="text-danger">{{ $item->quantity }}</span>
-                                                            @else
-                                                                {{ $item->quantity }}
-                                                            @endif
-
-                                                        </td>
-                                                        <td><a href="{{ url('barcode', $item->id) }}"
-                                                                class="mt-1 text-white btn btn-warning btn-sm">Generate</a>
-                                                        </td>
-                                                        <td>
-
-                                                            <a href="{{ url('item_edit', $item->id) }}"
-                                                                class="btn btn-success btn-sm"><i
-                                                                    class="fa-solid fa-pen-to-square"></i></a>
-
-                                                            @if (Auth::user()->type == 'Warehouse')
-                                                                <a href="{{ url('item_details', $item->id) }}"
-                                                                    class="btn btn-primary btn-sm"><i
-                                                                        class="fa-solid fa-eye"></i></a>
-
-
-                                                                <a href="{{ url('item_delete', $item->id) }}"
-                                                                    class="btn btn-danger btn-sm"
-                                                                    onclick="return confirm('Are you sure you want to delete this Item ?')"><i
-                                                                        class="fa-solid fa-trash"></i></a>
-                                                                <a href="{{ url('in_out', $item->id) }}"
-                                                                    class="mt-1 btn btn-info btn-sm">In/Out
-                                                                    History </a>
-                                                            @endif
-                                                        </td>
-                                                    </tr>
-                                                    @php
-                                                        $no++;
-                                                    @endphp
-                                                @endforeach
-
-                                            @endif --}}
                                         </tbody>
 
                                     </table>
@@ -422,12 +357,22 @@
 
     <!-- Page specific script -->
     <script>
-        new DataTable('#example1', {
-
-            "lengthChange": false,
-            "paging": true,
-            "pageLength": 100,
-
+        $(document).ready(function() {
+            new DataTable('#example1', {
+                "lengthChange": false,
+                "paging": true,
+                "pageLength": 100,
+                "dom": 'Bfrtip',
+                "buttons": [{
+                    extend: 'excelHtml5',
+                    text: 'Change Price Excel',
+                    exportOptions: {
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,
+                            9
+                        ]
+                    }
+                }]
+            });
         });
     </script>
 </body>

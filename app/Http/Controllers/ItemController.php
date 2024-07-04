@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\Exports\ItemsImportTemplate;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\ItemsUpdateImport;
 //use File;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Storage;
@@ -161,6 +162,33 @@ class ItemController extends Controller
             return back()->with('error', 'An error occurred while importing the file: ' . $e->getMessage());
         }
     }
+
+    public function fileUpdateImport(Request $request)
+    {
+        try {
+            $request->validate([
+                'warehouse_id' => 'required|exists:warehouses,id',
+                'file' => 'required|file|mimes:xlsx,xls,csv',
+            ], [
+                'file.required' => 'Please upload a file.',
+                'file.file' => 'The uploaded file is invalid.',
+                'file.mimes' => 'The file must be a valid Excel or CSV file.',
+            ]);
+
+            // Get the warehouse_id from the request
+            $warehouseId = $request->warehouse_id;
+            // Get the file from the request
+            $file = $request->file('file');
+            // Import the file and associate it with the warehouse
+            $import = new ItemsUpdateImport($warehouseId);
+            Excel::import($import, $file->store('temp'));
+
+            return back()->with('success', 'File Import Is Successfully!');
+        } catch (\Exception $e) {
+            return back()->with('error', 'An error occurred while importing the file: ' . $e->getMessage());
+        }
+    }
+
     public function fileExport()
     {
         return Excel::download(new ItemsExport, 'items.xlsx');
