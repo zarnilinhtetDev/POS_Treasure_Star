@@ -133,32 +133,41 @@
                                             <label for="end_date">Date To:</label>
                                             <input type="date" name="end_date" class="form-control" required>
                                         </div>
-                                        @if (auth()->user()->is_admin == '1' || Auth::user()->type == 'Admin')
-                                            <div class="col-md-3 form-group">
-                                                <label for="branch">Branch:</label>
-                                                <select name="branch" id="branch" class="form-control">
-                                                    <option value="">All</option>
-                                                    @foreach ($branchs as $drop)
-                                                        <option value="{{ $drop->id }}">
-                                                            {{ $drop->name }}
+                                        @if (auth()->user()->is_admin == '1')
+                                            <div class="form-group col-md-3">
+                                                <label for="branch">Location<span class="text-danger">*</span></label>
+
+                                                <select name="branch" id="branch" class="form-control" required>
+
+                                                    @foreach ($branchs as $branch)
+                                                        <option value="{{ $branch->id }}">{{ $branch->name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         @else
-                                            <div class="col-md-3 form-group" style="display: none;">
-                                                <label for="branch">Branch:</label>
-                                                <select name="branch" id="branch" class="form-control">
-                                                    @foreach ($branchs as $drop)
-                                                        @if ($drop->id == auth()->user()->level)
-                                                            <option value="{{ $drop->id }}">
-                                                                {{ $drop->name }}
+                                            <div class="form-group col-md-3">
+                                                <label for="branch">Location<span class="text-danger">*</span></label>
+
+                                                <select name="branch" id="branch" class="form-control" required>
+                                                    @php
+                                                        $userPermissions = auth()->user()->level
+                                                            ? json_decode(auth()->user()->level)
+                                                            : [];
+                                                    @endphp
+                                                    <option value="" selected disabled>Select Location
+                                                    </option>
+                                                    @foreach ($branchs as $branch)
+                                                        @if (in_array($branch->id, $userPermissions))
+                                                            <option value="{{ $branch->id }}">
+                                                                {{ $branch->name }}
                                                             </option>
                                                         @endif
                                                     @endforeach
                                                 </select>
                                             </div>
                                         @endif
+
                                         <div class="col-md-2 form-group">
                                             <label for="">&nbsp;</label>
                                             <input type="submit" class="btn btn-primary form-control" value="Search"
