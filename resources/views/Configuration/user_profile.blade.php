@@ -103,9 +103,8 @@
 
                                             <div class="row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="name">Company Name <span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="name" required
+                                                    <label for="name">Company Name</label>
+                                                    <input type="text" class="form-control" id="name" 
                                                         autofocus name="name" value="">
                                                 </div>
 
@@ -155,8 +154,8 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="name">Address<span class="text-danger">*</span></label>
-                                                <textarea name="address" id="" cols="30" rows="5" class="form-control"></textarea required>
+                                                <label for="name">Address</label>
+                                                <textarea name="address" id="" cols="30" rows="5" class="form-control"></textarea>
                                             </div>
                                 
                                 <div class="form-group">
@@ -166,10 +165,9 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label for="phno1">Phone Number <span
-                                                                class="text-danger">*</span></label>
+                                                        <label for="phno1">Phone Number</label>
                                                         <input type="tel" class="form-control" id="phone_number1"
-                                                            name="phno1" value="" required>
+                                                            name="phno1" value="" >
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
@@ -183,7 +181,7 @@
                                                     <div class="form-group">
                                                         <label for="phno2">Email</label>
                                                         <input type="email" class="form-control" id="phone_number2"
-                                                            name="email" value="" required>
+                                                            name="email" value="">
                                                     </div>
                                                 </div>
 

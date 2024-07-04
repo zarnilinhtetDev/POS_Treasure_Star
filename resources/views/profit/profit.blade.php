@@ -75,7 +75,7 @@
 
                 <div class="my-5 container-fluid">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-10">
                             <form action="{{ url('search') }}" method="get">
                                 <div class="row">
                                     <div class="col-md-3 form-group">
@@ -87,7 +87,7 @@
                                         <input type="date" name="end_date" class="form-control" required>
                                     </div>
                                     @if (auth()->user()->is_admin == '1')
-                                        <div class="form-group">
+                                        <div class="form-group col-md-3">
                                             <label for="branch">Location<span class="text-danger">*</span></label>
 
                                             <select name="branch" id="branch" class="form-control" required>
@@ -99,7 +99,7 @@
                                             </select>
                                         </div>
                                     @else
-                                        <div class="form-group">
+                                        <div class="form-group col-md-3">
                                             <label for="branch">Location<span class="text-danger">*</span></label>
 
                                             <select name="branch" id="branch" class="form-control" required>

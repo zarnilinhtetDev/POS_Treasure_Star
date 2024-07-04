@@ -102,10 +102,9 @@
 
                                             <div class="row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="name">Company Name <span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="name" required
-                                                        autofocus name="name" value="{{ $user_profile->name }}">
+                                                    <label for="name">Company Name</label>
+                                                    <input type="text" class="form-control" id="name" autofocus
+                                                        name="name" value="{{ $user_profile->name }}">
                                                 </div>
 
                                                 @if (auth()->user()->is_admin == '1')
@@ -163,8 +162,8 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="name">Address<span class="text-danger">*</span></label>
-                                                <textarea name="address" id="" cols="30" rows="5" class="form-control" required>{{ $user_profile->address }}</textarea>
+                                                <label for="name">Address</label>
+                                                <textarea name="address" id="" cols="30" rows="5" class="form-control">{{ $user_profile->address }}</textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="name">Description</label>
@@ -173,11 +172,9 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label for="phno1">Phone Number <span
-                                                                class="text-danger">*</span></label>
+                                                        <label for="phno1">Phone Number</label>
                                                         <input type="tel" class="form-control" id="phone_number1"
-                                                            name="phno1" value="{{ $user_profile->phno1 }}"
-                                                            required>
+                                                            name="phno1" value="{{ $user_profile->phno1 }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
@@ -191,8 +188,7 @@
                                                     <div class="form-group">
                                                         <label for="phno2">Email</label>
                                                         <input type="email" class="form-control" id="phone_number2"
-                                                            name="email" value="{{ $user_profile->email }}"
-                                                            required>
+                                                            name="email" value="{{ $user_profile->email }}">
                                                     </div>
                                                 </div>
                                             </div>
