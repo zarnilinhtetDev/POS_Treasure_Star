@@ -201,6 +201,7 @@ Route::middleware('auth')->group(function () {
 
     //Profit
     Route::get('profit', [ProfitController::class, 'index']);
+    Route::get('/index', [ProfitController::class, 'index'])->name('profit_report');
     Route::get('search', [ProfitController::class, 'search']);
 
     //Excel_Item_Export & Import
@@ -232,9 +233,13 @@ Route::middleware('auth')->group(function () {
 
 
     //UserProfile
+    Route::get('config_manage', [UserProfileController::class, 'index']);
     Route::get('config', [UserProfileController::class, 'config'])->name('config');
     Route::post('config_store', [UserProfileController::class, 'config_store'])->name('config_store');
-    Route::post('config_edit', [UserProfileController::class, 'config_edit'])->name('config_edit');
+    Route::get('config_edit/{id}', [UserProfileController::class, 'edit']);
+    Route::get('config_delete/{id}', [UserProfileController::class, 'delete']);
+    Route::post('config_update/{id}', [UserProfileController::class, 'config_edit']);
+    Route::get('config_details/{id}', [UserProfileController::class, 'details']);
 });
 Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

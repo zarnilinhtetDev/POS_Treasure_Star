@@ -78,21 +78,44 @@
                         <div class="col-md-6">
                             <form action="{{ url('search') }}" method="get">
                                 <div class="row">
-                                    <div class="col-md-5 form-group">
-                                        <label for="">Date From :</label>
+                                    <div class="col-md-3 form-group">
+                                        <label for="start_date">Date From:</label>
                                         <input type="date" name="start_date" class="form-control" required>
                                     </div>
-                                    <div class="col-md-5 form-group">
-                                        <label for="">Date To :</label>
+                                    <div class="col-md-3 form-group">
+                                        <label for="end_date">Date To:</label>
                                         <input type="date" name="end_date" class="form-control" required>
                                     </div>
-                                    <div class="mt-3 col-md-3 form-group">
+                                    @if (auth()->user()->is_admin == '1' || Auth::user()->type == 'Admin')
+                                        <div class="col-md-3 form-group">
+                                            <label for="branch">Branch:</label>
+                                            <select name="branch" id="branch" class="form-control">
+                                                <option value="">All</option>
+                                                @foreach ($branchs as $drop)
+                                                    <option value="{{ $drop->id }}">{{ $drop->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @else
+                                        <div class="col-md-3 form-group" style="display: none;">
+                                            <label for="branch">Branch:</label>
+                                            <select name="branch" id="branch" class="form-control">
+                                                @foreach ($branch_drop as $drop)
+                                                    @if ($drop->id == auth()->user()->level)
+                                                        <option value="{{ $drop->id }}">{{ $drop->name }}</option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @endif
+                                    <div class="col-md-2 form-group">
+                                        <label for="">&nbsp;</label>
                                         <input type="submit" class="btn btn-primary form-control" value="Search"
                                             style="background-color: #218838">
                                     </div>
-
                                 </div>
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -102,9 +125,41 @@
 
                     <div class="mt-3 col-md-12">
                         <div class="card ">
-                            <div class="card-header">
+                            <div class="card-header d-flex justify-content-between align-items-center">
                                 <h3 class="card-title">Monthly Net Profit Table</h3>
+                                <div class="dropdown ml-auto mr-5">
+                                    <div id="branchDropdown" class="dropdown ml-auto"
+                                        style="display:inline-block; margin-left: 10px;">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                            {{ $currentBranchName }}
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a href="{{ url('index') }}" class="dropdown-item">All Invoices</a>
+                                            @if (auth()->user()->is_admin == '1')
+                                                @foreach ($branchs as $drop)
+                                                    <a class="dropdown-item"
+                                                        href="{{ url('index?branch=' . $drop->id) }}">{{ $drop->name }}</a>
+                                                @endforeach
+                                            @else
+                                                @php
+                                                    $userPermissions = auth()->user()->level
+                                                        ? json_decode(auth()->user()->level)
+                                                        : [];
+                                                @endphp
+                                                @foreach ($branchs as $drop)
+                                                    @if (in_array($drop->id, $userPermissions))
+                                                        <a class="dropdown-item"
+                                                            href="{{ url('index?branch=' . $drop->id) }}">{{ $drop->name }}</a>
+                                                    @endif
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
                             <!-- /.card-header -->
                             <div class="card-body">
                                 @php

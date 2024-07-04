@@ -62,19 +62,21 @@
             </div>
         </div>
         @foreach ($profile as $pic)
-            <div class="mt-5 text-center">
-                <img src="{{ asset('logos/' . ($pic->logos ?? 'null')) }}" width="180" height="120">
+            @if ($invoice->branch == $pic->branch)
+                <div class="mt-5 text-center">
+                    <img src="{{ asset('logos/' . ($pic->logos ?? 'null')) }}" width="180" height="120">
 
-            </div>
-            <div class="row" style="margin-top: 30px;">
-                <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
+                </div>
+                <div class="row" style="margin-top: 30px;">
+                    <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
 
-                <p class="text-center fw-bold" style="font-size: 14px;">
-                    {{ $pic->address }}
-                    <br>
-                    {{ $pic->phno1 }}, {{ $pic->phno2 }}
-                </p>
-            </div>
+                    <p class="text-center fw-bold" style="font-size: 14px;">
+                        {{ $pic->address }}
+                        <br>
+                        {{ $pic->phno1 }}, {{ $pic->phno2 }}
+                    </p>
+                </div>
+            @endif
         @endforeach
 
         <div class="mt-3 row">
@@ -448,9 +450,23 @@ a {
                         <td class="content-wrap aligncenter">
                             <table >
                                 <tbody><tr>
-                    <h3 style="font-weight:bold;margin-bottom:10px;">သရဖူစတိုး</h3>
-                    <p style="font-size:13px">  အမှတ်(၃)၊ လမ်းမတော်လမ်း၊အနောက်ရပ်၊သီပေါမြို့။<br>
-                        09453131493 , 09679007355 , 09421099135</p>
+                   @foreach ($profile as $pic)
+            @if ($invoice->branch == $pic->branch)
+                <div class="mt-5 text-center">
+                    <img src="{{ asset('logos/' . ($pic->logos ?? 'null')) }}" width="180" height="120">
+
+                </div>
+                <div class="row" style="margin-top: 30px;">
+                    <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
+
+                    <p class="text-center fw-bold" style="font-size: 14px;">
+                        {{ $pic->address }}
+                        <br>
+                        {{ $pic->phno1 }}, {{ $pic->phno2 }}
+                    </p>
+                </div>
+            @endif
+        @endforeach
 
 
                                 </tr>

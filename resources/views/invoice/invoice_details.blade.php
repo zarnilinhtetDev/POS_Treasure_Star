@@ -45,20 +45,20 @@
 
     <div>
         @foreach ($profile as $pic)
-            <div class="mt-1 text-center">
+            @if ($invoice->branch == $pic->branch)
+                <div class="mt-1 text-center">
+                    <img src="{{ asset('logos/' . ($pic->logos ?? 'null')) }}" width="180" height="120">
+                </div>
+                <div class="row" style="margin-top: 10px;">
+                    <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
 
-
-                <img src="{{ asset('logos/' . ($pic->logos ?? 'null')) }}" width="180" height="120">
-            </div>
-            <div class="row" style="margin-top: 10px;">
-                <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
-
-                <p class="text-center fw-bold" style="font-size: 14px;">
-                    {{ $pic->address }}
-                    <br>
-                    {{ $pic->phno1 }}, {{ $pic->phno2 }}
-                </p>
-            </div>
+                    <p class="text-center fw-bold" style="font-size: 14px;">
+                        {{ $pic->address }}
+                        <br>
+                        {{ $pic->phno1 }}, {{ $pic->phno2 }}
+                    </p>
+                </div>
+            @endif
         @endforeach
 
         {{-- <h1>

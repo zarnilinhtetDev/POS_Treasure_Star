@@ -213,7 +213,7 @@
                         </ul>
                     </li>
                 @endif
-  @if (in_array('Location', $userPermissions) || auth()->user()->is_admin == '1')
+                @if (in_array('Location', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
                         <a href="{{ url('/warehouse') }}" class="nav-link">
                             <i class="text-white fa-solid fa-house nav-icon "></i>
@@ -290,7 +290,7 @@
 
                 @if (in_array('Configuration', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
-                        <a href="{{ url('/config') }}" class="nav-link">
+                        <a href="{{ url('/config_manage') }}" class="nav-link">
                             <i class="fa-solid fa-gear nav-icon text-white"></i>
                             <p class="pl-3 text-white">
                                 Configuration

@@ -3,14 +3,32 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserProfile;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 
 class UserProfileController extends Controller
 {
+
+    public function index()
+    {
+
+
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+
+        if (auth()->user()->is_admin == '1') {
+            $user_profiles = UserProfile::latest()->get();
+            $branchs = Warehouse::all();
+        } else {
+            $user_profiles = UserProfile::whereIn('branch', $warehousePermission)->latest()->get();
+            $branchs = Warehouse::all();
+        }
+
+        return view('Configuration.user_profile_manage', compact('user_profiles', 'branchs'));
+    }
     public function config()
     {
-        $user_profile = UserProfile::find(1);
-        return view('Configuration.user_profile', compact('user_profile'));
+        $branchs = Warehouse::all();
+        return view('Configuration.user_profile', compact('branchs'));
     }
 
 
@@ -23,6 +41,7 @@ class UserProfileController extends Controller
             'phno1' => 'required|string|max:15',
             'phno2' => 'nullable|string|max:15',
             'email' => 'required|email',
+            'branch' => 'required',
         ]);
 
         $profile = new UserProfile();
@@ -33,6 +52,7 @@ class UserProfileController extends Controller
         $profile->phno2 = $request->input('phno2');
         $profile->email = $request->input('email');
         $profile->address = $request->input('address');
+        $profile->branch = $request->input('branch');
         $logo = $request->file('logos'); // Corrected name here
         if ($logo) {
             $imagename = time() . '.' . $logo->getClientOriginalExtension();
@@ -42,10 +62,17 @@ class UserProfileController extends Controller
 
         $profile->save();
 
-        return redirect()->back()->with('success', 'Configuration Successfully');
+        return redirect(url('config_manage'))->with('success', 'Configuration Successfully');
     }
 
-    public function config_edit(Request $request)
+    public function edit($id)
+    {
+        $user_profile = UserProfile::find($id);
+        $branchs = Warehouse::all();
+        return view('Configuration.user_profile_edit', compact('user_profile', 'branchs'));
+    }
+
+    public function config_edit(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
@@ -54,9 +81,10 @@ class UserProfileController extends Controller
             'phno1' => 'required|string|max:15',
             'phno2' => 'nullable|string|max:15',
             'email' => 'required|email',
+            'branch' => 'required',
         ]);
 
-        $profile = UserProfile::find(1);
+        $profile = UserProfile::find($id);
         $profile->name = $request->input('name');
         $profile->address = $request->input('address');
         $profile->description = $request->input('description');
@@ -64,6 +92,7 @@ class UserProfileController extends Controller
         $profile->phno2 = $request->input('phno2');
         $profile->email = $request->input('email');
         $profile->address = $request->input('address');
+        $profile->branch = $request->input('branch');
         $logo = $request->file('logos');
         if ($logo) {
             $imagename = time() . '.' . $logo->getClientOriginalExtension();
@@ -73,6 +102,19 @@ class UserProfileController extends Controller
 
         $profile->update();
 
-        return redirect()->back()->with('success', 'Configuration Successfully');
+        return redirect(url('config_manage'))->with('success', 'Configuration Update Successfully');
+    }
+
+    public function details($id)
+    {
+        $user_profile = UserProfile::find($id);
+        return view('Configuration.user_profile_details', compact('user_profile'));
+    }
+
+    public function delete($id)
+    {
+        $user_profile = UserProfile::find($id);
+        $user_profile->delete();
+        return redirect()->back()->with('delete', 'Configuration Delete Successfully');
     }
 }

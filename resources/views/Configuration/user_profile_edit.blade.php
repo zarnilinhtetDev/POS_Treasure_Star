@@ -61,13 +61,13 @@
                     <div class="container-fluid">
                         <div class="mb-2 row">
                             <div class="col-sm-6">
-                                <h1> Configuration</h1>
+                                <h1> Configuration Edit</h1>
                             </div>
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
                                     <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a>
                                     </li>
-                                    <li class="breadcrumb-item"> Configuration
+                                    <li class="breadcrumb-item"> Configuration Edit
                                     </li>
                                 </ol>
                             </div>
@@ -90,13 +90,12 @@
                             <!-- general form elements -->
                             <div class="card">
                                 <div class="card-header">
-                                    <h3 class="card-title " style="font-weight: bold;">Profile </h3>
+                                    <h3 class="card-title " style="font-weight: bold;">Profile Edit</h3>
                                 </div>
                                 <!-- /.card-header -->
                                 <!-- form start -->
                                 <div class="card-body">
-                                    {{-- @if (empty($user_profile->name)) --}}
-                                    <form action="{{ asset('config_store') }}" method="POST"
+                                    <form action="{{ url('config_update', $user_profile->id) }}" method="POST"
                                         enctype="multipart/form-data">
                                         @csrf
                                         <div class="card-body">
@@ -106,20 +105,19 @@
                                                     <label for="name">Company Name <span
                                                             class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="name" required
-                                                        autofocus name="name" value="">
+                                                        autofocus name="name" value="{{ $user_profile->name }}">
                                                 </div>
 
                                                 @if (auth()->user()->is_admin == '1')
                                                     <div class="form-group col-md-6">
                                                         <label for="branch">Location<span
                                                                 class="text-danger">*</span></label>
-
                                                         <select name="branch" id="branch" class="form-control"
                                                             required>
-                                                            <option value="" selected disabled>Select Location
-                                                            </option>
                                                             @foreach ($branchs as $branch)
-                                                                <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                                <option value="{{ $branch->id }}"
+                                                                    {{ $branch->id == $user_profile->branch ? 'selected' : '' }}>
+                                                                    {{ $branch->name }}
                                                                 </option>
                                                             @endforeach
                                                         </select>
@@ -128,7 +126,6 @@
                                                     <div class="form-group col-md-6">
                                                         <label for="branch">Location<span
                                                                 class="text-danger">*</span></label>
-
                                                         <select name="branch" id="branch" class="form-control"
                                                             required>
                                                             @php
@@ -136,10 +133,10 @@
                                                                     ? json_decode(auth()->user()->level)
                                                                     : [];
                                                             @endphp
-
                                                             @foreach ($branchs as $branch)
                                                                 @if (in_array($branch->id, $userPermissions))
-                                                                    <option value="{{ $branch->id }}">
+                                                                    <option value="{{ $branch->id }}"
+                                                                        {{ $branch->id == $user_profile->branch ? 'selected' : '' }}>
                                                                         {{ $branch->name }}
                                                                     </option>
                                                                 @endif
@@ -148,20 +145,30 @@
                                                     </div>
                                                 @endif
                                             </div>
+
                                             <div class="form-group">
                                                 <label for="name">Company Logo</label>
-                                                <input type="file" class="form-control" id="name" autofocus
+                                                <div id="logoPreviewContainer" class="mt-3">
+                                                    <a href="{{ asset('logos/' . $user_profile->logos) }}"
+                                                        target="_blank" id="logoLink">
+                                                        <img src="{{ asset('logos/' . $user_profile->logos) }}"
+                                                            id="logoPreview" class="img-thumbnail"
+                                                            style="max-width: 200px; max-height: 200px;"
+                                                            alt="Company Logo Preview">
+                                                    </a>
+                                                </div>
+                                                <input type="file" class="form-control mt-3" id="name" autofocus
                                                     name="logos" value="">
+
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="name">Address<span class="text-danger">*</span></label>
-                                                <textarea name="address" id="" cols="30" rows="5" class="form-control"></textarea required>
+                                                <textarea name="address" id="" cols="30" rows="5" class="form-control" required>{{ $user_profile->address }}</textarea>
                                             </div>
-                                
-                                <div class="form-group">
-                                    <label for="name">Description</label>
-                                    <textarea name="description" id="" cols="30" rows="2" class="form-control"></textarea>
+                                            <div class="form-group">
+                                                <label for="name">Description</label>
+                                                <textarea name="description" id="" cols="30" rows="2" class="form-control">{{ $user_profile->description }}</textarea>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-4">
@@ -169,110 +176,33 @@
                                                         <label for="phno1">Phone Number <span
                                                                 class="text-danger">*</span></label>
                                                         <input type="tel" class="form-control" id="phone_number1"
-                                                            name="phno1" value="" required>
+                                                            name="phno1" value="{{ $user_profile->phno1 }}"
+                                                            required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="phno2">Phone Number</label>
                                                         <input type="tel" class="form-control" id="phone_number2"
-                                                            name="phno2" value="">
+                                                            name="phno2" value="{{ $user_profile->phno2 }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="phno2">Email</label>
                                                         <input type="email" class="form-control" id="phone_number2"
-                                                            name="email" value="" required>
+                                                            name="email" value="{{ $user_profile->email }}"
+                                                            required>
                                                     </div>
                                                 </div>
-
-
                                             </div>
                                         </div>
-
                                         <div class="modal-footer justify-content-end">
                                             <a href="{{ url('config_manage') }}" type="submit"
                                                 class="btn btn-danger">Back</a>
-                                            <button type="submit" class="btn btn-primary">Save </button>
+                                            <button type="submit" class="btn btn-primary">Update</button>
                                         </div>
                                     </form>
-                                    {{-- @else
-                                        <form action="{{ asset('config_edit') }}" method="POST"
-                                            enctype="multipart/form-data">
-                                            @csrf
-                                            <div class="card-body">
-
-                                                <div class="form-group">
-                                                    <label for="name">Company Name <span
-                                                            class="text-danger">*</span></label>
-                                                    <input type="text" class="form-control" id="name"
-                                                        required autofocus name="name"
-                                                        value="{{ $user_profile->name }}">
-                                                </div>
-
-
-
-                                                <div class="form-group">
-                                                    <label for="name">Company Logo</label>
-                                                    <div id="logoPreviewContainer" class="mt-3">
-                                                        <a href="{{ asset('logos/' . $user_profile->logos) }}"
-                                                            target="_blank" id="logoLink">
-                                                            <img src="{{ asset('logos/' . $user_profile->logos) }}"
-                                                                id="logoPreview" class="img-thumbnail"
-                                                                style="max-width: 200px; max-height: 200px;"
-                                                                alt="Company Logo Preview">
-                                                        </a>
-                                                    </div>
-                                                    <input type="file" class="form-control mt-3" id="name"
-                                                        autofocus name="logos" value="">
-
-                                                </div>
-
-                                                <div class="form-group">
-                                                    <label for="name">Address<span
-                                                            class="text-danger">*</span></label>
-                                                    <textarea name="address" id="" cols="30" rows="5" class="form-control" required>{{ $user_profile->address }}</textarea>
-                                                </div>
-                                                <div class="form-group">
-                                                    <label for="name">Description</label>
-                                                    <textarea name="description" id="" cols="30" rows="2" class="form-control">{{ $user_profile->description }}</textarea>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <label for="phno1">Phone Number <span
-                                                                    class="text-danger">*</span></label>
-                                                            <input type="tel" class="form-control"
-                                                                id="phone_number1" name="phno1"
-                                                                value="{{ $user_profile->phno1 }}" required>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <label for="phno2">Phone Number</label>
-                                                            <input type="tel" class="form-control"
-                                                                id="phone_number2" name="phno2"
-                                                                value="{{ $user_profile->phno2 }}">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <div class="form-group">
-                                                            <label for="phno2">Email</label>
-                                                            <input type="email" class="form-control"
-                                                                id="phone_number2" name="email"
-                                                                value="{{ $user_profile->email }}" required>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer justify-content-end">
-                                                <a href="{{ url('config_manage') }}" type="submit"
-                                                    class="btn btn-danger">Back</a>
-                                                <button type="submit" class="btn btn-primary">Update</button>
-                                            </div>
-                                        </form>
-                                    @endif --}}
 
                                 </div>
                             </div>
