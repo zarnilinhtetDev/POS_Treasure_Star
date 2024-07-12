@@ -676,7 +676,7 @@
                         location: Selectedlocation,
                     },
                     success: function(data) {
-                       
+
                         itemNameInput.val(data.wholesale_price);
 
                         partDesc.val(data.descriptions);
@@ -976,9 +976,7 @@
                 $('#commercial_text').val(totalTax.toFixed(2));
                 $('#total').val(totalTotal.toFixed(2));
                 $('#extra_discount').val('');
-                $('#paid').val('');
                 $('#total_total').val(total);
-                $('#balance').val('');
             }
 
             $(document).on("click", '#calculate', function(e) {
