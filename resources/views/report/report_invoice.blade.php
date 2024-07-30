@@ -25,8 +25,7 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
+                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
                 </li>
 
                 <li class="nav-item">
@@ -42,8 +41,7 @@
 
 
                 <div class="btn-group">
-                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown"
-                        aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         {{ auth()->user()->name }}
                     </button>
                     <div class="dropdown-menu ">
@@ -70,41 +68,32 @@
                     <div class="container mt-3">
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report') ? 'active' : '' }}"
-                                    href="{{ url('report') }}">Invoices</a>
+                                <a class="nav-link {{ request()->is('report') ? 'active' : '' }}" href="{{ url('report') }}">Invoices</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_quotation') ? 'active' : '' }}"
-                                    href="{{ url('report_quotation') }}">Quotations</a>
+                                <a class="nav-link {{ request()->is('report_quotation') ? 'active' : '' }}" href="{{ url('report_quotation') }}">Quotations</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}"
-                                    href="{{ url('report_pos') }}">POS</a>
+                                <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}" href="{{ url('report_pos') }}">POS</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_po') ? 'active' : '' }}"
-                                    href="{{ url('report_po') }}">Purchase Orders</a>
+                                <a class="nav-link {{ request()->is('report_po') ? 'active' : '' }}" href="{{ url('report_po') }}">Purchase Orders</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_purchase_return') ? 'active' : '' }}"
-                                    href="{{ url('report_purchase_return') }}">Purchase Return</a>
+                                <a class="nav-link {{ request()->is('report_purchase_return') ? 'active' : '' }}" href="{{ url('report_purchase_return') }}">Purchase Return</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_sale_return') ? 'active' : '' }}"
-                                    href="{{ url('report_sale_return') }}">Sale Return (Invoice)</a>
+                                <a class="nav-link {{ request()->is('report_sale_return') ? 'active' : '' }}" href="{{ url('report_sale_return') }}">Sale Return (Invoice)</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_item') ? 'active' : '' }}"
-                                    href="{{ url('report_item') }}">Items</a>
+                                <a class="nav-link {{ request()->is('report_item') ? 'active' : '' }}" href="{{ url('report_item') }}">Items</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('sale_return') ? 'active' : '' }}"
-                                    href="{{ url('sale_return') }}">Sale Return (POS)</a>
+                                <a class="nav-link {{ request()->is('sale_return') ? 'active' : '' }}" href="{{ url('sale_return') }}">Sale Return (POS)</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_expense') ? 'active' : '' }}"
-                                    href="{{ url('report_expense') }}">Expenses</a>
+                                <a class="nav-link {{ request()->is('report_expense') ? 'active' : '' }}" href="{{ url('report_expense') }}">Expenses</a>
                             </li>
                         </ul>
                     </div><!-- /.container-fluid -->
@@ -134,44 +123,43 @@
                                             <input type="date" name="end_date" class="form-control" required>
                                         </div>
                                         @if (auth()->user()->is_admin == '1')
-                                            <div class="form-group col-md-3">
-                                                <label for="branch">Location<span class="text-danger">*</span></label>
+                                        <div class="form-group col-md-3">
+                                            <label for="branch">Location<span class="text-danger">*</span></label>
 
-                                                <select name="branch" id="branch" class="form-control" required>
+                                            <select name="branch" id="branch" class="form-control" required>
 
-                                                    @foreach ($branchs as $branch)
-                                                        <option value="{{ $branch->id }}">{{ $branch->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                                @foreach ($branchs as $branch)
+                                                <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                         @else
-                                            <div class="form-group col-md-3">
-                                                <label for="branch">Location<span class="text-danger">*</span></label>
+                                        <div class="form-group col-md-3">
+                                            <label for="branch">Location<span class="text-danger">*</span></label>
 
-                                                <select name="branch" id="branch" class="form-control" required>
-                                                    @php
-                                                        $userPermissions = auth()->user()->level
-                                                            ? json_decode(auth()->user()->level)
-                                                            : [];
-                                                    @endphp
-                                                    <option value="" selected disabled>Select Location
-                                                    </option>
-                                                    @foreach ($branchs as $branch)
-                                                        @if (in_array($branch->id, $userPermissions))
-                                                            <option value="{{ $branch->id }}">
-                                                                {{ $branch->name }}
-                                                            </option>
-                                                        @endif
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                            <select name="branch" id="branch" class="form-control" required>
+                                                @php
+                                                $userPermissions = auth()->user()->level
+                                                ? json_decode(auth()->user()->level)
+                                                : [];
+                                                @endphp
+                                                <option value="" selected disabled>Select Location
+                                                </option>
+                                                @foreach ($branchs as $branch)
+                                                @if (in_array($branch->id, $userPermissions))
+                                                <option value="{{ $branch->id }}">
+                                                    {{ $branch->name }}
+                                                </option>
+                                                @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
                                         @endif
 
                                         <div class="col-md-2 form-group">
                                             <label for="">&nbsp;</label>
-                                            <input type="submit" class="btn btn-primary form-control" value="Search"
-                                                style="background-color: #218838">
+                                            <input type="submit" class="btn btn-primary form-control" value="Search" style="background-color: #218838">
                                         </div>
                                     </div>
                                 </form>
@@ -183,33 +171,28 @@
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h3 class="card-title">Invoices Report</h3>
                                 <div class="dropdown ml-auto mr-5">
-                                    <div id="branchDropdown" class="dropdown ml-auto"
-                                        style="display:inline-block; margin-left: 10px;">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button"
-                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false">
+                                    <div id="branchDropdown" class="dropdown ml-auto" style="display:inline-block; margin-left: 10px;">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             {{ $currentBranchName }}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a href="{{ url('report') }}" class="dropdown-item">All Invoices</a>
                                             @if (auth()->user()->is_admin == '1')
 
-                                                @foreach ($branchs as $drop)
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('report_invoice', $drop->id) }}">{{ $drop->name }}</a>
-                                                @endforeach
+                                            @foreach ($branchs as $drop)
+                                            <a class="dropdown-item" href="{{ route('report_invoice', $drop->id) }}">{{ $drop->name }}</a>
+                                            @endforeach
                                             @else
-                                                @php
-                                                    $userPermissions = auth()->user()->level
-                                                        ? json_decode(auth()->user()->level)
-                                                        : [];
-                                                @endphp
-                                                @foreach ($branchs as $drop)
-                                                    @if (in_array($drop->id, $userPermissions))
-                                                        <a class="dropdown-item"
-                                                            href="{{ route('report_invoice', $drop->id) }}">{{ $drop->name }}</a>
-                                                    @endif
-                                                @endforeach
+                                            @php
+                                            $userPermissions = auth()->user()->level
+                                            ? json_decode(auth()->user()->level)
+                                            : [];
+                                            @endphp
+                                            @foreach ($branchs as $drop)
+                                            @if (in_array($drop->id, $userPermissions))
+                                            <a class="dropdown-item" href="{{ route('report_invoice', $drop->id) }}">{{ $drop->name }}</a>
+                                            @endif
+                                            @endforeach
                                             @endif
 
                                         </div>
@@ -232,61 +215,79 @@
                                                 <th>Address</th>
                                                 <th>Date</th>
                                                 <th>Payment Method</th>
-                                                <th>Total Amount</th>
+                                                <th>Total Sale</th>
+                                                <th>Total Purchase</th>
+                                                <th>Profit</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @php
-                                                $no = '1';
+                                            $no = '1';
                                             @endphp
                                             @if (!empty($search_invoices))
-                                                @foreach ($search_invoices as $invoice)
-                                                    <tr>
-                                                        <td>{{ $no }}</td>
-                                                        <td>{{ $invoice->invoice_no }}</td>
-                                                        <td>
-                                                            @foreach ($branchs as $branch)
-                                                                @if ($branch->id == $invoice->branch)
-                                                                    {{ $branch->name }}
-                                                                @endif
-                                                            @endforeach
-                                                        </td>
-                                                        <td>{{ $invoice->customer_name }}</td>
-                                                        <td>{{ $invoice->phno }}</td>
-                                                        <td>{{ $invoice->type }}</td>
-                                                        <td>{{ $invoice->address }}</td>
-                                                        <td>{{ $invoice->invoice_date }}</td>
-                                                        <td>{{ $invoice->payment_method }}</td>
-                                                        <td>{{ number_format($invoice->total) }}</td>
-                                                    </tr>
-                                                    @php
-                                                        $no++;
-                                                    @endphp
-                                                @endforeach
+                                            @foreach ($search_invoices as $invoice)
+                                            <tr>
+                                                <td>{{ $no }}</td>
+                                                <td>
+                                                    <a href="{{ url('report_invoice_details', $invoice->id) }}">
+                                                        {{ $invoice->invoice_no }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    @foreach ($branchs as $branch)
+                                                    @if ($branch->id == $invoice->branch)
+                                                    {{ $branch->name }}
+                                                    @endif
+                                                    @endforeach
+                                                </td>
+                                                <td>{{ $invoice->customer_name }}</td>
+                                                <td>{{ $invoice->phno }}</td>
+                                                <td>{{ $invoice->type }}</td>
+                                                <td>{{ $invoice->address }}</td>
+                                                <td>{{ $invoice->invoice_date }}</td>
+                                                <td>{{ $invoice->payment_method }}</td>
+                                                <td>{{ number_format($invoice->total) }}</td>
+                                                <td>{{ number_format($invoice->total_buy_price) }}</td>
+
+                                                <td>{{ number_format($invoice->total - $invoice->total_buy_price) }}
+                                                </td>
+                                            </tr>
+                                            @php
+                                            $no++;
+                                            @endphp
+                                            @endforeach
                                             @else
-                                                @foreach ($invoices as $invoice)
-                                                    <tr>
-                                                        <td>{{ $no }}</td>
-                                                        <td>{{ $invoice->invoice_no }}</td>
-                                                        <td>
-                                                            @foreach ($branchs as $branch)
-                                                                @if ($branch->id == $invoice->branch)
-                                                                    {{ $branch->name }}
-                                                                @endif
-                                                            @endforeach
-                                                        </td>
-                                                        <td>{{ $invoice->customer_name }}</td>
-                                                        <td>{{ $invoice->phno }}</td>
-                                                        <td>{{ $invoice->type }}</td>
-                                                        <td>{{ $invoice->address }}</td>
-                                                        <td>{{ $invoice->invoice_date }}</td>
-                                                        <td>{{ $invoice->payment_method }}</td>
-                                                        <td>{{ number_format($invoice->total) }}</td>
-                                                    </tr>
-                                                    @php
-                                                        $no++;
-                                                    @endphp
-                                                @endforeach
+                                            @foreach ($invoices as $invoice)
+                                            <tr>
+                                                <td>{{ $no }}</td>
+                                                <td>
+                                                    <a href="{{ url('report_invoice_details', $invoice->id) }}">
+                                                        {{ $invoice->invoice_no }}
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    @foreach ($branchs as $branch)
+                                                    @if ($branch->id == $invoice->branch)
+                                                    {{ $branch->name }}
+                                                    @endif
+                                                    @endforeach
+                                                </td>
+                                                <td>{{ $invoice->customer_name }}</td>
+                                                <td>{{ $invoice->phno }}</td>
+                                                <td>{{ $invoice->type }}</td>
+                                                <td>{{ $invoice->address }}</td>
+                                                <td>{{ $invoice->invoice_date }}</td>
+                                                <td>{{ $invoice->payment_method }}</td>
+                                                <td>{{ number_format($invoice->total) }}</td>
+                                                <td>{{ number_format($invoice->total_buy_price) }}</td>
+
+                                                <td>{{ number_format($invoice->total - $invoice->total_buy_price) }}
+                                                </td>
+                                            </tr>
+                                            @php
+                                            $no++;
+                                            @endphp
+                                            @endforeach
                                             @endif
 
                                         <tfoot>
@@ -295,7 +296,17 @@
                                                 <td colspan="8" style="text-align:right">Total</td>
                                                 <td colspan="">
                                                     @if (!empty($search_invoices))
-                                                        {{ number_format($search_total) }}@else{{ number_format($total) }}
+                                                    {{ number_format($search_total) }}@else{{ number_format($total) }}
+                                                    @endif
+                                                </td>
+                                                <td colspan="">
+                                                    @if (!empty($search_invoices))
+                                                    {{ number_format($search_total_purchase) }}@else{{ number_format($totalPurchase) }}
+                                                    @endif
+                                                </td>
+                                                <td colspan="">
+                                                    @if (!empty($search_invoices))
+                                                    {{ number_format($search_total - $search_total_purchase) }}@else{{ number_format($total - $totalPurchase) }}
                                                     @endif
                                                 </td>
                                             </tr>
@@ -314,7 +325,9 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Payment Method</th>
-                                            <th>Amount</th>
+                                            <th>Total Sale</th>
+                                            <th>Total Purchase</th>
+                                            <th>Profit</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -322,25 +335,37 @@
                                             <td>1.</td>
                                             <td>Cash</td>
                                             <td>{{ number_format($totalCash) }}</td>
+                                            <td>{{ number_format($totalCashPurchase) }}</td>
+                                            <td>{{ number_format($totalCash - $totalCashPurchase) }}</td>
                                         </tr>
                                         <tr>
                                             <td>2.</td>
                                             <td>K Pay</td>
                                             <td>{{ number_format($totalKbz) }}</td>
+                                            <td>{{ number_format($totalKbzPurchase) }}</td>
+                                            <td>{{ number_format($totalKbz - $totalKbzPurchase) }}</td>
                                         </tr>
                                         <tr>
                                             <td>3.</td>
                                             <td>Wave</td>
                                             <td>{{ number_format($totalCB) }}</td>
+                                            <td>{{ number_format($totalCBPurchase) }}</td>
+                                            <td>{{ number_format($totalCB - $totalCBPurchase) }}</td>
                                         </tr>
                                         <tr>
                                             <td>4.</td>
                                             <td>Other</td>
                                             <td>{{ number_format($totalOther) }}</td>
+                                            <td>{{ number_format($totalOtherPurchase) }}</td>
+                                            <td>{{ number_format($totalOther - $totalOtherPurchase) }}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="2" style="text-align:right">Total</td>
+                                            <td>{{ number_format($totalCashPurchase + $totalKbzPurchase + $totalCBPurchase + $totalOtherPurchase) }}
+                                            </td>
                                             <td>{{ number_format($totalCash + $totalKbz + $totalCB + $totalOther) }}
+                                            </td>
+                                            <td>{{ number_format($totalCash + $totalKbz + $totalCB + $totalOther - ($totalCashPurchase + $totalKbzPurchase + $totalCBPurchase + $totalOtherPurchase)) }}
                                             </td>
                                         </tr>
                                     </tbody>

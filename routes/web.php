@@ -201,7 +201,8 @@ Route::middleware('auth')->group(function () {
     Route::get('sale_return_detail/{id}', [InvoiceController::class, 'sale_return_detail']);
     Route::get('sale_return_delete/{id}', [InvoiceController::class, 'sale_return_delete']);
     Route::get('sale_return_search', [InvoiceController::class, 'sale_return_search']);
-
+    Route::get('report_pos_receipt/{invoice}', [ReportController::class, 'pos_receipt']);
+    Route::get('report_invoice_details/{invoice}', [ReportController::class, 'report_invoice_detail']);
 
     //Profit
     Route::get('profit', [ProfitController::class, 'index']);

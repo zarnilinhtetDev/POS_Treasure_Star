@@ -6,6 +6,8 @@ use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\Invoice;
 use App\Models\PurchaseOrder;
+use App\Models\Sell;
+use App\Models\UserProfile;
 use App\Models\Warehouse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -38,12 +40,19 @@ class ReportController extends Controller
         $totalCB = $invoices->where('payment_method', 'Wave')->sum('total');
         $totalOther = $invoices->where('payment_method', 'Others')->sum('total');
 
+        $totalPurchase = $invoices->sum('total_buy_price');
+        $totalCashPurchase = $invoices->where('payment_method', 'Cash')->sum('total_buy_price');
+        $totalKbzPurchase = $invoices->where('payment_method', 'K Pay')->sum('total_buy_price');
+        $totalCBPurchase = $invoices->where('payment_method', 'Wave')->sum('total_buy_price');
+        $totalOtherPurchase = $invoices->where('payment_method', 'Others')->sum('total_buy_price');
+
+
         $branchs = Warehouse::all();
         $branchNames = $branchs->pluck('name', 'id');
 
         $currentBranchName = $branch ? $branchNames[$branch] : 'All Invoices';
 
-        return view('report.report_invoice', compact('invoices', 'total', 'totalCash', 'totalKbz', 'totalCB', 'totalOther', 'branch', 'branchs', 'currentBranchName'));
+        return view('report.report_invoice', compact('invoices', 'total', 'totalCash', 'totalKbz', 'totalCB', 'totalOther', 'branch', 'branchs', 'currentBranchName', 'totalPurchase', 'totalCashPurchase', 'totalKbzPurchase', 'totalCBPurchase', 'totalOtherPurchase'));
     }
 
 
@@ -280,6 +289,13 @@ class ReportController extends Controller
         $totalOther = $search_invoices->where('payment_method', 'Others')->sum('total');
         $search_total = $search_invoices->sum('total');
 
+        $search_total_purchase = $search_invoices->sum('total_buy_price');
+        $totalCashPurchase = $search_invoices->where('payment_method', 'Cash')->sum('total_buy_price');
+        $totalKbzPurchase = $search_invoices->where('payment_method', 'K Pay')->sum('total_buy_price');
+        $totalCBPurchase = $search_invoices->where('payment_method', 'Wave')->sum('total_buy_price');
+        $totalOtherPurchase = $search_invoices->where('payment_method', 'Others')->sum('total_buy_price');
+
+
         $branchs = Warehouse::all();
         $branchNames = $branchs->pluck('name', 'id');
 
@@ -294,7 +310,12 @@ class ReportController extends Controller
             'totalKbz',
             'totalCB',
             'totalOther',
-            'currentBranchName'
+            'currentBranchName',
+            'totalCashPurchase',
+            'totalKbzPurchase',
+            'totalCBPurchase',
+            'totalOtherPurchase',
+            'search_total_purchase'
         ));
     }
 
@@ -398,8 +419,6 @@ class ReportController extends Controller
         ));
     }
 
-
-
     public function monthly_purchase_return(Request $request)
     {
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
@@ -429,7 +448,6 @@ class ReportController extends Controller
 
         return view('report.report_purchase_return', compact('search_pos', 'search_total', 'branchs'));
     }
-
 
     public function report_pos(Request $request)
     {
@@ -463,6 +481,7 @@ class ReportController extends Controller
             ->get();
 
         $total = $pos_data->sum('total');
+        $totalPurchase = $pos_data->sum('total_buy_price');
         $branchs = Warehouse::all();
         $branchNames = $branchs->pluck('name', 'id');
         $currentBranchName = $branch ? $branchNames[$branch] : 'All POS';
@@ -472,7 +491,12 @@ class ReportController extends Controller
         $totalCB =  $pos_data->where('payment_method', 'Wave')->sum('total');
         $totalOther =  $pos_data->where('payment_method', 'Others')->sum('total');
 
-        return view('report.report_pos', compact('pos_data', 'total', 'sale_totals', 'branchs', 'totalCash', 'totalKbz', 'totalCB', 'totalOther', 'currentBranchName'));
+        $totalCashPurchase = $pos_data->where('payment_method', 'Cash')->sum('total_buy_price');
+        $totalKbzPurchase = $pos_data->where('payment_method', 'K Pay')->sum('total_buy_price');
+        $totalCBPurchase = $pos_data->where('payment_method', 'Wave')->sum('total_buy_price');
+        $totalOtherPurchase = $pos_data->where('payment_method', 'Others')->sum('total_buy_price');
+
+        return view('report.report_pos', compact('pos_data', 'total', 'sale_totals', 'branchs', 'totalCash', 'totalKbz', 'totalCB', 'totalOther', 'currentBranchName', 'totalPurchase', 'totalCashPurchase', 'totalKbzPurchase', 'totalCBPurchase', 'totalOtherPurchase'));
     }
     public function monthly_pos_search(Request $request)
     {
@@ -499,6 +523,7 @@ class ReportController extends Controller
 
         $search_pos = $query->get();
         $search_total = $search_pos->sum('total');
+        $search_totalPurchase = $search_pos->sum('total_buy_price');
 
         $sale_totals = DB::table('invoices')
             ->select('sale_by', DB::raw('count(*) as total_invoices'), DB::raw('sum(total) as sale_total'))
@@ -522,7 +547,12 @@ class ReportController extends Controller
         $totalCB = $search_pos->where('payment_method', 'Wave')->sum('total');
         $totalOther = $search_pos->where('payment_method', 'Others')->sum('total');
 
-        return view('report.report_pos', compact('search_pos', 'search_total', 'sale_totals', 'branchs', 'totalCash', 'totalKbz', 'totalCB', 'totalOther', 'currentBranchName'));
+        $totalCashPurchase = $search_pos->where('payment_method', 'Cash')->sum('total_buy_price');
+        $totalKbzPurchase = $search_pos->where('payment_method', 'K Pay')->sum('total_buy_price');
+        $totalCBPurchase = $search_pos->where('payment_method', 'Wave')->sum('total_buy_price');
+        $totalOtherPurchase = $search_pos->where('payment_method', 'Others')->sum('total_buy_price');
+
+        return view('report.report_pos', compact('search_pos', 'search_total', 'sale_totals', 'branchs', 'totalCash', 'totalKbz', 'totalCB', 'totalOther', 'currentBranchName', 'search_totalPurchase', 'totalCashPurchase', 'totalKbzPurchase', 'totalCBPurchase', 'totalOtherPurchase'));
     }
 
     public function reportExpense()
@@ -574,5 +604,30 @@ class ReportController extends Controller
         }
 
         return view('report.report_expense', compact('search_expenses', 'search_total', 'branchs', 'categorys'));
+    }
+
+    public function pos_receipt(Invoice $invoice)
+    {
+        $profile = UserProfile::all();
+        $sells = Sell::where('invoiceid', $invoice->id)->get();
+        $invoices = Invoice::where('id', $invoice->id)->get();
+        return view('report.report_pos_receipt', [
+            'invoice' => $invoice,
+            'invoices' => $invoices,
+            'sells' => $sells,
+            'profile' => $profile
+        ]);
+    }
+
+    public function report_invoice_detail(Invoice $invoice)
+    {
+        $profile = UserProfile::all();
+        $sells = Sell::where('invoiceid', $invoice->id)->get();
+        return view('report.report_invoice_details', [
+            'invoice' => $invoice,
+            'sells' => $sells,
+            'profile' => $profile
+
+        ]);
     }
 }

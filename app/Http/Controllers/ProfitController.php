@@ -72,8 +72,8 @@ class ProfitController extends Controller
         $invoicesQuery = Invoice::whereMonth('invoice_date', $currentMonth)
             ->whereYear('invoice_date', $currentYear);
 
-        $purchasesQuery = PurchaseOrder::whereMonth('po_date', $currentMonth)
-            ->whereYear('po_date', $currentYear);
+        $purchasesQuery = Invoice::whereMonth('invoice_date', $currentMonth)
+            ->whereYear('invoice_date', $currentYear);
 
         $expensesQuery = Expense::whereMonth('date', $currentMonth)
             ->whereYear('date', $currentYear);
@@ -95,7 +95,7 @@ class ProfitController extends Controller
         $expenses = $expensesQuery->get();
 
         $totalSum = $invoices->sum('total');
-        $totalPurchase = $purchases->sum('total');
+        $totalPurchase = $purchases->sum('total_buy_price');
         $totalExpense = $expenses->sum('amount');
 
         $branchs = Warehouse::all();
@@ -115,10 +115,10 @@ class ProfitController extends Controller
         $branch = $request->input('branch');
 
         $invoicesQuery = Invoice::whereBetween('invoice_date', [$startDate, $endDate]);
-        $purchasesQuery = PurchaseOrder::whereBetween('po_date', [$startDate, $endDate]);
+        $purchasesQuery = Invoice::whereBetween('invoice_date', [$startDate, $endDate]);
         $expensesQuery = Expense::whereBetween('date', [$startDate, $endDate]);
 
-        if (auth()->user()->is_admin == '1' || auth()->user()->type == 'Admin') {
+        if (auth()->user()->is_admin == '1') {
             if (!empty($branch)) {
                 $invoicesQuery->where('branch', $branch);
                 $purchasesQuery->where('branch', $branch);
@@ -135,7 +135,7 @@ class ProfitController extends Controller
         $expenses = $expensesQuery->get();
 
         $totalSum = $invoices->sum('total');
-        $totalPurchase = $purchases->sum('total');
+        $totalPurchase = $purchases->sum('total_buy_price');
         $totalExpense = $expenses->sum('amount');
 
         // Get the branch name
