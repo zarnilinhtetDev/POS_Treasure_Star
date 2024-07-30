@@ -131,9 +131,9 @@
                                                 <td>{{ $invoice->balance_due }}</td>
 
                                                 <td>{{ $invoice->total }}</td>
-                                                @if ($invoice->total == $invoice->deposit)
-                                                       <td>  <span class="badge badge-success text-white"> Paid</span>
-                                                   </td>
+                                                @if ($invoice->total <= $invoice->deposit)
+                                                    <td> <span class="badge badge-success text-white">Paid</span>
+                                                    </td>
                                                 @elseif($invoice->total > $invoice->deposit && $invoice->deposit > 0)
                                                     <td>
 
