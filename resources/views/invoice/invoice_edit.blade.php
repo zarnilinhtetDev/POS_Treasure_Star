@@ -90,17 +90,21 @@
                         <input type="date" name="overdue_date" id="overdue_date" class="form-control round"
                             autocomplete="off" min="<?= date('Y-m-d') ?>" value="{{ $invoice->overdue_date }}">
                     </div>
-                    <div class="col-md-3 ">
-                        <label for="payment_method" style="font-weight:bolder">{{ trans('Payment Methods') }}</label>
+                    <div class="col-md-3">
+                        <label for="payment_method" style="font-weight: bolder;">{{ trans('Payment Methods') }}</label>
                         <select class="mb-4 form-control round" aria-label="Default select example"
                             name="payment_method" required>
-                            <option value="{{ $invoice->payment_method }}" selected>{{ $invoice->payment_method }}
+                            <option value="Cash" {{ $invoice->payment_method == 'Cash' ? 'selected' : '' }}>Cash
                             </option>
-                            <option value="Cash">Cash</option>
-                            <option value="Credit">Credit</option>
-                            <option value="Consignment Terms">Consignment Terms</option>
+                            <option value="K Pay" {{ $invoice->payment_method == 'K Pay' ? 'selected' : '' }}>K Pay
+                            </option>
+                            <option value="Wave" {{ $invoice->payment_method == 'Wave' ? 'selected' : '' }}>Wave
+                            </option>
+                            <option value="Others" {{ $invoice->payment_method == 'Others' ? 'selected' : '' }}>Others
+                            </option>
                         </select>
                     </div>
+
 
                     <input type="hidden" name="quote_category" id="quote_category" value="Invoice">
                 </div>
@@ -883,92 +887,97 @@
             //     $('#total_total').val(total_total);
             //     $('#total_discount').val('');
             // });
-            $(document).on("click", '#calculate', function(e) {
-                e.preventDefault();
-                let salePriceCategory = $('#sale_price_category').val();
+            $(document).ready(function() {
+                function calculateTotals() {
+                    let salePriceCategory = $('#sale_price_category').val();
 
-                $('#showitem123 tr').each(function(index) {
-                    let row = $(this);
-                    let qty = parseInt(row.find('.req.amnt').val()) || 0;
-                    let price;
+                    $('#showitem123 tr').each(function() {
+                        let row = $(this);
+                        let qty = parseInt(row.find('.req.amnt').val()) || 0;
+                        let price;
 
-                    if (salePriceCategory === 'Default') {
-                        let cuz_name = $("#type").val();
-                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
-                                .val()) || 0 :
-                            parseFloat(row.find('.retail_price').val()) || 0;
-                    } else if (salePriceCategory === 'Whole Sale') {
-                        price = parseFloat(row.find('.price').val()) || 0;
-                    } else if (salePriceCategory === 'Retail') {
-                        price = parseFloat(row.find('.retail_price').val()) || 0;
-                    }
+                        if (salePriceCategory === 'Default') {
+                            let cuz_name = $("#type").val();
+                            price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
+                                .val()) || 0 : parseFloat(row.find('.retail_price').val()) || 0;
+                        } else if (salePriceCategory === 'Whole Sale') {
+                            price = parseFloat(row.find('.price').val()) || 0;
+                        } else if (salePriceCategory === 'Retail') {
+                            price = parseFloat(row.find('.retail_price').val()) || 0;
+                        }
 
-                    let discount = parseFloat(row.find('.vat').val()) || 0;
+                        let discount = parseFloat(row.find('.vat').val()) || 0;
+                        let total = qty * price;
+                        let discountAmount = (total * discount) / 100;
+                        let subtotal = total - discountAmount;
 
-                    let total = qty * price;
-                    let discountAmount = (total * discount) / 100;
-                    let subtotal = total - discountAmount;
+                        row.find('.ttlText1').text(subtotal);
+                    });
 
-                    row.find('.ttlText1').text(subtotal.toFixed(2));
+                    let total = 0;
+                    let totalTax = 0;
+
+                    $('#showitem123 tr').each(function() {
+                        let row = $(this);
+                        let qty = parseInt(row.find('.req.amnt').val()) || 0;
+                        let price;
+
+                        if (salePriceCategory === 'Default') {
+                            let cuz_name = $("#type").val();
+                            price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
+                                .val()) || 0 : parseFloat(row.find('.retail_price').val()) || 0;
+                        } else if (salePriceCategory === 'Whole Sale') {
+                            price = parseFloat(row.find('.price').val()) || 0;
+                        } else if (salePriceCategory === 'Retail') {
+                            price = parseFloat(row.find('.retail_price').val()) || 0;
+                        }
+
+                        let discount = parseFloat(row.find('.vat').val()) || 0;
+                        let itemTotal = qty * price;
+
+                        if (!isNaN(discount) && discount >= 0) {
+                            let itemTax = (itemTotal * discount) / 100;
+                            totalTax += itemTax;
+                        }
+
+                        if (!isNaN(discount) && discount > 0) {
+                            let discountAmount = (itemTotal * discount) / 100;
+                            itemTotal -= discountAmount;
+                        }
+
+                        total += itemTotal;
+
+                        row.find('.ttlText1').text(itemTotal);
+                        if (price > 0) {
+                            row.find('.ttlText1').show();
+                            row.find('.ttlText').hide();
+                        } else {
+                            row.find('.ttlText1').hide();
+                            row.find('.ttlText').show();
+                        }
+                    });
+
+                    let tax = Math.ceil(total * 0.05);
+                    let totalTotal = total - totalTax;
+
+                    $('#invoiceyoghtml').val(total);
+                    $('#commercial_text').val(totalTax);
+                    $('#total').val(totalTotal);
+                    $('#total_total').val(totalTotal);
+                }
+
+                // Bind function to button click
+                $(document).on("click", '#calculate', function(e) {
+                    e.preventDefault();
+                    calculateTotals();
                 });
 
-                let total = 0;
-                let totalTax = 0;
+                // Automatically run on page load
+                calculateTotals();
 
-                $('#showitem123 tr').each(function(index) {
-                    let row = $(this);
-                    let qty = parseInt(row.find('.req.amnt').val()) || 0;
-                    let price;
 
-                    if (salePriceCategory === 'Default') {
-                        let cuz_name = $("#type").val();
-                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
-                                .val()) || 0 :
-                            parseFloat(row.find('.retail_price').val()) || 0;
-                    } else if (salePriceCategory === 'Whole Sale') {
-                        price = parseFloat(row.find('.price').val()) || 0;
-                    } else if (salePriceCategory === 'Retail') {
-                        price = parseFloat(row.find('.retail_price').val()) || 0;
-                    }
-
-                    let discount = parseFloat(row.find('.vat').val()) || 0;
-
-                    let itemTotal = qty * price;
-
-                    if (!isNaN(discount) && discount >= 0) {
-                        let itemTax = (itemTotal * discount) / 100;
-                        totalTax += itemTax;
-                    }
-
-                    if (!isNaN(discount) && discount > 0) {
-                        let discountAmount = (itemTotal * discount) / 100;
-                        itemTotal -= discountAmount;
-                    }
-
-                    total += itemTotal;
-
-                    row.find('.ttlText1').text(itemTotal.toFixed(2));
-                    if (price > 0) {
-                        row.find('.ttlText1').show();
-                        row.find('.ttlText').hide();
-                    } else {
-                        row.find('.ttlText1').hide();
-                        row.find('.ttlText').show();
-                    }
-                });
-
-                let tax = total * 0.05;
-                tax = Math.ceil(tax);
-
-                let totalTotal = total - totalTax;
-
-                $('#invoiceyoghtml').val(total.toFixed(2));
-                $('#commercial_text').val(totalTax.toFixed(2));
-                $('#total').val(totalTotal.toFixed(2));
-                $('#extra_discount').val('');
-                $('#paid').val('');
-                $('#balance').val('');
             });
+
 
 
         });

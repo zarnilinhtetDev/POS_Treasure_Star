@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\Invoice;
+use App\Models\InvoicePaymentMethod;
+use App\Models\MakePayment;
 use App\Models\PurchaseOrder;
 use App\Models\Warehouse;
 use Carbon\Carbon;
@@ -19,7 +21,8 @@ class ReportController extends Controller
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
         $invoicesQuery = Invoice::whereDate('created_at', $today)
-            ->where('status', 'invoice');
+            ->where('status', 'invoice')
+            ->whereNull('balance_due');
 
         if ($branch) {
             $invoicesQuery->where('branch', $branch);
@@ -53,16 +56,25 @@ class ReportController extends Controller
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
         if (auth()->user()->is_admin == '1') {
-            $invoices = Invoice::whereDate('created_at', today())->where('status', 'invoice')->where('balance_due', 'PO Return')->get();
-            $total = $invoices->sum('total');
+            $pos = PurchaseOrder::whereDate('created_at', today())
+                ->where('quote_no', 'like', 'PO%')
+                ->where('balance_due', 'Sale Return')
+                ->get();
+
+            $total = $pos->sum('total');
             $branchs = Warehouse::all();
         } else {
-            $invoices = Invoice::whereDate('created_at', today())->where('status', 'invoice')->where('balance_due', 'PO Return')->whereIn('branch', $warehousePermission)->get();
-            $total = $invoices->sum('total');
+            $pos = PurchaseOrder::whereDate('created_at', today())
+                ->whereIn('branch', $warehousePermission)
+                ->where('quote_no', 'like', 'PO%')
+                ->where('balance_due', 'Sale Return')
+                ->get();
+
+            $total = $pos->sum('total');
             $branchs = Warehouse::all();
         }
 
-        return view('report.report_sale_return', compact('invoices', 'total', 'branchs'));
+        return view('report.report_sale_return', compact('pos', 'total', 'branchs'));
     }
 
 
@@ -139,25 +151,16 @@ class ReportController extends Controller
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
         if (auth()->user()->is_admin == '1') {
-            $pos = PurchaseOrder::whereDate('created_at', today())
-                ->where('quote_no', 'like', 'PO%')
-                ->where('balance_due', 'Sale Return')
-                ->get();
-
-            $total = $pos->sum('total');
+            $invoices = Invoice::whereDate('created_at', today())->where('status', 'invoice')->where('balance_due', 'PO Return')->get();
+            $total = $invoices->sum('total');
             $branchs = Warehouse::all();
         } else {
-            $pos = PurchaseOrder::whereDate('created_at', today())
-                ->whereIn('branch', $warehousePermission)
-                ->where('quote_no', 'like', 'PO%')
-                ->where('balance_due', 'Sale Return')
-                ->get();
-
-            $total = $pos->sum('total');
+            $invoices = Invoice::whereDate('created_at', today())->where('status', 'invoice')->where('balance_due', 'PO Return')->whereIn('branch', $warehousePermission)->get();
+            $total = $invoices->sum('total');
             $branchs = Warehouse::all();
         }
 
-        return view('report.report_purchase_return', compact('pos', 'total', 'branchs'));
+        return view('report.report_purchase_return', compact('invoices', 'total', 'branchs'));
     }
 
     public function report_item()
@@ -261,6 +264,7 @@ class ReportController extends Controller
 
         $invoicesQuery = Invoice::where('status', 'invoice')
             ->where('balance_due', 'Invoice')
+            ->whereNull('balance_due')
             ->whereDate('invoice_date', '>=', $start_date)
             ->whereDate('invoice_date', '<=', $end_date);
 
@@ -300,6 +304,35 @@ class ReportController extends Controller
 
 
 
+    // public function monthly_sale_return(Request $request)
+    // {
+
+    //     $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+
+    //     if (auth()->user()->is_admin == '1') {
+    //         $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
+    //         $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
+    //         $search_invoices = Invoice::where('status', 'invoice')
+    //             ->where('balance_due', 'Po Return')
+    //             ->whereDate('invoice_date', '>=', $start_date)
+    //             ->whereDate('invoice_date', '<=', $end_date)
+    //             ->get();
+    //         $search_total = $search_invoices->sum('total');
+    //         $branchs = Warehouse::all();
+    //     } else {
+    //         $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
+    //         $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
+    //         $search_invoices = Invoice::where('status', 'invoice')
+    //             ->whereIn('branch', $warehousePermission)
+    //             ->where('balance_due', 'Po Return')
+    //             ->whereDate('invoice_date', '>=', $start_date)
+    //             ->whereDate('invoice_date', '<=', $end_date)
+    //             ->get();
+    //         $search_total = $search_invoices->sum('total');
+    //         $branchs = Warehouse::all();
+    //     }
+    //     return view('report.report_sale_return', compact('search_invoices', 'search_total', 'branchs'));
+    // }
     public function monthly_sale_return(Request $request)
     {
 
@@ -308,26 +341,27 @@ class ReportController extends Controller
         if (auth()->user()->is_admin == '1') {
             $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
             $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
-            $search_invoices = Invoice::where('status', 'invoice')
-                ->where('balance_due', 'Po Return')
-                ->whereDate('invoice_date', '>=', $start_date)
-                ->whereDate('invoice_date', '<=', $end_date)
+            $search_pos = PurchaseOrder::whereDate('po_date', '>=', $start_date)
+                ->whereDate('po_date', '<=', $end_date)
+                ->where('quote_no', 'like', 'PO%')
+                ->where('balance_due', 'Sale Return')
                 ->get();
-            $search_total = $search_invoices->sum('total');
+            $search_total = $search_pos->sum('total');
             $branchs = Warehouse::all();
         } else {
             $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
             $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
-            $search_invoices = Invoice::where('status', 'invoice')
+            $search_pos = PurchaseOrder::whereDate('po_date', '>=', $start_date)
+                ->whereDate('po_date', '<=', $end_date)
                 ->whereIn('branch', $warehousePermission)
-                ->where('balance_due', 'Po Return')
-                ->whereDate('invoice_date', '>=', $start_date)
-                ->whereDate('invoice_date', '<=', $end_date)
+                ->where('quote_no', 'like', 'PO%')
+                ->where('balance_due', 'Sale Return')
                 ->get();
-            $search_total = $search_invoices->sum('total');
+            $search_total = $search_pos->sum('total');
             $branchs = Warehouse::all();
         }
-        return view('report.report_sale_return', compact('search_invoices', 'search_total', 'branchs'));
+
+        return view('report.report_sale_return', compact('search_pos', 'search_total', 'branchs'));
     }
 
     public function monthly_quotation_search(Request $request)
@@ -407,27 +441,26 @@ class ReportController extends Controller
         if (auth()->user()->is_admin == '1') {
             $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
             $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
-            $search_pos = PurchaseOrder::whereDate('po_date', '>=', $start_date)
-                ->whereDate('po_date', '<=', $end_date)
-                ->where('quote_no', 'like', 'PO%')
-                ->where('balance_due', 'Sale Return')
+            $search_invoices = Invoice::where('status', 'invoice')
+                ->where('balance_due', 'Po Return')
+                ->whereDate('invoice_date', '>=', $start_date)
+                ->whereDate('invoice_date', '<=', $end_date)
                 ->get();
-            $search_total = $search_pos->sum('total');
+            $search_total = $search_invoices->sum('total');
             $branchs = Warehouse::all();
         } else {
             $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
             $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
-            $search_pos = PurchaseOrder::whereDate('po_date', '>=', $start_date)
-                ->whereDate('po_date', '<=', $end_date)
+            $search_invoices = Invoice::where('status', 'invoice')
                 ->whereIn('branch', $warehousePermission)
-                ->where('quote_no', 'like', 'PO%')
-                ->where('balance_due', 'Sale Return')
+                ->where('balance_due', 'Po Return')
+                ->whereDate('invoice_date', '>=', $start_date)
+                ->whereDate('invoice_date', '<=', $end_date)
                 ->get();
-            $search_total = $search_pos->sum('total');
+            $search_total = $search_invoices->sum('total');
             $branchs = Warehouse::all();
         }
-
-        return view('report.report_purchase_return', compact('search_pos', 'search_total', 'branchs'));
+        return view('report.report_purchase_return', compact('search_invoices', 'search_total', 'branchs'));
     }
 
 
@@ -524,6 +557,7 @@ class ReportController extends Controller
 
         return view('report.report_pos', compact('search_pos', 'search_total', 'sale_totals', 'branchs', 'totalCash', 'totalKbz', 'totalCB', 'totalOther', 'currentBranchName'));
     }
+
 
     public function reportExpense()
     {

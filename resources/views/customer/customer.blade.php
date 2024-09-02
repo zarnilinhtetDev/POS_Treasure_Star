@@ -146,17 +146,16 @@
 
 
                                             <div class="form-group">
-                                                <label for="phno">Phone Number <span
-                                                        class="text-danger">*</span></label>
+                                                <label for="phno">Phone Number</label>
                                                 <input type="text" class="form-control" id="phone number"
-                                                    placeholder="Enter Phone Number" name="phno" required>
+                                                    placeholder="Enter Phone Number" name="phno">
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="crc">Customer Type </label>
                                                 <!-- <input type="text" class="form-control"
                                                     placeholder="Enter Customer Type" name="type"> -->
-                                                <select name="type" id="type" class="form-control" required>
+                                                <select name="type" id="type" class="form-control">
                                                     <option selected disabled>Select Customer Type</option>
                                                     <option value="Retail">Retail</option>
                                                     <option value="Whole Sale">Whole Sale</option>
@@ -204,10 +203,9 @@
                                             @endif
 
                                             <div class="form-group">
-                                                <label for="address">Address <span
-                                                        class="text-danger">*</span></label>
+                                                <label for="address">Address</label>
                                                 <input type="text" class="form-control" id="phone number"
-                                                    placeholder="Enter Address" name="address" required>
+                                                    placeholder="Enter Address" name="address">
                                             </div>
                                         </div>
                                 </div>

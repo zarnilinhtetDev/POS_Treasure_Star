@@ -57,18 +57,18 @@
             enctype="multipart/form-data">
             @csrf
 
-             {{-- Permission Php --}}
-             @php
-             $choosePermission = [];
-             if (auth()->user()->permission) {
-                 $decodedPermissions = json_decode(auth()->user()->permission, true);
-                 if (json_last_error() === JSON_ERROR_NONE) {
-                     $choosePermission = $decodedPermissions;
-                 }
-             }
-         @endphp
-         {{-- End Php --}}
-         
+            {{-- Permission Php --}}
+            @php
+                $choosePermission = [];
+                if (auth()->user()->permission) {
+                    $decodedPermissions = json_decode(auth()->user()->permission, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $choosePermission = $decodedPermissions;
+                    }
+                }
+            @endphp
+            {{-- End Php --}}
+
             <div class="mx-3 row ">
                 {{-- <input type='hidden' name='sale_by' id="sale_by" value="{{ auth()->user()->name }}" class="form-control"> --}}
                 <div class="mt-4 row">
@@ -93,11 +93,14 @@
                         <label for="payment_method" style="font-weight:bolder">{{ trans('Payment Methods') }}</label>
                         <select class="mb-4 form-control round" aria-label="Default select example"
                             name="payment_method" required>
-                            <option value="{{ $invoice->payment_method }}" selected>{{ $invoice->payment_method }}
+                            <option value="Cash" {{ $invoice->payment_method == 'Cash' ? 'selected' : '' }}>Cash
                             </option>
-                            <option value="Cash">Cash</option>
-                            <option value="Credit">Credit</option>
-                            <option value="Consignment Terms">Consignment Terms</option>
+                            <option value="K Pay" {{ $invoice->payment_method == 'K Pay' ? 'selected' : '' }}>K Pay
+                            </option>
+                            <option value="Wave" {{ $invoice->payment_method == 'Wave' ? 'selected' : '' }}>Wave
+                            </option>
+                            <option value="Others" {{ $invoice->payment_method == 'Others' ? 'selected' : '' }}>Others
+                            </option>
                         </select>
                     </div>
 
@@ -203,20 +206,62 @@
 
                                         </div>
                                         <hr>
-                                        <div class="mt-4 frmSearch col-md-3">
+                                        @if (auth()->user()->is_admin == '1')
+                                            <div class="mt-4 frmSearch col-md-3">
+                                                <div class="frmSearch col-sm-12">
+                                                    <span style="font-weight:bolder">
+                                                        <label for="cst"
+                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                    </span> <select name="branch" id="location"
+                                                        class="mb-4 form-control location" required>
+                                                        @foreach ($warehouses as $branch)
+                                                            @if ($branch->id == $invoice->branch)
+                                                                <option value="{{ $branch->id }}" selected>
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                        @foreach ($warehouses as $warehouse)
+                                                            <option value="{{ $warehouse->id }}">
+                                                                {{ $warehouse->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
 
-                                            <label for="location" style="font-weight:bolder">Choose Location</label>
-                                            <select name="location" id="location" class="mb-4 form-control"
-                                                required>
-
-                                                @foreach ($warehouses as $warehouse)
-                                                    <option value="{{ $warehouse->id }}"
-                                                        @if ($warehouse->id == $invoice->location) selected @endif>
-                                                        {{ $warehouse->name }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                                </div>
+                                            </div>
+                                        @else
+                                            <div class="mt-4 frmSearch col-md-3">
+                                                <div class="frmSearch col-sm-12">
+                                                    <span style="font-weight:bolder">
+                                                        <label for="cst"
+                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                    </span>
+                                                    <select name="branch" id="branch" class="form-control"
+                                                        required>
+                                                        @php
+                                                            $userPermissions = auth()->user()->level
+                                                                ? json_decode(auth()->user()->level)
+                                                                : [];
+                                                        @endphp
+                                                        @foreach ($warehouses as $branch)
+                                                            @if ($branch->id == $invoice->branch)
+                                                                <option value="{{ $branch->id }}" selected>
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                        @foreach ($warehouses as $branch)
+                                                            @if (in_array($branch->id, $userPermissions))
+                                                                <option value="{{ $branch->id }}">
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        @endif
                                         <div class="mt-4 frmSearch col-md-3">
                                             <div class="frmSearch col-sm-12">
                                                 <span style="font-weight:bolder">
@@ -430,7 +475,7 @@
                                                         <td class="add-row">
                                                             <button type="button" class="btn btn-success"
                                                                 id="addproduct"
-                                                                style="margin-top:20px;margin-bottom:20px;">
+                                                                style="margin-top:20px;margin-bottom:20px;display: none;">
                                                                 <i class="fa fa-plus-square"></i>
                                                                 {{ trans('Add row') }}
                                                             </button>
@@ -922,14 +967,20 @@
                 // Initialize typeahead for the first row
                 initializeTypeahead(count);
 
+                $(document).ready(function() {
+                    calculateTotals();
+                });
+
                 function calculateTotals() {
                     let total = 0;
+                    let totalPurchase = 0;
                     let totalTax = 0;
                     let salePriceCategory = $('#sale_price_category').val();
 
                     $('#showitem123 tr').each(function(index, row) {
                         let qty = parseFloat($(row).find('input[name="product_qty[]"]').val()) || 0;
                         let price = parseFloat($(row).find('input[name="product_price[]"]').val()) || 0;
+                        let buy_price = parseFloat($(row).find('input[name="buy_price[]"]').val()) || 0;
 
                         if (salePriceCategory === 'Default') {
                             let cuz_name = $("#type").val();
@@ -950,15 +1001,18 @@
                         }
 
                         let itemTotal = price * qty;
+                        let purchase = buy_price * qty;
                         $(row).find('.ttlText').text(itemTotal);
 
                         total += itemTotal;
+                        totalPurchase += purchase;
                     });
 
                     let taxt = total * 0.05; // Calculate tax based on the updated total
                     taxt = Math.ceil(taxt);
                     let total_total = total - totalTax;
                     $("#invoiceyoghtml").val(total);
+                    $("#total_buy_price").val(totalPurchase);
                     $("#commercial_text").val(totalTax); // Update tax value
                     $("#total").val(total_total);
                     $('#total_total').val(total_total);
@@ -969,7 +1023,6 @@
                     e.preventDefault();
                     calculateTotals();
                 });
-
 
                 function paidFunction() {
                     let paid = document.getElementById("paid").value;

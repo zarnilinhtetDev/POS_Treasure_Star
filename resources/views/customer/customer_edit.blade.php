@@ -126,19 +126,14 @@
                                                 <label for="name">Name <span class="text-danger">*</span></label>
                                                 <input type="text" class="form-control" id="name" required
                                                     autofocus name="name" value="{{ $showCustomer->name }}">
-                                                <input type="text" class="form-control" id="name" required
-                                                    autofocus name="name" value="{{ $showCustomer->name }}">
+
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="phno">Phone Number <span
-                                                        class="text-danger">*</span></label>
+                                                <label for="phno">Phone Number</label>
                                                 <input type="text" class="form-control" id="phone number"
-                                                    name="phno" value="{{ $showCustomer->phno }}" required>
-                                                <label for="phno">Phone Number <span
-                                                        class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="phone number"
-                                                    name="phno" value="{{ $showCustomer->phno }}" required>
+                                                    name="phno" value="{{ $showCustomer->phno }}">
+
                                             </div>
 
 
@@ -146,7 +141,7 @@
                                                 <label for="crc">Customer Type </label>
                                                 <!-- <input type="text" class="form-control"
                                                     placeholder="Enter Customer Type" name="type"> -->
-                                                <select name="type" id="type" class="form-control" required>
+                                                <select name="type" id="type" class="form-control">
                                                     <option value="{{ $showCustomer->type }}">
                                                         {{ $showCustomer->type }}
                                                     </option>
@@ -207,10 +202,9 @@
                                             @endif
 
                                             <div class="form-group">
-                                                <label for="address">Address <span
-                                                        class="text-danger">*</span></label>
+                                                <label for="address">Address</label>
                                                 <input type="text" class="form-control" id="phone number"
-                                                    name="address" value="{{ $showCustomer->address }}" required>
+                                                    name="address" value="{{ $showCustomer->address }}">
                                             </div>
 
 

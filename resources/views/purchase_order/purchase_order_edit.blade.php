@@ -122,14 +122,16 @@
 
                     <select class="mt-1 mb-3 form-control round" aria-label="Default select example"
                         name="payment_method" required>
-
-                        <option selected value="{{ $purchase_orders->payment_method }}">
-                            {{ $purchase_orders->payment_method }}
+                        <option value="Cash" {{ $purchase_orders->payment_method == 'Cash' ? 'selected' : '' }}>Cash
                         </option>
-                        <option value="Cash">Cash</option>
-                        <option value="Credit">Credit</option>
-                        <option value="Consignment Terms">Consignment Terms</option>
+                        <option value="K Pay" {{ $purchase_orders->payment_method == 'K Pay' ? 'selected' : '' }}>K
+                            Pay</option>
+                        <option value="Wave" {{ $purchase_orders->payment_method == 'Wave' ? 'selected' : '' }}>Wave
+                        </option>
+                        <option value="Others" {{ $purchase_orders->payment_method == 'Others' ? 'selected' : '' }}>
+                            Others</option>
                     </select>
+
                 </div>
                 {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
                 <div class="frmSearch col-md-3 col-sm-6">
@@ -667,7 +669,7 @@
                     '<td class="text-center">' + (rowCount + 1) + '</td>' +
                     '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="productname-' +
                     count + '" autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control description typeahead" name="part_description[]" required id="description-' +
+                    '<td><input type="text" class="form-control description typeahead" name="part_description[]" id="description-' +
                     count + '" autocomplete="off"></td>' +
 
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +

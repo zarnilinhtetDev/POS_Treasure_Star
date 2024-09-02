@@ -104,7 +104,7 @@ class PurchaseOrderController extends Controller
         $invoice->invoice_no  = $request->invoice_no;
         $invoice->overdue_date = $request->overdue_date;
         $invoice->po_date = $request->po_date;
-        $invoice->branch = $request->branch;
+        $invoice->branch = $request->location;
         $invoice->quote_no  = $request->po_number;
         $invoice->sub_total  = $request->sub_total;
         $invoice->total  = $request->total;
@@ -170,7 +170,7 @@ class PurchaseOrderController extends Controller
         $invoice->invoice_no  = $request->invoice_no;
         $invoice->overdue_date = $request->overdue_date;
         $invoice->po_date = $request->po_date;
-        $invoice->branch = $request->branch;
+        $invoice->branch = $request->location;
         $invoice->quote_no  = $request->po_number;
         $invoice->sub_total  = $request->sub_total;
         $invoice->total  = $request->total;

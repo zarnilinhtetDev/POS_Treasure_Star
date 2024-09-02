@@ -2,7 +2,8 @@
 <HTML>
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
 
@@ -44,14 +45,23 @@
 
     <div>
 
-        <div class="row" style="margin-top: 10px;">
-            <h4 class="text-center fw-bold">Purchase Order</h4>
-            <p class="text-center fw-bold" style="font-size: 14px;">
-                အမှတ်(၃)၊ လမ်းမတော်လမ်း၊အနောက်ရပ်၊သီပေါမြို့
-                <br>
-                09453131493 , 09679007355 , 09421099135
-            </p>
-        </div>
+        @foreach ($profile as $pic)
+            @if ($purchase_order->branch == $pic->branch)
+                <div class="mt-5 text-center">
+                    <img src="{{ asset('logos/' . ($pic->logos ?? 'null')) }}" width="180" height="120">
+
+                </div>
+                <div class="row" style="margin-top: 30px;">
+                    <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
+
+                    <p class="text-center fw-bold" style="font-size: 14px;">
+                        {{ $pic->address }}
+                        <br>
+                        {{ $pic->phno1 }}, {{ $pic->phno2 }}
+                    </p>
+                </div>
+            @endif
+        @endforeach
 
         {{-- <h1>
             Purchase Order
@@ -68,12 +78,12 @@
 
                                 <div style="width:40%;">
 
-                                    @if ($purchase_order->balance_due =="PO")
-                                    <h4>Purchase Order to</h4>
-                                    <div class="input-group"><span style="font-weight:bolder"> Supplier Name :&nbsp;
-                                        </span><span style="font-weight:bolder">{{ $purchase_order->supplier->name ?? 'N/A' }}
-                                        </span></div>
-
+                                    @if ($purchase_order->balance_due == 'PO')
+                                        <h4>Purchase Order to</h4>
+                                        <div class="input-group"><span style="font-weight:bolder"> Supplier Name :&nbsp;
+                                            </span><span
+                                                style="font-weight:bolder">{{ $purchase_order->supplier->name ?? 'N/A' }}
+                                            </span></div>
                                     @endif
 
                                     <div class="input-group"><span style="font-weight:bolder"> Receiving Mode :&nbsp;
@@ -84,10 +94,14 @@
                                 </div>
                                 <div style="width:30%;position:absolute;right:0px;top:0px;">
 
-                                    <label for="invociedate" class="caption" style="font-weight:bolder">{{ trans('Purchase Order Number') }}</label>
-                                    <div class="input-group"><span style="font-weight:bolder">{{ $purchase_order->quote_no }}</span> </div>
-                                    <label for="invociedate" class="caption" style="font-weight:bolder">{{ trans('Purchase Order Date') }}</label>
-                                    <div class="input-group"><span style="font-weight:bolder">{{ $purchase_order->po_date }}</span> </div>
+                                    <label for="invociedate" class="caption"
+                                        style="font-weight:bolder">{{ trans('Purchase Order Number') }}</label>
+                                    <div class="input-group"><span
+                                            style="font-weight:bolder">{{ $purchase_order->quote_no }}</span> </div>
+                                    <label for="invociedate" class="caption"
+                                        style="font-weight:bolder">{{ trans('Purchase Order Date') }}</label>
+                                    <div class="input-group"><span
+                                            style="font-weight:bolder">{{ $purchase_order->po_date }}</span> </div>
 
                                 </div>
 
@@ -116,26 +130,27 @@
                                         </thead>
                                         <tbody>
                                             @php
-                                            $no = 1;
+                                                $no = 1;
                                             @endphp
                                             @foreach ($purchase_sells as $sell)
-                                            <tr>
-                                                <td>{{ $no }}</td>
-                                                <td>{{ $sell->part_number }}</td>
+                                                <tr>
+                                                    <td>{{ $no }}</td>
+                                                    <td>{{ $sell->part_number }}</td>
 
-                                                <td>{{ $sell->description }}</td>
-                                                <td>{{ $sell->product_qty }}</td>
-                                                <td>{{ $sell->product_price }}</td>
-                                                <td>{{ $sell->unit }}</td>
+                                                    <td>{{ $sell->description }}</td>
+                                                    <td>{{ $sell->product_qty }}</td>
+                                                    <td>{{ $sell->product_price }}</td>
+                                                    <td>{{ $sell->unit }}</td>
 
-                                                <td>
-                                                    <span class="currenty"></span>
-                                                    <span class='ttlText'>{{ $sell->product_qty * $sell->product_price }}</span>
-                                                </td>
-                                            </tr>
-                                            @php
-                                            $no++;
-                                            @endphp
+                                                    <td>
+                                                        <span class="currenty"></span>
+                                                        <span
+                                                            class='ttlText'>{{ $sell->product_qty * $sell->product_price }}</span>
+                                                    </td>
+                                                </tr>
+                                                @php
+                                                    $no++;
+                                                @endphp
                                             @endforeach
                                         </tbody>
                                         <tfoot>

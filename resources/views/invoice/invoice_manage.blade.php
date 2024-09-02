@@ -138,7 +138,7 @@
                                                 <td>{{ $invoice->customer_name }}</td>
                                                 <td>{{ $invoice->balance_due }}</td>
 
-                                                <td>{{ $invoice->total }}</td>
+                                                <td>{{ number_format($invoice->total) }}</td>
                                                 @if ($invoice->total == $invoice->deposit)
                                                     <td>Paid</td>
                                                 @elseif($invoice->total > $invoice->deposit && $invoice->deposit > 0)

@@ -183,7 +183,6 @@
                             <div class="card-header">
                                 <h3 class="card-title">Sale Return Report</h3>
                             </div>
-
                             <!-- /.card-header -->
                             <div class="card-body">
 
@@ -191,13 +190,9 @@
                                     <thead>
                                         <tr>
                                             <th>No.</th>
-                                            <th>Invoice No.</th>
+                                            <th>Purchase Order No.</th>
                                             <th>Location</th>
-                                            <th>Customer Name</th>
-                                            <th>Phone Number</th>
-                                            <th>Customer Type</th>
-                                            <th>Address</th>
-                                            <th>Sale Return</th>
+                                            <th>Purchase Return</th>
                                             <th>Total Amount</th>
                                         </tr>
                                     </thead>
@@ -205,64 +200,64 @@
                                         @php
                                             $no = '1';
                                         @endphp
-                                        @if (!empty($search_invoices))
-                                            @foreach ($search_invoices as $invoice)
+
+                                        @if (!empty($search_pos))
+                                            @foreach ($search_pos as $po)
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td><a
-                                                            href="{{ url('invoice_detail', $invoice->id) }}">{{ $invoice->invoice_no }}</a>
+                                                            href="{{ url('purchase_order_details', $po->id) }}">{{ $po->quote_no }}</a>
                                                     </td>
                                                     <td>
                                                         @foreach ($branchs as $branch)
-                                                            @if ($branch->id == $invoice->branch)
+                                                            @if ($branch->id == $po->branch)
                                                                 {{ $branch->name }}
                                                             @endif
                                                         @endforeach
                                                     </td>
-                                                    <td>{{ $invoice->customer_name }}</td>
-                                                    <td>{{ $invoice->phno }}</td>
-                                                    <td>{{ $invoice->type }}</td>
-                                                    <td>{{ $invoice->address }}</td>
-                                                    <td>{{ $invoice->balance_due }}</td>
-                                                    <td>{{ $invoice->total }}</td>
+
+                                                    <td>{{ $po->balance_due }}</td>
+                                                    <td>{{ $po->total }}</td>
                                                 </tr>
+                                                @php
+                                                    $no++;
+                                                @endphp
                                             @endforeach
                                         @else
-                                            @foreach ($invoices as $invoice)
+                                            @foreach ($pos as $po)
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td><a
-                                                            href="{{ url('invoice_detail', $invoice->id) }}">{{ $invoice->invoice_no }}</a>
+                                                            href="{{ url('purchase_order_details', $po->id) }}">{{ $po->quote_no }}</a>
                                                     </td>
                                                     <td>
                                                         @foreach ($branchs as $branch)
-                                                            @if ($branch->id == $invoice->branch)
+                                                            @if ($branch->id == $po->branch)
                                                                 {{ $branch->name }}
                                                             @endif
                                                         @endforeach
                                                     </td>
-                                                    <td>{{ $invoice->customer_name }}</td>
-                                                    <td>{{ $invoice->phno }}</td>
-                                                    <td>{{ $invoice->type }}</td>
-                                                    <td>{{ $invoice->address }}</td>
-                                                    <td>{{ $invoice->balance_due }}</td>
-                                                    <td>{{ $invoice->total }}</td>
+
+                                                    <td>{{ $po->balance_due }}</td>
+
+                                                    <td>{{ $po->total }}</td>
                                                 </tr>
+                                                @php
+                                                    $no++;
+                                                @endphp
                                             @endforeach
+
                                         @endif
-
-
-                                        @php
-                                            $no++;
-                                        @endphp
 
                                     <tfoot>
                                         <tr>
                                             <td></td>
-                                            <td colspan="7" style="text-align:right">Total</td>
+                                            <td colspan="3" style="text-align:right">Total</td>
                                             <td colspan="">
-                                                @if (!empty($search_invoices))
-                                                    {{ $search_total }}@else{{ $total }}
+                                                @if (!empty($search_pos))
+                                                    {{ $search_total }}
+                                                @else
+                                                    {{ $total }}
                                                 @endif
                                             </td>
                                         </tr>

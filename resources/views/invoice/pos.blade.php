@@ -88,6 +88,34 @@
 
     <div class="container-fluid " id="content">
         <hr>
+
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>{{ session('success') }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>{{ session('error') }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+        @if ($errors->has('phno'))
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong> {{ $errors->first('phno') }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+
         <div class="modal fade" id="modal-xl">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
@@ -149,6 +177,99 @@
             </div>
         </div>
 
+
+        <div class="modal fade" id="modal-lg">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"> Register New Customer</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url('customer_register') }}" method="POST">
+                            @csrf
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <label for="name">Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="" placeholder="Enter Name"
+                                        required autofocus name="name">
+                                </div>
+
+
+                                <div class="form-group mt-3">
+                                    <label for="phno">Phone Number</label>
+                                    <input type="text" class="form-control" id=""
+                                        placeholder="Enter Phone Number" name="phno">
+                                </div>
+
+                                <div class="form-group mt-3">
+                                    <label for="crc">Customer Type </label>
+                                    <select name="type" id="" class="form-control">
+                                        <option selected disabled>Select Customer Type</option>
+                                        <option value="Retail">Retail</option>
+                                        <option value="Whole Sale">Whole Sale</option>
+                                    </select>
+                                </div>
+
+
+                                @if (auth()->user()->is_admin == '1')
+                                    <div class="form-group mt-3">
+                                        <label for="branch">Location<span class="text-danger">*</span></label>
+
+                                        <select name="branch" id="" class="form-control" required>
+                                            <option value="" selected disabled>Select Location
+                                            </option>
+                                            @foreach ($warehouses as $branch)
+                                                <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @else
+                                    <div class="form-group mt-3">
+                                        <label for="branch">Location<span class="text-danger">*</span></label>
+
+                                        <select name="branch" id="" class="form-control" required>
+                                            @php
+                                                $userPermissions = auth()->user()->level
+                                                    ? json_decode(auth()->user()->level)
+                                                    : [];
+                                            @endphp
+
+                                            @foreach ($warehouses as $branch)
+                                                @if (in_array($branch->id, $userPermissions))
+                                                    <option value="{{ $branch->id }}">
+                                                        {{ $branch->name }}
+                                                    </option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                @endif
+                                <div class="form-group mt-3">
+                                    <label for="address">Address</label>
+                                    <input type="text" class="form-control" id="phone number"
+                                        placeholder="Enter Address" name="address">
+                                </div>
+                            </div>
+
+
+
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save </button>
+                    </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
+
         <form method="post" id="myForm" action="{{ url('invoice_register') }}" enctype="multipart/form-data">
             @csrf
 
@@ -178,8 +299,9 @@
                             name="payment_method" required>
 
                             <option value="Cash">Cash</option>
-                            <option value="Credit">Credit</option>
-                            <option value="Consignment Terms">Consignment Terms</option>
+                            <option value="K Pay">K Pay</option>
+                            <option value="Wave">Wave</option>
+                            <option value="Others">Others</option>
                         </select>
                     </div>
 
@@ -193,10 +315,10 @@
                                 <div class="card-body">
 
                                     <div class="row">
-                                        <div class="col-sm-6 cmp-pnl">
+                                        <div class="col-sm-12 cmp-pnl">
                                             <div id="customerpanel" class="inner-cmp-pnl">
                                                 <div class="mt-3 form-group row">
-                                                    <div class="frmSearch col-sm-7">
+                                                    <div class="frmSearch col-sm-3">
                                                         <div class="frmSearch col-sm-12">
                                                             <span style="font-weight:bolder">
                                                                 <label for="cst"
@@ -215,6 +337,14 @@
                                                         </div>
                                                     </div>
 
+
+                                                    <div class="col-sm-2 mt-4">
+                                                        <button type="button" data-toggle="modal"
+                                                            data-target="#modal-lg"
+                                                            class="btn btn-primary text-white">Customer
+                                                            Register</button>
+                                                    </div>
+
                                                     <input type="hidden" id="service_id" name="service_id"
                                                         value="0">
 
@@ -225,7 +355,7 @@
 
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6 cmp-pnl">
+                                            <div class="col-sm-3 cmp-pnl">
 
                                                 <div class="inner-cmp-pnl">
 
@@ -672,8 +802,14 @@
             </div>
 
         </form>
-
+        <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script>
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             $(document).ready(function() {
                 let count = 0;
 
@@ -728,44 +864,60 @@
 
 
 
+
                 function updateItemName(item) {
-                    // Check if the table body is empty
-                    var Selectedlocation = $('#location').val();
+                    // Cache DOM elements
+                    var $location = $('#location');
+                    var $itemName0 = $("#item_name-0");
+                    var $description0 = $("#description-0");
+                    var $expDate0 = $("#exp_date-0");
+                    var $barcode0 = $("#barcode-0");
+                    var $price0 = $("#price-0");
+                    var $itemUnit0 = $("#item_unit-0");
+                    var $retailPrice0 = $("#retail_price-0");
+                    var $buyPrice0 = $("#buy_price-0");
+                    var $warehouse0 = $("#warehouse-0");
+                    var $productname = $("#productname");
+                    var $barcode = $("#barcode");
+                    var $amount0 = $("#amount-0");
 
-                    if ($("#item_name-0").val() === "") {
-                        let cuz_name = $("#type").val();
+                    var selectedLocation = $location.val();
+                    var cuzName = $("#type").val();
 
+                    function handleSuccess(data) {
+                        var item = data['item'];
+                        $itemName0.val(item['item_name']);
+                        $description0.val(item['descriptions']);
+                        $expDate0.val(item['expired_date']);
+                        $barcode0.val(item['barcode']);
+                        $price0.val(item['wholesale_price']);
+                        $itemUnit0.val(item['item_unit']);
+                        $retailPrice0.val(item['retail_price']);
+                        $buyPrice0.val(item['buy_price']);
+                        $warehouse0.val(item['warehouse_id']);
+                        $productname.val('');
+                        $barcode.val('');
+
+                        if (parseFloat(data.reorder_level_stock) >= parseFloat(data.quantity)) {
+                            alert(data.quantity + " quantity!");
+                        }
+                    }
+
+                    function handleError(xhr, status, error) {
+                        console.error(xhr.responseText);
+                    }
+
+                    if ($itemName0.val() === "") {
                         $.ajax({
                             type: 'POST',
                             url: "{{ route('get.part.data-invoice') }}",
                             data: {
                                 _token: "{{ csrf_token() }}",
                                 itemname: item,
-                                location: Selectedlocation,
+                                location: selectedLocation,
                             },
-                            success: function(data) {
-                                $("#item_name-0").val(data['item']['item_name']);
-                                $("#description-0").val(data['item']['descriptions']);
-                                $("#exp_date-0").val(data['item']['expired_date']);
-                                $("#barcode-0").val(data['item']['barcode']);
-                                $("#price-0").val(data['item']['wholesale_price']);
-
-                                $("#item_unit-0").val(data['item']['item_unit']);
-                                $("#retail_price-0").val(data['item']['retail_price']);
-                                $("#warehouse-0").val(data['item']['warehouse_id']);
-                                $("#productname").value('');
-                                $("#barcode").value('');
-                                // let priceValue = cuz_name === "Whole Sale" ? data['item'][
-                                //     'wholesale_price'
-                                // ] : data['item']['retail_price'];
-                                // $("#price-0").val(priceValue);
-                                if (parseFloat(data.reorder_level_stock) >= parseFloat(data.quantity)) {
-                                    alert(data.quantity + " quantity!");
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.error(xhr.responseText);
-                            }
+                            success: handleSuccess,
+                            error: handleError
                         });
 
                         $.ajax({
@@ -774,46 +926,18 @@
                             data: {
                                 _token: "{{ csrf_token() }}",
                                 barcode: item,
-                                location: Selectedlocation,
+                                location: selectedLocation,
                             },
-                            success: function(data) {
-                                $("#item_name-0").val(data['item']['item_name']);
-                                $("#description-0").val(data['item']['descriptions']);
-                                $("#exp_date-0").val(data['item']['expired_date']);
-                                $("#barcode-0").val(data['item']['barcode']);
-                                $("#item_unit-0").val(data['item']['item_unit']);
-                                $("#price-0").val(data['item']['wholesale_price']);
-                                $("#retail_price-0").val(data['item']['retail_price']);
-                                $("#warehouse-0").val(data['item']['warehouse_id']);
-                                $("#barcode").val();
-                                $("#productnames").val();
-                                // let priceValue = cuz_name === "Whole Sale" ? data['item'][
-                                //     'wholesale_price'
-                                // ] : data['item']['retail_price'];
-                                // $("#price-0").val(priceValue);
-
-                                if (parseFloat(data.reorder_level_stock) >= parseFloat(data.quantity)) {
-                                    alert(data.quantity + " quantity!");
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.error(xhr.responseText);
-                            }
-
+                            success: handleSuccess,
+                            error: handleError
                         });
 
                     } else {
-
-                        if ($("#item_name-0").val() === $("#productname").val() || $("#barcode-0").val() === $(
-                                "#barcode").val()) {
-
-                            var existingRow = $("#amount-0");
-
-                            var currentQuantity = parseInt(existingRow.val());
-                            existingRow.val(currentQuantity + 1);
-                            $("#barcode").val();
-                            $("#productnames").val();
-
+                        if ($itemName0.val() === $productname.val() || $barcode0.val() === $barcode.val()) {
+                            var currentQuantity = parseInt($amount0.val());
+                            $amount0.val(currentQuantity + 1);
+                            $barcode.val('');
+                            $productname.val('');
 
                         } else {
                             $.ajax({
@@ -822,19 +946,17 @@
                                 data: {
                                     _token: "{{ csrf_token() }}",
                                     itemname: item,
-                                    location: Selectedlocation,
+                                    location: selectedLocation,
                                 },
                                 success: function(data) {
                                     if (parseFloat(data.reorder_level_stock) >= parseFloat(data.quantity)) {
                                         alert(data.quantity + " quantity!");
                                     }
                                     addNewRow(data['item']);
-                                    $("#barcode").val();
-                                    $("#productnames").val();
+                                    $barcode.val('');
+                                    $productname.val('');
                                 },
-                                error: function(xhr, status, error) {
-                                    console.error(xhr.responseText);
-                                }
+                                error: handleError
                             });
 
                             $.ajax({
@@ -843,27 +965,22 @@
                                 data: {
                                     _token: "{{ csrf_token() }}",
                                     barcode: item,
-                                    location: Selectedlocation,
+                                    location: selectedLocation,
                                 },
                                 success: function(data) {
                                     if (parseFloat(data.reorder_level_stock) >= parseFloat(data.quantity)) {
                                         alert(data.quantity + " quantity!");
                                     }
                                     addNewRow(data['item']);
-                                    $("#barcode").val();
-                                    $("#productnames").val();
+                                    $barcode.val('');
+                                    $productname.val('');
                                 },
-                                error: function(xhr, status, error) {
-                                    console.error(xhr.responseText);
-                                }
+                                error: handleError
                             });
                         }
-
-
                     }
-
-
                 }
+
                 initializeTypeahead();
 
 
@@ -910,11 +1027,13 @@
                             '<td><input type="text" class="form-control retail_price" name="retail_price[]" id="retail_price-' +
                             count + '" autocomplete="off" value="' + (item['retail_price'] ?? 0) +
                             '"></td>' +
+                            '<td style="display: none;"><input type="text" class="form-control buy_price" name="buy_price[]" id="buy_price-' +
+                            count + '" autocomplete="off" value="' + (item['buy_price'] ?? 0) +
+                            '"></td>' +
                             '<td style="display: none;"><input type="text" class="form-control exp_date" name="exp_date[]" id="exp_date-' +
                             count + '" autocomplete="off" value="' + item['expired_date'] + '"></td>' +
                             '<td style="display: none;"><input  type="text" class="form-control warehouse" name="warehouse[]" id="warehouse-' +
                             count + '" autocomplete="off" value="' + item['warehouse_id'] + '"></td>' +
-
                             '<td style="text-align:center"><span class="currenty"></span><strong><span id="result-' +
                             count + '">0</span></strong></td>' +
                             '<input type="hidden" name="total_tax[]" id="taxa-' + count + '" value="0">' +
@@ -933,54 +1052,7 @@
                     }
                 }
 
-                $("#addproduct").click(function(e) {
-                    e.preventDefault();
-                    count++;
 
-                    let rowCount = $("#showitem123 tr").length;
-                    let newRow = '<tr>' +
-
-                        '<td class="text-center">' + (rowCount + 1) + '</td>' +
-                        '<td style="display:none"><input type="hidden" class="form-control barcode typeahead" name="barcode[]" id="barcode-' +
-                        count + '" autocomplete="off"></td>' +
-                        '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="item_name-' +
-                        count + '" autocomplete="off"></td>' +
-                        '<td><input type="text" class="form-control description typeahead" name="part_description[]" required id="description-' +
-                        count + '" autocomplete="off"></td>' +
-                        '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
-                        count +
-                        '"   autocomplete="off" value="1"><input type="hidden" id="alert-0" value="" name="alert[]"></td>' +
-                        '<td><input type="text" class="form-control unit " name="item_unit[]" id="item_unit-' +
-                        count +
-                        '" autocomplete ="off" required> </td>' +
-
-                        '<td><input type="text" class="form-control price" name="product_price[]" value="0" id="price-' +
-                        count + '"   autocomplete="off"></td>' +
-                        '<td><input type="text" class="form-control retail_price" name="retail_price[]" value="0" id="retail_price-' +
-                        count + '"   autocomplete="off"></td>' +
-                        '<td style="display: none;"><input type="text" class="form-control exp_date " name="exp_date[]" id="exp_date-' +
-                        count +
-                        '"   autocomplete="off"></td>' +
-                        '<td style="display: none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
-                        count +
-                        '"   autocomplete="off"></td>' +
-
-                        '<td style="text-align:center"><span class="currenty"></span><strong><span id="result-' +
-                        count + '">0</span></strong></td>' +
-                        '<input type="hidden" name="total_tax[]" id="taxa-' + count + '" value="0">' +
-                        '<input type="hidden" name="total_discount[]" id="disca-' + count + '" value="0">' +
-                        '<input type="hidden" class="ttInput" name="product_subtotal[]" id="total-' +
-                        count + '" value="0">' +
-                        '<input type="hidden" class="pdIn" name="product_id[]" id="pid-0" value="0">' +
-                        // '<input type="hidden" attr-org="" name="unit[]" id="unit-0" value="">' +
-                        '<input type="hidden" name="unit_m[]" id="unit_m-0" value="1">' +
-                        '<input type="hidden" name="code[]" id="hsn-0" value="">' +
-                        '<input type="hidden" name="serial[]" id="serial-0" value="">' +
-                        '<td><button type="submit" class="btn btn-danger remove_item_btn" id="removebutton">Remove</button></td>' +
-                        '</tr>';
-                    $("#showitem123").append(newRow);
-                    initializeTypeahead(count);
-                });
 
 
                 $(document).on('click', '.remove_item_btn', function(e) {
@@ -1008,6 +1080,7 @@
                     e.preventDefault();
                     let total = 0;
                     let totalTax = 0;
+                    let total_purchase = 0;
                     let salePriceCategory = $('#sale_price_category').val();
                     console.log(salePriceCategory);
 
@@ -1016,6 +1089,7 @@
                         var item_name = $('#productname-' + i).val() || 0;
                         var sel = $('#focsel-' + i).val() || 0;
                         let taxRate = parseFloat($('#vat-' + i).val() || 0);
+                        var buy_price = $('#buy_price-' + i).val() || 0;
 
                         let price;
                         if (salePriceCategory === 'Default') {
@@ -1045,96 +1119,22 @@
                         }
 
                         total += price * qty;
+                        total_purchase += buy_price * qty;
                     }
 
                     let taxt = total * 0.05; // Calculate tax based on the updated total
                     taxt = Math.ceil(taxt);
                     let total_total = total - totalTax;
                     $("#invoiceyoghtml").val(total);
+                    $("#total_buy_price").val(total_purchase);
                     $("#commercial_text").val(
-                        totalTax); // Update tax value
+                        totalTax);
                     $("#total").val(total_total);
                     $('#total_total').val(total_total);
                     // $("#total_discount").val('');
                 });
 
-                function paidFunction() {
-                    let paid = document.getElementById("paid").value;
-                    let total_p = document.getElementById("total_total").value;
-                    let balance = total_p - paid;
-                    $("#balance").val(balance);
-
-
-                }
             });
-        </script>
-        <script>
-            // $(document).on('click', '.remove_item_btn', function(e) {
-            //     e.preventDefault();
-            //     let row_item = $(this).parent().parent();
-            //     $(row_item).remove();
-            //     count--;
-            // });
-
-
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            // $(document).on("click", '#calculate', function(e) {
-            //     e.preventDefault();
-            //     let total = 0;
-            //     for (let i = 0; i < (count + 1); i++) {
-
-
-            //         var qty = parseInt($('#amount-' + i).val()); //get value from amount
-            //         var item_name = $('#productname-' + i).val(); //get value from amount
-            //         var sel = $('#focsel-' + i).val(); //get value from amount
-
-
-
-            //         let price = parseInt($('#price-' + i).val()); //get vlaue from price
-
-            //         console.log("price" + price)
-
-            //         $("#result-" + i).text((price *
-            //             qty));
-
-
-            //         if (sel >= 1) {
-            //             $("#foc-" + i).text('FOC');
-            //             price = 0;
-
-            //         }
-            //         if (sel < 1) {
-            //             $("#foc-" + i).text((price * qty));
-
-            //         }
-
-            //         total = total + (price * qty); //total adding (amount*price)
-
-            //     }
-            //     let taxt = total * 0.05;
-            //     taxt = Math.ceil(taxt);
-            //     let total_total = taxt + total;
-            //     $("#invoiceyoghtml").val(total); //set  (amount*price)  per invoice  subtotal
-            //     // $("#commercial_text").val(taxt); //commercial taxt 5% of total (sub total)
-            //     $("#total").val(total_total); //super total
-            //     $('#extra_discount').val('');
-            //     $('#paid').val('');
-            //     $('#balance').val('');
-            //     $('#total_total').val(total_total);
-            //     $('#total_discount').val('');
-            //     // alert("Text:sdfgsdf"+ qty + "count is ;" + count);
-
-            // });
-
-
-
-
-
 
             function paidFunction() {
 
@@ -1143,16 +1143,16 @@
                 let balance = total_p - paid;
                 $("#balance").val(balance);
             }
-        </script>
-        <script>
+
             $(document).ready(function() {
                 var path = "{{ route('customer_service_search') }}";
-
-
                 $('#customer').typeahead({
                     source: function(query, process) {
+                        var Selectedlocation = $('#location').val();
+
                         return $.get(path, {
-                            query: query
+                            query: query,
+                            location: Selectedlocation,
                         }, function(data) {
                             // Format the data for Typeahead
                             var formattedData = [];
@@ -1171,6 +1171,7 @@
                         });
                     }
                 });
+
 
 
 
@@ -1202,15 +1203,9 @@
                     });
                 });
             });
-        </script>
 
 
 
-
-
-
-
-        <script>
             $("input").on("change", function() {
                 if (this.value && moment(this.value, "YYYY-MM-DD").isValid()) {
                     this.setAttribute(
@@ -1221,18 +1216,15 @@
                     this.setAttribute("data-date", "dd/mm/yyyy");
                 }
             }).trigger("change");
-        </script>
 
-
-        <script>
             $(document).on("input", "#total_discount", function() {
                 let subtotal = parseFloat($("#invoiceyoghtml").val()) || 0;
                 let discount = parseFloat($(this).val()) || 0;
                 let total = subtotal - discount;
                 $("#total_total").val(total);
             });
-        </script>
-        <script>
+
+
             document.getElementById("suspend").addEventListener("click", function() {
                 setStatus("suspend");
             });
@@ -1246,7 +1238,8 @@
                 document.getElementById("myForm").submit();
             }
         </script>
-        <!-- <script src="{{ asset('plugins/jquery/jquery.min.js ') }}"></script> -->
+
+
         <!-- Bootstrap 4 -->
         <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <!-- DataTables  & Plugins -->
