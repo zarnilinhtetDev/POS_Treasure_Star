@@ -129,9 +129,6 @@ class PurchaseOrderController extends Controller
             $result->warehouse = $request->warehouse[$i];
             $result->save();
         }
-
-
-
         foreach ($invoice->po_sells as $po_sell) {
             $item = Item::where('item_name', $po_sell->part_number)
                 ->where('warehouse_id', $po_sell->warehouse)
