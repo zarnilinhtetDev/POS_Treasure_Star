@@ -394,32 +394,48 @@ class ReportController extends Controller
     }
     public function monthly_po_search(Request $request)
     {
+        // Get the current user's branch permissions
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
+        // Fetch all branches
         $branchs = Warehouse::all();
         $branch = $request->input('branch');
         $branchNames = $branchs->pluck('name', 'id');
-        $currentBranchName = $branch ? $branchNames[$branch] : 'All Quotations';
+        $currentBranchName = $branch ? $branchNames->get($branch, 'Unknown Branch') : 'All Quotations';
 
+        // Parse the start and end dates
         $start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
         $end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
 
+        // Initialize the Purchase Order query
         $search_pos = PurchaseOrder::whereDate('po_date', '>=', $start_date)
             ->whereDate('po_date', '<=', $end_date)
-            ->where('balance_due', 'PO')
-            ->when(!auth()->user()->is_admin, function ($query) use ($warehousePermission) {
-                return $query->whereIn('branch', $warehousePermission);
-            })
-            ->when($request->has('branch') && $request->input('branch'), function ($query) use ($request) {
-                return $query->where('branch', $request->input('branch'));
-            })
-            ->get();
+            ->where('balance_due', 'PO');
+
+        // Check if the user is an admin
+        if (auth()->user()->is_admin == '1') {
+            // Admins can filter by any branch
+            if ($branch) {
+                $search_pos->where('branch', $branch);
+            }
+        } else {
+            // Non-admins can only filter within their allowed branches
+            $search_pos->whereIn('branch', $warehousePermission);
+
+            if ($branch) {
+                $search_pos->where('branch', $branch);
+            }
+        }
+
+        // Execute the query and calculate totals
+        $search_pos = $search_pos->get();
         $totalCash = $search_pos->where('payment_method', 'Cash')->sum('total');
         $totalKbz = $search_pos->where('payment_method', 'K Pay')->sum('total');
-        $totalCB =  $search_pos->where('payment_method', 'Wave')->sum('total');
-        $totalOther =  $search_pos->where('payment_method', 'Others')->sum('total');
+        $totalCB = $search_pos->where('payment_method', 'Wave')->sum('total');
+        $totalOther = $search_pos->where('payment_method', 'Others')->sum('total');
         $search_total = $search_pos->sum('total');
 
+        // Return the view with data
         return view('report.report_po', compact(
             'search_pos',
             'search_total',
@@ -431,6 +447,7 @@ class ReportController extends Controller
             'currentBranchName'
         ));
     }
+
 
 
 

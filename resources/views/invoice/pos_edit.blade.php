@@ -185,7 +185,7 @@
                                                                 class="form-control"
                                                                 value="{{ $invoice->customer_name }}"></td>
                                                         <input type='hidden' name='customer_id' id="customer_id"
-                                                            class="form-control">
+                                                            class="form-control" value="{{ $invoice->customer_id }}">
                                                         <input type='hidden' name='status' id="status"
                                                             class="form-control" value="pos">
                                                         <td class="text-center"><input type='text' name='phno'

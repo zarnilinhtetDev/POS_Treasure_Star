@@ -117,40 +117,7 @@
                                 </div>
 
 
-                                @if (auth()->user()->is_admin == '1')
-                                    <div class="form-group mt-3">
-                                        <label for="branch">Location<span class="text-danger">*</span></label>
 
-                                        <select name="branch" id="" class="form-control" required>
-                                            <option value="" selected disabled>Select Location
-                                            </option>
-                                            @foreach ($warehouses as $branch)
-                                                <option value="{{ $branch->id }}">{{ $branch->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                @else
-                                    <div class="form-group mt-3">
-                                        <label for="branch">Location<span class="text-danger">*</span></label>
-
-                                        <select name="branch" id="" class="form-control" required>
-                                            @php
-                                                $userPermissions = auth()->user()->level
-                                                    ? json_decode(auth()->user()->level)
-                                                    : [];
-                                            @endphp
-
-                                            @foreach ($warehouses as $branch)
-                                                @if (in_array($branch->id, $userPermissions))
-                                                    <option value="{{ $branch->id }}">
-                                                        {{ $branch->name }}
-                                                    </option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                @endif
                                 <div class="form-group mt-3">
                                     <label for="address">Address</label>
                                     <input type="text" class="form-control" id="phone number"
@@ -370,24 +337,58 @@
                                                 </select>
                                             </div>
                                             {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
-                                            <div class="mt-4 frmSearch col-md-3">
-                                                <div class="frmSearch col-sm-12">
-                                                    <span style="font-weight:bolder">
-                                                        <label for="cst"
-                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                    </span>
-                                                    <select name="location" id="location"
-                                                        class="mb-4 form-control location" required>
 
-                                                        @foreach ($warehouses as $warehouse)
-                                                            <option value="{{ $warehouse->id }}">
-                                                                {{ $warehouse->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
+                                            @if (auth()->user()->is_admin == '1')
+                                                <div class="mt-4 frmSearch col-md-3">
+                                                    <div class="frmSearch col-sm-12">
+                                                        <span style="font-weight:bolder">
+                                                            <label for="cst"
+                                                                class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                        </span>
+                                                        <select name="branch" id="location"
+                                                            class="mb-4 form-control location" required>
 
+                                                            @foreach ($warehouses as $warehouse)
+                                                                <option value="{{ $warehouse->id }}">
+                                                                    {{ $warehouse->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            @else
+                                                <div class="mt-4 frmSearch col-md-3">
+                                                    <div class="frmSearch col-sm-12">
+                                                        <span style="font-weight:bolder">
+                                                            <label for="cst"
+                                                                class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                        </span>
+                                                        <select name="branch" id="location"
+                                                            class="mb-4 form-control location" required>
+
+                                                            @php
+                                                                $userPermissions = auth()->user()->level
+                                                                    ? json_decode(auth()->user()->level)
+                                                                    : [];
+                                                            @endphp
+
+                                                            @foreach ($warehouses as $branch)
+                                                                @if (in_array($branch->id, $userPermissions))
+                                                                    <option value="{{ $branch->id }}">
+                                                                        {{ $branch->name }}
+                                                                    </option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+
+                                                    </div>
+                                                </div>
+
+
+                                            @endif
+
+
                                             {{-- @else
                                             <div class="mt-4 frmSearch col-md-3">
                                                 <div class="frmSearch col-sm-12">

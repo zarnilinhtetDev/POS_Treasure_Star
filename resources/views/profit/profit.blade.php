@@ -149,10 +149,13 @@
                                             {{ $currentBranchName }}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a href="{{ url('index') }}" class="dropdown-item">All Invoices</a>
+
                                             @if (auth()->user()->is_admin == '1')
+                                                <a href="{{ url('index') }}"
+                                                    class="dropdown-item {{ request('branch') ? '' : 'active' }}">All
+                                                    Invoices</a>
                                                 @foreach ($branchs as $drop)
-                                                    <a class="dropdown-item"
+                                                    <a class="dropdown-item {{ request('branch') == $drop->id ? 'active' : '' }}"
                                                         href="{{ url('index?branch=' . $drop->id) }}">{{ $drop->name }}</a>
                                                 @endforeach
                                             @else
@@ -163,12 +166,13 @@
                                                 @endphp
                                                 @foreach ($branchs as $drop)
                                                     @if (in_array($drop->id, $userPermissions))
-                                                        <a class="dropdown-item"
+                                                        <a class="dropdown-item {{ request('branch') == $drop->id ? 'active' : '' }}"
                                                             href="{{ url('index?branch=' . $drop->id) }}">{{ $drop->name }}</a>
                                                     @endif
                                                 @endforeach
                                             @endif
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
