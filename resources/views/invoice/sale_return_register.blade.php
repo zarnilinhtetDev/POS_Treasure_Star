@@ -146,52 +146,42 @@
                                     <div id="customerpanel" class="inner-cmp-pnl">
 
                                         <div class="form-group row">
-                                            @if (auth()->user()->is_admin == '1')
-                                                <div class="frmSearch col-md-4">
-                                                    <div class="frmSearch col-sm-12">
-                                                        <span style="font-weight:bolder">
-                                                            <label for="cst"
-                                                                class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                        </span>
-                                                        <select name="branch" id="location"
-                                                            class="mb-4 form-control location" required>
-                                                            @foreach ($warehouses as $warehouse)
-                                                                <option value="{{ $warehouse->id }}">
+
+
+
+
+
+                                            {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+                                            <div class="frmSearch col-sm-4">
+                                                <label for="location" style="font-weight:bolder">
+                                                    Location</label>
+                                                <select name="location" id="location" class="mb-4 form-control"
+                                                    required>
+
+                                                    @foreach ($warehouses as $warehouse)
+                                                        <option value="{{ $warehouse->id }}">
+                                                            {{ $warehouse->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            {{-- @elseif (Auth::user()->type == 'Warehouse')
+                                                <div class="frmSearch col-sm-6" style="display: none;">
+                                                    <label for="location" style="font-weight:bolder">
+                                                        Location</label>
+                                                    <select name="location" id="location" class="mb-4 form-control"
+                                                        required>
+
+                                                        @foreach ($warehouses as $warehouse)
+                                                            @if (auth()->user()->level == $warehouse->id)
+                                                                <option value="{{ $warehouse->id }}" selected>
                                                                     {{ $warehouse->name }}
                                                                 </option>
-                                                            @endforeach
-                                                        </select>
-
-                                                    </div>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
                                                 </div>
-                                            @else
-                                                <div class="frmSearch col-md-4">
-                                                    <div class="frmSearch col-sm-12">
-                                                        <span style="font-weight:bolder">
-                                                            <label for="cst"
-                                                                class="caption">{{ trans('Location') }}&nbsp;</label>
-
-                                                            <select name="branch" id="location"
-                                                                class="form-control location" required>
-                                                                @php
-                                                                    $userPermissions = auth()->user()->level
-                                                                        ? json_decode(auth()->user()->level)
-                                                                        : [];
-                                                                @endphp
-                                                                <option value="" selected disabled>Select
-                                                                    Location
-                                                                </option>
-                                                                @foreach ($warehouses as $branch)
-                                                                    @if (in_array($branch->id, $userPermissions))
-                                                                        <option value="{{ $branch->id }}">
-                                                                            {{ $branch->name }}
-                                                                        </option>
-                                                                    @endif
-                                                                @endforeach
-                                                            </select>
-                                                    </div>
-                                                </div>
-                                            @endif
+                                            @endif --}}
 
 
                                             <div class="frmSearch col-sm-4">

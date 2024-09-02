@@ -26,7 +26,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
 
                 <li class="nav-item">
@@ -42,7 +43,8 @@
 
 
                 <div class="btn-group">
-                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         {{ auth()->user()->name }}
                     </button>
                     <div class="dropdown-menu ">
@@ -65,37 +67,85 @@
             <!-- Main content -->
             <section class="content">
 
+                {{-- Permission Php --}}
+                @php
+                    $choosePermission = [];
+                    if (auth()->user()->permission) {
+                        $decodedPermissions = json_decode(auth()->user()->permission, true);
+                        if (json_last_error() === JSON_ERROR_NONE) {
+                            $choosePermission = $decodedPermissions;
+                        }
+                    }
+                @endphp
+                {{-- End Php --}}
+
                 <section class="content-header">
                     <div class="container mt-3">
                         <ul class="nav nav-tabs">
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report') ? 'active' : '' }}" href="{{ url('report') }}">Invoices</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_quotation') ? 'active' : '' }}" href="{{ url('report_quotation') }}">Quotations</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}" href="{{ url('report_pos') }}">POS</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_po') ? 'active' : '' }}" href="{{ url('report_po') }}">Purchase Orders</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_purchase_return') ? 'active' : '' }}" href="{{ url('report_purchase_return') }}">Purchase Return</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_sale_return') ? 'active' : '' }}" href="{{ url('report_sale_return') }}">Sale Return (Invoice)</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_item') ? 'active' : '' }}" href="{{ url('report_item') }}">Items</a>
-                            </li>
 
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('sale_return') ? 'active' : '' }}" href="{{ url('sale_return') }}">Sale Return (POS)</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->is('report_expense') ? 'active' : '' }}" href="{{ url('report_expense') }}">Expenses</a>
-                            </li>
+                            @if (in_array('Invoice Report', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report') ? 'active' : '' }}"
+                                        href="{{ url('report') }}">Invoices</a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Quotation Report', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report_quotation') ? 'active' : '' }}"
+                                        href="{{ url('report_quotation') }}">Quotations</a>
+                                </li>
+                            @endif
+
+                            @if (in_array('POS Report', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}"
+                                        href="{{ url('report_pos') }}">POS</a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Purchase Order Report', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report_po') ? 'active' : '' }}"
+                                        href="{{ url('report_po') }}">Purchase Orders</a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Purchase Return', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report_purchase_return') ? 'active' : '' }}"
+                                        href="{{ url('report_purchase_return') }}">Purchase Return</a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Sale Return (Invoice)', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report_sale_return') ? 'active' : '' }}"
+                                        href="{{ url('report_sale_return') }}">Sale Return (Invoice)</a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Item Report', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report_item') ? 'active' : '' }}"
+                                        href="{{ url('report_item') }}">Items</a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Sale Return (POS)', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('sale_return') ? 'active' : '' }}"
+                                        href="{{ url('sale_return') }}">Sale Return (POS)</a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Expenses Report', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report_expense') ? 'active' : '' }}"
+                                        href="{{ url('report_expense') }}">Expenses</a>
+                                </li>
+                            @endif
+
                         </ul>
                     </div><!-- /.container-fluid -->
                 </section>
@@ -119,43 +169,44 @@
                                             <input type="date" name="end_date" class="form-control" required>
                                         </div>
                                         @if (auth()->user()->is_admin == '1')
-                                        <div class="form-group col-md-3">
-                                            <label for="branch">Location<span class="text-danger">*</span></label>
+                                            <div class="form-group col-md-3">
+                                                <label for="branch">Location<span class="text-danger">*</span></label>
 
-                                            <select name="branch" id="branch" class="form-control" required>
+                                                <select name="branch" id="branch" class="form-control" required>
 
-                                                @foreach ($branchs as $branch)
-                                                <option value="{{ $branch->id }}">{{ $branch->name }}
-                                                </option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                                    @foreach ($branchs as $branch)
+                                                        <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         @else
-                                        <div class="form-group col-md-3">
-                                            <label for="branch">Location<span class="text-danger">*</span></label>
+                                            <div class="form-group col-md-3">
+                                                <label for="branch">Location<span class="text-danger">*</span></label>
 
-                                            <select name="branch" id="branch" class="form-control" required>
-                                                @php
-                                                $userPermissions = auth()->user()->level
-                                                ? json_decode(auth()->user()->level)
-                                                : [];
-                                                @endphp
-                                                <option value="" selected disabled>Select Location
-                                                </option>
-                                                @foreach ($branchs as $branch)
-                                                @if (in_array($branch->id, $userPermissions))
-                                                <option value="{{ $branch->id }}">
-                                                    {{ $branch->name }}
-                                                </option>
-                                                @endif
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                                <select name="branch" id="branch" class="form-control" required>
+                                                    @php
+                                                        $userPermissions = auth()->user()->level
+                                                            ? json_decode(auth()->user()->level)
+                                                            : [];
+                                                    @endphp
+                                                    <option value="" selected disabled>Select Location
+                                                    </option>
+                                                    @foreach ($branchs as $branch)
+                                                        @if (in_array($branch->id, $userPermissions))
+                                                            <option value="{{ $branch->id }}">
+                                                                {{ $branch->name }}
+                                                            </option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                         @endif
 
                                         <div class="col-md-2 form-group">
                                             <label for="">&nbsp;</label>
-                                            <input type="submit" class="btn btn-primary form-control" value="Search" style="background-color: #218838">
+                                            <input type="submit" class="btn btn-primary form-control" value="Search"
+                                                style="background-color: #218838">
                                         </div>
                                     </div>
                                 </form>
@@ -168,28 +219,33 @@
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h3 class="card-title">POS Report</h3>
                                 <div class="dropdown ml-auto mr-5">
-                                    <div id="branchDropdown" class="dropdown ml-auto" style="display:inline-block; margin-left: 10px;">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <div id="branchDropdown" class="dropdown ml-auto"
+                                        style="display:inline-block; margin-left: 10px;">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
                                             {{ $currentBranchName }}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a href="{{ route('report_pos_branch') }}" class="dropdown-item">All POS
                                             </a>
                                             @if (auth()->user()->is_admin == '1')
-                                            @foreach ($branchs as $drop)
-                                            <a class="dropdown-item" href="{{ route('report_pos_branch', ['branch' => $drop->id]) }}">{{ $drop->name }}</a>
-                                            @endforeach
+                                                @foreach ($branchs as $drop)
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('report_pos_branch', ['branch' => $drop->id]) }}">{{ $drop->name }}</a>
+                                                @endforeach
                                             @else
-                                            @php
-                                            $userPermissions = auth()->user()->level
-                                            ? json_decode(auth()->user()->level)
-                                            : [];
-                                            @endphp
-                                            @foreach ($branchs as $drop)
-                                            @if (in_array($drop->id, $userPermissions))
-                                            <a class="dropdown-item" href="{{ route('report_pos_branch', ['branch' => $drop->id]) }}">{{ $drop->name }}</a>
-                                            @endif
-                                            @endforeach
+                                                @php
+                                                    $userPermissions = auth()->user()->level
+                                                        ? json_decode(auth()->user()->level)
+                                                        : [];
+                                                @endphp
+                                                @foreach ($branchs as $drop)
+                                                    @if (in_array($drop->id, $userPermissions))
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('report_pos_branch', ['branch' => $drop->id]) }}">{{ $drop->name }}</a>
+                                                    @endif
+                                                @endforeach
                                             @endif
                                         </div>
                                     </div>
@@ -215,79 +271,80 @@
                                     </thead>
                                     <tbody>
                                         @php
-                                        $no = 1;
-                                        $rowCount = count(!empty($search_pos) ? $search_pos : $pos_data);
-                                        $subtotal = 0;
-                                        $discounttotal = 0;
-                                        $amounttotal = 0;
-                                        $purchase = 0;
+                                            $no = 1;
+                                            $rowCount = count(!empty($search_pos) ? $search_pos : $pos_data);
+                                            $subtotal = 0;
+                                            $discounttotal = 0;
+                                            $amounttotal = 0;
+                                            $purchase = 0;
                                         @endphp
 
                                         @if (!empty($search_pos))
-                                        @foreach ($search_pos as $pos)
-                                        <tr>
-                                            <td>{{ $no }}</td>
-                                            <td><a href="{{ url('report_pos_receipt', $pos->id) }}">
-                                                    {{ $pos->invoice_no }}</a>
-                                            </td>
-                                            <td>
-                                                @foreach ($branchs as $branch)
-                                                @if ($branch->id == $pos->branch)
-                                                {{ $branch->name }}
-                                                @endif
-                                                @endforeach
-                                            </td>
-                                            <td>{{ $pos->invoice_date }}</td>
-                                            <td>{{ number_format($pos->discount_total + $pos->total) }}
-                                            </td>
+                                            @foreach ($search_pos as $pos)
+                                                <tr>
+                                                    <td>{{ $no }}</td>
+                                                    <td><a href="{{ url('report_pos_receipt', $pos->id) }}">
+                                                            {{ $pos->invoice_no }}</a>
+                                                    </td>
+                                                    <td>
+                                                        @foreach ($branchs as $branch)
+                                                            @if ($branch->id == $pos->branch)
+                                                                {{ $branch->name }}
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td>{{ $pos->invoice_date }}</td>
+                                                    <td>{{ number_format($pos->discount_total + $pos->total) }}
+                                                    </td>
 
-                                            <td>{{ $pos->discount_total ?? 0 }}</td>
-                                            <td>{{ number_format($pos->total) }}</td>
-                                            <td>{{ number_format($pos->total_buy_price) }}</td>
-                                            <td>{{ number_format($pos->total - $pos->total_buy_price) }}</td>
-                                            <td>{{ $pos->sale_by }}</td>
-                                        </tr>
-                                        @php
-                                        $no++;
-                                        $subtotal += $pos->discount_total + $pos->total; // Add subtotal for each $discounttotal += $pos_datas->discount_total;
-                                        $discounttotal += $pos->discount_total;
-                                        $amounttotal += $pos->total;
-                                        $purchase += $pos->total_buy_price;
+                                                    <td>{{ $pos->discount_total ?? 0 }}</td>
+                                                    <td>{{ number_format($pos->total) }}</td>
+                                                    <td>{{ number_format($pos->total_buy_price) }}</td>
+                                                    <td>{{ number_format($pos->total - $pos->total_buy_price) }}</td>
+                                                    <td>{{ $pos->sale_by }}</td>
+                                                </tr>
+                                                @php
+                                                    $no++;
+                                                    $subtotal += $pos->discount_total + $pos->total; // Add subtotal for each $discounttotal += $pos_datas->discount_total;
+                                                    $discounttotal += $pos->discount_total;
+                                                    $amounttotal += $pos->total;
+                                                    $purchase += $pos->total_buy_price;
 
-                                        @endphp
-                                        @endforeach
+                                                @endphp
+                                            @endforeach
                                         @else
-                                        @foreach ($pos_data as $pos_datas)
-                                        <tr>
-                                            <td>{{ $no }}</td>
-                                            <td><a href="{{ url('report_pos_receipt', $pos_datas->id) }}">{{ $pos_datas->invoice_no }}</a>
-                                            </td>
-                                            <td>
-                                                @foreach ($branchs as $branch)
-                                                @if ($branch->id == $pos_datas->branch)
-                                                {{ $branch->name }}
-                                                @endif
-                                                @endforeach
-                                            </td>
-                                            <td>{{ $pos_datas->invoice_date }}</td>
-                                            <td>{{ number_format($pos_datas->discount_total + $pos_datas->total) }}
-                                            </td>
+                                            @foreach ($pos_data as $pos_datas)
+                                                <tr>
+                                                    <td>{{ $no }}</td>
+                                                    <td><a
+                                                            href="{{ url('report_pos_receipt', $pos_datas->id) }}">{{ $pos_datas->invoice_no }}</a>
+                                                    </td>
+                                                    <td>
+                                                        @foreach ($branchs as $branch)
+                                                            @if ($branch->id == $pos_datas->branch)
+                                                                {{ $branch->name }}
+                                                            @endif
+                                                        @endforeach
+                                                    </td>
+                                                    <td>{{ $pos_datas->invoice_date }}</td>
+                                                    <td>{{ number_format($pos_datas->discount_total + $pos_datas->total) }}
+                                                    </td>
 
-                                            <td>{{ $pos_datas->discount_total ?? 0 }}</td>
-                                            <td>{{ number_format($pos_datas->total) }}</td>
-                                            <td>{{ number_format($pos_datas->total_buy_price) }}</td>
-                                            <td>{{ number_format($pos_datas->total - $pos_datas->total_buy_price) }}
-                                            </td>
-                                            <td>{{ $pos_datas->sale_by }}</td>
-                                        </tr>
-                                        @php
-                                        $no++;
-                                        $subtotal += $pos_datas->discount_total + $pos_datas->total;
-                                        $discounttotal += $pos_datas->discount_total;
-                                        $amounttotal += $pos_datas->total;
-                                        $purchase += $pos_datas->total_buy_price;
-                                        @endphp
-                                        @endforeach
+                                                    <td>{{ $pos_datas->discount_total ?? 0 }}</td>
+                                                    <td>{{ number_format($pos_datas->total) }}</td>
+                                                    <td>{{ number_format($pos_datas->total_buy_price) }}</td>
+                                                    <td>{{ number_format($pos_datas->total - $pos_datas->total_buy_price) }}
+                                                    </td>
+                                                    <td>{{ $pos_datas->sale_by }}</td>
+                                                </tr>
+                                                @php
+                                                    $no++;
+                                                    $subtotal += $pos_datas->discount_total + $pos_datas->total;
+                                                    $discounttotal += $pos_datas->discount_total;
+                                                    $amounttotal += $pos_datas->total;
+                                                    $purchase += $pos_datas->total_buy_price;
+                                                @endphp
+                                            @endforeach
                                         @endif
 
                                     <tfoot>
@@ -317,18 +374,18 @@
                                         </tr>
                                     </thead>
                                     @php
-                                    $no = 1;
+                                        $no = 1;
                                     @endphp
                                     @foreach ($sale_totals as $sale_total)
-                                    <tr>
-                                        <td>{{ $no }}</td>
-                                        <td colspan="">{{ $sale_total->sale_by }}</td>
-                                        <td>{{ number_format($sale_total->sale_total) }}</td>
-                                        <!-- Display the subtotal here -->
-                                    </tr>
-                                    @php
-                                    $no++;
-                                    @endphp
+                                        <tr>
+                                            <td>{{ $no }}</td>
+                                            <td colspan="">{{ $sale_total->sale_by }}</td>
+                                            <td>{{ number_format($sale_total->sale_total) }}</td>
+                                            <!-- Display the subtotal here -->
+                                        </tr>
+                                        @php
+                                            $no++;
+                                        @endphp
                                     @endforeach
                                 </table>
                             </div>

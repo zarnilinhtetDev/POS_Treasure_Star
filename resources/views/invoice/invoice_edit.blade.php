@@ -2,7 +2,8 @@
 <HTML>
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
 
@@ -48,42 +49,56 @@
     <div class="container-fluid" id="content">
 
 
-        <div class="row">
-            <div class="col d-flex justify-content-between align-items-center mx-4 mt-3">
-                <h1>Invoice Edit</h1>
-                <a href="{{ url('invoice') }}" class="btn btn-danger">Back</a>
-            </div>
-        </div>
+        <h1 class="mx-4 mt-3">
+            Invoice Edit
+        </h1>
 
-
-        <form method="post" id="myForm" action="{{ url('/invoice_update', $invoice->id) }}" enctype="multipart/form-data">
+        <form method="post" id="myForm" action="{{ url('/invoice_update', $invoice->id) }}"
+            enctype="multipart/form-data">
             @csrf
+
+
+            {{-- Permission Php --}}
+            @php
+                $choosePermission = [];
+                if (auth()->user()->permission) {
+                    $decodedPermissions = json_decode(auth()->user()->permission, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $choosePermission = $decodedPermissions;
+                    }
+                }
+            @endphp
+            {{-- End Php --}}
 
             <div class="mx-3 row ">
 
                 <div class="my-3 mt-4 row">
                     <div class="col-md-3">
                         <label for="invoice_no" style="font-weight:bolder">Invoice Number</label>
-                        <input type="text" id="invoice_no" class="form-control" name="invoice_no" value="{{ $invoice->invoice_no }}" readonly>
+                        <input type="text" id="invoice_no" class="form-control" name="invoice_no"
+                            value="{{ $invoice->invoice_no }}" readonly>
                     </div>
                     <div class="col-md-3">
                         <label for="invoice_date" style="font-weight:bolder">Date</label>
-                        <input type="date" name="invoice_date" class="form-control" max="{{ date('Y-m-d') }}" value="{{ $invoice->invoice_date }}" required>
+                        <input type="date" name="invoice_date" class="form-control" max="{{ date('Y-m-d') }}"
+                            value="{{ $invoice->invoice_date }}" required>
                     </div>
 
                     <div class="col-md-3">
-                        <label for="overdue_date" class=" caption" style="font-weight:bolder">{{ trans('Payment OverDue Date') }}</label>
-                        <input type="date" name="overdue_date" id="overdue_date" class="form-control round" autocomplete="off" min="<?= date('Y-m-d') ?>" value="{{ $invoice->overdue_date }}">
+                        <label for="overdue_date" class=" caption"
+                            style="font-weight:bolder">{{ trans('Payment OverDue Date') }}</label>
+                        <input type="date" name="overdue_date" id="overdue_date" class="form-control round"
+                            autocomplete="off" min="<?= date('Y-m-d') ?>" value="{{ $invoice->overdue_date }}">
                     </div>
                     <div class="col-md-3 ">
                         <label for="payment_method" style="font-weight:bolder">{{ trans('Payment Methods') }}</label>
-                        <select class="mb-4 form-control round" aria-label="Default select example" name="payment_method" required>
+                        <select class="mb-4 form-control round" aria-label="Default select example"
+                            name="payment_method" required>
                             <option value="{{ $invoice->payment_method }}" selected>{{ $invoice->payment_method }}
                             </option>
                             <option value="Cash">Cash</option>
-                            <option value="K Pay">K Pay</option>
-                            <option value="Wave">Wave</option>
-                            <option value="Others">Others</option>
+                            <option value="Credit">Credit</option>
+                            <option value="Consignment Terms">Consignment Terms</option>
                         </select>
                     </div>
 
@@ -102,7 +117,7 @@
                                             <div id="customerpanel" class="inner-cmp-pnl">
 
                                                 <div class="form-group row">
-                                                    <div class="frmSearch col-sm-6">
+                                                    <!-- <div class="frmSearch col-sm-6">
 
                                                         <div class="frmSearch col-sm-12" style="">
                                                             <div class="frmSearch col-sm-12">
@@ -120,7 +135,7 @@
 
                                                         </div>
 
-                                                    </div>
+                                                    </div> -->
 
                                                     <div class="frmSearch col-sm-6">
                                                         <div class="frmSearch col-sm-12">
@@ -129,11 +144,14 @@
                                                                     <label for="cst" class="caption">Register
                                                                         Mode</label>
                                                                 </span>
-                                                                <select name="balance_due" id="balance_due" class="mb-4 form-control balance_due" required>
+                                                                <select name="balance_due" id="balance_due"
+                                                                    class="mb-4 form-control balance_due" required>
 
-                                                                    <option value="Invoice" @if ($invoice->balance_due == 'Invoice') selected @endif>
+                                                                    <option value="Invoice"
+                                                                        @if ($invoice->balance_due == 'Invoice') selected @endif>
                                                                         Invoice</option>
-                                                                    <option value="Po Return" @if ($invoice->balance_due == 'Po Return') selected @endif>
+                                                                    <option value="Po Return"
+                                                                        @if ($invoice->balance_due == 'Po Return') selected @endif>
                                                                         Po Return</option>
 
                                                                 </select>
@@ -147,12 +165,15 @@
 
 
                                                     </div>
-                                                    <input type="hidden" id="service_id" name="service_id" value="0">
+                                                    <input type="hidden" id="service_id" name="service_id"
+                                                        value="0">
 
 
-                                                    <input type="hidden" name="manager_type" value="{{ Auth::user()->type }}">
+                                                    <input type="hidden" name="manager_type"
+                                                        value="{{ Auth::user()->type }}">
 
-                                                    <input type="text" name="status" class="form-control" value="draft" style="display: none">
+                                                    <input type="text" name="status" class="form-control"
+                                                        value="draft" style="display: none">
 
                                                 </div>
                                             </div>
@@ -184,12 +205,23 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr class="item_header bg-gradient-directional-blue white">
-                                                        <td class="text-center"><input type='text' name='customer_name' id="name" class="form-control" value="{{ $invoice->customer_name }}"></td>
-                                                        <input type='hidden' name='customer_id' id="customer_id" class="form-control">
-                                                        <input type='hidden' name='status' id="status" class="form-control" value="invoice">
-                                                        <td class="text-center"><input type='text' name='phno' id="phone_no" class="form-control" value="{{ $invoice->phno }}"></td>
-                                                        <td class="text-center"><input type='text' name='type' id="type" class="form-control" value="{{ $invoice->type }}"></td>
-                                                        <td class="text-center"><input type='text' name='address' value="{{ $invoice->address }}" class="form-control" id="address"></td>
+                                                        <td class="text-center"><input type='text'
+                                                                name='customer_name' id="name"
+                                                                class="form-control"
+                                                                value="{{ $invoice->customer_name }}"></td>
+                                                        <input type='hidden' name='customer_id' id="customer_id"
+                                                            class="form-control">
+                                                        <input type='hidden' name='status' id="status"
+                                                            class="form-control" value="invoice">
+                                                        <td class="text-center"><input type='text' name='phno'
+                                                                id="phone_no" class="form-control"
+                                                                value="{{ $invoice->phno }}"></td>
+                                                        <td class="text-center"><input type='text' name='type'
+                                                                id="type" class="form-control"
+                                                                value="{{ $invoice->type }}"></td>
+                                                        <td class="text-center"><input type='text' name='address'
+                                                                value="{{ $invoice->address }}" class="form-control"
+                                                                id="address"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -200,9 +232,12 @@
 
                                         <div class="row table-responsive " style="margin-top:1vh;">
                                             <div class="mt-4 frmSearch col-md-3">
-                                                <label for="payment" style="font-weight:bolder">{{ trans('Sale Price Category') }}
+                                                <label for="payment"
+                                                    style="font-weight:bolder">{{ trans('Sale Price Category') }}
                                                 </label>
-                                                <select class="mb-4 form-control round " aria-label="Default select example" name="sale_price_category" id="sale_price_category" required>
+                                                <select class="mb-4 form-control round "
+                                                    aria-label="Default select example" name="sale_price_category"
+                                                    id="sale_price_category" required>
                                                     <option value="{{ $invoice->sale_price_category }}" selected>
                                                         {{ $invoice->sale_price_category }}
                                                     </option>
@@ -213,64 +248,55 @@
                                             </div>
 
 
-                                            @if (auth()->user()->is_admin == '1')
+
+
+
+
+                                            {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+                                            <div class="mt-4 frmSearch col-md-3">
+                                                <div class="frmSearch col-sm-12">
+                                                    <span style="font-weight:bolder">
+                                                        <label for="cst"
+                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                    </span> <select name="location" id="location"
+                                                        class="mb-4 form-control location" required>
+
+                                                        @foreach ($warehouses as $warehouse)
+                                                            <option value="{{ $warehouse->id }}" selected>
+                                                                {{ $warehouse->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                            {{-- @else
                                             <div class="mt-4 frmSearch col-md-3">
                                                 <div class="frmSearch col-sm-12">
                                                     <span style="font-weight:bolder">
                                                         <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                    </span> <select name="branch" id="location" class="mb-4 form-control location" required>
-                                                        @foreach ($warehouses as $branch)
-                                                        @if ($branch->id == $invoice->branch)
-                                                        <option value="{{ $branch->id }}" selected>
-                                                            {{ $branch->name }}
-                                                        </option>
-                                                        @endif
-                                                        @endforeach
+                                                    </span> <select name="location" id="location" class="mb-4 form-control location" required>
+
                                                         @foreach ($warehouses as $warehouse)
-                                                        <option value="{{ $warehouse->id }}">
+                                                        @if (auth()->user()->level == $warehouse->id)
+                                                        <option value="{{ $warehouse->id }}" selected>
                                                             {{ $warehouse->name }}
                                                         </option>
+                                                        @endif
                                                         @endforeach
                                                     </select>
 
                                                 </div>
-                                            </div>
-                                            @else
-                                            <div class="mt-4 frmSearch col-md-3">
-                                                <div class="frmSearch col-sm-12">
-                                                    <span style="font-weight:bolder">
-                                                        <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                    </span>
-                                                    <select name="branch" id="branch" class="form-control" required>
-                                                        @php
-                                                        $userPermissions = auth()->user()->level
-                                                        ? json_decode(auth()->user()->level)
-                                                        : [];
-                                                        @endphp
-                                                        @foreach ($warehouses as $branch)
-                                                        @if ($branch->id == $invoice->branch)
-                                                        <option value="{{ $branch->id }}" selected>
-                                                            {{ $branch->name }}
-                                                        </option>
-                                                        @endif
-                                                        @endforeach
-                                                        @foreach ($warehouses as $branch)
-                                                        @if (in_array($branch->id, $userPermissions))
-                                                        <option value="{{ $branch->id }}">
-                                                            {{ $branch->name }}
-                                                        </option>
-                                                        @endif
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            @endif
 
+
+                                            </div>
+                                            @endif --}}
 
                                             <!-- <table class="table-responsive tfr my_stripe"> -->
                                             <table class="table table-bordered">
                                                 <thead style="background-color:#0047AA;color:white;">
-                                                    <tr class="item_header bg-gradient-directional-blue white" style="margin-bottom:10px;">
+                                                    <tr class="item_header bg-gradient-directional-blue white"
+                                                        style="margin-bottom:10px;">
                                                         <th width="5%" class="text-center">{{ trans('No') }}
                                                         </th>
                                                         <th width="18%" class="text-center">
@@ -291,7 +317,8 @@
                                                         <th width="9%" class="text-center">
                                                             {{ trans('လက်လီစျေး') }}
                                                         </th>
-                                                        <th style="display: none;" width="9%" class="text-center">
+                                                        <th style="display: none;" width="9%"
+                                                            class="text-center">
                                                             {{ trans('၀ယ်စျေး') }}
                                                         </th>
                                                         <th width="9%" class="text-center">
@@ -312,56 +339,98 @@
 
                                                 <tbody id="showitem123">
                                                     @foreach ($sell as $key => $sell)
-                                                    <tr>
-                                                        <td class="text-center" id="count">
-                                                            {{ $key + 1 }}
-                                                        </td>
-                                                        <td><input type="text" class="form-control productname typeahead" name="part_number[]" value="{{ $sell->part_number }}" placeholder="{{ trans('Enter Item Name') }}" id='productname-0' autocomplete="off">
-                                                        </td>
+                                                        <tr>
+                                                            <td class="text-center" id="count">
+                                                                {{ $key + 1 }}
+                                                            </td>
+                                                            <td><input type="text"
+                                                                    class="form-control productname typeahead"
+                                                                    name="part_number[]"
+                                                                    value="{{ $sell->part_number }}"
+                                                                    placeholder="{{ trans('Enter Part Number') }}"
+                                                                    id='productname-0' autocomplete="off">
+                                                            </td>
 
-                                                        <td><input type="text" class="form-control description typeahead" value="{{ $sell->description }}" name="part_description[]" placeholder="{{ trans('') }}" id='description-0' autocomplete="off"></td>
-                                                        <td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-0" autocomplete="off" value="{{ $sell->product_qty }}"><input type="hidden" id="alert-0" value="" name="alert[]"></td>
-                                                        <td><input type="text" class="form-control item_unit" name="item_unit[]" id="item_unit-0" value="{{ $sell->unit }}">
+                                                            <td><input type="text"
+                                                                    class="form-control description typeahead"
+                                                                    value="{{ $sell->description }}"
+                                                                    name="part_description[]"
+                                                                    placeholder="{{ trans('') }}"
+                                                                    id='description-0' autocomplete="off"></td>
+                                                            <td><input type="text" class="form-control req amnt"
+                                                                    name="product_qty[]" id="amount-0"
+                                                                    autocomplete="off"
+                                                                    value="{{ $sell->product_qty }}"><input
+                                                                    type="hidden" id="alert-0" value=""
+                                                                    name="alert[]"></td>
+                                                            <td><input type="text" class="form-control item_unit"
+                                                                    name="item_unit[]" id="item_unit-0"
+                                                                    value="{{ $sell->unit }}">
 
-                                                        </td>
-                                                        <td><input type="text" class="form-control price" name="product_price[]" id="price-0" autocomplete="off" value="{{ $sell->product_price }}">
-                                                        </td>
-                                                        <td><input type="text" class="form-control retail_price" name="retail_price[]" id="retail_price-0" autocomplete="off" value="{{ $sell->retail_price }}">
-                                                        </td>
-                                                        <td style="display: none;"><input type="text" class="form-control buy_price" name="buy_price[]" id="buy_price-0" autocomplete="off" value="{{ $sell->buy_price }}">
-                                                        </td>
-                                                        <td><input type="text" class="form-control exp_date " name="exp_date[]" id="exp_date-0" autocomplete="off" value="{{ $sell->exp_date }}">
-                                                        </td>
-                                                        <td style="display: none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-0" autocomplete="off" value="{{ $sell->warehouse }}">
-                                                        </td>
-                                                        <!-- <td><input type="text" class="form-control vat " name="discount[]" id="vat-0" autocomplete="off" value="{{ old('discount') }}">
+                                                            </td>
+                                                            <td><input type="text" class="form-control price"
+                                                                    name="product_price[]" id="price-0"
+                                                                    autocomplete="off"
+                                                                    value="{{ $sell->product_price }}">
+                                                            </td>
+                                                            <td><input type="text"
+                                                                    class="form-control retail_price"
+                                                                    name="retail_price[]" id="retail_price-0"
+                                                                    autocomplete="off"
+                                                                    value="{{ $sell->retail_price }}">
+                                                            </td>
+                                                            <td style="display: none;"><input type="text"
+                                                                    class="form-control buy_price" name="buy_price[]"
+                                                                    id="buy_price-0" autocomplete="off"
+                                                                    value="{{ $sell->buy_price }}">
+                                                            </td>
+                                                            <td><input type="text" class="form-control exp_date "
+                                                                    name="exp_date[]" id="exp_date-0"
+                                                                    autocomplete="off" value="{{ $sell->exp_date }}">
+                                                            </td>
+                                                            <td style="display: none;"><input type="text"
+                                                                    class="form-control warehouse " name="warehouse[]"
+                                                                    id="warehouse-0" autocomplete="off"
+                                                                    value="{{ $sell->warehouse }}">
+                                                            </td>
+                                                            <!-- <td><input type="text" class="form-control vat " name="discount[]" id="vat-0" autocomplete="off" value="{{ old('discount') }}">
                                                     </td> -->
 
-                                                        <td style="text-align:center">
-                                                            <strong>
-                                                                <span class='ttlText1' id="foc-0"></span>
-                                                            </strong>
-                                                            <span class="currenty">{{ config('currency.symbol') }}</span>
-                                                            <strong>
-                                                                <span class='ttlText' id="result-{{ $key }}">
-                                                                    {{ intval($sell->product_qty) * floatval($sell->product_price) - (intval($sell->product_qty) * floatval($sell->product_price) * intval($sell->discount)) / 100 }}
+                                                            <td style="text-align:center">
+                                                                <strong>
+                                                                    <span class='ttlText1' id="foc-0"></span>
+                                                                </strong>
+                                                                <span
+                                                                    class="currenty">{{ config('currency.symbol') }}</span>
+                                                                <strong>
+                                                                    <span class='ttlText'
+                                                                        id="result-{{ $key }}">
+                                                                        {{ intval($sell->product_qty) * floatval($sell->product_price) - (intval($sell->product_qty) * floatval($sell->product_price) * intval($sell->discount)) / 100 }}
 
-                                                                </span>
-                                                            </strong>
-                                                        </td>
-                                                        <td><button type="submit" class="btn btn-danger remove_item_btn" id="removebutton">Remove</button></td>
-                                                        <input type="hidden" class="form-control vat " name="product_tax[]" id="vat-0" value="0">
-                                                        <input type="hidden" name="total_tax[]" id="taxa-0" value="0">
-                                                        {{-- <input type="hidden" name="total_discount[]" id="disca-0"
+                                                                    </span>
+                                                                </strong>
+                                                            </td>
+                                                            <input type="hidden" class="form-control vat "
+                                                                name="product_tax[]" id="vat-0" value="0">
+                                                            <input type="hidden" name="total_tax[]" id="taxa-0"
+                                                                value="0">
+                                                            {{-- <input type="hidden" name="total_discount[]" id="disca-0"
                                                             value="0"> --}}
-                                                        <input type="hidden" class="ttInput" name="product_subtotal[]" id="total-0" value="0">
-                                                        <input type="hidden" class="pdIn" name="product_id[]" id="pid-0" value="0">
-                                                        <input type="hidden" attr-org="" name="unit[]" id="unit-0" value="">
-                                                        <input type="hidden" name="unit_m[]" id="unit_m-0" value="1">
-                                                        <input type="hidden" name="code[]" id="hsn-0" value="">
-                                                        <input type="hidden" name="serial[]" id="serial-0" value="">
-                                                        {{-- <td></td> --}}
-                                                    </tr>
+                                                            <input type="hidden" class="ttInput"
+                                                                name="product_subtotal[]" id="total-0"
+                                                                value="0">
+                                                            <input type="hidden" class="pdIn" name="product_id[]"
+                                                                id="pid-0" value="0">
+                                                            <input type="hidden" attr-org="" name="unit[]"
+                                                                id="unit-0" value="">
+                                                            <input type="hidden" name="unit_m[]" id="unit_m-0"
+                                                                value="1">
+                                                            <input type="hidden" name="code[]" id="hsn-0"
+                                                                value="">
+                                                            <input type="hidden" name="serial[]" id="serial-0"
+                                                                value="">
+                                                            {{-- <td></td> --}}
+                                                        </tr>
                                                     @endforeach
                                                 </tbody>
 
@@ -387,18 +456,25 @@
                                                     <tr class="last-item-row sub_c">
                                                         <td></td>
                                                         <td class="add-row">
-                                                            <button type="button" class="btn btn-success" id="addproduct" style="margin-top:20px;margin-bottom:20px;">
+                                                            <button type="button" class="btn btn-success"
+                                                                id="addproduct"
+                                                                style="margin-top:20px;margin-bottom:20px;">
                                                                 <i class="fa fa-plus-square"></i>
                                                                 {{ trans('Add row') }}
                                                             </button>
-                                                            <button type="button" class="btn btn-primary" id="calculate">
+                                                            <button type="button" class="btn btn-primary"
+                                                                id="calculate">
                                                                 Calculate
                                                             </button>
 
-                                                            <a href="{{ URL('items') }}" target="_blank" id="item_search">
-                                                                <button type="button" class="btn btn-success">
-                                                                    <i class="fa fa-plus-square"></i> Item Search
-                                                                </button></a>
+
+                                                            @if (in_array('Invoice Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                                <a href="{{ URL('items') }}" target="_blank"
+                                                                    id="item_search">
+                                                                    <button type="button" class="btn btn-success">
+                                                                        <i class="fa fa-plus-square"></i> Item Search
+                                                                    </button></a>
+                                                            @endif
 
 
 
@@ -413,19 +489,20 @@
                                                     <tr class="sub_c" style="display: table-row;">
                                                         <td colspan="2">
                                                             @if (isset($employees[0]))
-                                                            {{ trans('general.employee') }}
-                                                            <select name="user_id" class="selectpicker form-control">
-                                                                <option value="{{ $logged_in_user->id }}">
-                                                                    {{ $logged_in_user->first_name }}
-                                                                </option>
-                                                                @foreach ($employees as $employee)
-                                                                <option value="{{ $employee->id }}">
-                                                                    {{ $employee->first_name }}
-                                                                    {{ $employee->last_name }}
-                                                                </option>
-                                                                @endforeach
+                                                                {{ trans('general.employee') }}
+                                                                <select name="user_id"
+                                                                    class="selectpicker form-control">
+                                                                    <option value="{{ $logged_in_user->id }}">
+                                                                        {{ $logged_in_user->first_name }}
+                                                                    </option>
+                                                                    @foreach ($employees as $employee)
+                                                                        <option value="{{ $employee->id }}">
+                                                                            {{ $employee->first_name }}
+                                                                            {{ $employee->last_name }}
+                                                                        </option>
+                                                                    @endforeach
 
-                                                            </select>
+                                                                </select>
                                                             @endif
                                                         </td>
                                                     </tr>
@@ -434,14 +511,19 @@
 
                                                         </td>
                                                     </tr>
-                                                    <tr style="display: none;" class="sub_c" style="display: table-row;">
+                                                    <tr style="display: none;" class="sub_c"
+                                                        style="display: table-row;">
                                                         <td colspan="2">
 
                                                         </td>
                                                         <td colspan="3" align="right"><strong>Total Purchase
                                                             </strong>
                                                         </td>
-                                                        <td align="left" colspan="2" class="col-md-4"><input type="text" name="total_buy_price" class="form-control" id="total_buy_price" readonly style="background-color: #E9ECEF" value="{{ $invoice->total_buy_price }}">
+                                                        <td align="left" colspan="2" class="col-md-4"><input
+                                                                type="text" name="total_buy_price"
+                                                                class="form-control" id="total_buy_price" readonly
+                                                                style="background-color: #E9ECEF"
+                                                                value="{{ $invoice->total_buy_price }}">
 
                                                         </td>
 
@@ -453,7 +535,11 @@
                                                         <td colspan="3" align="right"><strong>Sub Total
                                                             </strong>
                                                         </td>
-                                                        <td align="left" colspan="2" class="col-md-4"><input type="text" name="sub_total" class="form-control" id="invoiceyoghtml" readonly style="background-color: #E9ECEF" value="{{ $invoice->sub_total }}">
+                                                        <td align="left" colspan="2" class="col-md-4"><input
+                                                                type="text" name="sub_total" class="form-control"
+                                                                id="invoiceyoghtml" readonly
+                                                                style="background-color: #E9ECEF"
+                                                                value="{{ $invoice->sub_total }}">
 
                                                         </td>
 
@@ -465,7 +551,10 @@
                                                         <td colspan="3" align="right"><strong>Discount
                                                             </strong>
                                                         </td>
-                                                        <td align="left" colspan="2" class="col-md-4"><input type="text" name="discount" class="form-control" id="total_discount" value="{{ $invoice->discount_total }}">
+                                                        <td align="left" colspan="2" class="col-md-4"><input
+                                                                type="text" name="discount" class="form-control"
+                                                                id="total_discount"
+                                                                value="{{ $invoice->discount_total }}">
 
                                                         </td>
 
@@ -477,7 +566,11 @@
                                                         <td colspan="3" align="right"><strong>Total
                                                             </strong>
                                                         </td>
-                                                        <td align="left" colspan="2" class="col-md-4"><input type="text" name="total" class="form-control" id="total_total" readonly style="background-color: #E9ECEF" value="{{ $invoice->total }}">
+                                                        <td align="left" colspan="2" class="col-md-4"><input
+                                                                type="text" name="total" class="form-control"
+                                                                id="total_total" readonly
+                                                                style="background-color: #E9ECEF"
+                                                                value="{{ $invoice->total }}">
 
                                                         </td>
 
@@ -492,7 +585,10 @@
                                                         <td colspan="3" align="right"><strong>Deposit
                                                             </strong>
                                                         </td>
-                                                        <td align="left" colspan="2"><input type="text" name="paid" class="form-control" id="paid" onchange="paidFunction()" value="{{ $invoice->deposit }}">
+                                                        <td align="left" colspan="2"><input type="text"
+                                                                name="paid" class="form-control" id="paid"
+                                                                onchange="paidFunction()"
+                                                                value="{{ $invoice->deposit }}">
 
                                                         </td>
 
@@ -504,7 +600,9 @@
                                                         <td colspan="3" align="right"><strong>Remaining Balance
                                                             </strong>
                                                         </td>
-                                                        <td align="left" colspan="2"><input type="text" name="balance" class="form-control" id="balance" readonly value="{{ $invoice->remain_balance }}">
+                                                        <td align="left" colspan="2"><input type="text"
+                                                                name="balance" class="form-control" id="balance"
+                                                                readonly value="{{ $invoice->remain_balance }}">
 
                                                         </td>
                                                     </tr>
@@ -520,10 +618,12 @@
 
                                                         <td align="right" colspan="9">
 
-                                                            <button id="submitButton" class="mt-3 btn btn-primary" type="submit">Save</button>
+                                                            <button id="submitButton" class="mt-3 btn btn-primary"
+                                                                type="submit">Save</button>
 
 
-                                                            <a href="{{ url('invoice') }}" type="submit" class="mt-3 btn btn-danger">Cancel
+                                                            <a href="{{ url('invoice') }}" type="submit"
+                                                                class="mt-3 btn btn-danger">Cancel
                                                             </a>
 
                                                         </td>
@@ -592,6 +692,7 @@
                         location: Selectedlocation,
                     },
                     success: function(data) {
+                        //  itemNameInput.val(data.retail_price);
 
                         itemNameInput.val(data.wholesale_price);
 
@@ -806,17 +907,11 @@
             //     $('#total_total').val(total_total);
             //     $('#total_discount').val('');
             // });
-
-            $(document).ready(function() {
-                calculateTotal();
-
-            });
-
-            function calculateTotal() {
+            $(document).on("click", '#calculate', function(e) {
+                e.preventDefault();
                 let salePriceCategory = $('#sale_price_category').val();
 
-                // Iterate through each row to calculate subtotal for each item
-                $('#showitem123 tr').each(function() {
+                $('#showitem123 tr').each(function(index) {
                     let row = $(this);
                     let qty = parseInt(row.find('.req.amnt').val()) || 0;
                     let buy_price = parseInt(row.find('.buy_price').val()) || 0;
@@ -824,7 +919,8 @@
 
                     if (salePriceCategory === 'Default') {
                         let cuz_name = $("#type").val();
-                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price').val()) || 0 :
+                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
+                                .val()) || 0 :
                             parseFloat(row.find('.retail_price').val()) || 0;
                     } else if (salePriceCategory === 'Whole Sale') {
                         price = parseFloat(row.find('.price').val()) || 0;
@@ -846,8 +942,7 @@
                 let totalTax = 0;
                 let total_purchase = 0;
 
-                // Iterate through each row to calculate the grand total and total tax
-                $('#showitem123 tr').each(function() {
+                $('#showitem123 tr').each(function(index) {
                     let row = $(this);
                     let qty = parseInt(row.find('.req.amnt').val()) || 0;
                     let buy_price = parseInt(row.find('.buy_price').val()) || 0;
@@ -855,7 +950,8 @@
 
                     if (salePriceCategory === 'Default') {
                         let cuz_name = $("#type").val();
-                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price').val()) || 0 :
+                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
+                                .val()) || 0 :
                             parseFloat(row.find('.retail_price').val()) || 0;
                     } else if (salePriceCategory === 'Whole Sale') {
                         price = parseFloat(row.find('.price').val()) || 0;
@@ -882,7 +978,7 @@
                     total += itemTotal;
                     total_purchase += purchase;
 
-                    row.find('.ttlText1').text(itemTotal);
+                    row.find('.ttlText1').text(itemTotal.toFixed(2));
                     if (price > 0) {
                         row.find('.ttlText1').show();
                         row.find('.ttlText').hide();
@@ -897,18 +993,14 @@
 
                 let totalTotal = total - totalTax;
 
-                $('#invoiceyoghtml').val(total);
-                $('#total_buy_price').val(total_purchase);
+                $('#invoiceyoghtml').val(total.toFixed(2));
                 $('#commercial_text').val(totalTax.toFixed(2));
                 $('#total').val(totalTotal.toFixed(2));
                 $('#extra_discount').val('');
-                $('#total_total').val(total);
-            }
-
-            $(document).on("click", '#calculate', function(e) {
-                e.preventDefault();
-                calculateTotal();
+                $('#paid').val('');
+                $('#balance').val('');
             });
+
 
         });
     </script>
@@ -939,13 +1031,12 @@
     <script>
         $(document).ready(function() {
             var path = "{{ route('customer_service_search') }}";
+
+
             $('#customer').typeahead({
                 source: function(query, process) {
-                    var Selectedlocation = $('#location').val();
-
                     return $.get(path, {
-                        query: query,
-                        location: Selectedlocation,
+                        query: query
                     }, function(data) {
                         // Format the data for Typeahead
                         var formattedData = [];
@@ -964,7 +1055,6 @@
                     });
                 }
             });
-
 
 
 
@@ -997,6 +1087,12 @@
             });
         });
     </script>
+
+
+
+
+
+
 
     <script>
         $("input").on("change", function() {

@@ -129,6 +129,24 @@
                                     </div>
 
                                     <div class="form-group col-md-6">
+                                        <label for="item_image">Item Image</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <img id="imagePreview"
+                                                        src="{{ asset('item_images/' . $items->item_image) }}"
+                                                        style="max-width: 50px; max-height: 50px;"
+                                                        alt="Item Image Preview">
+                                                </span>
+                                            </div>
+                                            <input type="file" class="form-control" id="item_image" name="item_image"
+                                                accept="image/*" onchange="previewImage(event)">
+                                        </div>
+                                        <span class="text-danger">Old: {{ $items->item_image }}</span>
+                                    </div>
+
+
+                                    <div class="form-group col-md-6">
                                         <label for="barcode">Barcode</label>
                                         <input type="number" class="form-control" id="barcode" name="barcode"
                                             placeholder="Enter BarCode" value="{{ $items->barcode }}">
@@ -150,12 +168,14 @@
                                     <div class="form-group col-md-6">
                                         <label for="category">Item Category</label>
                                         <input type="text" class="form-control" id="category" name="category"
-                                            value="{{ $items->category }}" placeholder="Enter Item Category" required>
+                                            value="{{ $items->category }}" placeholder="Enter Item Category"
+                                            required>
                                     </div>
 
                                     @if (auth()->user()->is_admin == '1')
                                         <div class="form-group col-md-6">
-                                            <label for="warehouse_id">Location<span class="text-danger">*</span></label>
+                                            <label for="warehouse_id">Location<span
+                                                    class="text-danger">*</span></label>
                                             <input type="hidden" id="warehouse_id_from" name="warehouse_id_from">
                                             <select name="warehouse_id" id="warehouse_id" class="form-control"
                                                 required>
@@ -283,7 +303,6 @@
     @include('layouts.footer')
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
         $(document).ready(function() {
             $('.option-checkbox').on('change', function() {
@@ -292,4 +311,14 @@
                 }
             });
         });
+    </script>
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('imagePreview');
+                output.src = reader.result; // Set the image source to the base64 encoded string
+            };
+            reader.readAsDataURL(event.target.files[0]); // Read the file as a data URL
+        }
     </script>

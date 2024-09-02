@@ -95,12 +95,27 @@
                 @endif
 
                 <div class="ml-2 container-fluid">
-                    <div class="row">
-                        <div class="mr-auto col"> <button type="button" class="mr-auto btn btn-primary "
-                                data-toggle="modal" data-target="#modal-lg">
-                                Create Expense
+
+                    {{-- Permission --}}
+                    @php
+                        $choosePermission = [];
+                        if (auth()->user()->permission) {
+                            $decodedPermissions = json_decode(auth()->user()->permission, true);
+                            if (json_last_error() === JSON_ERROR_NONE) {
+                                $choosePermission = $decodedPermissions;
+                            }
+                        }
+                    @endphp
+                    {{-- End Permission --}}
+
+                    @if (in_array('Expenses Register', $choosePermission) || auth()->user()->is_admin == '1')
+                        <div class="row">
+                            <div class="mr-auto col"> <button type="button" class="mr-auto btn btn-primary "
+                                    data-toggle="modal" data-target="#modal-lg">
+                                    Create Expense
+                            </div>
                         </div>
-                    </div>
+                    @endif
                     <div class="modal fade" id="modal-lg">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
@@ -275,16 +290,21 @@
                                             </td>
                                             <td>{{ number_format($expense->amount) }}</td>
                                             <td>
-                                                <a href="{{ url('expense_edit', $expense->id) }}"
-                                                    class="btn btn-success btn-sm"><i
-                                                        class="fa-solid fa-pen-to-square"></i></a>
 
-                                                {{-- @if (auth()->user()->is_admin == '1' || auth()->user()->type == 'Admin' || auth()->user()->type == 'Branch Manager') --}}
-                                                <a href="{{ url('expense_delete', $expense->id) }}"
-                                                    class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Are you sure you want to delete this Expense?')"><i
-                                                        class="fa-solid fa-trash"></i></a>
-                                                {{-- @endif --}}
+                                                @if (in_array('Expenses Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                                    <a href="{{ url('expense_edit', $expense->id) }}"
+                                                        class="btn btn-success btn-sm"><i
+                                                            class="fa-solid fa-pen-to-square"></i></a>
+                                                @endif
+
+
+
+                                                @if (in_array('Expenses Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                    <a href="{{ url('expense_delete', $expense->id) }}"
+                                                        class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Are you sure you want to delete this Expense?')"><i
+                                                            class="fa-solid fa-trash"></i></a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

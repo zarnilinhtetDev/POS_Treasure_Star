@@ -1,4 +1,17 @@
 @include('layouts.header')
+<style>
+    .img-thumbnail {
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        transition: transform 0.2s;
+    }
+
+    .img-thumbnail:hover {
+        transform: scale(1.1);
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    }
+</style>
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
@@ -168,6 +181,19 @@
 
                             </form>
                         </div>
+
+                        {{-- Permission --}}
+                        @php
+                            $choosePermission = [];
+                            if (auth()->user()->permission) {
+                                $decodedPermissions = json_decode(auth()->user()->permission, true);
+                                if (json_last_error() === JSON_ERROR_NONE) {
+                                    $choosePermission = $decodedPermissions;
+                                }
+                            }
+                        @endphp
+                        {{-- End Permission --}}
+
                         <div class="ml-2 col row d-flex">
                             <form action="{{ route('file-update-import') }}" method="POST"
                                 enctype="multipart/form-data">
@@ -220,10 +246,13 @@
                     </div>
 
 
-                    <div class="mt-5 mr-auto col">
-                        <a href="{{ url('items_register') }}" type="button" class="mr-auto btn btn-primary ">
-                            Item Register</a>
-                    </div>
+
+                    @if (in_array('Item Register', $choosePermission) || auth()->user()->is_admin == '1')
+                        <div class="mt-5 mr-auto col">
+                            <a href="{{ url('items_register') }}" type="button" class="mr-auto btn btn-primary ">
+                                Item Register</a>
+                        </div>
+                    @endif
 
 
                     <div class="container-fluid">
@@ -243,6 +272,7 @@
                                         <thead>
                                             <tr>
                                                 <th>No.</th>
+                                                <th>Item Image</th>
                                                 <th>Item Name</th>
                                                 <th>Category</th>
                                                 <th>Location</th>
@@ -250,7 +280,6 @@
                                                 <th>လက်ကားစျေး</th>
                                                 <th>ဝယ်စျေး</th>
                                                 <th>Barcode</th>
-
                                                 <th>Expired Date</th>
 
                                                 <th style="background-color: rgb(221, 215, 215)">Quantity</th>
@@ -267,6 +296,14 @@
                                             @foreach ($items as $item)
                                                 <tr>
                                                     <td>{{ $no }}</td>
+                                                    <td> <a href="{{ asset('item_images/' . $item->item_image) }}"
+                                                            target="_blank" id="logoLink">
+                                                            <img src="{{ asset('item_images/' . $item->item_image) }}"
+                                                                id="logoPreview" class="img-thumbnail"
+                                                                style="max-width: 150px; max-height: 100px;"
+                                                                alt="Item Image Preview">
+                                                        </a>
+                                                    </td>
                                                     <td>{{ $item->item_name }}</td>
                                                     <td>{{ $item->category }}</td>
                                                     <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
@@ -295,20 +332,30 @@
                                                             class="mt-1 text-white btn btn-warning btn-sm">Generate</a>
                                                     </td>
                                                     <td>
-                                                        <a href="{{ url('item_details', $item->id) }}"
-                                                            class="btn btn-primary btn-sm"><i
-                                                                class="fa-solid fa-eye"></i></a>
+                                                        @if (in_array('Item Details', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('item_details', $item->id) }}"
+                                                                class="btn btn-primary btn-sm"><i
+                                                                    class="fa-solid fa-eye"></i></a>
+                                                        @endif
 
-                                                        <a href="{{ url('item_edit', $item->id) }}"
-                                                            class="btn btn-success btn-sm"><i
-                                                                class="fa-solid fa-pen-to-square"></i></a>
-                                                        <a href="{{ url('item_delete', $item->id) }}"
-                                                            class="btn btn-danger btn-sm"
-                                                            onclick="return confirm('Are you sure you want to delete this Item ?')"><i
-                                                                class="fa-solid fa-trash"></i></a>
-                                                        {{-- <a href="{{ url('in_out', $item->id) }}"
-                                                            class="mt-1 btn btn-info btn-sm">In/Out
-                                                            History </a> --}}
+                                                        @if (in_array('Item Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('item_edit', $item->id) }}"
+                                                                class="btn btn-success btn-sm"><i
+                                                                    class="fa-solid fa-pen-to-square"></i></a>
+                                                        @endif
+
+                                                        @if (in_array('Item Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('item_delete', $item->id) }}"
+                                                                class="btn btn-danger btn-sm"
+                                                                onclick="return confirm('Are you sure you want to delete this Item ?')"><i
+                                                                    class="fa-solid fa-trash"></i></a>
+                                                        @endif
+
+                                                        @if (in_array('Inout History', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('in_out', $item->id) }}"
+                                                                class="mt-1 btn btn-info btn-sm">In/Out
+                                                                History </a>
+                                                        @endif
 
                                                     </td>
                                                 </tr>

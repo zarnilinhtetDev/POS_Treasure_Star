@@ -71,7 +71,12 @@
                 <div class="container-fluid">
                     <div class="row justify-content-center d-flex">
 
+
                     </div>
+
+
+
+                    <!-- /.modal -->
                     <div class="mt-3 col-md-12">
                         @if (session('success'))
                             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -100,12 +105,10 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Invoice No.</th>
-                                            <th>Location</th>
                                             <th>Customer Name</th>
                                             <th>Register Mode</th>
                                             <th>Total</th>
-                                            <th> Status</th>
-                                            <th>Payment Method</th>
+                                            <th>Payment Status</th>
                                             <th> Date</th>
                                             <th>Action</th>
 
@@ -115,51 +118,59 @@
                                         @php
                                             $no = '1';
                                         @endphp
+                                        {{-- Permission Php --}}
+                                        @php
+                                            $choosePermission = [];
+                                            if (auth()->user()->permission) {
+                                                $decodedPermissions = json_decode(auth()->user()->permission, true);
+                                                if (json_last_error() === JSON_ERROR_NONE) {
+                                                    $choosePermission = $decodedPermissions;
+                                                }
+                                            }
+                                        @endphp
+                                        {{-- End Php --}}
                                         @foreach ($invoices as $invoice)
                                             <tr>
 
                                                 <td>{{ $no }}</td>
                                                 <td> {{ $invoice->invoice_no }}</td>
-                                                <td>
-                                                    @foreach ($branchs as $branch)
-                                                        @if ($branch->id == $invoice->branch)
-                                                            {{ $branch->name }}
-                                                        @endif
-                                                    @endforeach
-                                                </td>
+
                                                 <td>{{ $invoice->customer_name }}</td>
                                                 <td>{{ $invoice->balance_due }}</td>
 
                                                 <td>{{ $invoice->total }}</td>
-                                                @if ($invoice->total <= $invoice->deposit)
-                                                    <td> <span class="badge badge-success text-white">Paid</span>
-                                                    </td>
+                                                @if ($invoice->total == $invoice->deposit)
+                                                    <td>Paid</td>
                                                 @elseif($invoice->total > $invoice->deposit && $invoice->deposit > 0)
-                                                    <td>
-
-                                                        <span class="badge badge-warning text-white">Partial Paid</span>
-                                                    </td>
+                                                    <td>Partial Paid</td>
                                                 @else
-                                                    <td><span class="badge badge-danger text-white">UnPaid</span></td>
+                                                    <td>Unpaid</td>
                                                 @endif
-                                                <td>{{ $invoice->payment_method }}</td>
                                                 <td>{{ $invoice->invoice_date }}</td>
                                                 <td>
-                                                    <a href="{{ url('/invoice_detail', $invoice->id) }}"
-                                                        class="btn btn-primary btn-sm"><i
-                                                            class="fa-solid fa-eye"></i></a>
 
-                                                    @if ($invoice->status == 'invoice')
-                                                        <a href="{{ url('invoice_edit', $invoice->id) }}"
-                                                            class="btn btn-success btn-sm"><i
-                                                                class="fa-solid fa-pen-to-square"></i></a>
-                                                    @else
+                                                    @if (in_array('Invoice Details', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ url('/invoice_detail', $invoice->id) }}"
+                                                            class="btn btn-primary btn-sm"><i
+                                                                class="fa-solid fa-eye"></i></a>
                                                     @endif
 
-                                                    <a href="{{ url('invoice_delete', $invoice->id) }}"
-                                                        class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Are you sure you want to delete this Invoice ?')"><i
-                                                            class="fa-solid fa-trash"></i></a>
+                                                    @if (in_array('Invoice Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        @if ($invoice->status == 'invoice')
+                                                            <a href="{{ url('invoice_edit', $invoice->id) }}"
+                                                                class="btn btn-success btn-sm"><i
+                                                                    class="fa-solid fa-pen-to-square"></i></a>
+                                                        @else
+                                                        @endif
+                                                    @endif
+
+
+                                                    @if (in_array('Invoice Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ url('invoice_delete', $invoice->id) }}"
+                                                            class="btn btn-danger btn-sm"
+                                                            onclick="return confirm('Are you sure you want to delete this Invoice ?')"><i
+                                                                class="fa-solid fa-trash"></i></a>
+                                                    @endif
 
                                                 </td>
 

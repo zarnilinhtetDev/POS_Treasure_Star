@@ -110,11 +110,9 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>POS No.</th>
-                                            <th>Location</th>
                                             <th>Customer Name</th>
                                             <th>Total</th>
                                             <th>Payment Status</th>
-                                            <th>Payment Method</th>
                                             <th> Date</th>
                                             <th>Sale By</th>
                                             <th>Action</th>
@@ -125,7 +123,17 @@
                                         @php
                                             $no = '1';
                                         @endphp
-
+                                        {{-- Permission Php --}}
+                                        @php
+                                            $choosePermission = [];
+                                            if (auth()->user()->permission) {
+                                                $decodedPermissions = json_decode(auth()->user()->permission, true);
+                                                if (json_last_error() === JSON_ERROR_NONE) {
+                                                    $choosePermission = $decodedPermissions;
+                                                }
+                                            }
+                                        @endphp
+                                        {{-- End Php --}}
 
 
                                         @foreach ($invoices as $invoice)
@@ -133,38 +141,40 @@
 
                                                 <td>{{ $no }}</td>
                                                 <td> {{ $invoice->invoice_no }}</td>
-                                                <td>
-                                                    @foreach ($branchs as $branch)
-                                                        @if ($branch->id == $invoice->branch)
-                                                            {{ $branch->name }}
-                                                        @endif
-                                                    @endforeach
-                                                </td>
+
                                                 <td>{{ $invoice->customer_name ?? ' N/A' }}</td>
 
                                                 <td>{{ number_format($invoice->total) }}</td>
 
 
                                                 <td><span class="badge badge-success">Paid</span></td>
-                                                <td>{{ $invoice->payment_method }}</td>
+
                                                 <td>{{ $invoice->invoice_date }}</td>
                                                 <td>{{ $invoice->sale_by }}</td>
                                                 <td>
-                                                    <a href="{{ url('/invoice_detail', $invoice->id) }}"
-                                                        class="btn btn-primary btn-sm"><i
-                                                            class="fa-solid fa-eye"></i></a>
 
-                                                    @if ($invoice->status == 'invoice')
+
+                                                    @if (in_array('POS Details', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ url('/invoice_detail', $invoice->id) }}"
+                                                            class="btn btn-primary btn-sm"><i
+                                                                class="fa-solid fa-eye"></i></a>
+                                                    @endif
+
+
+
+                                                    {{-- @if ($invoice->status == 'invoice')
                                                         <a href="{{ url('invoice_edit', $invoice->id) }}"
                                                             class="btn btn-success btn-sm"><i
                                                                 class="fa-solid fa-pen-to-square"></i></a>
                                                     @else
-                                                    @endif
+                                                    @endif --}}
 
-                                                    <a href="{{ url('pos_delete', $invoice->id) }}"
-                                                        class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Are you sure you want to delete this pos ?')"><i
-                                                            class="fa-solid fa-trash"></i></a>
+                                                    @if (in_array('POS Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ url('pos_delete', $invoice->id) }}"
+                                                            class="btn btn-danger btn-sm"
+                                                            onclick="return confirm('Are you sure you want to delete this pos ?')"><i
+                                                                class="fa-solid fa-trash"></i></a>
+                                                    @endif
 
                                                 </td>
 

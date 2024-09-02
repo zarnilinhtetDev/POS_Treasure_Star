@@ -92,13 +92,27 @@
                 @endif
 
                 <div class="ml-2 container-fluid">
+
+                    {{-- Permission Php --}}
+                    @php
+                        $choosePermission = [];
+                        if (auth()->user()->permission) {
+                            $decodedPermissions = json_decode(auth()->user()->permission, true);
+                            if (json_last_error() === JSON_ERROR_NONE) {
+                                $choosePermission = $decodedPermissions;
+                            }
+                        }
+                    @endphp
+                    {{-- End Php --}}
                     <div class="row">
-                        {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
-                        <div class="mr-auto col"> <button type="button" class="mr-auto btn btn-primary "
-                                data-toggle="modal" data-target="#modal-lg">
-                                Register New Location
-                        </div>
-                        {{-- @endif --}}
+
+                        @if (in_array('Location Register', $choosePermission) || auth()->user()->is_admin == '1')
+                            <div class="mr-auto col"> <button type="button" class="mr-auto btn btn-primary "
+                                    data-toggle="modal" data-target="#modal-lg">
+                                    Register New Location
+                            </div>
+                        @endif
+
                     </div>
                     <div class="modal fade" id="modal-lg">
                         <div class="modal-dialog modal-lg">
@@ -159,9 +173,7 @@
                                             <th>Name</th>
                                             <th>Phone Number</th>
                                             <th>Address</th>
-                                            {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
                                             <th>Action</th>
-                                            {{-- @endif --}}
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -174,26 +186,27 @@
                                                 <td>{{ $warehouse->name }}</td>
                                                 <td>{{ $warehouse->phone_number }}</td>
                                                 <td>{{ $warehouse->address }}</td>
-                                                {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
                                                 <td>
                                                     <div class="row">
+                                                        @if (in_array('Location Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('warehouse_Edit', $warehouse->id) }}"
+                                                                title="Location Edit" class="mx-2 btn btn-success"><i
+                                                                    class="fa-solid fa-pen-to-square"></i></a>
+                                                        @endif
 
-
-                                                        <a href="{{ url('warehouse_Edit', $warehouse->id) }}"
-                                                            title="Location Edit" class="mx-2 btn btn-success"><i
-                                                                class="fa-solid fa-pen-to-square"></i></a>
-                                                        <a href="{{ url('warehouse_Delete', $warehouse->id) }}"
-                                                            title="Location Delete" class="btn btn-danger"
-                                                            onclick="alert('Are you sure you want to delete this Warehouse ?')"><i
-                                                                class="fa-solid fa-trash"></i></a>
-
+                                                        @if (in_array('Location Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('warehouse_Delete', $warehouse->id) }}"
+                                                                title="Location Delete" class="btn btn-danger"
+                                                                onclick="alert('Are you sure you want to delete this Warehouse ?')"><i
+                                                                    class="fa-solid fa-trash"></i></a>
+                                                        @endif
 
                                                     </div>
 
 
 
                                                 </td>
-                                                {{-- @endif --}}
+
                                             </tr>
                                             @php
                                                 $no++;

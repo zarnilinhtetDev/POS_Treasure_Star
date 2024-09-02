@@ -39,8 +39,6 @@ class UserProfileController extends Controller
             'logos' => 'nullable|file|image|max:2048',
             'address' => 'required|string',
             'phno1' => 'required|string|max:15',
-            'phno2' => 'nullable|string|max:15',
-            'email' => 'required|email',
             'branch' => 'required',
         ]);
 
@@ -79,8 +77,6 @@ class UserProfileController extends Controller
             'logos' => 'nullable|file|image|max:2048',
             'address' => 'required|string',
             'phno1' => 'required|string|max:15',
-            'phno2' => 'nullable|string|max:15',
-            'email' => 'required|email',
             'branch' => 'required',
         ]);
 

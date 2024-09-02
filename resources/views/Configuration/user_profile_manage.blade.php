@@ -84,17 +84,29 @@
                         </div>
                     </div><!-- /.container-fluid -->
                 </section>
-
+                {{-- Permission --}}
+                @php
+                    $choosePermission = [];
+                    if (auth()->user()->permission) {
+                        $decodedPermissions = json_decode(auth()->user()->permission, true);
+                        if (json_last_error() === JSON_ERROR_NONE) {
+                            $choosePermission = $decodedPermissions;
+                        }
+                    }
+                @endphp
+                {{-- End Permission --}}
                 <div class="container-fluid">
                     <div class="row  justify-content-center d-flex">
 
 
                     </div>
 
-                    <div class="mt-5 mr-auto col">
-                        <a href="{{ url('config') }}" type="button" class="mr-auto btn btn-primary ">
-                            Configuration Register</a>
-                    </div>
+                    @if (in_array('Configuration Register', $choosePermission) || auth()->user()->is_admin == '1')
+                        <div class="mt-5 mr-auto col">
+                            <a href="{{ url('config') }}" type="button" class="mr-auto btn btn-primary ">
+                                Configuration Register</a>
+                        </div>
+                    @endif
 
                     <!-- /.modal -->
                     <div class="col-md-12 mt-3">
@@ -156,18 +168,27 @@
                                                 </td>
                                                 <td>{{ $user_profile->address }}</td>
                                                 <td>
-                                                    <a href="{{ url('/config_details', $user_profile->id) }}"
-                                                        class="btn btn-primary btn-sm"><i
-                                                            class="fa-solid fa-eye"></i></a>
 
-                                                    <a href="{{ url('config_edit', $user_profile->id) }}"
-                                                        class="btn btn-success btn-sm"><i
-                                                            class="fa-solid fa-pen-to-square"></i></a>
+                                                    @if (in_array('Configuration Details', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ url('/config_details', $user_profile->id) }}"
+                                                            class="btn btn-primary btn-sm"><i
+                                                                class="fa-solid fa-eye"></i></a>
+                                                    @endif
 
-                                                    <a href="{{ url('config_delete', $user_profile->id) }}"
-                                                        class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Are you sure you want to delete this Configuration ?')"><i
-                                                            class="fa-solid fa-trash"></i></a>
+
+                                                    @if (in_array('Configuration Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ url('config_edit', $user_profile->id) }}"
+                                                            class="btn btn-success btn-sm"><i
+                                                                class="fa-solid fa-pen-to-square"></i></a>
+                                                    @endif
+
+
+                                                    @if (in_array('Configuration Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ url('config_delete', $user_profile->id) }}"
+                                                            class="btn btn-danger btn-sm"
+                                                            onclick="return confirm('Are you sure you want to delete this Configuration ?')"><i
+                                                                class="fa-solid fa-trash"></i></a>
+                                                    @endif
 
                                                 </td>
                                             </tr>

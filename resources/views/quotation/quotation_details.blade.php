@@ -2,8 +2,7 @@
 <HTML>
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
 
@@ -45,22 +44,9 @@
 
     <div>
 
-        @foreach ($profile as $pic)
-            @if ($quotation->branch == $pic->branch)
-                <div class="mt-1 text-center">
-                    <img src="{{ asset('logos/' . ($pic->logos ?? 'null')) }}" width="180" height="120">
-                </div>
-                <div class="row" style="margin-top: 10px;">
-                    <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
-
-                    <p class="text-center fw-bold" style="font-size: 14px;">
-                        {{ $pic->address }}
-                        <br>
-                        {{ $pic->phno1 }}, {{ $pic->phno2 }}
-                    </p>
-                </div>
-            @endif
-        @endforeach
+        <h1>
+            Quotation
+        </h1>
 
         <div class="content-wrapper">
             <div class="content-body">
@@ -80,11 +66,9 @@
                                 </div>
                                 <div style="width:30%;position:absolute;right:0px;top:0px;">
 
-                                    <label for="invociedate" class="caption"
-                                        style="font-weight:bolder">{{ trans('Quotations Number') }}</label>
+                                    <label for="invociedate" class="caption" style="font-weight:bolder">{{ trans('Quotations Number') }}</label>
                                     <div class="input-group"> {{ $quotation->quote_no }} </div>
-                                    <label for="invociedate" class="caption"
-                                        style="font-weight:bolder">{{ trans('Quotation Date') }}</label>
+                                    <label for="invociedate" class="caption" style="font-weight:bolder">{{ trans('Quotation Date') }}</label>
                                     <div class="input-group"> {{ $quotation->quote_date }}</div>
 
                                 </div>
@@ -135,30 +119,29 @@
                                         </thead>
                                         <tbody>
                                             @php
-                                                $no = 1;
+                                            $no = 1;
                                             @endphp
                                             @foreach ($sells as $sell)
-                                                <tr>
-                                                    <td>{{ $no }}</td>
-                                                    <td>{{ $sell->part_number }}</td>
-                                                    <td>{{ $sell->description }}</td>
-                                                    <td>{{ $sell->product_qty }}</td>
-                                                    @if ($sell->product_price)
-                                                        <td>{{ $sell->product_price }}</td>
-                                                    @elseif($sell->retail_price)
-                                                        <td>{{ $sell->retail_price }}</td>
-                                                    @endif
-                                                    <td>{{ $sell->unit }}</td>
+                                            <tr>
+                                                <td>{{ $no }}</td>
+                                                <td>{{ $sell->part_number }}</td>
+                                                <td>{{ $sell->description }}</td>
+                                                <td>{{ $sell->product_qty }}</td>
+                                                @if ($sell->product_price)
+                                                <td>{{ $sell->product_price }}</td>
+                                                @elseif($sell->retail_price)
+                                                <td>{{ $sell->retail_price }}</td>
+                                                @endif
+                                                <td>{{ $sell->unit }}</td>
 
-                                                    <td>
-                                                        <span class="currenty"></span>
-                                                        <span
-                                                            class='ttlText'>{{ $sell->product_qty * ($sell->product_price ?? $sell->retail_price) }}</span>
-                                                    </td>
-                                                </tr>
-                                                @php
-                                                    $no++;
-                                                @endphp
+                                                <td>
+                                                    <span class="currenty"></span>
+                                                    <span class='ttlText'>{{ $sell->product_qty * ($sell->product_price ?? $sell->retail_price) }}</span>
+                                                </td>
+                                            </tr>
+                                            @php
+                                            $no++;
+                                            @endphp
                                             @endforeach
                                         </tbody>
                                         <tfoot>

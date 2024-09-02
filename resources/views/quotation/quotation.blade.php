@@ -56,6 +56,19 @@
         <form method="post" id="myForm" action="{{ url('invoice_register') }}" enctype="multipart/form-data">
             @csrf
 
+
+            {{-- Permission Php --}}
+            @php
+                $choosePermission = [];
+                if (auth()->user()->permission) {
+                    $decodedPermissions = json_decode(auth()->user()->permission, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $choosePermission = $decodedPermissions;
+                    }
+                }
+            @endphp
+            {{-- End Php --}}
+
             <div class="mx-3 row ">
 
                 <div class="my-3 mt-4 row">
@@ -188,51 +201,24 @@
                                                 </select>
                                             </div>
 
-                                            @if (auth()->user()->is_admin == '1')
-                                                <div class="mt-4 frmSearch col-md-3">
-                                                    <div class="frmSearch col-sm-12">
-                                                        <span style="font-weight:bolder">
-                                                            <label for="cst"
-                                                                class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                        </span>
-                                                        <select name="branch" id="location"
-                                                            class="mb-4 form-control location" required>
-                                                            @foreach ($warehouses as $warehouse)
-                                                                <option value="{{ $warehouse->id }}">
-                                                                    {{ $warehouse->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
+                                            <div class="mt-4 frmSearch col-md-3">
+                                                <div class="frmSearch col-sm-12">
+                                                    <span style="font-weight:bolder">
+                                                        <label for="cst"
+                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                    </span> <select name="location" id="location"
+                                                        class="mb-4 form-control location" required>
+
+                                                        @foreach ($warehouses as $warehouse)
+                                                            <option value="{{ $warehouse->id }}">
+                                                                {{ $warehouse->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+
                                                 </div>
-                                            @else
-                                                <div class="mt-4 frmSearch col-md-3">
-                                                    <div class="frmSearch col-sm-12">
-                                                        <span style="font-weight:bolder">
-                                                            <label for="cst"
-                                                                class="caption">{{ trans('Location') }}&nbsp;</label>
+                                            </div>
 
-                                                            <select name="branch" id="location"
-                                                                class="form-control location" required>
-                                                                @php
-                                                                    $userPermissions = auth()->user()->level
-                                                                        ? json_decode(auth()->user()->level)
-                                                                        : [];
-                                                                @endphp
-
-                                                                @foreach ($warehouses as $branch)
-                                                                    @if (in_array($branch->id, $userPermissions))
-                                                                        <option value="{{ $branch->id }}">
-                                                                            {{ $branch->name }}
-                                                                        </option>
-                                                                    @endif
-                                                                @endforeach
-                                                            </select>
-                                                    </div>
-                                                </div>
-                                            @endif
-
-                                            <!-- <table class="table-responsive tfr my_stripe"> -->
                                             <table class="table table-bordered">
                                                 <thead style="background-color:#0047AA;color:white;">
                                                     <tr class="item_header bg-gradient-directional-blue white"
@@ -281,7 +267,7 @@
                                                         <td><input type="text"
                                                                 class="form-control productname typeahead"
                                                                 name="part_number[]" value="{{ old('part_number') }}"
-                                                                placeholder="{{ trans('Enter Item Name') }}"
+                                                                placeholder="{{ trans('Enter Part Number') }}"
                                                                 id='productname-0' autocomplete="off">
                                                         </td>
 
@@ -381,11 +367,13 @@
                                                                 Calculate
                                                             </button>
 
-                                                            <a href="{{ URL('items') }}" target="_blank"
-                                                                id="item_search">
-                                                                <button type="button" class="btn btn-success">
-                                                                    <i class="fa fa-plus-square"></i> Item Search
-                                                                </button></a>
+                                                            @if (in_array('Item', $choosePermission) || auth()->user()->is_admin == '1')
+                                                                <a href="{{ URL('items') }}" target="_blank"
+                                                                    id="item_search">
+                                                                    <button type="button" class="btn btn-success">
+                                                                        <i class="fa fa-plus-square"></i> Item Search
+                                                                    </button></a>
+                                                            @endif
 
 
 
@@ -648,7 +636,7 @@
                     count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="productname-' +
                     count + '" autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control description typeahead" name="part_description[]"  id="description-' +
+                    '<td><input type="text" class="form-control description typeahead" name="part_description[]" required id="description-' +
                     count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
                     count +
@@ -784,13 +772,12 @@
     <script>
         $(document).ready(function() {
             var path = "{{ route('customer_service_search') }}";
+
+
             $('#customer').typeahead({
                 source: function(query, process) {
-                    var Selectedlocation = $('#location').val();
-
                     return $.get(path, {
-                        query: query,
-                        location: Selectedlocation,
+                        query: query
                     }, function(data) {
                         // Format the data for Typeahead
                         var formattedData = [];
@@ -809,6 +796,9 @@
                     });
                 }
             });
+
+
+
 
             $(document).on('click', '#customer_search', function(e) {
                 e.preventDefault();

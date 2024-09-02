@@ -2,7 +2,8 @@
 <HTML>
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
 
@@ -47,154 +48,55 @@
 
     <div class="container-fluid" id="content">
 
-        @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <strong>{{ session('success') }}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
-        @if (session('error'))
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>{{ session('error') }}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
 
-        @if ($errors->has('phno'))
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong> {{ $errors->first('phno') }}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
+        <h1 class="mx-4 mt-3">
+            Invoice
+        </h1>
 
-        <div class="row">
-            <div class="col d-flex justify-content-between align-items-center mx-4 mt-3">
-                <h1>Invoice</h1>
-                <a href="{{ url('invoice') }}" class="btn btn-danger">Back</a>
-            </div>
-        </div>
-
-        <div class="modal fade" id="modal-lg">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title"> Register New Customer</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{ url('customer_register') }}" method="POST">
-                            @csrf
-                            <div class="card-body">
-
-                                <div class="form-group">
-                                    <label for="name">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="" placeholder="Enter Name" required autofocus name="name">
-                                </div>
-
-
-                                <div class="form-group mt-3">
-                                    <label for="phno">Phone Number <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="" placeholder="Enter Phone Number" name="phno" required>
-                                </div>
-
-                                <div class="form-group mt-3">
-                                    <label for="crc">Customer Type </label>
-
-                                    <select name="type" id="" class="form-control" required>
-                                        <option selected disabled>Select Customer Type</option>
-                                        <option value="Retail">Retail</option>
-                                        <option value="Whole Sale">Whole Sale</option>
-                                    </select>
-                                </div>
-
-
-                                @if (auth()->user()->is_admin == '1')
-                                <div class="form-group mt-3">
-                                    <label for="branch">Location<span class="text-danger">*</span></label>
-
-                                    <select name="branch" id="" class="form-control" required>
-                                        <option value="" selected disabled>Select Location
-                                        </option>
-                                        @foreach ($warehouses as $branch)
-                                        <option value="{{ $branch->id }}">{{ $branch->name }}
-                                        </option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @else
-                                <div class="form-group mt-3">
-                                    <label for="branch">Location<span class="text-danger">*</span></label>
-
-                                    <select name="branch" id="" class="form-control" required>
-                                        @php
-                                        $userPermissions = auth()->user()->level
-                                        ? json_decode(auth()->user()->level)
-                                        : [];
-                                        @endphp
-
-                                        @foreach ($warehouses as $branch)
-                                        @if (in_array($branch->id, $userPermissions))
-                                        <option value="{{ $branch->id }}">
-                                            {{ $branch->name }}
-                                        </option>
-                                        @endif
-                                        @endforeach
-                                    </select>
-                                </div>
-                                @endif
-                                <div class="form-group mt-3">
-                                    <label for="address">Address <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="phone number" placeholder="Enter Address" name="address" required>
-                                </div>
-                            </div>
-
-
-
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save </button>
-                    </div>
-                    </form>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
         <form method="post" id="myForm" action="{{ url('invoice_register') }}" enctype="multipart/form-data">
             @csrf
+
+
+            {{-- Permission Php --}}
+            @php
+                $choosePermission = [];
+                if (auth()->user()->permission) {
+                    $decodedPermissions = json_decode(auth()->user()->permission, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $choosePermission = $decodedPermissions;
+                    }
+                }
+            @endphp
+            {{-- End Php --}}
 
             <div class="mx-3 row ">
 
                 <div class="my-3 mt-4 row">
                     <div class="col-md-3">
                         <label for="invoice_no" style="font-weight:bolder">Invoice Number</label>
-                        <input type="text" id="invoice_no" class="form-control" name="invoice_no" value="{{ $invoice_no }}" readonly>
+                        <input type="text" id="invoice_no" class="form-control" name="invoice_no"
+                            value="{{ $invoice_no }}" readonly>
                     </div>
                     <div class="col-md-3">
                         <label for="invoice_date" style="font-weight:bolder">Date</label>
-                        <input type="date" name="invoice_date" class="form-control" max="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" required>
+                        <input type="date" name="invoice_date" class="form-control" max="{{ date('Y-m-d') }}"
+                            value="{{ date('Y-m-d') }}" required>
                     </div>
 
                     <div class="col-md-3">
-                        <label for="overdue_date" class=" caption" style="font-weight:bolder">{{ trans('Payment OverDue Date') }}</label>
-                        <input type="date" name="overdue_date" id="overdue_date" class="form-control round" autocomplete="off" min="<?= date('Y-m-d') ?>" value="{{ date('Y-m-d') }}">
+                        <label for="overdue_date" class=" caption"
+                            style="font-weight:bolder">{{ trans('Payment OverDue Date') }}</label>
+                        <input type="date" name="overdue_date" id="overdue_date" class="form-control round"
+                            autocomplete="off" min="<?= date('Y-m-d') ?>" value="{{ date('Y-m-d') }}">
                     </div>
                     <div class="col-md-3 ">
                         <label for="payment_method" style="font-weight:bolder">{{ trans('Payment Methods') }}</label>
-                        <select class="mb-4 form-control round" aria-label="Default select example" name="payment_method" required>
+                        <select class="mb-4 form-control round" aria-label="Default select example"
+                            name="payment_method" required>
+
                             <option value="Cash">Cash</option>
-                            <option value="K Pay">K Pay</option>
-                            <option value="Wave">Wave</option>
-                            <option value="Others">Others</option>
+                            <option value="Credit">Credit</option>
+                            <option value="Consignment Terms">Consignment Terms</option>
                         </select>
                     </div>
 
@@ -209,41 +111,45 @@
                                 <div class="card-body">
 
                                     <div class="row">
-                                        <div class="col-sm-12 cmp-pnl">
+                                        <div class="col-sm-6 cmp-pnl">
                                             <div id="customerpanel" class="inner-cmp-pnl">
 
                                                 <div class="form-group row">
-                                                    <div class="frmSearch col-sm-3">
+                                                    <div class="frmSearch col-sm-6">
 
                                                         <div class="frmSearch col-sm-12">
                                                             <div class="frmSearch col-sm-12">
                                                                 <span style="font-weight:bolder">
-                                                                    <label for="cst" class="caption">{{ trans('Search  Customer Name & Phone No.') }}</label>
+                                                                    <label for="cst"
+                                                                        class="caption">{{ trans('Search  Customer Name & Phone No.') }}</label>
                                                                 </span>
                                                                 <div class="form-group d-flex">
-                                                                    <input type="text" id="customer" name="customer" class="mr-2 form-control round" autocomplete="off" placeholder="Search.....">
-                                                                    &nbsp;&nbsp;&nbsp; <button type="submit" class="btn btn-primary" id="customer_search">Add</button>
+                                                                    <input type="text" id="customer" name="customer"
+                                                                        class="mr-2 form-control round"
+                                                                        autocomplete="off" placeholder="Search.....">
+                                                                    &nbsp;&nbsp;&nbsp; <button type="submit"
+                                                                        class="btn btn-primary"
+                                                                        id="customer_search">Add</button>
                                                                 </div>
 
                                                                 <div id="customer-box-result"></div>
                                                             </div>
+
+
                                                         </div>
 
 
 
                                                     </div>
-                                                    <div class="col-sm-2 mt-4">
-                                                        <button type="button" data-toggle="modal" data-target="#modal-lg" class="btn btn-primary text-white">Customer
-                                                            Register</button>
-                                                    </div>
-                                                    <div class="frmSearch col-sm-3">
+                                                    <div class="frmSearch col-sm-6">
                                                         <div class="frmSearch col-sm-12">
                                                             <div class="frmSearch col-sm-12">
                                                                 <span style="font-weight:bolder">
                                                                     <label for="cst" class="caption">Register
                                                                         Mode</label>
                                                                 </span>
-                                                                <select name="balance_due" id="balance_due" class="mb-4 form-control balance_due" required>
+                                                                <select name="balance_due" id="balance_due"
+                                                                    class="mb-4 form-control balance_due" required>
 
                                                                     <option value="Invoice">Invoice</option>
                                                                     <option value="Po Return">Po Return</option>
@@ -259,12 +165,15 @@
 
 
                                                     </div>
-                                                    <input type="hidden" id="service_id" name="service_id" value="0">
+                                                    <input type="hidden" id="service_id" name="service_id"
+                                                        value="0">
 
 
-                                                    <input type="hidden" name="manager_type" value="{{ Auth::user()->type }}">
+                                                    <input type="hidden" name="manager_type"
+                                                        value="{{ Auth::user()->type }}">
 
-                                                    <input type="text" name="status" class="form-control" value="draft" style="display: none">
+                                                    <input type="text" name="status" class="form-control"
+                                                        value="draft" style="display: none">
 
                                                 </div>
                                             </div>
@@ -296,12 +205,19 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr class="item_header bg-gradient-directional-blue white">
-                                                        <td class="text-center"><input type='text' name='customer_name' id="name" class="form-control"></td>
-                                                        <input type='hidden' name='customer_id' id="customer_id" class="form-control">
-                                                        <input type='hidden' name='status' id="status" class="form-control" value="invoice">
-                                                        <td class="text-center"><input type='text' name='phno' id="phone_no" class="form-control"></td>
-                                                        <td class="text-center"><input type='text' name='type' id="type" class="form-control"></td>
-                                                        <td class="text-center"><input type='text' name='address' class="form-control" id="address"></td>
+                                                        <td class="text-center"><input type='text'
+                                                                name='customer_name' id="name"
+                                                                class="form-control"></td>
+                                                        <input type='hidden' name='customer_id' id="customer_id"
+                                                            class="form-control">
+                                                        <input type='hidden' name='status' id="status"
+                                                            class="form-control" value="invoice">
+                                                        <td class="text-center"><input type='text' name='phno'
+                                                                id="phone_no" class="form-control"></td>
+                                                        <td class="text-center"><input type='text' name='type'
+                                                                id="type" class="form-control"></td>
+                                                        <td class="text-center"><input type='text' name='address'
+                                                                class="form-control" id="address"></td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -312,9 +228,12 @@
 
                                         <div class="row table-responsive " style="margin-top:1vh;">
                                             <div class="mt-4 frmSearch col-md-4">
-                                                <label for="payment" style="font-weight:bolder">{{ trans('Sale Price Category') }}
+                                                <label for="payment"
+                                                    style="font-weight:bolder">{{ trans('Sale Price Category') }}
                                                 </label>
-                                                <select class="mb-4 form-control round " aria-label="Default select example" name="sale_price_category" id="sale_price_category" required>
+                                                <select class="mb-4 form-control round "
+                                                    aria-label="Default select example" name="sale_price_category"
+                                                    id="sale_price_category" required>
 
                                                     <option value="Default" selected>Default</option>
                                                     <option value="Whole Sale">Whole Sale</option>
@@ -322,49 +241,24 @@
                                                 </select>
                                             </div>
                                             {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
-
-
-
-                                            @if (auth()->user()->is_admin == '1')
                                             <div class="mt-4 frmSearch col-md-3">
                                                 <div class="frmSearch col-sm-12">
                                                     <span style="font-weight:bolder">
-                                                        <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                        <label for="cst"
+                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
                                                     </span>
-                                                    <select name="branch" id="location" class="mb-4 form-control location" required>
+                                                    <select name="location" id="location"
+                                                        class="mb-4 form-control location" required>
+
                                                         @foreach ($warehouses as $warehouse)
-                                                        <option value="{{ $warehouse->id }}">
-                                                            {{ $warehouse->name }}
-                                                        </option>
+                                                            <option value="{{ $warehouse->id }}">
+                                                                {{ $warehouse->name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
 
                                                 </div>
                                             </div>
-                                            @else
-                                            <div class="mt-4 frmSearch col-md-3">
-                                                <div class="frmSearch col-sm-12">
-                                                    <span style="font-weight:bolder">
-                                                        <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
-
-                                                        <select name="branch" id="location" class="form-control location" required>
-                                                            @php
-                                                            $userPermissions = auth()->user()->level
-                                                            ? json_decode(auth()->user()->level)
-                                                            : [];
-                                                            @endphp
-
-                                                            @foreach ($warehouses as $branch)
-                                                            @if (in_array($branch->id, $userPermissions))
-                                                            <option value="{{ $branch->id }}">
-                                                                {{ $branch->name }}
-                                                            </option>
-                                                            @endif
-                                                            @endforeach
-                                                        </select>
-                                                </div>
-                                            </div>
-                                            @endif
                                             {{-- @else
                                             <div class="mt-4 frmSearch col-md-3">
                                                 <div class="frmSearch col-sm-12">
@@ -388,276 +282,334 @@
                                     @endif --}}
 
 
-                                    <!-- <table class="table-responsive tfr my_stripe"> -->
-                                    <table class="table table-bordered">
-                                        <thead style="background-color:#0047AA;color:white;">
-                                            <tr class="item_header bg-gradient-directional-blue white" style="margin-bottom:10px;">
-                                                <th width="5%" class="text-center">{{ trans('No') }}
-                                                </th>
-                                                <th width="18%" class="text-center">
-                                                    {{ trans('Item Name') }}
-                                                </th>
-                                                <th width="23%" class="text-center">
-                                                    {{ trans('Descriptions') }}
-                                                </th>
-                                                <th width="8%" class="text-center">
-                                                    {{ trans('Qty') }}
-                                                </th>
-                                                <th width="10%" class="text-center">{{ trans('Unit') }}
-                                                </th>
+                                            <!-- <table class="table-responsive tfr my_stripe"> -->
+                                            <table class="table table-bordered">
+                                                <thead style="background-color:#0047AA;color:white;">
+                                                    <tr class="item_header bg-gradient-directional-blue white"
+                                                        style="margin-bottom:10px;">
+                                                        <th width="5%" class="text-center">{{ trans('No') }}
+                                                        </th>
+                                                        <th width="18%" class="text-center">
+                                                            {{ trans('Item Name') }}
+                                                        </th>
+                                                        <th width="23%" class="text-center">
+                                                            {{ trans('Descriptions') }}
+                                                        </th>
+                                                        <th width="8%" class="text-center">
+                                                            {{ trans('Qty') }}
+                                                        </th>
+                                                        <th width="10%" class="text-center">{{ trans('Unit') }}
+                                                        </th>
 
-                                                <th width="9%" class="text-center">
-                                                    {{ trans('လက်ကားစျေး') }}
-                                                </th>
-                                                <th width="9%" class="text-center">
-                                                    {{ trans('လက်လီစျေး') }}
-                                                </th>
-                                                <th style="display: none;" width="9%" class="text-center">
-                                                    {{ trans('၀ယ်စျေး') }}
-                                                </th>
-                                                <th width="9%" class="text-center">
-                                                    {{ trans('Expiry') }}
-                                                </th>
+                                                        <th width="9%" class="text-center">
+                                                            {{ trans('လက်ကားစျေး') }}
+                                                        </th>
+                                                        <th width="9%" class="text-center">
+                                                            {{ trans('လက်လီစျေး') }}
+                                                        </th>
+                                                        <th style="display: none;" width="9%"
+                                                            class="text-center">
+                                                            {{ trans('၀ယ်စျေး') }}
+                                                        </th>
+                                                        <th width="9%" class="text-center">
+                                                            {{ trans('Expiry') }}
+                                                        </th>
 
-                                                <!-- <th width="10%" class="text-center">
+                                                        <!-- <th width="10%" class="text-center">
                                                         {{ trans('Discounts (%)') }}
                                                     </th> -->
 
-                                                <th width="14%" class="text-center">{{ trans('Amount') }}
-                                                    ({{ config('currency.symbol') }})
-                                                </th>
+                                                        <th width="14%" class="text-center">{{ trans('Amount') }}
+                                                            ({{ config('currency.symbol') }})
+                                                        </th>
 
-                                            </tr>
+                                                    </tr>
 
-                                        </thead>
+                                                </thead>
 
-                                        <tbody id="showitem123">
-                                            <tr>
+                                                <tbody id="showitem123">
+                                                    <tr>
 
 
-                                                <td class="text-center" id="count">1</td>
-                                                <td><input type="text" class="form-control productname typeahead" name="part_number[]" value="{{ old('part_number') }}" placeholder="{{ trans('Enter Item Name') }}" id='productname-0' autocomplete="off">
-                                                </td>
+                                                        <td class="text-center" id="count">1</td>
+                                                        <td><input type="text"
+                                                                class="form-control productname typeahead"
+                                                                name="part_number[]" value="{{ old('part_number') }}"
+                                                                placeholder="{{ trans('Enter Part Number') }}"
+                                                                id='productname-0' autocomplete="off">
+                                                        </td>
 
-                                                <td><input type="text" class="form-control description typeahead" value="{{ old('part_description') }}" name="part_description[]" placeholder="{{ trans('') }}" id='description-0' autocomplete="off"></td>
-                                                <td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-0" autocomplete="off" value="1"><input type="hidden" id="alert-0" value="" name="alert[]"></td>
-                                                <td><input type="text" class="form-control item_unit" name="item_unit[]" id="item_unit-0">
+                                                        <td><input type="text"
+                                                                class="form-control description typeahead"
+                                                                value="{{ old('part_description') }}"
+                                                                name="part_description[]"
+                                                                placeholder="{{ trans('') }}" id='description-0'
+                                                                autocomplete="off"></td>
+                                                        <td><input type="text" class="form-control req amnt"
+                                                                name="product_qty[]" id="amount-0"
+                                                                autocomplete="off" value="1"><input
+                                                                type="hidden" id="alert-0" value=""
+                                                                name="alert[]"></td>
+                                                        <td><input type="text" class="form-control item_unit"
+                                                                name="item_unit[]" id="item_unit-0">
 
-                                                </td>
-                                                <td><input type="text" class="form-control price" name="product_price[]" id="price-0" autocomplete="off" value="0">
-                                                </td>
-                                                <td><input type="text" class="form-control retail_price" name="retail_price[]" id="retail_price-0" autocomplete="off" value="0">
-                                                </td>
-                                                <td style="display: none;"><input type="text" class="form-control buy_price" name="buy_price[]" id="buy_price-0" autocomplete="off" value="0">
-                                                </td>
-                                                <td><input type="text" class="form-control exp_date " name="exp_date[]" id="exp_date-0" autocomplete="off">
-                                                </td>
+                                                        </td>
+                                                        <td><input type="text" class="form-control price"
+                                                                name="product_price[]" id="price-0"
+                                                                autocomplete="off" value="0">
+                                                        </td>
+                                                        <td><input type="text" class="form-control retail_price"
+                                                                name="retail_price[]" id="retail_price-0"
+                                                                autocomplete="off" value="0">
+                                                        </td>
+                                                        <td style="display: none;"><input type="text"
+                                                                class="form-control buy_price" name="buy_price[]"
+                                                                id="buy_price-0" autocomplete="off" value="0">
+                                                        </td>
+                                                        <td><input type="text" class="form-control exp_date "
+                                                                name="exp_date[]" id="exp_date-0" autocomplete="off">
+                                                        </td>
 
-                                                <td style="display: none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-0" autocomplete="off">
-                                                </td>
-                                                <!-- <td><input type="text" class="form-control vat " name="discount[]" id="vat-0" autocomplete="off" value="{{ old('discount') }}">
+                                                        <td style="display: none;"><input type="text"
+                                                                class="form-control warehouse " name="warehouse[]"
+                                                                id="warehouse-0" autocomplete="off">
+                                                        </td>
+                                                        <!-- <td><input type="text" class="form-control vat " name="discount[]" id="vat-0" autocomplete="off" value="{{ old('discount') }}">
                                                     </td> -->
 
-                                                <td style="text-align:center">
-                                                    <span class='ttlText' id="foc-0"></span>
-                                                    <span class="currenty">{{ config('currency.symbol') }}</span>
-                                                    <strong>
-                                                        <span class='ttlText' id="result-0"></span>
-                                                    </strong>
-                                                </td>
-                                                <input type="hidden" class="form-control vat " name="product_tax[]" id="vat-0" value="0">
-                                                <input type="hidden" name="total_tax[]" id="taxa-0" value="0">
-                                                {{-- <input type="hidden" name="total_discount[]" id="disca-0"
+                                                        <td style="text-align:center">
+                                                            <span class='ttlText' id="foc-0"></span>
+                                                            <span
+                                                                class="currenty">{{ config('currency.symbol') }}</span>
+                                                            <strong>
+                                                                <span class='ttlText' id="result-0"></span>
+                                                            </strong>
+                                                        </td>
+                                                        <input type="hidden" class="form-control vat "
+                                                            name="product_tax[]" id="vat-0" value="0">
+                                                        <input type="hidden" name="total_tax[]" id="taxa-0"
+                                                            value="0">
+                                                        {{-- <input type="hidden" name="total_discount[]" id="disca-0"
                                                             value="0"> --}}
-                                                <input type="hidden" class="ttInput" name="product_subtotal[]" id="total-0" value="0">
-                                                <input type="hidden" class="pdIn" name="product_id[]" id="pid-0" value="0">
-                                                <input type="hidden" attr-org="" name="unit[]" id="unit-0" value="">
-                                                <input type="hidden" name="unit_m[]" id="unit_m-0" value="1">
-                                                <input type="hidden" name="code[]" id="hsn-0" value="">
-                                                <input type="hidden" name="serial[]" id="serial-0" value="">
-                                                {{-- <td></td> --}}
-                                            </tr>
-                                        </tbody>
+                                                        <input type="hidden" class="ttInput"
+                                                            name="product_subtotal[]" id="total-0" value="0">
+                                                        <input type="hidden" class="pdIn" name="product_id[]"
+                                                            id="pid-0" value="0">
+                                                        <input type="hidden" attr-org="" name="unit[]"
+                                                            id="unit-0" value="">
+                                                        <input type="hidden" name="unit_m[]" id="unit_m-0"
+                                                            value="1">
+                                                        <input type="hidden" name="code[]" id="hsn-0"
+                                                            value="">
+                                                        <input type="hidden" name="serial[]" id="serial-0"
+                                                            value="">
+                                                        {{-- <td></td> --}}
+                                                    </tr>
+                                                </tbody>
 
-                                    </table>
+                                            </table>
 
-                                    <table class="mt-3">
-                                        <tbody id="showitem">
-
-
-
-
-                                            <tr style="display: table-row;">
-                                                <td></td>
-                                                <td colspan="">
-
-                                                </td>
-
-
-
-                                            </tr>
-
-
-                                            <tr class="last-item-row sub_c">
-                                                <td></td>
-                                                <td class="add-row">
-                                                    <button type="button" class="btn btn-success" id="addproduct" style="margin-top:20px;margin-bottom:20px;">
-                                                        <i class="fa fa-plus-square"></i>
-                                                        {{ trans('Add row') }}
-                                                    </button>
-                                                    <button type="button" class="btn btn-primary" id="calculate">
-                                                        Calculate
-                                                    </button>
-
-                                                    <a href="{{ URL('items') }}" target="_blank" id="item_search">
-                                                        <button type="button" class="btn btn-success">
-                                                            <i class="fa fa-plus-square"></i> Item Search
-                                                        </button></a>
+                                            <table class="mt-3">
+                                                <tbody id="showitem">
 
 
 
 
-                                                </td>
-                                                <td colspan="6"></td>
-                                                <br><br>
+                                                    <tr style="display: table-row;">
+                                                        <td></td>
+                                                        <td colspan="">
 
-                                            </tr>
-
-
-                                            <tr class="sub_c" style="display: table-row;">
-                                                <td colspan="2">
-                                                    @if (isset($employees[0]))
-                                                    {{ trans('general.employee') }}
-                                                    <select name="user_id" class="selectpicker form-control">
-                                                        <option value="{{ $logged_in_user->id }}">
-                                                            {{ $logged_in_user->first_name }}
-                                                        </option>
-                                                        @foreach ($employees as $employee)
-                                                        <option value="{{ $employee->id }}">
-                                                            {{ $employee->first_name }}
-                                                            {{ $employee->last_name }}
-                                                        </option>
-                                                        @endforeach
-
-                                                    </select>
-                                                    @endif
-                                                </td>
-                                            </tr>
-
-                                            <tr class="sub_c" style="display: table-row;">
-                                                <td>
-
-                                                </td>
-                                            </tr>
-                                            <tr style="display: none;" class="sub_c" style="display: table-row;">
-                                                <td colspan="2">
-
-                                                </td>
-                                                <td colspan="3" align="right"><strong>Total Purchase
-                                                    </strong>
-                                                </td>
-                                                <td align="left" colspan="2" class="col-md-4"><input type="text" name="total_buy_price" class="form-control" id="total_buy_price" readonly style="background-color: #E9ECEF">
-
-                                                </td>
-
-                                            </tr>
-                                            <tr class="sub_c" style="display: table-row;">
-                                                <td colspan="2">
-
-                                                </td>
-                                                <td colspan="3" align="right"><strong>Sub Total
-                                                    </strong>
-                                                </td>
-                                                <td align="left" colspan="2" class="col-md-4"><input type="text" name="sub_total" class="form-control" id="invoiceyoghtml" readonly style="background-color: #E9ECEF">
-
-                                                </td>
-
-                                            </tr>
-                                            <tr class="sub_c" style="display: table-row;">
-                                                <td colspan="2">
-
-                                                </td>
-                                                <td colspan="3" align="right"><strong>Discount
-                                                    </strong>
-                                                </td>
-                                                <td align="left" colspan="2" class="col-md-4"><input type="text" name="discount" class="form-control" id="total_discount">
-
-                                                </td>
-
-                                            </tr>
-                                            <tr class="sub_c" style="display: table-row;">
-                                                <td colspan="2">
-
-                                                </td>
-                                                <td colspan="3" align="right"><strong>Total
-                                                    </strong>
-                                                </td>
-                                                <td align="left" colspan="2" class="col-md-4"><input type="text" name="total" class="form-control" id="total_total" readonly style="background-color: #E9ECEF">
-
-                                                </td>
-
-                                            </tr>
+                                                        </td>
 
 
 
-                                            <tr class="sub_c" style="display: table-row;">
-                                                <td colspan="2">
-
-                                                </td>
-                                                <td colspan="3" align="right"><strong>Deposit
-                                                    </strong>
-                                                </td>
-                                                <td align="left" colspan="2"><input type="text" name="paid" class="form-control" id="paid" onchange="paidFunction()">
-
-                                                </td>
-
-                                            </tr>
-                                            <tr class="sub_c" style="display: table-row;">
-                                                <td colspan="2">
-
-                                                </td>
-                                                <td colspan="3" align="right"><strong>Remaining Balance
-                                                    </strong>
-                                                </td>
-                                                <td align="left" colspan="2"><input type="text" name="balance" class="form-control" id="balance" readonly="">
-
-                                                </td>
-                                            </tr>
-
-                                            <tr class="sub_c " style="display: table-row;">
-                                                <td colspan="12"> <label for="remark">Remark</label>
-                                                    <textarea name="remark" id="remark" class="form-control" rows="2"></textarea>
-
-                                                </td>
-                                            </tr>
-                                            <tr class="sub_c " style="display: table-row;">
+                                                    </tr>
 
 
-                                                <td align="right" colspan="9">
+                                                    <tr class="last-item-row sub_c">
+                                                        <td></td>
+                                                        <td class="add-row">
+                                                            <button type="button" class="btn btn-success"
+                                                                id="addproduct"
+                                                                style="margin-top:20px;margin-bottom:20px;">
+                                                                <i class="fa fa-plus-square"></i>
+                                                                {{ trans('Add row') }}
+                                                            </button>
+                                                            <button type="button" class="btn btn-primary"
+                                                                id="calculate">
+                                                                Calculate
+                                                            </button>
 
-                                                    <button id="submitButton" class="mt-3 btn btn-primary" type="submit">Save</button>
+                                                            @if (in_array('Item', $choosePermission) || auth()->user()->is_admin == '1')
+                                                                <a href="{{ URL('items') }}" target="_blank"
+                                                                    id="item_search">
+                                                                    <button type="button" class="btn btn-success">
+                                                                        <i class="fa fa-plus-square"></i> Item Search
+                                                                    </button></a>
+                                                            @endif
 
 
-                                                    <a href="{{ url('invoice') }}" type="submit" class="mt-3 btn btn-danger">Cancel
-                                                    </a>
 
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+
+                                                        </td>
+                                                        <td colspan="6"></td>
+                                                        <br><br>
+
+                                                    </tr>
+
+
+                                                    <tr class="sub_c" style="display: table-row;">
+                                                        <td colspan="2">
+                                                            @if (isset($employees[0]))
+                                                                {{ trans('general.employee') }}
+                                                                <select name="user_id"
+                                                                    class="selectpicker form-control">
+                                                                    <option value="{{ $logged_in_user->id }}">
+                                                                        {{ $logged_in_user->first_name }}
+                                                                    </option>
+                                                                    @foreach ($employees as $employee)
+                                                                        <option value="{{ $employee->id }}">
+                                                                            {{ $employee->first_name }}
+                                                                            {{ $employee->last_name }}
+                                                                        </option>
+                                                                    @endforeach
+
+                                                                </select>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr class="sub_c" style="display: table-row;">
+                                                        <td>
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="display: none;" class="sub_c"
+                                                        style="display: table-row;">
+                                                        <td colspan="2">
+
+                                                        </td>
+                                                        <td colspan="3" align="right"><strong>Total Purchase
+                                                            </strong>
+                                                        </td>
+                                                        <td align="left" colspan="2" class="col-md-4"><input
+                                                                type="text" name="total_buy_price"
+                                                                class="form-control" id="total_buy_price" readonly
+                                                                style="background-color: #E9ECEF">
+
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr class="sub_c" style="display: table-row;">
+                                                        <td colspan="2">
+
+                                                        </td>
+                                                        <td colspan="3" align="right"><strong>Sub Total
+                                                            </strong>
+                                                        </td>
+                                                        <td align="left" colspan="2" class="col-md-4"><input
+                                                                type="text" name="sub_total" class="form-control"
+                                                                id="invoiceyoghtml" readonly
+                                                                style="background-color: #E9ECEF">
+
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr class="sub_c" style="display: table-row;">
+                                                        <td colspan="2">
+
+                                                        </td>
+                                                        <td colspan="3" align="right"><strong>Discount
+                                                            </strong>
+                                                        </td>
+                                                        <td align="left" colspan="2" class="col-md-4"><input
+                                                                type="text" name="discount" class="form-control"
+                                                                id="total_discount">
+
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr class="sub_c" style="display: table-row;">
+                                                        <td colspan="2">
+
+                                                        </td>
+                                                        <td colspan="3" align="right"><strong>Total
+                                                            </strong>
+                                                        </td>
+                                                        <td align="left" colspan="2" class="col-md-4"><input
+                                                                type="text" name="total" class="form-control"
+                                                                id="total_total" readonly
+                                                                style="background-color: #E9ECEF">
+
+                                                        </td>
+
+                                                    </tr>
+
+
+
+                                                    <tr class="sub_c" style="display: table-row;">
+                                                        <td colspan="2">
+
+                                                        </td>
+                                                        <td colspan="3" align="right"><strong>Deposit
+                                                            </strong>
+                                                        </td>
+                                                        <td align="left" colspan="2"><input type="text"
+                                                                name="paid" class="form-control" id="paid"
+                                                                onchange="paidFunction()">
+
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr class="sub_c" style="display: table-row;">
+                                                        <td colspan="2">
+
+                                                        </td>
+                                                        <td colspan="3" align="right"><strong>Remaining Balance
+                                                            </strong>
+                                                        </td>
+                                                        <td align="left" colspan="2"><input type="text"
+                                                                name="balance" class="form-control" id="balance"
+                                                                readonly="">
+
+                                                        </td>
+                                                    </tr>
+
+                                                    <tr class="sub_c " style="display: table-row;">
+                                                        <td colspan="12"> <label for="remark">Remark</label>
+                                                            <textarea name="remark" id="remark" class="form-control" rows="2"></textarea>
+
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="sub_c " style="display: table-row;">
+
+
+                                                        <td align="right" colspan="9">
+
+                                                            <button id="submitButton" class="mt-3 btn btn-primary"
+                                                                type="submit">Save</button>
+
+
+                                                            <a href="{{ url('invoice') }}" type="submit"
+                                                                class="mt-3 btn btn-danger">Cancel
+                                                            </a>
+
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+
                                 </div>
-
                             </div>
-
                         </div>
-                    </div>
-                </div>
 
-            </div>
+                    </div>
         </form>
 
     </div>
-    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {
@@ -773,7 +725,7 @@
                     count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="productname-' +
                     count + '" autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control description typeahead" name="part_description[]"  id="description-' +
+                    '<td><input type="text" class="form-control description typeahead" name="part_description[]" required id="description-' +
                     count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
                     count +
@@ -917,13 +869,12 @@
     <script>
         $(document).ready(function() {
             var path = "{{ route('customer_service_search') }}";
+
+
             $('#customer').typeahead({
                 source: function(query, process) {
-                    var Selectedlocation = $('#location').val();
-
                     return $.get(path, {
-                        query: query,
-                        location: Selectedlocation,
+                        query: query
                     }, function(data) {
                         // Format the data for Typeahead
                         var formattedData = [];
@@ -942,10 +893,6 @@
                     });
                 }
             });
-
-
-
-
 
             $(document).on('click', '#customer_search', function(e) {
                 e.preventDefault();

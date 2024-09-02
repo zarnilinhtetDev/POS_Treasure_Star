@@ -98,21 +98,27 @@
                     <!-- left column -->
 
                     <!-- general form elements -->
+                    {{-- Permission --}}
+                    @php
+                        $choosePermission = [];
+                        if (auth()->user()->permission) {
+                            $decodedPermissions = json_decode(auth()->user()->permission, true);
+                            if (json_last_error() === JSON_ERROR_NONE) {
+                                $choosePermission = $decodedPermissions;
+                            }
+                        }
+                    @endphp
+                    {{-- End Permission --}}
 
 
-
-                    <div class="row">
-                        <div class="mr-auto col"> <button type="button" class="mr-auto btn btn-primary "
-                                data-toggle="modal" data-target="#modal-lg">
-                                Register New Supplier
+                    @if (in_array('Supplier Register', $choosePermission) || auth()->user()->is_admin == '1')
+                        <div class="row">
+                            <div class="mr-auto col"> <button type="button" class="mr-auto btn btn-primary "
+                                    data-toggle="modal" data-target="#modal-lg">
+                                    Register New Supplier
+                            </div>
                         </div>
-
-
-
-
-
-                    </div>
-
+                    @endif
 
 
                     <div class="modal fade" id="modal-lg">
@@ -243,21 +249,17 @@
 
                                                 <td>
                                                     <div class="row">
+                                                        @if (in_array('Supplier Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('supplier_edit', $supplier->id) }}"
+                                                                title="Supplier Edit" class="mx-2 btn btn-success"><i
+                                                                    class="fa-solid fa-pen-to-square"></i></a>
+                                                        @endif
 
-
-
-                                                        <!-- <a href="{{ url('supplier_view', $supplier->id) }}" class="btn btn-primary">
-                                                        <i class="fa-solid fa-eye"></i>
-                                                    </a> -->
-
-                                                        <a href="{{ url('supplier_edit', $supplier->id) }}"
-                                                            title="Supplier Edit" class="mx-2 btn btn-success"><i
-                                                                class="fa-solid fa-pen-to-square"></i></a>
-                                                        <a href="{{ url('supplier_delete', $supplier->id) }}"
-                                                            title="Supplier Delete" class="mx-2 btn btn-danger"><i
-                                                                class="fa-solid fa-trash"></i></a>
-
-
+                                                        @if (in_array('Supplier Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('supplier_delete', $supplier->id) }}"
+                                                                title="Supplier Delete" class="mx-2 btn btn-danger"><i
+                                                                    class="fa-solid fa-trash"></i></a>
+                                                        @endif
                                                     </div>
 
 

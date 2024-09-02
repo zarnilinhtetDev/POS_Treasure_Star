@@ -57,6 +57,18 @@
             enctype="multipart/form-data">
             @csrf
 
+            {{-- Permission Php --}}
+            @php
+                $choosePermission = [];
+                if (auth()->user()->permission) {
+                    $decodedPermissions = json_decode(auth()->user()->permission, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $choosePermission = $decodedPermissions;
+                    }
+                }
+            @endphp
+            {{-- End Php --}}
+
             <div class="mx-3 row ">
 
                 <div class="my-3 mt-4 row">
@@ -87,24 +99,6 @@
                                         <div class="col-sm-6 cmp-pnl">
                                             <div id="customerpanel" class="inner-cmp-pnl">
 
-                                                <div class="frmSearch col-sm-7">
-                                                    <div class="frmSearch col-sm-12">
-                                                        <span style="font-weight:bolder">
-                                                            <label for="cst"
-                                                                class="caption">{{ trans('Search  Customer Name & Phone No.') }}</label>
-                                                        </span>
-                                                        <div class="form-group d-flex">
-                                                            <input type="text" id="customer" name="customer"
-                                                                class="mr-2 form-control round" autocomplete="off"
-                                                                placeholder="Search.....">
-                                                            &nbsp;&nbsp;&nbsp; <button type="submit"
-                                                                class="btn btn-primary"
-                                                                id="customer_search">Add</button>
-                                                        </div>
-
-                                                        <div id="customer-box-result"></div>
-                                                    </div>
-                                                </div>
                                                 <!--  -->
                                                 <input type="hidden" id="service_id" name="service_id" value="0">
 
@@ -185,64 +179,25 @@
                                                 <option value="Retail">Retail</option>
                                             </select>
                                         </div>
-                                        @if (auth()->user()->is_admin == '1')
-                                            <div class="mt-4 frmSearch col-md-3">
-                                                <div class="frmSearch col-sm-12">
-                                                    <span style="font-weight:bolder">
-                                                        <label for="cst"
-                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                    </span> <select name="branch" id="location"
-                                                        class="mb-4 form-control location" required>
-                                                        @foreach ($warehouses as $branch)
-                                                            @if ($branch->id == $quotation->branch)
-                                                                <option value="{{ $branch->id }}" selected>
-                                                                    {{ $branch->name }}
-                                                                </option>
-                                                            @endif
-                                                        @endforeach
-                                                        @foreach ($warehouses as $warehouse)
-                                                            <option value="{{ $warehouse->id }}">
-                                                                {{ $warehouse->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
 
-                                                </div>
-                                            </div>
-                                        @else
-                                            <div class="mt-4 frmSearch col-md-3">
-                                                <div class="frmSearch col-sm-12">
-                                                    <span style="font-weight:bolder">
-                                                        <label for="cst"
-                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                    </span>
-                                                    <select name="branch" id="branch" class="form-control"
-                                                        required>
-                                                        @php
-                                                            $userPermissions = auth()->user()->level
-                                                                ? json_decode(auth()->user()->level)
-                                                                : [];
-                                                        @endphp
-                                                        @foreach ($warehouses as $branch)
-                                                            @if ($branch->id == $quotation->branch)
-                                                                <option value="{{ $branch->id }}" selected>
-                                                                    {{ $branch->name }}
-                                                                </option>
-                                                            @endif
-                                                        @endforeach
-                                                        @foreach ($warehouses as $branch)
-                                                            @if (in_array($branch->id, $userPermissions))
-                                                                <option value="{{ $branch->id }}">
-                                                                    {{ $branch->name }}
-                                                                </option>
-                                                            @endif
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        @endif
+                                        <div class="mt-4 frmSearch col-md-3">
+                                            <div class="frmSearch col-sm-12">
+                                                <span style="font-weight:bolder">
+                                                    <label for="cst"
+                                                        class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                </span> <select name="location" id="location"
+                                                    class="mb-4 form-control location" required>
 
-                                        <!-- <table class="table-responsive tfr my_stripe"> -->
+                                                    @foreach ($warehouses as $warehouse)
+                                                        <option value="{{ $warehouse->id }}" selected>
+                                                            {{ $warehouse->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+
+                                            </div>
+                                        </div>
+
                                         <table class="table table-bordered">
                                             <thead style="background-color:#0047AA;color:white;">
                                                 <tr class="item_header bg-gradient-directional-blue white"
@@ -292,7 +247,7 @@
                                                         <td><input type="text"
                                                                 class="form-control productname typeahead"
                                                                 name="part_number[]" value="{{ $sell->part_number }}"
-                                                                placeholder="{{ trans('Enter Item Name') }}"
+                                                                placeholder="{{ trans('Enter Part Number') }}"
                                                                 id='productname-0' autocomplete="off">
                                                         </td>
 
@@ -349,9 +304,6 @@
                                                                 </span>
                                                             </strong>
                                                         </td>
-                                                        <td><button type="submit"
-                                                                class="btn btn-danger remove_item_btn"
-                                                                id="removebutton">Remove</button></td>
                                                         <input type="hidden" class="form-control vat "
                                                             name="product_tax[]" id="vat-0" value="0">
                                                         <input type="hidden" name="total_tax[]" id="taxa-0"
@@ -408,11 +360,13 @@
                                                             Calculate
                                                         </button>
 
-                                                        <a href="{{ URL('items') }}" target="_blank"
-                                                            id="item_search">
-                                                            <button type="button" class="btn btn-success">
-                                                                <i class="fa fa-plus-square"></i> Item Search
-                                                            </button></a>
+                                                        @if (in_array('Item', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ URL('items') }}" target="_blank"
+                                                                id="item_search">
+                                                                <button type="button" class="btn btn-success">
+                                                                    <i class="fa fa-plus-square"></i> Item Search
+                                                                </button></a>
+                                                        @endif
 
 
 
@@ -598,10 +552,11 @@
                 let itemNameInput = row.find('.price');
                 let partDesc = row.find('.description');
                 let exp_date = row.find('.exp_date');
-                let warehouse = row.find('.warehouse');
                 let item_unit = row.find('.item_unit');
                 let retail_price = row.find('.retail_price');
                 var Selectedlocation = $('#location').val();
+                let warehouse = row.find('.warehouse');
+
                 $.ajax({
                     type: 'POST',
                     url: "{{ route('get-part-data-invoice') }}",
@@ -616,9 +571,9 @@
                         itemNameInput.val(data.wholesale_price);
 
                         partDesc.val(data.descriptions);
+                        warehouse.val(data.warehouse_id);
                         exp_date.val(data.expired_date);
                         item_unit.val(data.item_unit);
-                        warehouse.val(data.warehouse_id);
                         retail_price.val(data.retail_price);
                         if (parseFloat(data.reorder_level_stock) >= parseFloat(data.quantity)) {
                             alert(data.quantity + " quantity!");
@@ -693,12 +648,11 @@
                     '<td><input type="text" class="form-control exp_date " name="exp_date[]" id="exp_date-' +
                     count +
                     '"   autocomplete="off"></td>' +
-
-                    '<td style="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
+                    '<td style ="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
                     count +
                     '"   autocomplete="off"></td>' +
 
-                    '<td style="text-align:center"><span class="currenty"></span><strong><span class="ttlText1" id="result-' +
+                    '<td style="text-align:center"><span class="currenty"></span><strong><span  class="ttlText1" id="result-' +
                     count + '">0</span></strong></td>' +
                     '<input type="hidden" name="total_tax[]" id="taxa-' + count + '" value="0">' +
 
@@ -736,25 +690,19 @@
             });
             // Initialize typeahead for the first row
             initializeTypeahead(count);
-
-
-            $(document).ready(function() {
-                calculateTotal();
-
-            });
-
-            function calculateTotal() {
+            $(document).on("click", '#calculate', function(e) {
+                e.preventDefault();
                 let salePriceCategory = $('#sale_price_category').val();
 
-                // Iterate through each row to calculate subtotal for each item
-                $('#showitem123 tr').each(function() {
+                $('#showitem123 tr').each(function(index) {
                     let row = $(this);
                     let qty = parseInt(row.find('.req.amnt').val()) || 0;
                     let price;
 
                     if (salePriceCategory === 'Default') {
                         let cuz_name = $("#type").val();
-                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price').val()) || 0 :
+                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
+                                .val()) || 0 :
                             parseFloat(row.find('.retail_price').val()) || 0;
                     } else if (salePriceCategory === 'Whole Sale') {
                         price = parseFloat(row.find('.price').val()) || 0;
@@ -774,15 +722,15 @@
                 let total = 0;
                 let totalTax = 0;
 
-                // Iterate through each row to calculate the grand total and total tax
-                $('#showitem123 tr').each(function() {
+                $('#showitem123 tr').each(function(index) {
                     let row = $(this);
                     let qty = parseInt(row.find('.req.amnt').val()) || 0;
                     let price;
 
                     if (salePriceCategory === 'Default') {
                         let cuz_name = $("#type").val();
-                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price').val()) || 0 :
+                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
+                                .val()) || 0 :
                             parseFloat(row.find('.retail_price').val()) || 0;
                     } else if (salePriceCategory === 'Whole Sale') {
                         price = parseFloat(row.find('.price').val()) || 0;
@@ -806,7 +754,7 @@
 
                     total += itemTotal;
 
-                    row.find('.ttlText1').text(itemTotal);
+                    row.find('.ttlText1').text(itemTotal.toFixed(2));
                     if (price > 0) {
                         row.find('.ttlText1').show();
                         row.find('.ttlText').hide();
@@ -822,17 +770,13 @@
                 let totalTotal = total - totalTax;
 
                 $('#invoiceyoghtml').val(total);
-                $('#commercial_text').val(totalTax.toFixed(2));
-                $('#total').val(totalTotal.toFixed(2));
+                $('#commercial_text').val(totalTax);
+                $('#total').val(totalTota);
                 $('#extra_discount').val('');
                 $('#paid').val('');
-                $('#total_total').val(total);
                 $('#balance').val('');
-            }
-
-            $(document).on("click", '#calculate', function(e) {
-                e.preventDefault();
-                calculateTotal();
+                $('#total_total').val(totalTotal);
+                $('#total_discount').val('');
             });
 
 
@@ -857,7 +801,7 @@
 
             let paid = document.getElementById("paid").value;
             let total_p = document.getElementById("total_total").value;
-            let balance = total_p - paid;
+            let balance = (total_p) - paid;
             $("#balance").val(balance); //update balance
         }
     </script>
@@ -865,13 +809,12 @@
     <script>
         $(document).ready(function() {
             var path = "{{ route('customer_service_search') }}";
+
+
             $('#customer').typeahead({
                 source: function(query, process) {
-                    var Selectedlocation = $('#location').val();
-
                     return $.get(path, {
-                        query: query,
-                        location: Selectedlocation,
+                        query: query
                     }, function(data) {
                         // Format the data for Typeahead
                         var formattedData = [];
@@ -890,7 +833,6 @@
                     });
                 }
             });
-
 
 
 
@@ -923,6 +865,12 @@
             });
         });
     </script>
+
+
+
+
+
+
 
     <script>
         $("input").on("change", function() {

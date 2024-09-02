@@ -79,6 +79,8 @@
                                 <i class="fa-solid fa-right-from-bracket "></i> Logout</button>
 
                         </form>
+
+
                     </div>
                 </div>
 
@@ -88,8 +90,6 @@
         </nav>
         @include('layouts.sidebar')
         <div class="container-fluid">
-
-
             <form action=" {{ url('store_transfer_item') }}" method="POST">
                 @csrf
                 <div class="content-wrapper">
@@ -107,53 +107,39 @@
                                             <div class="form-group row">
                                                 <div class="frmSearch col-sm-12">
                                                     <div class="row">
-
-
-                                                        @if (auth()->user()->is_admin == '1')
+                                                        {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+                                                        <div class="frmSearch col-sm-3">
+                                                            <label for="from" style="font-weight:bolder">From
+                                                                Location</label>
+                                                            <select name="from_location" id="from_location"
+                                                                class="form-control">
+                                                                <option value="" selected disabled>Choose
+                                                                    Location
+                                                                </option>
+                                                                @foreach ($warehouses as $warehouse)
+                                                                    <option value="{{ $warehouse->id }}">
+                                                                        {{ $warehouse->name }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                        {{-- @else
                                                             <div class="frmSearch col-sm-3">
-                                                                <label for="from_location">From Location</label>
+                                                                <label for="from" style="font-weight:bolder">From
+                                                                    Location</label>
                                                                 <select name="from_location" id="from_location"
-                                                                    class="form-control" required>
-                                                                    <option value="" selected disabled>Select
+                                                                    class="form-control">
+                                                                    <option value="" selected disabled>Choose
                                                                         Location
                                                                     </option>
                                                                     @foreach ($warehouses as $warehouse)
-                                                                        <option value="{{ $warehouse->id }}">
-                                                                            {{ $warehouse->name }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                        @else
-                                                            <div class="frmSearch col-sm-3">
-                                                                <label for="from_location">From Location</label>
-                                                                <select name="from_location" id="from_location"
-                                                                    class="form-control" required>
-                                                                    @php
-                                                                        $userPermissions = auth()->user()->level
-                                                                            ? json_decode(auth()->user()->level)
-                                                                            : [];
-                                                                    @endphp
-                                                                    <option value="" selected disabled>Select
-                                                                        Location
-                                                                    </option>
-                                                                    @foreach ($warehouses as $branch)
-                                                                        @if (in_array($branch->id, $userPermissions))
-                                                                            <option value="{{ $branch->id }}">
-                                                                                {{ $branch->name }}
-                                                                            </option>
+                                                                        @if (auth()->user()->level == $warehouse->id)
+                                                                            <option value="{{ $warehouse->id }}">
+                                                                                {{ $warehouse->name }}</option>
                                                                         @endif
                                                                     @endforeach
                                                                 </select>
                                                             </div>
-                                                        @endif
-
-
-
-
-
-
-
-
+                                                        @endif --}}
                                                         <div class="frmSearch col-sm-3">
                                                             <label for="to" style="font-weight:bolder">To
                                                                 Location</label>
@@ -232,7 +218,7 @@
                                                     <td><input type="text"
                                                             class="form-control productname typeahead"
                                                             name="part_number[]"
-                                                            placeholder="{{ trans('Enter Item Name') }}"
+                                                            placeholder="{{ trans('Enter Part Number') }}"
                                                             id='productname-0' autocomplete="off">
                                                     </td>
                                                     <td><input type="text" class="form-control total_product_qty"
@@ -346,9 +332,9 @@
                                                             type="submit">Transfer</button>
 
 
-                                                        {{-- <a href="{{ url('create_vehicle') }}" type="submit"
+                                                        <a href="{{ url('create_vehicle') }}" type="submit"
                                                             class="mt-3 btn btn-warning">Cancel
-                                                        </a> --}}
+                                                        </a>
 
                                                     </td>
                                                 </tr>
