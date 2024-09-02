@@ -66,7 +66,7 @@
                 }
             @endphp
             {{-- End Php --}}
-            
+
             <div class="row">
 
 
@@ -723,9 +723,6 @@
                     '<td><input type="text" class="form-control item_unit" name="item_unit[]" id="item_unit-' +
                     count +
                     '"   autocomplete="off"></td>' +
-
-
-
                     '<td><input type="text" class="form-control price" name="product_price[]" value="0" id="price-' +
                     count + '"   autocomplete="off"></td>' +
 

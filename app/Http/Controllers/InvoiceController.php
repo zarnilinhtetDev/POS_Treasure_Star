@@ -459,6 +459,8 @@ class InvoiceController extends Controller
         return response()->json($result);
     }
 
+
+    //Pos
     public function autocompletePartCode(Request $request)
     {
         $query = $request->get('query');
@@ -515,6 +517,8 @@ class InvoiceController extends Controller
 
         return response()->json($resdata);
     }
+
+    //End Pos
 
     // public function invoice_detail(Invoice $invoice)
     public function invoice_detail(Invoice $invoice)
