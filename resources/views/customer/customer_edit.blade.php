@@ -7,7 +7,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
 
                 <li class="nav-item">
@@ -16,33 +17,34 @@
                 </li>
 
                 @if (Auth::user()->type === '1')
-                <li class="nav-item ml-auto">
-                    <a class="nav-link" href="#">
-                        @if (Auth::user()->branch_id)
-                        {{ Auth::user()->branch->branch_name }}
-                        @else
-                        Admin
-                        @endif
+                    <li class="nav-item ml-auto">
+                        <a class="nav-link" href="#">
+                            @if (Auth::user()->branch_id)
+                                {{ Auth::user()->branch->branch_name }}
+                            @else
+                                Admin
+                            @endif
 
-                    </a>
-                </li>
+                        </a>
+                    </li>
                 @else
-                <li class="nav-item ml-auto">
-                    <a class="nav-link" href="#">
-                        @if (Auth::user()->branch_id)
-                        {{ Auth::user()->branch->branch_name }}
-                        @else
-                        N/A
-                        @endif
-                    </a>
-                </li>
+                    <li class="nav-item ml-auto">
+                        <a class="nav-link" href="#">
+                            @if (Auth::user()->branch_id)
+                                {{ Auth::user()->branch->branch_name }}
+                            @else
+                                N/A
+                            @endif
+                        </a>
+                    </li>
                 @endif
             </ul>
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <div class="btn-group">
-                    <button type="button" class=" text-white btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class=" text-white btn dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         {{ auth()->user()->name }}
                     </button>
                     <div class="dropdown-menu ">
@@ -100,12 +102,15 @@
 
                                             <div class="form-group">
                                                 <label for="name">Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="name" required autofocus name="name" value="{{ $showCustomer->name }}">
+                                                <input type="text" class="form-control" id="name" required
+                                                    autofocus name="name" value="{{ $showCustomer->name }}">
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="phno">Phone Number <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="phone number" name="phno" value="{{ $showCustomer->phno }}" required>
+                                                <label for="phno">Phone Number <span
+                                                        class="text-danger">*</span></label>
+                                                <input type="text" class="form-control" id="phone number"
+                                                    name="phno" value="{{ $showCustomer->phno }}" required>
                                             </div>
 
 
@@ -123,7 +128,8 @@
 
                                             <div class="form-group">
                                                 <label for="address">Address <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="phone number" name="address" value="{{ $showCustomer->address }}" required>
+                                                <input type="text" class="form-control" id="phone number"
+                                                    name="address" value="{{ $showCustomer->address }}" required>
                                             </div>
 
 
