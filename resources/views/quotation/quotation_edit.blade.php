@@ -191,7 +191,7 @@
                                                         class="mb-4 form-control location" required>
                                                         @foreach ($warehouses as $warehouse)
                                                             <option value="{{ $warehouse->id }}"
-                                                                {{ $invoice->branch == $warehouse->id ? 'selected' : '' }}>
+                                                                {{ $quotation->branch == $warehouse->id ? 'selected' : '' }}>
                                                                 {{ $warehouse->name }}
                                                             </option>
                                                         @endforeach

@@ -45,9 +45,16 @@ class WarehouseController extends Controller
     }
     public function warehouse_delete($id)
     {
-        Warehouse::destroy($id);
-        return back()->with('delete', 'Warehouse Deleted Successful');
+        $itemsCount = Item::where('warehouse_id', $id)->count();
+
+        if ($itemsCount > 0) {
+            return back()->with('error', 'Cannot delete warehouse because items are associated with it.');
+        } else {
+            Warehouse::destroy($id);
+            return back()->with('delete', 'Warehouse deleted successfully.');
+        }
     }
+
     public function warehouse_edit($id)
     {
         $warehouse = Warehouse::find($id);

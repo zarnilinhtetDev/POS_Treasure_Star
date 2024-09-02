@@ -455,7 +455,7 @@ class InvoiceController extends Controller
         $quotation->invoice_date = Carbon::today()->format('Y-m-d');
         $quotation->update();
 
-        return redirect('/invoice')->with('status', 'Change Invoice Successful!');
+        return redirect('/invoice')->with('success', 'Change Invoice Successful!');
     }
 
     public function autocompletePartCodeInvoice(Request $request)

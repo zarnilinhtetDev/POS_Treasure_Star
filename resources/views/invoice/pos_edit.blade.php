@@ -1124,12 +1124,13 @@
         <script>
             $(document).ready(function() {
                 var path = "{{ route('customer_service_search') }}";
-
-
                 $('#customer').typeahead({
                     source: function(query, process) {
+                        var Selectedlocation = $('#location').val();
+
                         return $.get(path, {
-                            query: query
+                            query: query,
+                            location: Selectedlocation,
                         }, function(data) {
                             // Format the data for Typeahead
                             var formattedData = [];
@@ -1148,6 +1149,7 @@
                         });
                     }
                 });
+
 
 
 

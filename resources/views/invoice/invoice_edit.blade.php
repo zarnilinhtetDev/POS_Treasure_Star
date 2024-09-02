@@ -121,7 +121,7 @@
                                             <div id="customerpanel" class="inner-cmp-pnl">
 
                                                 <div class="form-group row">
-                                                    <!-- <div class="frmSearch col-sm-6">
+                                                    <div class="frmSearch col-sm-6">
 
                                                         <div class="frmSearch col-sm-12" style="">
                                                             <div class="frmSearch col-sm-12">
@@ -144,7 +144,8 @@
 
                                                         </div>
 
-                                                    </div> -->
+                                                    </div>
+
 
                                                     <div class="frmSearch col-sm-6">
                                                         <div class="frmSearch col-sm-12">
@@ -1043,12 +1044,13 @@
     <script>
         $(document).ready(function() {
             var path = "{{ route('customer_service_search') }}";
-
-
             $('#customer').typeahead({
                 source: function(query, process) {
+                    var Selectedlocation = $('#location').val();
+
                     return $.get(path, {
-                        query: query
+                        query: query,
+                        location: Selectedlocation,
                     }, function(data) {
                         // Format the data for Typeahead
                         var formattedData = [];
@@ -1067,6 +1069,7 @@
                     });
                 }
             });
+
 
 
 
