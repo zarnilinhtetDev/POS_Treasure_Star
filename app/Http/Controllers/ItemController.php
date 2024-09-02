@@ -180,6 +180,8 @@ class ItemController extends Controller
             ]);
             // Get the warehouse_id from the request
             $warehouseId = $request->warehouse_id;
+            // dd($warehouseId);
+
             // Get the file from the request
             $file = $request->file('file');
             // Import the file and associate it with the warehouse

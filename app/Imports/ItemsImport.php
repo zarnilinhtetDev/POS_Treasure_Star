@@ -22,23 +22,28 @@ class ItemsImport implements ToModel
     public function model(array $row)
     {
         $this->rowCount++;
+
         if (!$this->firstRowSkipped) {
             $this->firstRowSkipped = true;
             return null;
         }
-        // Your existing validation and logic here...
+
         if ($this->hasErrors) {
             return null;
         }
+
+        $warehouse = Warehouse::where('name', $row[0])->first();
+
+        if (!$warehouse || $warehouse->id != $this->warehouseId) {
+            return null;
+        }
+
         if (empty($row[2])) {
             $row[2] = $this->generateRandomBarcode();
         }
-        //  else {
-        //     $row[2] = $this->formatBarcode($row[2]);
-        // }
 
         return new Item([
-            'warehouse_id' => $this->warehouseId, // Use the warehouse_id passed from the controller
+            'warehouse_id' => $warehouse->id,
             'item_name' => $row[1],
             'barcode' => (string)$row[2],
             'descriptions' => $row[3],
@@ -53,6 +58,7 @@ class ItemsImport implements ToModel
             'parent_id' => $row[12],
         ]);
     }
+
 
     public function generateRandomBarcode()
     {

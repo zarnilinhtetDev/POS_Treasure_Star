@@ -170,13 +170,14 @@
                                             <input type="file" name="file" class="" id="customFile">
                                         </div>
                                         <button class="mt-3 btn btn-primary">Import </button>
-
+                                        {{-- @endif --}}
                                         <a class="mt-3 btn btn-success" href="{{ route('file-export') }}">Export </a>
                                     </div>
                                 </div>
-
+                                {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin' || Auth::user()->type == 'Warehouse') --}}
                                 <a class="" href="{{ route('file-import-template') }}">Download
                                     Import CSV Template</a>
+                                {{-- @endif --}}
 
                             </form>
                         </div>
