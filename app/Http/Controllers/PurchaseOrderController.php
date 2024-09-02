@@ -184,6 +184,24 @@ class PurchaseOrderController extends Controller
         $last_id = $invoice->id;
 
 
+        $po = [];
+        for ($i = 0; $i < $count; $i++) {
+            $po[] = [
+                'invoiceid' => $last_id,
+                'supplier_id' => $request->supplier_id,
+                'description' => $request->part_description[$i],
+                'part_number' => $request->part_number[$i],
+                'unit' => $request->item_unit[$i],
+                'product_qty' => $request->product_qty[$i],
+                'exp_date' => $request->exp_date[$i],
+                'product_price' => $request->product_price[$i],
+                'warehouse' => $request->warehouse[$i],
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+
         $oldQuantities = [];
         foreach ($invoice->po_sells as $key => $po_sell) {
             $oldQuantities[$key] = $po_sell->product_qty;
@@ -192,7 +210,7 @@ class PurchaseOrderController extends Controller
             $po_sell = $invoice->po_sells[$key] ?? null;
 
             $item = Item::where('item_name', $partNumber)
-                ->where('warehouse_id', $po_sell->warehouse)
+                ->where('warehouse_id', $request->warehouse)
                 ->first();
             // info($item);
             if (!$item) {
@@ -207,21 +225,9 @@ class PurchaseOrderController extends Controller
         }
 
         PO_sells::where('invoiceid', $id)->delete();
-        for ($i = 0; $i < $count; $i++) {
-            $result = new PO_sells();
-            $result->invoiceid = $last_id;
-            $result->supplier_id = $request->supplier_id;
-            $result->description = $request->part_description[$i];
-            $result->part_number = $request->part_number[$i];
-            $result->unit = $request->item_unit[$i];
-            $result->product_qty = $request->product_qty[$i];
-            $result->exp_date = $request->exp_date[$i];
-            $result->product_price = $request->product_price[$i];
-            $result->warehouse = $request->warehouse[$i];
-            $result->save();
-        }
+        PO_sells::insert($po);
 
-        if ($invoice->status == 'PO') {
+        if ($invoice->balance_due == 'PO') {
             return redirect('/purchase_order_manage')->with('success', 'Purchase Order Updated Successful!');
         } else {
             return redirect('/sale_return')->with('success', 'Sale Return Updated Successful!');
