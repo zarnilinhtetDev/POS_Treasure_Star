@@ -22,7 +22,7 @@ class ReportController extends Controller
 
         $invoicesQuery = Invoice::whereDate('created_at', $today)
             ->where('status', 'invoice')
-            ->whereNull('balance_due');
+            ->where('balance_due', 'Invoice');
 
         if ($branch) {
             $invoicesQuery->where('branch', $branch);
@@ -264,7 +264,6 @@ class ReportController extends Controller
 
         $invoicesQuery = Invoice::where('status', 'invoice')
             ->where('balance_due', 'Invoice')
-            ->whereNull('balance_due')
             ->whereDate('invoice_date', '>=', $start_date)
             ->whereDate('invoice_date', '<=', $end_date);
 
