@@ -64,16 +64,29 @@
                         </div>
                     </div><!-- /.container-fluid -->
                 </section>
+                {{-- Permission --}}
+                @php
+                    $choosePermission = [];
+                    if (auth()->user()->permission) {
+                        $decodedPermissions = json_decode(auth()->user()->permission, true);
+                        if (json_last_error() === JSON_ERROR_NONE) {
+                            $choosePermission = $decodedPermissions;
+                        }
+                    }
+                @endphp
+                {{-- End Permission --}}
 
                 <div class="container-fluid">
                     <div class="row  justify-content-center d-flex">
                         <!-- left column -->
-                        <div class="col-md-12 ">
-                            <!-- general form elements -->
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-lg">
-                                User Register
-                            </button>
-                        </div>
+                        @if (in_array('User Register', $choosePermission) || auth()->user()->is_admin == '1')
+                            <div class="col-md-12 ">
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#modal-lg">
+                                    User Register
+                                </button>
+                            </div>
+                        @endif
 
                         <div class="modal fade" id="modal-lg">
                             <div class="modal-dialog modal-lg">
@@ -198,23 +211,29 @@
                                                     <td>{{ $showUser->created_at }}</td>
                                                     <td>
 
-                                                        <a href="{{ url('user_permission', $showUser->id) }}"
-                                                            class="btn btn-warning">
-                                                            <i
-                                                                class="fa-solid fa-person-circle-question text-white"></i>
+                                                        @if (in_array('User Permission', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('user_permission', $showUser->id) }}"
+                                                                class="btn btn-warning">
+                                                                <i
+                                                                    class="fa-solid fa-person-circle-question text-white"></i>
 
-                                                        </a>
+                                                            </a>
+                                                        @endif
 
-                                                        <a href="{{ url('userShow', $showUser->id) }}"
-                                                            class="btn btn-success">
-                                                            <i class="fa-solid fa-pen-to-square"></i>
+                                                        @if (in_array('User Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('userShow', $showUser->id) }}"
+                                                                class="btn btn-success">
+                                                                <i class="fa-solid fa-pen-to-square"></i>
 
-                                                        </a>
+                                                            </a>
+                                                        @endif
 
-                                                        <a href="{{ url('delete_user', $showUser->id) }}"
-                                                            class="btn btn-danger"
-                                                            onclick="return confirm('Are you sure you want to delete this user ?')">
-                                                            <i class="fa-solid fa-trash"></i></a>
+                                                        @if (in_array('User Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('delete_user', $showUser->id) }}"
+                                                                class="btn btn-danger"
+                                                                onclick="return confirm('Are you sure you want to delete this user ?')">
+                                                                <i class="fa-solid fa-trash"></i></a>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                                 @php

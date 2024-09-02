@@ -99,20 +99,28 @@
 
                     <!-- general form elements -->
 
+                    {{-- Permission --}}
+                    @php
+                        $choosePermission = [];
+                        if (auth()->user()->permission) {
+                            $decodedPermissions = json_decode(auth()->user()->permission, true);
+                            if (json_last_error() === JSON_ERROR_NONE) {
+                                $choosePermission = $decodedPermissions;
+                            }
+                        }
+                    @endphp
+                    {{-- End Permission --}}
 
 
-                    <div class="row">
-                        <div class="mr-auto col"> <button type="button" class="mr-auto btn btn-primary "
-                                data-toggle="modal" data-target="#modal-lg">
-                                Register New Customer </button>
+                    @if (in_array('Customer Register', $choosePermission) || auth()->user()->is_admin == '1')
+                        <div class="row">
+                            <div class="mr-auto col"> <button type="button" class="mr-auto btn btn-primary "
+                                    data-toggle="modal" data-target="#modal-lg">
+                                    Register New Customer </button>
 
+                            </div>
                         </div>
-
-
-
-
-
-                    </div>
+                    @endif
 
 
 
@@ -146,7 +154,8 @@
 
                                             <div class="form-group">
                                                 <label for="crc">Customer Type </label>
-
+                                                <!-- <input type="text" class="form-control"
+                                                    placeholder="Enter Customer Type" name="type"> -->
                                                 <select name="type" id="type" class="form-control" required>
                                                     <option selected disabled>Select Customer Type</option>
                                                     <option value="Retail">Retail</option>
@@ -154,46 +163,6 @@
                                                 </select>
                                             </div>
 
-
-                                            @if (auth()->user()->is_admin == '1')
-                                                <div class="form-group">
-                                                    <label for="branch">Location<span
-                                                            class="text-danger">*</span></label>
-
-                                                    <select name="branch" id="branch" class="form-control"
-                                                        required>
-                                                        <option value="" selected disabled>Select Location
-                                                        </option>
-                                                        @foreach ($branchs as $branch)
-                                                            <option value="{{ $branch->id }}">{{ $branch->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            @else
-                                                <div class="form-group">
-                                                    <label for="branch">Location<span
-                                                            class="text-danger">*</span></label>
-
-                                                    <select name="branch" id="branch" class="form-control"
-                                                        required>
-                                                        @php
-                                                            $userPermissions = auth()->user()->level
-                                                                ? json_decode(auth()->user()->level)
-                                                                : [];
-                                                        @endphp
-                                                        <option value="" selected disabled>Select Location
-                                                        </option>
-                                                        @foreach ($branchs as $branch)
-                                                            @if (in_array($branch->id, $userPermissions))
-                                                                <option value="{{ $branch->id }}">
-                                                                    {{ $branch->name }}
-                                                                </option>
-                                                            @endif
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            @endif
                                             <div class="form-group">
                                                 <label for="address">Address <span
                                                         class="text-danger">*</span></label>
@@ -201,9 +170,6 @@
                                                     placeholder="Enter Address" name="address" required>
                                             </div>
                                         </div>
-
-
-
                                 </div>
                                 <div class="modal-footer justify-content-between">
                                     <button type="button" class="btn btn-default"
@@ -232,7 +198,6 @@
                                             <th>Name</th>
                                             <th>Phone Number</th>
                                             <th>Customer Type</th>
-                                            <th>Location</th>
                                             <th>Address</th>
                                             <th>Action</th>
 
@@ -248,32 +213,26 @@
                                                 <td>{{ $customer->name }}</a></td>
                                                 <td>{{ $customer->phno }}</td>
                                                 <td>{{ $customer->type }}</td>
-                                                <td>
-                                                    @foreach ($branchs as $branch)
-                                                        @if ($branch->id == $customer->branch)
-                                                            {{ $branch->name }}
-                                                        @endif
-                                                    @endforeach
-                                                </td>
                                                 <td>{{ $customer->address }}</td>
                                                 <td>
                                                     <div class="row">
+                                                        @if (in_array('Customer Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('customer_edit', $customer->id) }}"
+                                                                title="Customer Edit" class="mx-2 btn btn-success"><i
+                                                                    class="fa-solid fa-pen-to-square"></i></a>
+                                                        @endif
 
+                                                        @if (in_array('Customer Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('customer_delete', $customer->id) }}"
+                                                                title="Customer Delete" class=" btn btn-danger"><i
+                                                                    class="fa-solid fa-trash"></i></a>
+                                                        @endif
 
-
-
-
-                                                        <a href="{{ url('customer_edit', $customer->id) }}"
-                                                            title="Customer Edit" class="mx-2 btn btn-success"><i
-                                                                class="fa-solid fa-pen-to-square"></i></a>
-                                                        <a href="{{ url('customer_delete', $customer->id) }}"
-                                                            title="Customer Delete" class=" btn btn-danger"><i
-                                                                class="fa-solid fa-trash"></i></a>
-                                                        <a href="{{ url('customer_credit', $customer->id) }}"
-                                                            type="button" class="mx-2 btn btn-warning ">
-                                                            Credit</a>
-
-
+                                                        @if (in_array('Customer Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('customer_credit', $customer->id) }}"
+                                                                type="button" class="mx-2 btn btn-warning ">
+                                                                Credit</a>
+                                                        @endif
                                                     </div>
 
 

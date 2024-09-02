@@ -102,6 +102,19 @@
                                     </div>
 
                                     <div class="form-group col-md-6">
+                                        <label for="item_image">Item Image</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <img id="imagePreview" src="#" style="max-width: 50px; max-height: 50px; display: none;" alt="Item Image Preview">
+                                                </span>
+                                            </div>
+                                            <input type="file" class="form-control" id="item_image" name="item_image" accept="image/*" onchange="previewImage(event)">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group col-md-6">
                                         <label for="barcode">Barcode <span class="text-danger"> *</span></label>
                                         <input type="number" class="form-control" id="barcode" name="barcode"
                                             placeholder="Enter BarCode" value="{{ old('barcode') }}">
@@ -119,8 +132,8 @@
 
                                     <div class="form-group col-md-6">
                                         <label for="expired_date">Expired Date</label>
-                                        <input type="date" class="form-control" id="expired_date" name="expired_date"
-                                            value="{{ old('expired_date') }}">
+                                        <input type="date" class="form-control" id="expired_date"
+                                            name="expired_date" value="{{ old('expired_date') }}">
                                     </div>
 
                                     <div class="form-group col-md-6">
@@ -344,4 +357,19 @@
                 additionalElements.style.display = "none";
             }
         });
+
+
     </script>
+<script>
+    function previewImage(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('imagePreview');
+            output.src = reader.result; // Set the source of the image preview
+            output.style.display = 'inline'; // Make the image visible
+        };
+        if (event.target.files.length > 0) {
+            reader.readAsDataURL(event.target.files[0]); // Read the file as a data URL
+        }
+    }
+</script>

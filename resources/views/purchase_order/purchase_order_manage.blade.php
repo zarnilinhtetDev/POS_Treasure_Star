@@ -100,11 +100,13 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Purchase Order Number</th>
-                                            <th>Location</th>
                                             <th>Supplier Name</th>
                                             <th>Receiving Mode</th>
-                                            <th>Remaining Balance</th>
+
+
                                             <th>Total</th>
+
+
                                             <th>Action</th>
 
                                         </tr>
@@ -114,37 +116,50 @@
                                             $no = '1';
                                         @endphp
 
+                                        {{-- Permission Php --}}
+                                        @php
+                                            $choosePermission = [];
+                                            if (auth()->user()->permission) {
+                                                $decodedPermissions = json_decode(auth()->user()->permission, true);
+                                                if (json_last_error() === JSON_ERROR_NONE) {
+                                                    $choosePermission = $decodedPermissions;
+                                                }
+                                            }
+                                        @endphp
+                                        {{-- End Php --}}
+
 
                                         @foreach ($po as $pos)
                                             <tr>
 
                                                 <td>{{ $no }}</td>
                                                 <td>{{ $pos->quote_no }}</td>
-                                                <td>
-                                                    @foreach ($branchs as $branch)
-                                                        @if ($branch->id == $pos->branch)
-                                                            {{ $branch->name }}
-                                                        @endif
-                                                    @endforeach
-                                                </td>
+
                                                 <td>{{ $pos->supplier->name ?? 'N/A' }}</td>
                                                 <td>{{ $pos->balance_due }}</td>
-                                                <td>{{ $pos->remain_balance }}</td>
+
+
                                                 <td>{{ $pos->total }}</td>
                                                 <td>
-                                                    <a href="{{ route('purchase_order_details', $pos->id) }}"
-                                                        class="btn btn-primary btn-sm"><i
-                                                            class="fa-solid fa-eye"></i></a>
 
-                                                    <a href="{{ route('purchase_order_edit', $pos->id) }}"
-                                                        class="btn btn-success btn-sm"><i
-                                                            class="fa-solid fa-pen-to-square"></i></a>
+                                                    @if (in_array('Purchase Order Details', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ route('purchase_order_details', $pos->id) }}"
+                                                            class="btn btn-primary btn-sm"><i
+                                                                class="fa-solid fa-eye"></i></a>
+                                                    @endif
 
+                                                    @if (in_array('Purchase Order Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ route('purchase_order_edit', $pos->id) }}"
+                                                            class="btn btn-success btn-sm"><i
+                                                                class="fa-solid fa-pen-to-square"></i></a>
+                                                    @endif
 
-                                                    <a href="{{ url('purchase_order_delete', $pos->id) }}"
-                                                        class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Are you sure you want to delete this Purchase Order ?')"><i
-                                                            class="fa-solid fa-trash"></i></a>
+                                                    @if (in_array('Purchase Order Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ url('purchase_order_delete', $pos->id) }}"
+                                                            class="btn btn-danger btn-sm"
+                                                            onclick="return confirm('Are you sure you want to delete this Purchase Order ?')"><i
+                                                                class="fa-solid fa-trash"></i></a>
+                                                    @endif
                                                 </td>
                                             </tr>
                                             @php

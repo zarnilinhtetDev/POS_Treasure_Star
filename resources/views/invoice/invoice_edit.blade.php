@@ -49,17 +49,26 @@
     <div class="container-fluid" id="content">
 
 
-        <div class="row">
-            <div class="col d-flex justify-content-between align-items-center mx-4 mt-3">
-                <h1>Invoice Edit</h1>
-                <a href="{{ url('invoice') }}" class="btn btn-danger">Back</a>
-            </div>
-        </div>
-
+        <h1 class="mx-4 mt-3">
+            Invoice Edit
+        </h1>
 
         <form method="post" id="myForm" action="{{ url('/invoice_update', $invoice->id) }}"
             enctype="multipart/form-data">
             @csrf
+
+
+            {{-- Permission Php --}}
+            @php
+                $choosePermission = [];
+                if (auth()->user()->permission) {
+                    $decodedPermissions = json_decode(auth()->user()->permission, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $choosePermission = $decodedPermissions;
+                    }
+                }
+            @endphp
+            {{-- End Php --}}
 
             <div class="mx-3 row ">
 
@@ -88,9 +97,8 @@
                             <option value="{{ $invoice->payment_method }}" selected>{{ $invoice->payment_method }}
                             </option>
                             <option value="Cash">Cash</option>
-                            <option value="K Pay">K Pay</option>
-                            <option value="Wave">Wave</option>
-                            <option value="Others">Others</option>
+                            <option value="Credit">Credit</option>
+                            <option value="Consignment Terms">Consignment Terms</option>
                         </select>
                     </div>
 
@@ -109,7 +117,7 @@
                                             <div id="customerpanel" class="inner-cmp-pnl">
 
                                                 <div class="form-group row">
-                                                    <div class="frmSearch col-sm-6">
+                                                    <!-- <div class="frmSearch col-sm-6">
 
                                                         <div class="frmSearch col-sm-12" style="">
                                                             <div class="frmSearch col-sm-12">
@@ -132,7 +140,7 @@
 
                                                         </div>
 
-                                                    </div>
+                                                    </div> -->
 
                                                     <div class="frmSearch col-sm-6">
                                                         <div class="frmSearch col-sm-12">
@@ -245,63 +253,49 @@
                                             </div>
 
 
-                                            @if (auth()->user()->is_admin == '1')
-                                                <div class="mt-4 frmSearch col-md-3">
-                                                    <div class="frmSearch col-sm-12">
-                                                        <span style="font-weight:bolder">
-                                                            <label for="cst"
-                                                                class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                        </span> <select name="branch" id="location"
-                                                            class="mb-4 form-control location" required>
-                                                            @foreach ($warehouses as $branch)
-                                                                @if ($branch->id == $invoice->branch)
-                                                                    <option value="{{ $branch->id }}" selected>
-                                                                        {{ $branch->name }}
-                                                                    </option>
-                                                                @endif
-                                                            @endforeach
-                                                            @foreach ($warehouses as $warehouse)
-                                                                <option value="{{ $warehouse->id }}">
-                                                                    {{ $warehouse->name }}
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
 
-                                                    </div>
-                                                </div>
-                                            @else
-                                                <div class="mt-4 frmSearch col-md-3">
-                                                    <div class="frmSearch col-sm-12">
-                                                        <span style="font-weight:bolder">
-                                                            <label for="cst"
-                                                                class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                        </span>
-                                                        <select name="branch" id="branch" class="form-control"
-                                                            required>
-                                                            @php
-                                                                $userPermissions = auth()->user()->level
-                                                                    ? json_decode(auth()->user()->level)
-                                                                    : [];
-                                                            @endphp
-                                                            @foreach ($warehouses as $branch)
-                                                                @if ($branch->id == $invoice->branch)
-                                                                    <option value="{{ $branch->id }}" selected>
-                                                                        {{ $branch->name }}
-                                                                    </option>
-                                                                @endif
-                                                            @endforeach
-                                                            @foreach ($warehouses as $branch)
-                                                                @if (in_array($branch->id, $userPermissions))
-                                                                    <option value="{{ $branch->id }}">
-                                                                        {{ $branch->name }}
-                                                                    </option>
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            @endif
 
+
+
+                                            {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+                                            <div class="mt-4 frmSearch col-md-3">
+                                                <div class="frmSearch col-sm-12">
+                                                    <span style="font-weight:bolder">
+                                                        <label for="cst"
+                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                    </span> <select name="location" id="location"
+                                                        class="mb-4 form-control location" required>
+
+                                                        @foreach ($warehouses as $warehouse)
+                                                            <option value="{{ $warehouse->id }}" selected>
+                                                                {{ $warehouse->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+
+                                                </div>
+                                            </div>
+                                            {{-- @else
+                                            <div class="mt-4 frmSearch col-md-3">
+                                                <div class="frmSearch col-sm-12">
+                                                    <span style="font-weight:bolder">
+                                                        <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                    </span> <select name="location" id="location" class="mb-4 form-control location" required>
+
+                                                        @foreach ($warehouses as $warehouse)
+                                                        @if (auth()->user()->level == $warehouse->id)
+                                                        <option value="{{ $warehouse->id }}" selected>
+                                                            {{ $warehouse->name }}
+                                                        </option>
+                                                        @endif
+                                                        @endforeach
+                                                    </select>
+
+                                                </div>
+
+
+                                            </div>
+                                            @endif --}}
 
                                             <!-- <table class="table-responsive tfr my_stripe"> -->
                                             <table class="table table-bordered">
@@ -354,7 +348,7 @@
                                                                     class="form-control productname typeahead"
                                                                     name="part_number[]"
                                                                     value="{{ $sell->part_number }}"
-                                                                    placeholder="{{ trans('Enter Item Name') }}"
+                                                                    placeholder="{{ trans('Enter Part Number') }}"
                                                                     id='productname-0' autocomplete="off">
                                                             </td>
 
@@ -412,9 +406,6 @@
                                                                     </span>
                                                                 </strong>
                                                             </td>
-                                                            <td><button type="submit"
-                                                                    class="btn btn-danger remove_item_btn"
-                                                                    id="removebutton">Remove</button></td>
                                                             <input type="hidden" class="form-control vat "
                                                                 name="product_tax[]" id="vat-0" value="0">
                                                             <input type="hidden" name="total_tax[]" id="taxa-0"
@@ -472,11 +463,14 @@
                                                                 Calculate
                                                             </button>
 
-                                                            <a href="{{ URL('items') }}" target="_blank"
-                                                                id="item_search">
-                                                                <button type="button" class="btn btn-success">
-                                                                    <i class="fa fa-plus-square"></i> Item Search
-                                                                </button></a>
+
+                                                            @if (in_array('Invoice Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                                <a href="{{ URL('items') }}" target="_blank"
+                                                                    id="item_search">
+                                                                    <button type="button" class="btn btn-success">
+                                                                        <i class="fa fa-plus-square"></i> Item Search
+                                                                    </button></a>
+                                                            @endif
 
 
 
@@ -676,7 +670,8 @@
                         location: Selectedlocation,
                     },
                     success: function(data) {
-                       
+                        //  itemNameInput.val(data.retail_price);
+
                         itemNameInput.val(data.wholesale_price);
 
                         partDesc.val(data.descriptions);
@@ -888,24 +883,19 @@
             //     $('#total_total').val(total_total);
             //     $('#total_discount').val('');
             // });
-
-            $(document).ready(function() {
-                calculateTotal();
-
-            });
-
-            function calculateTotal() {
+            $(document).on("click", '#calculate', function(e) {
+                e.preventDefault();
                 let salePriceCategory = $('#sale_price_category').val();
 
-                // Iterate through each row to calculate subtotal for each item
-                $('#showitem123 tr').each(function() {
+                $('#showitem123 tr').each(function(index) {
                     let row = $(this);
                     let qty = parseInt(row.find('.req.amnt').val()) || 0;
                     let price;
 
                     if (salePriceCategory === 'Default') {
                         let cuz_name = $("#type").val();
-                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price').val()) || 0 :
+                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
+                                .val()) || 0 :
                             parseFloat(row.find('.retail_price').val()) || 0;
                     } else if (salePriceCategory === 'Whole Sale') {
                         price = parseFloat(row.find('.price').val()) || 0;
@@ -925,15 +915,15 @@
                 let total = 0;
                 let totalTax = 0;
 
-                // Iterate through each row to calculate the grand total and total tax
-                $('#showitem123 tr').each(function() {
+                $('#showitem123 tr').each(function(index) {
                     let row = $(this);
                     let qty = parseInt(row.find('.req.amnt').val()) || 0;
                     let price;
 
                     if (salePriceCategory === 'Default') {
                         let cuz_name = $("#type").val();
-                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price').val()) || 0 :
+                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
+                                .val()) || 0 :
                             parseFloat(row.find('.retail_price').val()) || 0;
                     } else if (salePriceCategory === 'Whole Sale') {
                         price = parseFloat(row.find('.price').val()) || 0;
@@ -957,7 +947,7 @@
 
                     total += itemTotal;
 
-                    row.find('.ttlText1').text(itemTotal);
+                    row.find('.ttlText1').text(itemTotal.toFixed(2));
                     if (price > 0) {
                         row.find('.ttlText1').show();
                         row.find('.ttlText').hide();
@@ -972,19 +962,14 @@
 
                 let totalTotal = total - totalTax;
 
-                $('#invoiceyoghtml').val(total);
+                $('#invoiceyoghtml').val(total.toFixed(2));
                 $('#commercial_text').val(totalTax.toFixed(2));
                 $('#total').val(totalTotal.toFixed(2));
                 $('#extra_discount').val('');
                 $('#paid').val('');
-                $('#total_total').val(total);
                 $('#balance').val('');
-            }
-
-            $(document).on("click", '#calculate', function(e) {
-                e.preventDefault();
-                calculateTotal();
             });
+
 
         });
     </script>
@@ -1015,13 +1000,12 @@
     <script>
         $(document).ready(function() {
             var path = "{{ route('customer_service_search') }}";
+
+
             $('#customer').typeahead({
                 source: function(query, process) {
-                    var Selectedlocation = $('#location').val();
-
                     return $.get(path, {
-                        query: query,
-                        location: Selectedlocation,
+                        query: query
                     }, function(data) {
                         // Format the data for Typeahead
                         var formattedData = [];
@@ -1040,7 +1024,6 @@
                     });
                 }
             });
-
 
 
 
@@ -1073,6 +1056,12 @@
             });
         });
     </script>
+
+
+
+
+
+
 
     <script>
         $("input").on("change", function() {

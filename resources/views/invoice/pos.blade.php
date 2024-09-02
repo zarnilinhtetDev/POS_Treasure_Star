@@ -49,31 +49,39 @@
 <body>
     <!-- As a link -->
     <nav class="navbar navbar-light bg-light justify-content-between">
-        <h1 class="mx-2">POS</h1>
+        <h1 class="mx-4">POS</h1>
         @if (session('success'))
             <h4 class="text-success">{{ session('success') }}</h4>
         @endif
         @if (session('delete'))
             <h4 class="text-danger">{{ session('delete') }}</h4>
         @endif
-        <form class="form-inline mx-5">
+        <form class="form-inline">
 
-            {{-- <button class="my-2 btn btn-outline-success my-sm-0" type="submit">Search</button> --}}
+            {{-- Permission Php --}}
+            @php
+                $choosePermission = [];
+                if (auth()->user()->permission) {
+                    $decodedPermissions = json_decode(auth()->user()->permission, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $choosePermission = $decodedPermissions;
+                    }
+                }
+            @endphp
+            {{-- End Php --}}
+
             <div class="row">
-                <div class="col-md-2 mx-4">
-                    <a href="{{ url('invoice') }}" class="btn btn-danger">Back</a>
-                </div>
-
                 <div class="col">
                     <a href="{{ url('sale_return_register') }}" type="button" class="mr-auto btn btn-primary ">
                         Sale Return</a>
                 </div>
-                <div class="col">
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-xl">
-                        Suspended
-                    </button>
-                </div>
-
+                @if (in_array('Suspend', $choosePermission) || auth()->user()->is_admin == '1')
+                    <div class="col">
+                        <button type="button" class="mx-2 btn btn-primary" data-toggle="modal" data-target="#modal-xl">
+                            Suspended
+                        </button>
+                    </div>
+                @endif
             </div>
         </form>
     </nav>
@@ -140,98 +148,7 @@
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="modal-lg">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title"> Register New Customer</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form action="{{ url('customer_register') }}" method="POST">
-                            @csrf
-                            <div class="card-body">
 
-                                <div class="form-group">
-                                    <label for="name">Name <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="" placeholder="Enter Name"
-                                        required autofocus name="name">
-                                </div>
-
-
-                                <div class="form-group mt-3">
-                                    <label for="phno">Phone Number <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id=""
-                                        placeholder="Enter Phone Number" name="phno" required>
-                                </div>
-
-                                <div class="form-group mt-3">
-                                    <label for="crc">Customer Type </label>
-
-                                    <select name="type" id="" class="form-control" required>
-                                        <option selected disabled>Select Customer Type</option>
-                                        <option value="Retail">Retail</option>
-                                        <option value="Whole Sale">Whole Sale</option>
-                                    </select>
-                                </div>
-
-
-                                @if (auth()->user()->is_admin == '1')
-                                    <div class="form-group mt-3">
-                                        <label for="branch">Location<span class="text-danger">*</span></label>
-
-                                        <select name="branch" id="" class="form-control" required>
-                                            <option value="" selected disabled>Select Location
-                                            </option>
-                                            @foreach ($warehouses as $branch)
-                                                <option value="{{ $branch->id }}">{{ $branch->name }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                @else
-                                    <div class="form-group mt-3">
-                                        <label for="branch">Location<span class="text-danger">*</span></label>
-
-                                        <select name="branch" id="" class="form-control" required>
-                                            @php
-                                                $userPermissions = auth()->user()->level
-                                                    ? json_decode(auth()->user()->level)
-                                                    : [];
-                                            @endphp
-
-                                            @foreach ($warehouses as $branch)
-                                                @if (in_array($branch->id, $userPermissions))
-                                                    <option value="{{ $branch->id }}">
-                                                        {{ $branch->name }}
-                                                    </option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                @endif
-                                <div class="form-group mt-3">
-                                    <label for="address">Address <span class="text-danger">*</span></label>
-                                    <input type="text" class="form-control" id="phone number"
-                                        placeholder="Enter Address" name="address" required>
-                                </div>
-                            </div>
-
-
-
-                    </div>
-                    <div class="modal-footer justify-content-between">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save </button>
-                    </div>
-                    </form>
-                </div>
-                <!-- /.modal-content -->
-            </div>
-            <!-- /.modal-dialog -->
-        </div>
         <form method="post" id="myForm" action="{{ url('invoice_register') }}" enctype="multipart/form-data">
             @csrf
 
@@ -259,10 +176,10 @@
                         <label for="payment_method" style="font-weight:bolder">{{ trans('Payment Methods') }}</label>
                         <select class="mb-4 form-control round" aria-label="Default select example"
                             name="payment_method" required>
+
                             <option value="Cash">Cash</option>
-                            <option value="K Pay">K Pay</option>
-                            <option value="Wave">Wave</option>
-                            <option value="Others">Others</option>
+                            <option value="Credit">Credit</option>
+                            <option value="Consignment Terms">Consignment Terms</option>
                         </select>
                     </div>
 
@@ -297,12 +214,7 @@
                                                             <div id="customer-box-result"></div>
                                                         </div>
                                                     </div>
-                                                    <div class="col-sm-4 mt-4">
-                                                        <button type="button" data-toggle="modal"
-                                                            data-target="#modal-lg"
-                                                            class="btn btn-primary text-white">Customer
-                                                            Register</button>
-                                                    </div>
+
                                                     <input type="hidden" id="service_id" name="service_id"
                                                         value="0">
 
@@ -359,50 +271,47 @@
                                             </table>
                                         </div>
                                         <hr>
-                                        @if (auth()->user()->is_admin == '1')
-                                            <div class="mt-4 frmSearch col-md-3">
+                                        {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+                                        <div class="mt-4 frmSearch col-md-3">
+                                            <div class="frmSearch col-sm-12">
+                                                <span style="font-weight:bolder">
+                                                    <label for="cst"
+                                                        class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                </span> <select name="location" id="location"
+                                                    class="mb-4 form-control location" required>
+
+                                                    @foreach ($warehouses as $warehouse)
+                                                        <option value="{{ $warehouse->id }}">
+                                                            {{ $warehouse->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                        {{-- @elseif (Auth::user()->type == 'Cashier')
+                                            <div class="mt-4 frmSearch col-md-3" style="display: none;">
                                                 <div class="frmSearch col-sm-12">
                                                     <span style="font-weight:bolder">
                                                         <label for="cst"
                                                             class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                    </span>
-                                                    <select name="branch" id="location"
+                                                    </span> <select name="location" id="location"
                                                         class="mb-4 form-control location" required>
+
                                                         @foreach ($warehouses as $warehouse)
-                                                            <option value="{{ $warehouse->id }}">
-                                                                {{ $warehouse->name }}
-                                                            </option>
+                                                            @if (auth()->user()->level == $warehouse->id)
+                                                                <option value="{{ $warehouse->id }}" selected>
+                                                                    {{ $warehouse->name }}
+                                                                </option>
+                                                            @endif
                                                         @endforeach
                                                     </select>
 
                                                 </div>
-                                            </div>
-                                        @else
-                                            <div class="mt-4 frmSearch col-md-3">
-                                                <div class="frmSearch col-sm-12">
-                                                    <span style="font-weight:bolder">
-                                                        <label for="cst"
-                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
 
-                                                        <select name="branch" id="location"
-                                                            class="form-control location" required>
-                                                            @php
-                                                                $userPermissions = auth()->user()->level
-                                                                    ? json_decode(auth()->user()->level)
-                                                                    : [];
-                                                            @endphp
 
-                                                            @foreach ($warehouses as $branch)
-                                                                @if (in_array($branch->id, $userPermissions))
-                                                                    <option value="{{ $branch->id }}">
-                                                                        {{ $branch->name }}
-                                                                    </option>
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                </div>
                                             </div>
-                                        @endif
+                                        @endif --}}
 
                                         <div class="mt-4 frmSearch col-md-3">
                                             <div class="frmSearch col-sm-12">
@@ -505,7 +414,7 @@
                                                         <td><input type="text"
                                                                 class="form-control productname typeahead"
                                                                 name="part_number[]" value="{{ old('part_number') }}"
-                                                                placeholder="{{ trans('Enter Item Name') }}"
+                                                                placeholder="{{ trans('Enter Part Number') }}"
                                                                 id='item_name-0' autocomplete="off">
                                                         </td>
 
@@ -608,7 +517,7 @@
                                                                 Calculate
                                                             </button>
 
-                                                            @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin')
+                                                            @if (in_array('Item', $choosePermission) || auth()->user()->is_admin == '1')
                                                                 <a href="{{ URL('items') }}" target="_blank"
                                                                     id="item_search">
                                                                     <button type="button" class="btn btn-success">
@@ -732,8 +641,10 @@
 
 
                                                         <td align="right" colspan="9">
-                                                            <button id="suspend" class="mt-3 btn btn-primary"
-                                                                type="submit">Suspend</button>
+                                                            @if (in_array('Suspend', $choosePermission) || auth()->user()->is_admin == '1')
+                                                                <button id="suspend" class="mt-3 btn btn-primary"
+                                                                    type="submit">Suspend</button>
+                                                            @endif
                                                             <button id="submitButton" class="mt-3 btn btn-primary"
                                                                 type="submit">Save</button>
 
@@ -762,7 +673,6 @@
 
         </form>
 
-        <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script>
             $(document).ready(function() {
                 let count = 0;
@@ -1237,13 +1147,12 @@
         <script>
             $(document).ready(function() {
                 var path = "{{ route('customer_service_search') }}";
+
+
                 $('#customer').typeahead({
                     source: function(query, process) {
-                        var Selectedlocation = $('#location').val();
-
                         return $.get(path, {
-                            query: query,
-                            location: Selectedlocation,
+                            query: query
                         }, function(data) {
                             // Format the data for Typeahead
                             var formattedData = [];
@@ -1262,7 +1171,6 @@
                         });
                     }
                 });
-
 
 
 

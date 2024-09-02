@@ -54,6 +54,19 @@
         </h1>
         <form method="post" id="data_form" action=" {{ URL('purchase_order_store') }}" enctype="multipart/form-data">
             @csrf
+
+            {{-- Permission Php --}}
+            @php
+                $choosePermission = [];
+                if (auth()->user()->permission) {
+                    $decodedPermissions = json_decode(auth()->user()->permission, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $choosePermission = $decodedPermissions;
+                    }
+                }
+            @endphp
+            {{-- End Php --}}
+            
             <div class="row">
 
 
@@ -107,10 +120,10 @@
                     </label>
                     <select class="mb-4 form-control round" aria-label="Default select example" name="payment_method"
                         required>
+
                         <option value="Cash">Cash</option>
-                        <option value="K Pay">K Pay</option>
-                        <option value="Wave">Wave</option>
-                        <option value="Others">Others</option>
+                        <option value="Credit">Credit</option>
+                        <option value="Consignment Terms">Consignment Terms</option>
                     </select>
                 </div>
 
@@ -152,59 +165,48 @@
                                                     <label for="cst"
                                                         class="caption">{{ trans('Supplier Name') }}</label>
                                                 </span>
-                                                <select name="supplier_id" id="supplier" class="form-control">
-                                                    <option value="" selected disabled>Choose Supplier</option>
+                                                <select name="supplier_id" id="" class="form-control">
+                                                    <option value="" selected disabled>Choose Supplier
+                                                    </option>
                                                     @foreach ($suppliers as $supplier)
-                                                        <option value="{{ $supplier->id }}"
-                                                            data-location="{{ $supplier->branch }}">
-                                                            {{ $supplier->name }}</option>
+                                                        <option value="{{ $supplier->id }}">{{ $supplier->name }}
+                                                        </option>
                                                     @endforeach
                                                 </select>
                                             </div>
 
 
 
-                                            @if (auth()->user()->is_admin == '1')
-                                                <div class="frmSearch col-md-4">
-                                                    <div class="frmSearch col-sm-12">
-                                                        <span style="font-weight:bolder">
-                                                            <label for="cst"
-                                                                class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                        </span>
-                                                        <select name="branch" id="location"
-                                                            class="mb-4 form-control location" required>
-                                                            @foreach ($warehouses as $warehouse)
-                                                                <option value="{{ $warehouse->id }}">
-                                                                    {{ $warehouse->name }}</option>
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            @else
-                                                <div class="frmSearch col-md-4">
-                                                    <div class="frmSearch col-sm-12">
-                                                        <span style="font-weight:bolder">
-                                                            <label for="cst"
-                                                                class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                        </span>
-                                                        <select name="branch" id="location"
-                                                            class="form-control location" required>
-                                                            @php
-                                                                $userPermissions = auth()->user()->level
-                                                                    ? json_decode(auth()->user()->level)
-                                                                    : [];
-                                                            @endphp
+                                            {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+                                            <div class="frmSearch col-sm-4">
+                                                <label for="location" style="font-weight:bolder">
+                                                    Location</label>
+                                                <select name="location" id="location" class="mb-4 form-control"
+                                                    required>
 
-                                                            @foreach ($warehouses as $branch)
-                                                                @if (in_array($branch->id, $userPermissions))
-                                                                    <option value="{{ $branch->id }}">
-                                                                        {{ $branch->name }}</option>
-                                                                @endif
-                                                            @endforeach
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            @endif
+                                                    @foreach ($warehouses as $warehouse)
+                                                        <option value="{{ $warehouse->id }}">
+                                                            {{ $warehouse->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            {{-- @elseif (Auth::user()->type == 'Warehouse')
+                                            <div class="frmSearch col-sm-6" style="display: none;">
+                                                <label for="location" style="font-weight:bolder">
+                                                    Location</label>
+                                                <select name="location" id="location" class="mb-4 form-control" required>
+
+                                                    @foreach ($warehouses as $warehouse)
+                                                    @if (auth()->user()->level == $warehouse->id)
+                                                    <option value="{{ $warehouse->id }}" selected>
+                                                        {{ $warehouse->name }}
+                                                    </option>
+                                                    @endif
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            @endif --}}
 
 
                                             <div class="frmSearch col-sm-4">
@@ -246,7 +248,7 @@
 
 
 
-                                <input type="hidden" value="PO" name="status">
+                                <input type="hidden" value="invoice" name="status">
 
                                 <div class="row " style="margin-top:1vh;">
                                     <!-- <table class="table-responsive tfr my_stripe"> -->
@@ -283,7 +285,7 @@
                                                 <td class="text-center" id="count">1</td>
                                                 <td><input type="text" class="form-control productname typeahead"
                                                         name="part_number[]"
-                                                        placeholder="{{ trans('Enter Item Name') }}"
+                                                        placeholder="{{ trans('Enter Part Number') }}"
                                                         id='productname-0' autocomplete="off">
                                                 </td>
                                                 <td><input type="text" class="form-control description typeahead"
@@ -370,10 +372,13 @@
                                                         Calculate
                                                     </button>
 
-                                                    <a href="{{ URL('items') }}" target="_blank" id="item_search">
-                                                        <button type="button" class="btn btn-success">
-                                                            <i class="fa fa-plus-square"></i> Item Search
-                                                        </button></a>
+                                                    @if (in_array('Item', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ URL('items') }}" target="_blank"
+                                                            id="item_search">
+                                                            <button type="button" class="btn btn-success">
+                                                                <i class="fa fa-plus-square"></i> Item Search
+                                                            </button></a>
+                                                    @endif
 
 
 
@@ -852,34 +857,6 @@
                     $("#supplier_box").hide(); // Hide the supplier_box if balance_due is not empty
                 }
             });
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const locationSelect = document.getElementById('location');
-            const supplierSelect = document.getElementById('supplier');
-            const allSuppliers = Array.from(supplierSelect.options);
-
-            const filterSuppliers = (selectedLocation) => {
-                // Clear existing supplier options except the first one
-                supplierSelect.innerHTML = '<option value="" selected disabled>Choose Supplier</option>';
-
-                // Filter suppliers based on the selected location
-                allSuppliers.forEach(option => {
-                    if (option.dataset.location === selectedLocation) {
-                        supplierSelect.appendChild(option);
-                    }
-                });
-            };
-
-            locationSelect.addEventListener('change', function() {
-                filterSuppliers(this.value);
-            });
-
-            // Trigger filtering if a location is pre-selected
-            if (locationSelect.value) {
-                filterSuppliers(locationSelect.value);
-            }
         });
     </script>
 

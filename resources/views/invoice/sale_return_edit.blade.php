@@ -31,7 +31,7 @@
         input::-webkit-datetime-edit,
         input::-webkit-inner-spin-button,
         input::-webkit-clear-button {
-            display: none;tr
+            display: none;
         }
 
         input::-webkit-calendar-picker-indicator {
@@ -119,56 +119,33 @@
                         <option value="Consignment Terms">Consignment Terms</option>
                     </select>
                 </div>
-                @if (auth()->user()->is_admin == '1')
-                    <div class="frmSearch col-md-3">
-                        <div class="frmSearch col-sm-12">
-                            <span style="font-weight:bolder">
-                                <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
-                            </span> <select name="branch" id="location" class="mb-4 form-control location" required>
-                                @foreach ($warehouses as $branch)
-                                    @if ($branch->id == $purchase_orders->branch)
-                                        <option value="{{ $branch->id }}" selected>
-                                            {{ $branch->name }}
-                                        </option>
-                                    @endif
-                                @endforeach
-                                @foreach ($warehouses as $warehouse)
-                                    <option value="{{ $warehouse->id }}">
+                {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+                <div class="frmSearch col-md-3 col-sm-6">
+                    <label for="location" style="font-weight:bolder">Location</label>
+                    <select name="location" id="location" class="mb-4 form-control" required>
+
+                        @foreach ($warehouses as $warehouse)
+                            <option value="{{ $warehouse->id }}" @if ($warehouse->id == $purchase_orders->location)  @endif selected>
+                                {{ $warehouse->name }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                {{-- @elseif (Auth::user()->type == 'Warehouse')
+                    <div class="frmSearch col-md-3 col-sm-6" style="display: none;">
+                        <label for="location" style="font-weight:bolder"> Location</label>
+                        <select name="location" id="location" class="mb-4 form-control" required>
+
+                            @foreach ($warehouses as $warehouse)
+                                @if (auth()->user()->level == $warehouse->id)
+                                    <option value="{{ $warehouse->id }}" selected>
                                         {{ $warehouse->name }}
                                     </option>
-                                @endforeach
-                            </select>
-
-                        </div>
+                                @endif
+                            @endforeach
+                        </select>
                     </div>
-                @else
-                    <div class="frmSearch col-md-3">
-                        <div class="frmSearch col-sm-12">
-                            <span style="font-weight:bolder">
-                                <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
-                            </span>
-                            <select name="branch" id="branch" class="form-control" required>
-                                @php
-                                    $userPermissions = auth()->user()->level ? json_decode(auth()->user()->level) : [];
-                                @endphp
-                                @foreach ($warehouses as $branch)
-                                    @if ($branch->id == $purchase_orders->branch)
-                                        <option value="{{ $branch->id }}" selected>
-                                            {{ $branch->name }}
-                                        </option>
-                                    @endif
-                                @endforeach
-                                @foreach ($warehouses as $branch)
-                                    @if (in_array($branch->id, $userPermissions))
-                                        <option value="{{ $branch->id }}">
-                                            {{ $branch->name }}
-                                        </option>
-                                    @endif
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                @endif
+                @endif --}}
 
                 <div class="frmSearch col-md-3 col-sm-6">
                     <div class="frmSearch col-sm-12">

@@ -95,12 +95,27 @@
                 @endif
 
                 <div class="ml-2 container-fluid">
-                    <div class="row">
-                        <div class="mr-auto col"> <button type="button" class="mr-auto btn btn-primary "
-                                data-toggle="modal" data-target="#modal-lg">
-                                Create Expense Category
+                    {{-- Permission --}}
+                    @php
+                        $choosePermission = [];
+                        if (auth()->user()->permission) {
+                            $decodedPermissions = json_decode(auth()->user()->permission, true);
+                            if (json_last_error() === JSON_ERROR_NONE) {
+                                $choosePermission = $decodedPermissions;
+                            }
+                        }
+                    @endphp
+                    {{-- End Permission --}}
+
+                    @if (in_array('Expense Category Register', $choosePermission) || auth()->user()->is_admin == '1')
+                        <div class="row">
+                            <div class="mr-auto col"> <button type="button" class="mr-auto btn btn-primary "
+                                    data-toggle="modal" data-target="#modal-lg">
+                                    Create Expense Category
+                            </div>
                         </div>
-                    </div>
+                    @endif
+
                     <div class="modal fade" id="modal-lg">
                         <div class="modal-dialog modal-lg">
                             <div class="modal-content">
@@ -153,7 +168,7 @@
                                                                 ? json_decode(auth()->user()->level)
                                                                 : [];
                                                         @endphp
-                                                       
+
                                                         @foreach ($branches as $branch)
                                                             @if (in_array($branch->id, $userPermissions))
                                                                 <option value="{{ $branch->id }}">
@@ -212,16 +227,19 @@
                                             <td>{{ $cat->created_at->format('d M Y') }}
                                             </td>
                                             <td>
-                                                <a href="{{ url('expense_category_edit', $cat->id) }}"
-                                                    class="btn btn-success btn-sm"><i
-                                                        class="fa-solid fa-pen-to-square"></i></a>
+                                                @if (in_array('Expense Category Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                                    <a href="{{ url('expense_category_edit', $cat->id) }}"
+                                                        class="btn btn-success btn-sm"><i
+                                                            class="fa-solid fa-pen-to-square"></i></a>
+                                                @endif
 
-                                                {{-- @if (auth()->user()->is_admin == '1' || auth()->user()->type == 'Admin' || auth()->user()->type == 'Branch Manager') --}}
-                                                <a href="{{ url('expense_category_delete', $cat->id) }}"
-                                                    class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Are you sure you want to delete this Expense Category ?')"><i
-                                                        class="fa-solid fa-trash"></i></a>
-                                                {{-- @endif --}}
+
+                                                @if (in_array('Expense Category Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                    <a href="{{ url('expense_category_delete', $cat->id) }}"
+                                                        class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Are you sure you want to delete this Expense Category ?')"><i
+                                                            class="fa-solid fa-trash"></i></a>
+                                                @endif
                                             </td>
                                         </tr>
                                     @endforeach

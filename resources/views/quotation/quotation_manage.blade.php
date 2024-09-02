@@ -104,16 +104,29 @@
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
+                                {{-- Permission Php --}}
+                                @php
+                                    $choosePermission = [];
+                                    if (auth()->user()->permission) {
+                                        $decodedPermissions = json_decode(auth()->user()->permission, true);
+                                        if (json_last_error() === JSON_ERROR_NONE) {
+                                            $choosePermission = $decodedPermissions;
+                                        }
+                                    }
+                                @endphp
+                                {{-- End Php --}}
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
                                             <th>No.</th>
                                             <th>Quotation No.</th>
-                                            <th>Location</th>
                                             <th>Customer Name</th>
                                             <th>Quotation Date</th>
                                             <th>Total</th>
-                                            <th>Tools</th>
+                                            @if (in_array('Change Invoice', $choosePermission) || auth()->user()->is_admin == '1')
+                                                <th>Tools</th>
+                                            @endif
+
                                             <th>Action</th>
 
                                         </tr>
@@ -122,38 +135,43 @@
                                         @php
                                             $no = '1';
                                         @endphp
+
                                         @foreach ($quotations as $quotation)
                                             <tr>
 
                                                 <td>{{ $no }}</td>
                                                 <td>{{ $quotation->quote_no }}</td>
-                                                <td>
-                                                    @foreach ($branchs as $branch)
-                                                        @if ($branch->id == $quotation->branch)
-                                                            {{ $branch->name }}
-                                                        @endif
-                                                    @endforeach
-                                                </td>
+
                                                 <td>{{ $quotation->customer_name }}</td>
 
                                                 <td>{{ $quotation->quote_date }}</td>
                                                 <td>{{ $quotation->total }}</td>
-                                                <td><a href="{{ url('/change_invoice', $quotation->id) }}"
-                                                        class="btn btn-primary btn-sm">Change Invoice</a></td>
+                                                @if (in_array('Change Invoice', $choosePermission) || auth()->user()->is_admin == '1')
+                                                    <td>
+                                                        <a href="{{ url('/change_invoice', $quotation->id) }}"
+                                                            class="btn btn-primary btn-sm">Change Invoice</a>
+                                                    </td>
+                                                @endif
+
                                                 <td>
-                                                    <a href="{{ url('/quotation_detail', $quotation->id) }}"
-                                                        class="btn btn-primary btn-sm"><i
-                                                            class="fa-solid fa-eye"></i></a>
+                                                    @if (in_array('Quotation Details', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ url('/quotation_detail', $quotation->id) }}"
+                                                            class="btn btn-primary btn-sm"><i
+                                                                class="fa-solid fa-eye"></i></a>
+                                                    @endif
 
-                                                    <a href="{{ url('quotation_edit', $quotation->id) }}"
-                                                        class="btn btn-success btn-sm"><i
-                                                            class="fa-solid fa-pen-to-square"></i></a>
+                                                    @if (in_array('Quotation Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ url('quotation_edit', $quotation->id) }}"
+                                                            class="btn btn-success btn-sm"><i
+                                                                class="fa-solid fa-pen-to-square"></i></a>
+                                                    @endif
 
-
-                                                    <a href="{{ url('quotation_delete', $quotation->id) }}"
-                                                        class="btn btn-danger btn-sm"
-                                                        onclick="return confirm('Are you sure you want to delete this Qotation ?')"><i
-                                                            class="fa-solid fa-trash"></i></a>
+                                                    @if (in_array('Quotation Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ url('quotation_delete', $quotation->id) }}"
+                                                            class="btn btn-danger btn-sm"
+                                                            onclick="return confirm('Are you sure you want to delete this Qotation ?')"><i
+                                                                class="fa-solid fa-trash"></i></a>
+                                                    @endif
 
                                                 </td>
 

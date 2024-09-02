@@ -18,8 +18,15 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column " data-widget="treeview" role="menu" data-accordion="false">
                 @php
-                    $userPermissions = auth()->user()->permission ? json_decode(auth()->user()->permission) : [];
+                    $userPermissions = [];
+                    if (auth()->user()->permission) {
+                        $decodedPermissions = json_decode(auth()->user()->permission, true);
+                        if (json_last_error() === JSON_ERROR_NONE) {
+                            $userPermissions = $decodedPermissions;
+                        }
+                    }
                 @endphp
+
                 @if (in_array('Item', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
                         <a href="#" class="nav-link">
@@ -36,12 +43,14 @@
                                     <p class="text-white">Items</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ url('items_register') }}" class="nav-link">
-                                    <i class="text-white far fa-circle nav-icon "></i>
-                                    <p class="text-white">Item Register</p>
-                                </a>
-                            </li>
+                            @if (in_array('Item Register', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('items_register') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon "></i>
+                                        <p class="text-white">Item Register</p>
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                 @endif
@@ -56,6 +65,7 @@
 
                     </li>
                 @endif
+
 
                 @if (in_array('POS', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
@@ -74,12 +84,14 @@
                                     <p class="text-white">POS Management</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ url('pos_register') }}" class="nav-link">
-                                    <i class="text-white far fa-circle nav-icon"></i>
-                                    <p class="text-white">Issue POS</p>
-                                </a>
-                            </li>
+                            @if (in_array('POS Register', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('pos_register') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Issue POS</p>
+                                    </a>
+                                </li>
+                            @endif
 
                         </ul>
                     </li>
@@ -100,16 +112,18 @@
                                     <p class="text-white">Invoice Management</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ url('invoice_reg') }}" class="nav-link">
-                                    <i class="text-white far fa-circle nav-icon"></i>
-                                    <p class="text-white">Issue Invoice</p>
-                                </a>
-                            </li>
-
+                            @if (in_array('Invoice Register', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('invoice_reg') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Issue Invoice</p>
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                 @endif
+
                 @if (in_array('Quotation', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
                         <a href="{{ url('/quotation') }}" class="nav-link">
@@ -126,12 +140,14 @@
                                     <p class="text-white">Quotation Manage</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ url('quotation_register') }}" class="nav-link">
-                                    <i class="text-white far fa-circle nav-icon"></i>
-                                    <p class="text-white">Issue Quotation</p>
-                                </a>
-                            </li>
+                            @if (in_array('Quotation Register', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('quotation_register') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Issue Quotation</p>
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                 @endif
@@ -148,23 +164,32 @@
                             <li class="nav-item">
                                 <a href="{{ url('purchase_order_manage') }}" class="nav-link">
                                     <i class="text-white far fa-circle nav-icon"></i>
-                                    <p class="text-white"> Purchase Order Manage</p>
+                                    <p class="text-white">Purchase Order Manage</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ url('purchase_order_register') }}" class="nav-link">
-                                    <i class="text-white far fa-circle nav-icon"></i>
-                                    <p class="text-white">Issue Purchase Order</p>
-                                </a>
-                            </li>
+                            @if (in_array('Purchase Order Register', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('purchase_order_register') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Issue Purchase Order</p>
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                 @endif
 
+                @if (in_array('Location', $userPermissions) || auth()->user()->is_admin == '1')
+                    <li class="nav-item">
+                        <a href="{{ url('/warehouse') }}" class="nav-link">
+                            <i class="text-white fa-solid fa-house nav-icon "></i>
+                            <p class="pl-3 text-white">
+                                Location </p>
+                        </a>
+                    </li>
+                @endif
 
-
-
-                @if (in_array('Transfer Item', $userPermissions) || auth()->user()->is_admin == '1')
+                @if (in_array('Transfer', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
                         <a href="{{ url('/warehouse') }}" class="nav-link">
                             <i class="fa-solid fa-arrow-right-arrow-left text-white nav-icon"></i>
@@ -174,18 +199,23 @@
                         </a>
                         <ul class="nav nav-treeview">
 
-                            <li class="nav-item">
-                                <a href="{{ url('transfer_item') }}" class="nav-link">
-                                    <i class="text-white far fa-circle nav-icon"></i>
-                                    <p class="text-white">Transfer Item</p>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a href="{{ url('show_transfer_history') }}" class="nav-link">
-                                    <i class="text-white far fa-circle nav-icon"></i>
-                                    <p class="text-white">Transfer History</p>
-                                </a>
-                            </li>
+                            @if (in_array('Transfer Item', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('transfer_item') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Transfer Item</p>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Transfer Item', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('show_transfer_history') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Transfer History</p>
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                 @endif
@@ -201,27 +231,22 @@
                             <li class="nav-item">
                                 <a href="{{ url('/expense') }}" class="nav-link">
                                     <i class="text-white far fa-circle nav-icon"></i>
-                                    <p class="text-white">Expense Register</p>
+                                    <p class="text-white">Expense</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ url('expense_category') }}" class="nav-link">
-                                    <i class="text-white far fa-circle nav-icon"></i>
-                                    <p class="text-white">Expense Category</p>
-                                </a>
-                            </li>
+                            @if (in_array('Expense Category', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('expense_category') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Expense Category</p>
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                 @endif
-                @if (in_array('Location', $userPermissions) || auth()->user()->is_admin == '1')
-                    <li class="nav-item">
-                        <a href="{{ url('/warehouse') }}" class="nav-link">
-                            <i class="text-white fa-solid fa-house nav-icon "></i>
-                            <p class="pl-3 text-white">
-                                Location </p>
-                        </a>
-                    </li>
-                @endif
+
+
                 @if (in_array('Unit', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
                         <a href="{{ url('unit') }}" class="nav-link">
@@ -231,6 +256,7 @@
                         </a>
                     </li>
                 @endif
+
 
                 @if (in_array('Supplier', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
@@ -253,7 +279,7 @@
                     </li>
                 @endif
 
-                @if (in_array('Net Profit', $userPermissions) || auth()->user()->is_admin == '1')
+                @if (in_array('Profit', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
                         <a href="{{ url('/profit') }}" class="nav-link">
                             <i class="text-white fa-solid fa-book nav-icon"></i>
@@ -269,7 +295,7 @@
                         <a class="nav-link">
                             <i class="text-white fa-solid fa-users nav-icon"></i>
                             <p class="pl-3 text-white">
-                                Users</p><i class="text-white right fas fa-angle-left"></i>
+                                User </p><i class="text-white right fas fa-angle-left"></i>
                         </a>
                         <ul class="nav nav-treeview">
                             <li class="nav-item">
@@ -278,19 +304,21 @@
                                     <p class="text-white">User</p>
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a href="{{ url('/user_type') }}" class="nav-link">
-                                    <i class="text-white far fa-circle nav-icon"></i>
-                                    <p class="text-white">User Type</p>
-                                </a>
-                            </li>
+                            @if (in_array('User Type', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('/user_type') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">User Type</p>
+                                    </a>
+                                </li>
+                            @endif
                         </ul>
                     </li>
                 @endif
 
                 @if (in_array('Configuration', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
-                        <a href="{{ url('/config_manage') }}" class="nav-link">
+                        <a href="{{ url('/config') }}" class="nav-link">
                             <i class="fa-solid fa-gear nav-icon text-white"></i>
                             <p class="pl-3 text-white">
                                 Configuration

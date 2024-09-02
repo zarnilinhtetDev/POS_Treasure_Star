@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Part Details</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -110,6 +111,18 @@
         font-size: larger;
         /* Add any other styles you want */
     }
+
+    .img-thumbnail {
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        padding: 5px;
+        transition: transform 0.2s;
+    }
+
+    .img-thumbnail:hover {
+        transform: scale(1.1);
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    }
 </style>
 
 
@@ -121,19 +134,40 @@
             <div class="card-header" style="">
                 <h4 style="font-size: 18px" class="fw-semibold">Item Details</h4>
             </div>
-            {{-- <a href="{{ route('show2', $item->id) }}">
-            <button type="button" class="btn btn-success" id="calculate" style="margin-top:20px;margin-bottom:20px;margin-left:20px;">
-                In/out History
-            </button>
-            </a> --}}
+            {{-- Permission --}}
+            @php
+                $choosePermission = [];
+                if (auth()->user()->permission) {
+                    $decodedPermissions = json_decode(auth()->user()->permission, true);
+                    if (json_last_error() === JSON_ERROR_NONE) {
+                        $choosePermission = $decodedPermissions;
+                    }
+                }
+            @endphp
+            {{-- End Permission --}}
             <div style="display: flex;">
                 <div style="flex: 4;">
                     <table class='table table-bordered mt-5' style="font-size: 20">
-                        <a href="{{ url('item_edit', $items->id) }}" class="btn btn-success mt-3"><i class="fa-solid fa-pen-to-square"></i>Edit</a>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                @if (in_array('Item Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                    <a href="{{ url('item_edit', $items->id) }}" class="btn btn-success mt-3"><i
+                                            class="fa-solid fa-pen-to-square"></i>Edit</a>
+                                @endif
 
-                        <a href="{{ url('in_out', $items->id) }}" class="btn btn-info mt-3 mx-1">In/Out
-                            History </a>
-                        <tr>
+                                @if (in_array('Inout History', $choosePermission) || auth()->user()->is_admin == '1')
+                                    <a href="{{ url('in_out', $items->id) }}" class="btn btn-info mt-3 mx-1">In/Out
+                                        History</a>
+                                @endif
+                            </div>
+                            <a href="{{ asset('item_images/' . $items->item_image) }}" target="_blank" id="logoLink">
+                                <img src="{{ asset('item_images/' . $items->item_image) }}" id="logoPreview"
+                                    class="img-thumbnail mt-3" style="max-width: 200px; max-height: 150px;"
+                                    alt="Item Image Preview">
+                            </a>
+                        </div>
+
+
                         <tr>
 
                             <td class="fw-light" style="width: 200px;">Item Name</td>
@@ -163,9 +197,9 @@
                             <td class="fw-light" style="width:200px">Expired Date</td>
                             <td class="fw-normal" style="width: 200px;">
                                 @if ($items->expired_date)
-                                {{ \Carbon\Carbon::parse($items->expired_date)->format('d F Y') }}
+                                    {{ \Carbon\Carbon::parse($items->expired_date)->format('d F Y') }}
                                 @else
-                                N/A
+                                    N/A
                                 @endif
                             </td>
 
@@ -189,12 +223,7 @@
                             </td>
                         </tr>
 
-                        <tr>
-                            <td class="fw-light" style="width:200px">Market</td>
-                            <td class="fw-normal" style="width: 200px;">
-                                {{ $items->mingalar_market ?? 'N/A' }}
-                            </td>
-                        </tr>
+
                         <tr>
                             <td class="fw-light" style="width:200px">Quantity</td>
                             <td class="fw-normal" style="width: 200px;">
@@ -237,7 +266,8 @@
             </div>
             <div class="mt-3 d-flex justify-content-end">
                 <a type="button" id="printButton" class="btn btn-primary m-2" onclick="printPage()">Print</a>
-                <a type="button" id="printButton" class="m-2 excelButton btn btn-danger" href="{{ url('items') }}">Back</a>
+                <a type="button" id="printButton" class="m-2 excelButton btn btn-danger"
+                    href="{{ url('items') }}">Back</a>
             </div>
         </div>
     </div>

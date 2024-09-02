@@ -64,15 +64,31 @@
                     </div><!-- /.container-fluid -->
                 </section>
 
+
+                {{-- Permission --}}
+                @php
+                    $choosePermission = [];
+                    if (auth()->user()->permission) {
+                        $decodedPermissions = json_decode(auth()->user()->permission, true);
+                        if (json_last_error() === JSON_ERROR_NONE) {
+                            $choosePermission = $decodedPermissions;
+                        }
+                    }
+                @endphp
+                {{-- End Permission --}}
+
                 <div class="container-fluid">
                     <div class="row  justify-content-center d-flex">
                         <!-- left column -->
-                        <div class="col-md-12 ">
-                            <!-- general form elements -->
-                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal-lg">
-                                User Type Register
-                            </button>
-                        </div>
+                        @if (in_array('User Type Register', $choosePermission) || auth()->user()->is_admin == '1')
+                            <div class="col-md-12 ">
+                                <!-- general form elements -->
+                                <button type="button" class="btn btn-primary" data-toggle="modal"
+                                    data-target="#modal-lg">
+                                    User Type Register
+                                </button>
+                            </div>
+                        @endif
 
                         <div class="modal fade" id="modal-lg">
                             <div class="modal-dialog modal-lg">
@@ -149,16 +165,22 @@
                                                     <td>{{ $type->name }}</td>
                                                     <td>{{ $type->created_at->format('d - M - Y') }}</td>
                                                     <td>
-                                                        <a href="{{ url('user_type_edit', $type->id) }}"
-                                                            class="btn btn-success">
-                                                            <i class="fa-solid fa-pen-to-square"></i>
 
-                                                        </a>
+                                                        @if (in_array('User Type Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('user_type_edit', $type->id) }}"
+                                                                class="btn btn-success">
+                                                                <i class="fa-solid fa-pen-to-square"></i>
 
-                                                        <a href="{{ url('user_type_delete', $type->id) }}"
-                                                            class="btn btn-danger"
-                                                            onclick="return confirm('Are you sure you want to delete this user type ?')">
-                                                            <i class="fa-solid fa-trash"></i></a>
+                                                            </a>
+                                                        @endif
+
+
+                                                        @if (in_array('User Type Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('user_type_delete', $type->id) }}"
+                                                                class="btn btn-danger"
+                                                                onclick="return confirm('Are you sure you want to delete this user type ?')">
+                                                                <i class="fa-solid fa-trash"></i></a>
+                                                        @endif
 
                                                     </td>
                                                 </tr>

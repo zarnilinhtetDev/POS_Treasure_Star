@@ -49,18 +49,26 @@
     <div class="container-fluid " id="content">
 
 
-
-        <div class="row">
-            <div class="col d-flex justify-content-between align-items-center mx-4 mt-3">
-                <h1>Suspend</h1>
-                <a href="{{ url('pos') }}" class="btn btn-danger">Back</a>
-            </div>
-        </div>
+        <h1 class="mx-4 mt-3">
+            Suspend
+        </h1>
 
         <form method="post" id="myForm" action="{{ url('/invoice_update', $invoice->id) }}"
             enctype="multipart/form-data">
             @csrf
 
+             {{-- Permission Php --}}
+             @php
+             $choosePermission = [];
+             if (auth()->user()->permission) {
+                 $decodedPermissions = json_decode(auth()->user()->permission, true);
+                 if (json_last_error() === JSON_ERROR_NONE) {
+                     $choosePermission = $decodedPermissions;
+                 }
+             }
+         @endphp
+         {{-- End Php --}}
+         
             <div class="mx-3 row ">
                 {{-- <input type='hidden' name='sale_by' id="sale_by" value="{{ auth()->user()->name }}" class="form-control"> --}}
                 <div class="mt-4 row">
@@ -88,9 +96,8 @@
                             <option value="{{ $invoice->payment_method }}" selected>{{ $invoice->payment_method }}
                             </option>
                             <option value="Cash">Cash</option>
-                            <option value="K Pay">K Pay</option>
-                            <option value="Wave">Wave</option>
-                            <option value="Others">Others</option>
+                            <option value="Credit">Credit</option>
+                            <option value="Consignment Terms">Consignment Terms</option>
                         </select>
                     </div>
 
@@ -196,65 +203,20 @@
 
                                         </div>
                                         <hr>
+                                        <div class="mt-4 frmSearch col-md-3">
 
+                                            <label for="location" style="font-weight:bolder">Choose Location</label>
+                                            <select name="location" id="location" class="mb-4 form-control"
+                                                required>
 
-                                        @if (auth()->user()->is_admin == '1')
-                                            <div class="mt-4 frmSearch col-md-3">
-                                                <div class="frmSearch col-sm-12">
-                                                    <span style="font-weight:bolder">
-                                                        <label for="cst"
-                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                    </span> <select name="branch" id="location"
-                                                        class="mb-4 form-control location" required>
-                                                        @foreach ($warehouses as $branch)
-                                                            @if ($branch->id == $invoice->branch)
-                                                                <option value="{{ $branch->id }}" selected>
-                                                                    {{ $branch->name }}
-                                                                </option>
-                                                            @endif
-                                                        @endforeach
-                                                        @foreach ($warehouses as $warehouse)
-                                                            <option value="{{ $warehouse->id }}">
-                                                                {{ $warehouse->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-
-                                                </div>
-                                            </div>
-                                        @else
-                                            <div class="mt-4 frmSearch col-md-3">
-                                                <div class="frmSearch col-sm-12">
-                                                    <span style="font-weight:bolder">
-                                                        <label for="cst"
-                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                    </span>
-                                                    <select name="branch" id="branch" class="form-control"
-                                                        required>
-                                                        @php
-                                                            $userPermissions = auth()->user()->level
-                                                                ? json_decode(auth()->user()->level)
-                                                                : [];
-                                                        @endphp
-                                                        @foreach ($warehouses as $branch)
-                                                            @if ($branch->id == $invoice->branch)
-                                                                <option value="{{ $branch->id }}" selected>
-                                                                    {{ $branch->name }}
-                                                                </option>
-                                                            @endif
-                                                        @endforeach
-                                                        @foreach ($warehouses as $branch)
-                                                            @if (in_array($branch->id, $userPermissions))
-                                                                <option value="{{ $branch->id }}">
-                                                                    {{ $branch->name }}
-                                                                </option>
-                                                            @endif
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        @endif
-
+                                                @foreach ($warehouses as $warehouse)
+                                                    <option value="{{ $warehouse->id }}"
+                                                        @if ($warehouse->id == $invoice->location) selected @endif>
+                                                        {{ $warehouse->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                         <div class="mt-4 frmSearch col-md-3">
                                             <div class="frmSearch col-sm-12">
                                                 <span style="font-weight:bolder">
@@ -359,7 +321,7 @@
                                                                     class="form-control productname typeahead"
                                                                     name="part_number[]"
                                                                     value="{{ $sell->part_number }}"
-                                                                    placeholder="{{ trans('Enter Item Name') }}"
+                                                                    placeholder="{{ trans('Enter Part Number') }}"
                                                                     id='item_name-0' autocomplete="off">
                                                             </td>
 
@@ -477,11 +439,13 @@
                                                                 Calculate
                                                             </button>
 
-                                                            <a href="{{ URL('items') }}" target="_blank"
-                                                                id="item_search">
-                                                                <button type="button" class="btn btn-success">
-                                                                    <i class="fa fa-plus-square"></i> Item Search
-                                                                </button></a>
+                                                            @if (in_array('Item', $choosePermission) || auth()->user()->is_admin == '1')
+                                                                <a href="{{ URL('items') }}" target="_blank"
+                                                                    id="item_search">
+                                                                    <button type="button" class="btn btn-success">
+                                                                        <i class="fa fa-plus-square"></i> Item Search
+                                                                    </button></a>
+                                                            @endif
 
 
 
@@ -610,7 +574,7 @@
                                                                 type="submit">Confirm</button>
 
 
-                                                            <a href="{{ url('pos') }}" type="submit"
+                                                            <a href="{{ url('invoice') }}" type="submit"
                                                                 class="mt-3 btn btn-danger">Cancel
                                                             </a>
 
@@ -958,10 +922,6 @@
                 // Initialize typeahead for the first row
                 initializeTypeahead(count);
 
-                $(document).ready(function() {
-                    calculateTotals();
-                });
-
                 function calculateTotals() {
                     let total = 0;
                     let totalTax = 0;
@@ -1111,13 +1071,12 @@
         <script>
             $(document).ready(function() {
                 var path = "{{ route('customer_service_search') }}";
+
+
                 $('#customer').typeahead({
                     source: function(query, process) {
-                        var Selectedlocation = $('#location').val();
-
                         return $.get(path, {
-                            query: query,
-                            location: Selectedlocation,
+                            query: query
                         }, function(data) {
                             // Format the data for Typeahead
                             var formattedData = [];
@@ -1136,7 +1095,6 @@
                         });
                     }
                 });
-
 
 
 

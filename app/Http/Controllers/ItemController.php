@@ -67,6 +67,7 @@ class ItemController extends Controller
     {
         $validate = $request->validate([
             'item_unit' => 'required',
+            'item_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ], [
             'item_unit.required' => 'Please Select Unit',
         ]);
@@ -95,6 +96,12 @@ class ItemController extends Controller
         $items = new Item();
         $items->fill($validate);
         $items->fill($request->all());
+        $image = $request->file('item_image');
+        if ($image) {
+            $imagename = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('item_images'), $imagename);
+            $items->item_image = $imagename;
+        }
         $items->warehouse_id = $request->warehouse_id;
         $items->save();
         return redirect(url('items'))->with('success', 'Item Register is Successfully');
@@ -114,17 +121,38 @@ class ItemController extends Controller
     public function update(Request $request, $id)
     {
         $item = Item::find($id);
-        $item->update($request->all());
+
+        $image = $request->file('item_image');
+        if ($image) {
+            if ($item->item_image && file_exists(public_path('item_images/' . $item->item_image))) {
+                unlink(public_path('item_images/' . $item->item_image));
+            }
+            $imagename = time() . '.' . $image->getClientOriginalExtension();
+            $image->move(public_path('item_images'), $imagename);
+            $item->item_image = $imagename;
+        }
+        $item->update($request->except('item_image'));
         $item->warehouse_id = $request->warehouse_id;
-        $item->update();
-        return redirect(url('items'))->with('success', 'Item Update Is Successfully');
+        $item->save();
+
+        return redirect(url('items'))->with('success', 'Item Update Successfully');
     }
     public function delete($id)
     {
-        $items = Item::find($id);
-        $items->delete();
-        return redirect(url('items'))->with('delete', 'Item Delete Is Successfully');
+        $item = Item::find($id);
+
+        if ($item) {
+            if ($item->item_image && file_exists(public_path('item_images/' . $item->item_image))) {
+                unlink(public_path('item_images/' . $item->item_image));
+            }
+            $item->delete();
+
+            return redirect(url('items'))->with('delete', 'Item Deleted Successfully');
+        }
+
+        return redirect(url('items'))->with('error', 'Item Not Found');
     }
+
     public function inout($id)
     {
         $items = Item::find($id);
