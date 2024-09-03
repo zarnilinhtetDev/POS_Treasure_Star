@@ -44,9 +44,9 @@ class CustomerController extends Controller
             $validated = $request->validate(
                 [
                     'name' => 'required',
-                    'phno' => 'required',
-                    'type' => 'required',
-                    'address' => 'required',
+                    'phno' => 'nullable',
+                    'type' => 'nullable',
+                    'address' => 'nullable',
                     'branch' => 'required',
                 ],
                 ['type.required' => 'Customer Type is required']

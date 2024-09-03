@@ -168,11 +168,15 @@
                                             $no = '1';
                                         @endphp
 
-                                        {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
+
                                         @foreach ($po as $pos)
                                             <tr>
                                                 <td>{{ $no }}</td>
-                                                <td>{{ $pos->quote_no }}</td>
+                                                <td>
+                                                    <a href="{{ url('purchase_order_details', $pos->id) }} }}">
+                                                        {{ $pos->quote_no }}
+                                                    </a>
+                                                </td>
                                                 <td>{{ $pos->balance_due }}</td>
                                                 <td>{{ $pos->total }}</td>
                                                 <td>
@@ -195,36 +199,7 @@
                                                 $no++;
                                             @endphp
                                         @endforeach
-                                        {{-- @elseif (Auth::user()->type == 'Warehouse')
-                                            @foreach ($po as $pos)
-                                                @foreach ($pos->po_sells as $sell)
-                                                    @if ($sell->warehouse == Auth::user()->level)
-                                                        <tr>
-                                                            <td>{{ $no }}</td>
-                                                            <td>{{ $pos->quote_no }}</td>
-                                                            <td>{{ $pos->total }}</td>
-                                                            <td>
-                                                                <a href="{{ url('sale_return_detail', $pos->id) }}"
-                                                                    class="btn btn-primary btn-sm"><i
-                                                                        class="fa-solid fa-eye"></i></a>
 
-                                                                <a href="{{ url('sale_return_edit', $pos->id) }}"
-                                                                    class="btn btn-success btn-sm"><i
-                                                                        class="fa-solid fa-pen-to-square"></i></a>
-
-                                                                <a href="{{ url('sale_return_delete', $pos->id) }}"
-                                                                    class="btn btn-danger btn-sm"
-                                                                    onclick="return confirm('Are you sure you want to delete this Sale Return ?')"><i
-                                                                        class="fa-solid fa-trash"></i></a>
-                                                            </td>
-                                                        </tr>
-                                                        @php
-                                                            $no++;
-                                                        @endphp
-                                                    @endif
-                                                @endforeach
-                                            @endforeach
-                                        @endif --}}
                                     <tfoot>
                                         <tr>
                                             <td colspan="3">Total</td>

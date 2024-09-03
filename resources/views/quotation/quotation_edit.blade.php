@@ -663,7 +663,7 @@
                     count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="productname-' +
                     count + '" autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control description typeahead" name="part_description[]" required id="description-' +
+                    '<td><input type="text" class="form-control description typeahead" name="part_description[]" id="description-' +
                     count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
                     count +

@@ -182,8 +182,8 @@
                                                     <input type="hidden" name="manager_type"
                                                         value="{{ Auth::user()->type }}">
 
-                                                    <input type="text" name="status" class="form-control"
-                                                        value="draft" style="display: none">
+                                                    {{-- <input type="text" name="status" class="form-control"
+                                                        value="draft" style="display: none"> --}}
 
                                                 </div>
                                             </div>
@@ -454,6 +454,9 @@
                                                                     </span>
                                                                 </strong>
                                                             </td>
+                                                            <td><button type="button"
+                                                                    class="btn btn-danger remove_item_btn"
+                                                                    id="removebutton">Remove</button></td>
                                                             <input type="hidden" class="form-control vat "
                                                                 name="product_tax[]" id="vat-0" value="0">
                                                             <input type="hidden" name="total_tax[]" id="taxa-0"
@@ -803,7 +806,7 @@
                     count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="productname-' +
                     count + '" autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control description typeahead" name="part_description[]" required id="description-' +
+                    '<td><input type="text" class="form-control description typeahead" name="part_description[]" id="description-' +
                     count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
                     count +

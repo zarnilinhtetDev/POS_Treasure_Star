@@ -383,18 +383,12 @@ class InvoiceController extends Controller
             foreach ($invoice->sells as $key => $sell) {
                 $oldQuantities[$key] = $sell->product_qty;
             }
-            // dd($oldQuantities);
 
 
             foreach ($request->input('part_number') as $key => $partNumber) {
-                $sell = $invoice->sells[$key] ?? null;
-
-                if (!$sell) {
-                    continue;
-                }
 
                 $item = Item::where('item_name', $partNumber)
-                    ->where('warehouse_id', $sell->warehouse)
+                    ->where('warehouse_id', $request->warehouse)
                     ->first();
 
                 if (!$item) {
@@ -406,22 +400,24 @@ class InvoiceController extends Controller
                 $item->quantity = $newQuantity;
                 $item->save();
             }
-        } elseif ($invoice->status == 'pos') {
-            foreach ($invoice->sells as $sell) {
-                $item = Item::where('item_name', $sell->part_number)
-                    ->where('warehouse_id', $sell->warehouse)
+        } elseif ($request->status == 'pos') {
+
+            foreach ($request->input('part_number') as $key => $partNumber) {
+
+                $item = Item::where('item_name', $partNumber)
+                    ->where('warehouse_id', $request->warehouse)
                     ->first();
 
-                if ($item) {
-                    $item->quantity -= $sell->product_qty;
-                    $item->save();
-                } else {
+                if (!$item) {
                     continue;
                 }
+
+                $currentQuantity = $item->quantity;
+                $newQuantity = $currentQuantity - $request->input('product_qty')[$key];
+                $item->quantity = $newQuantity;
+                $item->save();
             }
         }
-
-
         Sell::where('invoiceid', $id)->delete();
         Sell::insert($sellsData);
 

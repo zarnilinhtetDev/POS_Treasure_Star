@@ -879,7 +879,7 @@
                             count + '" autocomplete="off" value="' + item['barcode'] + '"></td>' +
                             '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="item_name-' +
                             count + '" autocomplete="off" value="' + item['item_name'] + '"></td>' +
-                            '<td><input type="text" class="form-control description typeahead" name="part_description[]" required id="description-' +
+                            '<td><input type="text" class="form-control description typeahead" name="part_description[]" id="description-' +
                             count + '" autocomplete="off" value="' + (item['descriptions'] ?? '') + '"></td>' +
                             '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
                             count +
@@ -921,55 +921,55 @@
                     }
                 }
 
-                $("#addproduct").click(function(e) {
-                    e.preventDefault();
-                    count++;
+                // $("#addproduct").click(function(e) {
+                //     e.preventDefault();
+                //     count++;
 
-                    let rowCount = $("#showitem123 tr").length;
-                    let newRow = '<tr>' +
+                //     let rowCount = $("#showitem123 tr").length;
+                //     let newRow = '<tr>' +
 
-                        '<td class="text-center">' + (rowCount + 1) + '</td>' +
-                        '<td style="display:none"><input type="hidden" class="form-control barcode typeahead" name="barcode[]" id="barcode-' +
-                        count + '" autocomplete="off"></td>' +
-                        '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="item_name-' +
-                        count + '" autocomplete="off"></td>' +
-                        '<td><input type="text" class="form-control description typeahead" name="part_description[]" required id="description-' +
-                        count + '" autocomplete="off"></td>' +
-                        '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
-                        count +
-                        '"   autocomplete="off" value="1"><input type="hidden" id="alert-0" value="" name="alert[]"></td>' +
-                        '<td><input type="text" class="form-control unit " name="item_unit[]" id="item_unit-' +
-                        count +
-                        '" autocomplete ="off" required> </td>' +
+                //         '<td class="text-center">' + (rowCount + 1) + '</td>' +
+                //         '<td style="display:none"><input type="hidden" class="form-control barcode typeahead" name="barcode[]" id="barcode-' +
+                //         count + '" autocomplete="off"></td>' +
+                //         '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="item_name-' +
+                //         count + '" autocomplete="off"></td>' +
+                //         '<td><input type="text" class="form-control description typeahead" name="part_description[]" required id="description-' +
+                //         count + '" autocomplete="off"></td>' +
+                //         '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
+                //         count +
+                //         '"   autocomplete="off" value="1"><input type="hidden" id="alert-0" value="" name="alert[]"></td>' +
+                //         '<td><input type="text" class="form-control unit " name="item_unit[]" id="item_unit-' +
+                //         count +
+                //         '" autocomplete ="off" required> </td>' +
 
-                        '<td><input type="text" class="form-control price" name="product_price[]" value="0" id="price-' +
-                        count + '"   autocomplete="off"></td>' +
-                        '<td><input type="text" class="form-control retail_price" name="retail_price[]" value="0" id="retail_price-' +
-                        count + '"   autocomplete="off"></td>' +
-                        '<td style="display:none"><input type="text" class="form-control exp_date " name="exp_date[]" id="exp_date-' +
-                        count +
-                        '"   autocomplete="off"></td>' +
-                        '<td style="display: none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
-                        count +
-                        '"   autocomplete="off"></td>' +
+                //         '<td><input type="text" class="form-control price" name="product_price[]" value="0" id="price-' +
+                //         count + '"   autocomplete="off"></td>' +
+                //         '<td><input type="text" class="form-control retail_price" name="retail_price[]" value="0" id="retail_price-' +
+                //         count + '"   autocomplete="off"></td>' +
+                //         '<td style="display:none"><input type="text" class="form-control exp_date " name="exp_date[]" id="exp_date-' +
+                //         count +
+                //         '"   autocomplete="off"></td>' +
+                //         '<td style="display: none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
+                //         count +
+                //         '"   autocomplete="off"></td>' +
 
-                        '<td style="text-align:center"><span class="currenty"></span><strong><span class="ttlText" id="result-' +
-                        count + '">0</span></strong></td>' +
-                        '<input type="hidden" name="total_tax[]" id="taxa-' + count + '" value="0">' +
-                        '<input type="hidden" name="total_discount[]" id="disca-' + count + '" value="0">' +
-                        '<input type="hidden" class="ttInput" name="product_subtotal[]" id="total-' +
-                        count + '" value="0">' +
-                        '<input type="hidden" class="pdIn" name="product_id[]" id="pid-0" value="0">' +
-                        // '<input type="hidden" attr-org="" name="unit[]" id="unit-0" value="">' +
-                        '<input type="hidden" name="unit_m[]" id="unit_m-0" value="1">' +
-                        '<input type="hidden" name="code[]" id="hsn-0" value="">' +
-                        '<input type="hidden" name="serial[]" id="serial-0" value="">' +
-                        '<td><button type="submit" class="btn btn-danger remove_item_btn" id="removebutton">Remove</button></td>' +
-                        '</tr>';
-                    $("#showitem123").append(newRow);
-                    initializeTypeahead(count);
-                    calculateTotals();
-                });
+                //         '<td style="text-align:center"><span class="currenty"></span><strong><span class="ttlText" id="result-' +
+                //         count + '">0</span></strong></td>' +
+                //         '<input type="hidden" name="total_tax[]" id="taxa-' + count + '" value="0">' +
+                //         '<input type="hidden" name="total_discount[]" id="disca-' + count + '" value="0">' +
+                //         '<input type="hidden" class="ttInput" name="product_subtotal[]" id="total-' +
+                //         count + '" value="0">' +
+                //         '<input type="hidden" class="pdIn" name="product_id[]" id="pid-0" value="0">' +
+                //         // '<input type="hidden" attr-org="" name="unit[]" id="unit-0" value="">' +
+                //         '<input type="hidden" name="unit_m[]" id="unit_m-0" value="1">' +
+                //         '<input type="hidden" name="code[]" id="hsn-0" value="">' +
+                //         '<input type="hidden" name="serial[]" id="serial-0" value="">' +
+                //         '<td><button type="submit" class="btn btn-danger remove_item_btn" id="removebutton">Remove</button></td>' +
+                //         '</tr>';
+                //     $("#showitem123").append(newRow);
+                //     initializeTypeahead(count);
+                //     calculateTotals();
+                // });
 
 
                 $(document).on('click', '.remove_item_btn', function(e) {
