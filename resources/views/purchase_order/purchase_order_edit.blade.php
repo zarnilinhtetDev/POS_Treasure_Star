@@ -134,7 +134,7 @@
 
                 </div>
                 @if (auth()->user()->is_admin == '1')
-                    <div class="mt-4 frmSearch col-md-3">
+                    <div class="frmSearch col-md-3">
                         <div class="frmSearch col-sm-12">
                             <span style="font-weight: bolder;">
                                 <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
@@ -150,7 +150,7 @@
                         </div>
                     </div>
                 @else
-                    <div class="mt-4 frmSearch col-md-3">
+                    <div class="frmSearch col-md-3">
                         <div class="frmSearch col-sm-12">
                             <span style="font-weight:bolder">
                                 <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
