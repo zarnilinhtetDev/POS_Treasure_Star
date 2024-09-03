@@ -122,7 +122,7 @@
 
                                     <div class="form-group col-md-6">
                                         <label for="barcode">Barcode <span class="text-danger"> *</span></label>
-                                        <input type="number" class="form-control" id="barcode" name="barcode"
+                                        <input type="text" class="form-control" id="barcode" name="barcode"
                                             placeholder="Enter BarCode" value="{{ old('barcode') }}">
                                         @error('barcode')
                                             <p class="text-danger">{{ $message }}</p>

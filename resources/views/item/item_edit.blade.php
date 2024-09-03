@@ -151,7 +151,7 @@
 
                                     <div class="form-group col-md-6">
                                         <label for="barcode">Barcode</label>
-                                        <input type="number" class="form-control" id="barcode" name="barcode"
+                                        <input type="text" class="form-control" id="barcode" name="barcode"
                                             placeholder="Enter BarCode" value="{{ $items->barcode }}">
                                     </div>
 
