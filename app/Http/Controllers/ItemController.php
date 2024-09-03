@@ -123,7 +123,7 @@ class ItemController extends Controller
         $item = Item::find($id);
 
         $request->validate([
-            'item_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:600',
+            'item_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:600',
         ]);
 
         $image = $request->file('item_image');
