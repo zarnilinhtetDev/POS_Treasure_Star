@@ -33,7 +33,7 @@
 
 
                     <td style="font-size: 10px;font-weight:bolder" class="text-center">
-                        {{ $productCode->item_name  }}
+                        {{ $productCode->item_name }}
 
                 <tr>
 
@@ -42,15 +42,18 @@
                         'EAN13',
                         ) !!}</td> --}}
 
-                    <td> {!! DNS1D::getBarcodeHTML($productCode->barcode ,'EAN13') !!}
+                    <td> {!! DNS1D::getBarcodeHTML($productCode->barcode, 'C128') !!}
 
-                       </td>
+                    </td>
 
                 </tr>
                 <tr>
-                <td style="font-size: 10px;font-weight:bolder " class="text-center">{{ $productCode->barcode  }} </td></tr>
+                    <td style="font-size: 10px;font-weight:bolder " class="text-center">{{ $productCode->barcode }}
+                    </td>
+                </tr>
                 <tr>
-                    <td style="font-size: 10px;font-weight:bolder" class="text-center">{{ $productCode->retail_price }} Kyats</td>
+                    <td style="font-size: 10px;font-weight:bolder" class="text-center">{{ $productCode->retail_price }}
+                        Kyats</td>
 
                 </tr>
             </table>
