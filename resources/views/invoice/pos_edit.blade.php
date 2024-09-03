@@ -1041,6 +1041,13 @@
                     let taxt = total * 0.05; // Calculate tax based on the updated total
                     taxt = Math.ceil(taxt);
                     let total_total = total - totalTax;
+                    let paid = parseFloat(document.getElementById("paid").value) ||
+                        0;
+                    let total_p = parseFloat(document.getElementById("total_total").value) ||
+                        0;
+                    let balance = total_total - paid;
+
+                    $("#balance").val(balance);
                     $("#invoiceyoghtml").val(total);
                     $("#total_buy_price").val(totalPurchase);
                     $("#commercial_text").val(totalTax); // Update tax value

@@ -1024,9 +1024,18 @@
                         }
                     });
 
+
+
                     let tax = Math.ceil(total * 0.05);
                     let totalTotal = total - totalTax;
 
+                    let paid = parseFloat(document.getElementById("paid").value) ||
+                        0;
+                    let total_p = parseFloat(document.getElementById("total_total").value) ||
+                        0;
+                    let balance = totalTotal - paid;
+
+                    $("#balance").val(balance);
                     $('#invoiceyoghtml').val(total);
                     $('#commercial_text').val(totalTax);
                     $('#total').val(totalTotal);
