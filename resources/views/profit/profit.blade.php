@@ -7,7 +7,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
 
                 <li class="nav-item">
@@ -31,7 +32,8 @@
 
 
                 <div class="btn-group">
-                    <button type="button" class="btn text-white dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn text-white dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         {{ auth()->user()->name }}
                     </button>
                     <div class="dropdown-menu ">
@@ -85,43 +87,44 @@
                                         <input type="date" name="end_date" class="form-control" required>
                                     </div>
                                     @if (auth()->user()->is_admin == '1')
-                                    <div class="form-group col-md-3">
-                                        <label for="branch">Location<span class="text-danger">*</span></label>
+                                        <div class="form-group col-md-3">
+                                            <label for="branch">Location<span class="text-danger">*</span></label>
 
-                                        <select name="branch" id="branch" class="form-control" required>
+                                            <select name="branch" id="branch" class="form-control" required>
 
-                                            @foreach ($branchs as $branch)
-                                            <option value="{{ $branch->id }}">{{ $branch->name }}
-                                            </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                                @foreach ($branchs as $branch)
+                                                    <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     @else
-                                    <div class="form-group col-md-3">
-                                        <label for="branch">Location<span class="text-danger">*</span></label>
+                                        <div class="form-group col-md-3">
+                                            <label for="branch">Location<span class="text-danger">*</span></label>
 
-                                        <select name="branch" id="branch" class="form-control" required>
-                                            @php
-                                            $userPermissions = auth()->user()->level
-                                            ? json_decode(auth()->user()->level)
-                                            : [];
-                                            @endphp
-                                            <option value="" selected disabled>Select Location
-                                            </option>
-                                            @foreach ($branchs as $branch)
-                                            @if (in_array($branch->id, $userPermissions))
-                                            <option value="{{ $branch->id }}">
-                                                {{ $branch->name }}
-                                            </option>
-                                            @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                            <select name="branch" id="branch" class="form-control" required>
+                                                @php
+                                                    $userPermissions = auth()->user()->level
+                                                        ? json_decode(auth()->user()->level)
+                                                        : [];
+                                                @endphp
+                                                <option value="" selected disabled>Select Location
+                                                </option>
+                                                @foreach ($branchs as $branch)
+                                                    @if (in_array($branch->id, $userPermissions))
+                                                        <option value="{{ $branch->id }}">
+                                                            {{ $branch->name }}
+                                                        </option>
+                                                    @endif
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     @endif
 
                                     <div class="col-md-2 form-group">
                                         <label for="">&nbsp;</label>
-                                        <input type="submit" class="btn btn-primary form-control" value="Search" style="background-color: #218838">
+                                        <input type="submit" class="btn btn-primary form-control" value="Search"
+                                            style="background-color: #218838">
                                     </div>
                                 </div>
                             </form>
@@ -138,29 +141,38 @@
                             <div class="card-header d-flex justify-content-between align-items-center">
                                 <h3 class="card-title">Monthly Net Profit Table</h3>
                                 <div class="dropdown ml-auto mr-5">
-                                    <div id="branchDropdown" class="dropdown ml-auto" style="display:inline-block; margin-left: 10px;">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <div id="branchDropdown" class="dropdown ml-auto"
+                                        style="display:inline-block; margin-left: 10px;">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
                                             {{ $currentBranchName }}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a href="{{ url('index') }}" class="dropdown-item">All Invoices</a>
+
                                             @if (auth()->user()->is_admin == '1')
-                                            @foreach ($branchs as $drop)
-                                            <a class="dropdown-item" href="{{ url('index?branch=' . $drop->id) }}">{{ $drop->name }}</a>
-                                            @endforeach
+                                                <a href="{{ url('index') }}"
+                                                    class="dropdown-item {{ request('branch') ? '' : 'active' }}">All
+                                                    Invoices</a>
+                                                @foreach ($branchs as $drop)
+                                                    <a class="dropdown-item {{ request('branch') == $drop->id ? 'active' : '' }}"
+                                                        href="{{ url('index?branch=' . $drop->id) }}">{{ $drop->name }}</a>
+                                                @endforeach
                                             @else
-                                            @php
-                                            $userPermissions = auth()->user()->level
-                                            ? json_decode(auth()->user()->level)
-                                            : [];
-                                            @endphp
-                                            @foreach ($branchs as $drop)
-                                            @if (in_array($drop->id, $userPermissions))
-                                            <a class="dropdown-item" href="{{ url('index?branch=' . $drop->id) }}">{{ $drop->name }}</a>
-                                            @endif
-                                            @endforeach
+                                                @php
+                                                    $userPermissions = auth()->user()->level
+                                                        ? json_decode(auth()->user()->level)
+                                                        : [];
+                                                @endphp
+                                                @foreach ($branchs as $drop)
+                                                    @if (in_array($drop->id, $userPermissions))
+                                                        <a class="dropdown-item {{ request('branch') == $drop->id ? 'active' : '' }}"
+                                                            href="{{ url('index?branch=' . $drop->id) }}">{{ $drop->name }}</a>
+                                                    @endif
+                                                @endforeach
                                             @endif
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
@@ -168,7 +180,7 @@
                             <!-- /.card-header -->
                             <div class="card-body">
                                 @php
-                                use Carbon\Carbon;
+                                    use Carbon\Carbon;
                                 @endphp
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>

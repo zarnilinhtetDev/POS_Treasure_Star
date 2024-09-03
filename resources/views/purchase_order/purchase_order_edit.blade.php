@@ -122,42 +122,58 @@
 
                     <select class="mt-1 mb-3 form-control round" aria-label="Default select example"
                         name="payment_method" required>
-
-                        <option selected value="{{ $purchase_orders->payment_method }}">
-                            {{ $purchase_orders->payment_method }}
+                        <option value="Cash" {{ $purchase_orders->payment_method == 'Cash' ? 'selected' : '' }}>Cash
                         </option>
-                        <option value="Cash">Cash</option>
-                        <option value="Credit">Credit</option>
-                        <option value="Consignment Terms">Consignment Terms</option>
-                    </select>
-                </div>
-                {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
-                <div class="frmSearch col-md-3 col-sm-6">
-                    <label for="location" style="font-weight:bolder">Location</label>
-                    <select name="location" id="location" class="mb-4 form-control" required>
-
-                        @foreach ($warehouses as $warehouse)
-                            <option value="{{ $warehouse->id }}" @if ($warehouse->id == $purchase_orders->location)  @endif selected>
-                                {{ $warehouse->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                {{-- @elseif (Auth::user()->type == 'Warehouse')
-                <div class="frmSearch col-md-3 col-sm-6" style="display: none;">
-                    <label for="location" style="font-weight:bolder"> Location</label>
-                    <select name="location" id="location" class="mb-4 form-control" required>
-
-                        @foreach ($warehouses as $warehouse)
-                        @if (auth()->user()->level == $warehouse->id)
-                        <option value="{{ $warehouse->id }}" selected>
-                            {{ $warehouse->name }}
+                        <option value="K Pay" {{ $purchase_orders->payment_method == 'K Pay' ? 'selected' : '' }}>K
+                            Pay</option>
+                        <option value="Wave" {{ $purchase_orders->payment_method == 'Wave' ? 'selected' : '' }}>Wave
                         </option>
-                        @endif
-                        @endforeach
+                        <option value="Others" {{ $purchase_orders->payment_method == 'Others' ? 'selected' : '' }}>
+                            Others</option>
                     </select>
+
                 </div>
-                @endif --}}
+                @if (auth()->user()->is_admin == '1')
+                    <div class="mt-4 frmSearch col-md-3">
+                        <div class="frmSearch col-sm-12">
+                            <span style="font-weight: bolder;">
+                                <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
+                            </span>
+                            <select name="location" id="location" class="mb-4 form-control location" required>
+                                @foreach ($warehouses as $warehouse)
+                                    <option value="{{ $warehouse->id }}"
+                                        {{ $invoice->branch == $warehouse->id ? 'selected' : '' }}>
+                                        {{ $warehouse->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                @else
+                    <div class="mt-4 frmSearch col-md-3">
+                        <div class="frmSearch col-sm-12">
+                            <span style="font-weight:bolder">
+                                <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
+                            </span>
+                            <select name="location" id="location" class="mb-4 form-control location" required>
+
+                                @php
+                                    $userPermissions = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+                                @endphp
+
+                                @foreach ($warehouses as $branch)
+                                    @if (in_array($branch->id, $userPermissions))
+                                        <option value="{{ $branch->id }}">
+                                            {{ $branch->name }}
+                                        </option>
+                                    @endif
+                                @endforeach
+                            </select>
+
+                        </div>
+                    </div>
+                @endif
+
 
                 <div class="frmSearch col-md-3 col-sm-6">
                     <div class="frmSearch col-sm-12">
@@ -667,7 +683,7 @@
                     '<td class="text-center">' + (rowCount + 1) + '</td>' +
                     '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="productname-' +
                     count + '" autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control description typeahead" name="part_description[]" required id="description-' +
+                    '<td><input type="text" class="form-control description typeahead" name="part_description[]" id="description-' +
                     count + '" autocomplete="off"></td>' +
 
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +

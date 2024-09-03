@@ -318,6 +318,9 @@ class InvoiceController extends Controller
     public function invoice_update(Request $request, $id)
     {
 
+        // dd($request->status);
+
+
         $invoice = Invoice::find($id);
 
         if (!$invoice) {
@@ -376,11 +379,11 @@ class InvoiceController extends Controller
         }
 
         if ($invoice->status === 'invoice') {
-
             $oldQuantities = [];
             foreach ($invoice->sells as $key => $sell) {
                 $oldQuantities[$key] = $sell->product_qty;
             }
+            // dd($oldQuantities);
 
 
             foreach ($request->input('part_number') as $key => $partNumber) {
@@ -403,7 +406,21 @@ class InvoiceController extends Controller
                 $item->quantity = $newQuantity;
                 $item->save();
             }
+        } elseif ($invoice->status == 'pos') {
+            foreach ($invoice->sells as $sell) {
+                $item = Item::where('item_name', $sell->part_number)
+                    ->where('warehouse_id', $sell->warehouse)
+                    ->first();
+
+                if ($item) {
+                    $item->quantity -= $sell->product_qty;
+                    $item->save();
+                } else {
+                    continue;
+                }
+            }
         }
+
 
         Sell::where('invoiceid', $id)->delete();
         Sell::insert($sellsData);
@@ -441,7 +458,7 @@ class InvoiceController extends Controller
         $quotation->invoice_date = Carbon::today()->format('Y-m-d');
         $quotation->update();
 
-        return redirect('/invoice')->with('status', 'Change Invoice Successful!');
+        return redirect('/invoice')->with('success', 'Change Invoice Successful!');
     }
 
     public function autocompletePartCodeInvoice(Request $request)
@@ -462,6 +479,8 @@ class InvoiceController extends Controller
         return response()->json($result);
     }
 
+
+    //Pos
     public function autocompletePartCode(Request $request)
     {
         $query = $request->get('query');
@@ -518,6 +537,8 @@ class InvoiceController extends Controller
 
         return response()->json($resdata);
     }
+
+    //End Pos
 
     // public function invoice_detail(Invoice $invoice)
     public function invoice_detail(Invoice $invoice)
@@ -691,7 +712,8 @@ class InvoiceController extends Controller
     {
         $purchase_order = PurchaseOrder::find($id);
         $purchase_sells = PO_sells::where('invoiceid', $id)->get();
-        return view('invoice.sale_return_detail', compact('purchase_order', 'purchase_sells'));
+        $profile = UserProfile::all();
+        return view('invoice.sale_return_detail', compact('purchase_order', 'purchase_sells', 'profile'));
     }
 
     public function sale_return_delete($id)

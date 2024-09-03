@@ -106,11 +106,17 @@
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">
-                                                    <img id="imagePreview" src="#" style="max-width: 50px; max-height: 50px; display: none;" alt="Item Image Preview">
+                                                    <img id="imagePreview" src="#"
+                                                        style="max-width: 50px; max-height: 50px; display: none;"
+                                                        alt="Item Image Preview">
                                                 </span>
                                             </div>
-                                            <input type="file" class="form-control" id="item_image" name="item_image" accept="image/*" onchange="previewImage(event)">
+                                            <input type="file" class="form-control" id="item_image" name="item_image"
+                                                accept="image/*" onchange="previewImage(event)">
                                         </div>
+                                        @error('item_image')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
                                     </div>
 
 
@@ -357,19 +363,17 @@
                 additionalElements.style.display = "none";
             }
         });
-
-
     </script>
-<script>
-    function previewImage(event) {
-        var reader = new FileReader();
-        reader.onload = function () {
-            var output = document.getElementById('imagePreview');
-            output.src = reader.result; // Set the source of the image preview
-            output.style.display = 'inline'; // Make the image visible
-        };
-        if (event.target.files.length > 0) {
-            reader.readAsDataURL(event.target.files[0]); // Read the file as a data URL
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('imagePreview');
+                output.src = reader.result; // Set the source of the image preview
+                output.style.display = 'inline'; // Make the image visible
+            };
+            if (event.target.files.length > 0) {
+                reader.readAsDataURL(event.target.files[0]); // Read the file as a data URL
+            }
         }
-    }
-</script>
+    </script>

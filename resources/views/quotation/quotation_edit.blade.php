@@ -143,7 +143,7 @@
                                                             id="name" class="form-control"
                                                             value="{{ $quotation->customer_name }}"></td>
                                                     <input type='hidden' name='customer_id' id="customer_id"
-                                                        class="form-control">
+                                                        class="form-control" value="{{ $quotation->customer_id }}">
                                                     <input type='hidden' name='status' id="status"
                                                         class="form-control" value="quotation">
                                                     <td class="text-center"><input type='text' name='phno'
@@ -180,23 +180,54 @@
                                             </select>
                                         </div>
 
-                                        <div class="mt-4 frmSearch col-md-3">
-                                            <div class="frmSearch col-sm-12">
-                                                <span style="font-weight:bolder">
-                                                    <label for="cst"
-                                                        class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                </span> <select name="location" id="location"
-                                                    class="mb-4 form-control location" required>
-
-                                                    @foreach ($warehouses as $warehouse)
-                                                        <option value="{{ $warehouse->id }}" selected>
-                                                            {{ $warehouse->name }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-
+                                        @if (auth()->user()->is_admin == '1')
+                                            <div class="mt-4 frmSearch col-md-3">
+                                                <div class="frmSearch col-sm-12">
+                                                    <span style="font-weight: bolder;">
+                                                        <label for="cst"
+                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                    </span>
+                                                    <select name="branch" id="location"
+                                                        class="mb-4 form-control location" required>
+                                                        @foreach ($warehouses as $warehouse)
+                                                            <option value="{{ $warehouse->id }}"
+                                                                {{ $quotation->branch == $warehouse->id ? 'selected' : '' }}>
+                                                                {{ $warehouse->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @else
+                                            <div class="mt-4 frmSearch col-md-3">
+                                                <div class="frmSearch col-sm-12">
+                                                    <span style="font-weight:bolder">
+                                                        <label for="cst"
+                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                    </span>
+                                                    <select name="branch" id="location"
+                                                        class="mb-4 form-control location" required>
+
+                                                        @php
+                                                            $userPermissions = auth()->user()->level
+                                                                ? json_decode(auth()->user()->level)
+                                                                : [];
+                                                        @endphp
+
+                                                        @foreach ($warehouses as $branch)
+                                                            @if (in_array($branch->id, $userPermissions))
+                                                                <option value="{{ $branch->id }}">
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+
+                                                </div>
+                                            </div>
+
+
+                                        @endif
 
                                         <table class="table table-bordered">
                                             <thead style="background-color:#0047AA;color:white;">
@@ -690,93 +721,95 @@
             });
             // Initialize typeahead for the first row
             initializeTypeahead(count);
-            $(document).on("click", '#calculate', function(e) {
-                e.preventDefault();
-                let salePriceCategory = $('#sale_price_category').val();
+            $(document).ready(function() {
+                function calculateTotals() {
+                    let salePriceCategory = $('#sale_price_category').val();
 
-                $('#showitem123 tr').each(function(index) {
-                    let row = $(this);
-                    let qty = parseInt(row.find('.req.amnt').val()) || 0;
-                    let price;
+                    $('#showitem123 tr').each(function() {
+                        let row = $(this);
+                        let qty = parseInt(row.find('.req.amnt').val()) || 0;
+                        let price;
 
-                    if (salePriceCategory === 'Default') {
-                        let cuz_name = $("#type").val();
-                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
-                                .val()) || 0 :
-                            parseFloat(row.find('.retail_price').val()) || 0;
-                    } else if (salePriceCategory === 'Whole Sale') {
-                        price = parseFloat(row.find('.price').val()) || 0;
-                    } else if (salePriceCategory === 'Retail') {
-                        price = parseFloat(row.find('.retail_price').val()) || 0;
-                    }
+                        if (salePriceCategory === 'Default') {
+                            let cuz_name = $("#type").val();
+                            price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
+                                .val()) || 0 : parseFloat(row.find('.retail_price').val()) || 0;
+                        } else if (salePriceCategory === 'Whole Sale') {
+                            price = parseFloat(row.find('.price').val()) || 0;
+                        } else if (salePriceCategory === 'Retail') {
+                            price = parseFloat(row.find('.retail_price').val()) || 0;
+                        }
 
-                    let discount = parseFloat(row.find('.vat').val()) || 0;
+                        let discount = parseFloat(row.find('.vat').val()) || 0;
+                        let total = qty * price;
+                        let discountAmount = (total * discount) / 100;
+                        let subtotal = total - discountAmount;
 
-                    let total = qty * price;
-                    let discountAmount = (total * discount) / 100;
-                    let subtotal = total - discountAmount;
+                        row.find('.ttlText1').text(subtotal);
+                    });
 
-                    row.find('.ttlText1').text(subtotal.toFixed(2));
+                    let total = 0;
+                    let totalTax = 0;
+
+                    $('#showitem123 tr').each(function() {
+                        let row = $(this);
+                        let qty = parseInt(row.find('.req.amnt').val()) || 0;
+                        let price;
+
+                        if (salePriceCategory === 'Default') {
+                            let cuz_name = $("#type").val();
+                            price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
+                                .val()) || 0 : parseFloat(row.find('.retail_price').val()) || 0;
+                        } else if (salePriceCategory === 'Whole Sale') {
+                            price = parseFloat(row.find('.price').val()) || 0;
+                        } else if (salePriceCategory === 'Retail') {
+                            price = parseFloat(row.find('.retail_price').val()) || 0;
+                        }
+
+                        let discount = parseFloat(row.find('.vat').val()) || 0;
+                        let itemTotal = qty * price;
+
+                        if (!isNaN(discount) && discount >= 0) {
+                            let itemTax = (itemTotal * discount) / 100;
+                            totalTax += itemTax;
+                        }
+
+                        if (!isNaN(discount) && discount > 0) {
+                            let discountAmount = (itemTotal * discount) / 100;
+                            itemTotal -= discountAmount;
+                        }
+
+                        total += itemTotal;
+
+                        row.find('.ttlText1').text(itemTotal);
+                        if (price > 0) {
+                            row.find('.ttlText1').show();
+                            row.find('.ttlText').hide();
+                        } else {
+                            row.find('.ttlText1').hide();
+                            row.find('.ttlText').show();
+                        }
+                    });
+
+                    let tax = Math.ceil(total * 0.05);
+                    let totalTotal = total - totalTax;
+
+                    $('#invoiceyoghtml').val(total);
+                    $('#commercial_text').val(totalTax);
+                    $('#total').val(totalTotal);
+                    $('#total_total').val(totalTotal);
+                }
+
+                // Bind function to button click
+                $(document).on("click", '#calculate', function(e) {
+                    e.preventDefault();
+                    calculateTotals();
                 });
 
-                let total = 0;
-                let totalTax = 0;
+                // Automatically run on page load
+                calculateTotals();
 
-                $('#showitem123 tr').each(function(index) {
-                    let row = $(this);
-                    let qty = parseInt(row.find('.req.amnt').val()) || 0;
-                    let price;
 
-                    if (salePriceCategory === 'Default') {
-                        let cuz_name = $("#type").val();
-                        price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
-                                .val()) || 0 :
-                            parseFloat(row.find('.retail_price').val()) || 0;
-                    } else if (salePriceCategory === 'Whole Sale') {
-                        price = parseFloat(row.find('.price').val()) || 0;
-                    } else if (salePriceCategory === 'Retail') {
-                        price = parseFloat(row.find('.retail_price').val()) || 0;
-                    }
-
-                    let discount = parseFloat(row.find('.vat').val()) || 0;
-
-                    let itemTotal = qty * price;
-
-                    if (!isNaN(discount) && discount >= 0) {
-                        let itemTax = (itemTotal * discount) / 100;
-                        totalTax += itemTax;
-                    }
-
-                    if (!isNaN(discount) && discount > 0) {
-                        let discountAmount = (itemTotal * discount) / 100;
-                        itemTotal -= discountAmount;
-                    }
-
-                    total += itemTotal;
-
-                    row.find('.ttlText1').text(itemTotal.toFixed(2));
-                    if (price > 0) {
-                        row.find('.ttlText1').show();
-                        row.find('.ttlText').hide();
-                    } else {
-                        row.find('.ttlText1').hide();
-                        row.find('.ttlText').show();
-                    }
-                });
-
-                let tax = total * 0.05;
-                tax = Math.ceil(tax);
-
-                let totalTotal = total - totalTax;
-
-                $('#invoiceyoghtml').val(total);
-                $('#commercial_text').val(totalTax);
-                $('#total').val(totalTota);
-                $('#extra_discount').val('');
-                $('#paid').val('');
-                $('#balance').val('');
-                $('#total_total').val(totalTotal);
-                $('#total_discount').val('');
             });
 
 

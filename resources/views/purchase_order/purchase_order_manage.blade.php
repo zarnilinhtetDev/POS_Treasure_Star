@@ -102,13 +102,9 @@
                                             <th>Purchase Order Number</th>
                                             <th>Supplier Name</th>
                                             <th>Receiving Mode</th>
-
-
+                                            <th>Date</th>
                                             <th>Total</th>
-
-
                                             <th>Action</th>
-
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -137,9 +133,10 @@
 
                                                 <td>{{ $pos->supplier->name ?? 'N/A' }}</td>
                                                 <td>{{ $pos->balance_due }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($pos->po_date)->format('d / m / Y') }}</td>
 
 
-                                                <td>{{ $pos->total }}</td>
+                                                <td>{{ number_format($pos->total) }}</td>
                                                 <td>
 
                                                     @if (in_array('Purchase Order Details', $choosePermission) || auth()->user()->is_admin == '1')

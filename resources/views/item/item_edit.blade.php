@@ -143,6 +143,9 @@
                                                 accept="image/*" onchange="previewImage(event)">
                                         </div>
                                         <span class="text-danger">Old: {{ $items->item_image }}</span>
+                                        @error('item_image')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
                                     </div>
 
 
@@ -161,8 +164,8 @@
 
                                     <div class="form-group col-md-6">
                                         <label for="expired_date">Expired Date</label>
-                                        <input type="date" class="form-control" id="expired_date" name="expired_date"
-                                            value="{{ $items->expired_date }}">
+                                        <input type="date" class="form-control" id="expired_date"
+                                            name="expired_date" value="{{ $items->expired_date }}">
                                     </div>
 
                                     <div class="form-group col-md-6">

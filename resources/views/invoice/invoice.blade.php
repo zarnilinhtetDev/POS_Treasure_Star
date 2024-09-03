@@ -6,6 +6,7 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
+    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
 
@@ -48,10 +49,95 @@
 
     <div class="container-fluid" id="content">
 
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>{{ session('success') }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>{{ session('error') }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+        @if ($errors->has('phno'))
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong> {{ $errors->first('phno') }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
 
         <h1 class="mx-4 mt-3">
             Invoice
         </h1>
+
+
+        <div class="modal fade" id="modal-lg">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title"> Register New Customer</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="{{ url('customer_register') }}" method="POST">
+                            @csrf
+                            <div class="card-body">
+
+                                <div class="form-group">
+                                    <label for="name">Name <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="" placeholder="Enter Name"
+                                        required autofocus name="name">
+                                </div>
+
+
+                                <div class="form-group mt-3">
+                                    <label for="phno">Phone Number</label>
+                                    <input type="text" class="form-control" id=""
+                                        placeholder="Enter Phone Number" name="phno">
+                                </div>
+
+                                <div class="form-group mt-3">
+                                    <label for="crc">Customer Type </label>
+                                    <select name="type" id="" class="form-control">
+                                        <option selected disabled>Select Customer Type</option>
+                                        <option value="Retail">Retail</option>
+                                        <option value="Whole Sale">Whole Sale</option>
+                                    </select>
+                                </div>
+
+
+
+                                <div class="form-group mt-3">
+                                    <label for="address">Address</label>
+                                    <input type="text" class="form-control" id="phone number"
+                                        placeholder="Enter Address" name="address">
+                                </div>
+                            </div>
+
+
+
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save </button>
+                    </div>
+                    </form>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div>
 
         <form method="post" id="myForm" action="{{ url('invoice_register') }}" enctype="multipart/form-data">
             @csrf
@@ -89,14 +175,15 @@
                         <input type="date" name="overdue_date" id="overdue_date" class="form-control round"
                             autocomplete="off" min="<?= date('Y-m-d') ?>" value="{{ date('Y-m-d') }}">
                     </div>
+
                     <div class="col-md-3 ">
                         <label for="payment_method" style="font-weight:bolder">{{ trans('Payment Methods') }}</label>
                         <select class="mb-4 form-control round" aria-label="Default select example"
                             name="payment_method" required>
-
                             <option value="Cash">Cash</option>
-                            <option value="Credit">Credit</option>
-                            <option value="Consignment Terms">Consignment Terms</option>
+                            <option value="K Pay">K Pay</option>
+                            <option value="Wave">Wave</option>
+                            <option value="Others">Others</option>
                         </select>
                     </div>
 
@@ -111,11 +198,11 @@
                                 <div class="card-body">
 
                                     <div class="row">
-                                        <div class="col-sm-6 cmp-pnl">
+                                        <div class="col-sm-12 cmp-pnl">
                                             <div id="customerpanel" class="inner-cmp-pnl">
 
                                                 <div class="form-group row">
-                                                    <div class="frmSearch col-sm-6">
+                                                    <div class="frmSearch col-sm-3">
 
                                                         <div class="frmSearch col-sm-12">
                                                             <div class="frmSearch col-sm-12">
@@ -124,7 +211,8 @@
                                                                         class="caption">{{ trans('Search  Customer Name & Phone No.') }}</label>
                                                                 </span>
                                                                 <div class="form-group d-flex">
-                                                                    <input type="text" id="customer" name="customer"
+                                                                    <input type="text" id="customer"
+                                                                        name="customer"
                                                                         class="mr-2 form-control round"
                                                                         autocomplete="off" placeholder="Search.....">
                                                                     &nbsp;&nbsp;&nbsp; <button type="submit"
@@ -141,7 +229,15 @@
 
 
                                                     </div>
-                                                    <div class="frmSearch col-sm-6">
+
+                                                    <div class="col-sm-2 mt-4">
+                                                        <button type="button" data-toggle="modal"
+                                                            data-target="#modal-lg"
+                                                            class="btn btn-primary text-white">Customer
+                                                            Register</button>
+                                                    </div>
+
+                                                    <div class="frmSearch col-sm-3">
                                                         <div class="frmSearch col-sm-12">
                                                             <div class="frmSearch col-sm-12">
                                                                 <span style="font-weight:bolder">
@@ -241,24 +337,58 @@
                                                 </select>
                                             </div>
                                             {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
-                                            <div class="mt-4 frmSearch col-md-3">
-                                                <div class="frmSearch col-sm-12">
-                                                    <span style="font-weight:bolder">
-                                                        <label for="cst"
-                                                            class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                    </span>
-                                                    <select name="location" id="location"
-                                                        class="mb-4 form-control location" required>
 
-                                                        @foreach ($warehouses as $warehouse)
-                                                            <option value="{{ $warehouse->id }}">
-                                                                {{ $warehouse->name }}
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
+                                            @if (auth()->user()->is_admin == '1')
+                                                <div class="mt-4 frmSearch col-md-3">
+                                                    <div class="frmSearch col-sm-12">
+                                                        <span style="font-weight:bolder">
+                                                            <label for="cst"
+                                                                class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                        </span>
+                                                        <select name="branch" id="location"
+                                                            class="mb-4 form-control location" required>
 
+                                                            @foreach ($warehouses as $warehouse)
+                                                                <option value="{{ $warehouse->id }}">
+                                                                    {{ $warehouse->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            @else
+                                                <div class="mt-4 frmSearch col-md-3">
+                                                    <div class="frmSearch col-sm-12">
+                                                        <span style="font-weight:bolder">
+                                                            <label for="cst"
+                                                                class="caption">{{ trans('Location') }}&nbsp;</label>
+                                                        </span>
+                                                        <select name="branch" id="location"
+                                                            class="mb-4 form-control location" required>
+
+                                                            @php
+                                                                $userPermissions = auth()->user()->level
+                                                                    ? json_decode(auth()->user()->level)
+                                                                    : [];
+                                                            @endphp
+
+                                                            @foreach ($warehouses as $branch)
+                                                                @if (in_array($branch->id, $userPermissions))
+                                                                    <option value="{{ $branch->id }}">
+                                                                        {{ $branch->name }}
+                                                                    </option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+
+                                                    </div>
+                                                </div>
+
+
+                                            @endif
+
+
                                             {{-- @else
                                             <div class="mt-4 frmSearch col-md-3">
                                                 <div class="frmSearch col-sm-12">
@@ -611,6 +741,8 @@
 
     </div>
 
+    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
     <script>
         $(document).ready(function() {
             let count = 0;
@@ -725,7 +857,7 @@
                     count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="productname-' +
                     count + '" autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control description typeahead" name="part_description[]" required id="description-' +
+                    '<td><input type="text" class="form-control description typeahead" name="part_description[]"  id="description-' +
                     count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
                     count +
@@ -869,12 +1001,13 @@
     <script>
         $(document).ready(function() {
             var path = "{{ route('customer_service_search') }}";
-
-
             $('#customer').typeahead({
                 source: function(query, process) {
+                    var Selectedlocation = $('#location').val();
+
                     return $.get(path, {
-                        query: query
+                        query: query,
+                        location: Selectedlocation,
                     }, function(data) {
                         // Format the data for Typeahead
                         var formattedData = [];
@@ -893,6 +1026,10 @@
                     });
                 }
             });
+
+
+
+
 
             $(document).on('click', '#customer_search', function(e) {
                 e.preventDefault();

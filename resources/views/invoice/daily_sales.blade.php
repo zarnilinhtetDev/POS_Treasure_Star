@@ -121,15 +121,20 @@
                                                 $amounttotal += $pos->total;
                                             @endphp
                                         @endforeach
-                                        <td colspan="3" style="text-align:right">Total</td>
-                                        <td colspan="">{{ number_format($subtotal) }}</td>
-                                        <td colspan="">{{ number_format($discounttotal) }}</td>
-                                        <td colspan="">{{ number_format($amounttotal) }}</td>
-                                        <td></td>
-                                        <td></td>
+
 
 
                                     </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="3" style="text-align:right">Total</td>
+                                            <td colspan="">{{ number_format($subtotal) }}</td>
+                                            <td colspan="">{{ number_format($discounttotal) }}</td>
+                                            <td colspan="">{{ number_format($amounttotal) }}</td>
+                                            <td></td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
 
 
                                 </table>
@@ -172,24 +177,14 @@
     <!-- Page specific script -->
     <script>
         $(function() {
-            $("#exam       ple1").DataTable({
+            $("#example1").DataTable({
                 "scrollX": true,
                 "lengthChange": false,
                 "autoWidth": false,
                 "pageLength": 30,
                 // "buttons": ["excel", "pdf", "print"]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-            $('#exam                ple2').DataTable({
-                "paging": true,
-                "lengthC hange": false,
-                "searchi   ng": true,
-                "orderin      g": true,
-                "info": true,
-                "autoWid           th": false,
-                "respons              ive": true,
-                "pageLen                 gth": 30,
-                "buttons": ["excel", "pdf", "print"]
-            }).buttons().container().appendTo('#example2_wrapper .col-md-6:eq(0)');
+
         });
     </script>
 </body>

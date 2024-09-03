@@ -67,7 +67,7 @@ class ItemController extends Controller
     {
         $validate = $request->validate([
             'item_unit' => 'required',
-            'item_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'item_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:600',
         ], [
             'item_unit.required' => 'Please Select Unit',
         ]);
@@ -121,6 +121,10 @@ class ItemController extends Controller
     public function update(Request $request, $id)
     {
         $item = Item::find($id);
+
+        $request->validate([
+            'item_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:600',
+        ]);
 
         $image = $request->file('item_image');
         if ($image) {

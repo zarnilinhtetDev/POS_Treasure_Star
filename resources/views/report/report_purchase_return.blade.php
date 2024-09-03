@@ -67,88 +67,88 @@
             <!-- Main content -->
             <section class="content">
 
-                 {{-- Permission Php --}}
-                 @php
-                 $choosePermission = [];
-                 if (auth()->user()->permission) {
-                     $decodedPermissions = json_decode(auth()->user()->permission, true);
-                     if (json_last_error() === JSON_ERROR_NONE) {
-                         $choosePermission = $decodedPermissions;
-                     }
-                 }
-             @endphp
-             {{-- End Php --}}
+                {{-- Permission Php --}}
+                @php
+                    $choosePermission = [];
+                    if (auth()->user()->permission) {
+                        $decodedPermissions = json_decode(auth()->user()->permission, true);
+                        if (json_last_error() === JSON_ERROR_NONE) {
+                            $choosePermission = $decodedPermissions;
+                        }
+                    }
+                @endphp
+                {{-- End Php --}}
 
-             <section class="content-header">
-                 <div class="container mt-3">
-                     <ul class="nav nav-tabs">
+                <section class="content-header">
+                    <div class="container mt-3">
+                        <ul class="nav nav-tabs">
 
-                         @if (in_array('Invoice Report', $choosePermission) || auth()->user()->is_admin == '1')
-                             <li class="nav-item">
-                                 <a class="nav-link {{ request()->is('report') ? 'active' : '' }}"
-                                     href="{{ url('report') }}">Invoices</a>
-                             </li>
-                         @endif
+                            @if (in_array('Invoice Report', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report') ? 'active' : '' }}"
+                                        href="{{ url('report') }}">Invoices</a>
+                                </li>
+                            @endif
 
-                         @if (in_array('Quotation Report', $choosePermission) || auth()->user()->is_admin == '1')
-                             <li class="nav-item">
-                                 <a class="nav-link {{ request()->is('report_quotation') ? 'active' : '' }}"
-                                     href="{{ url('report_quotation') }}">Quotations</a>
-                             </li>
-                         @endif
+                            @if (in_array('Quotation Report', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report_quotation') ? 'active' : '' }}"
+                                        href="{{ url('report_quotation') }}">Quotations</a>
+                                </li>
+                            @endif
 
-                         @if (in_array('POS Report', $choosePermission) || auth()->user()->is_admin == '1')
-                             <li class="nav-item">
-                                 <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}"
-                                     href="{{ url('report_pos') }}">POS</a>
-                             </li>
-                         @endif
+                            @if (in_array('POS Report', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}"
+                                        href="{{ url('report_pos') }}">POS</a>
+                                </li>
+                            @endif
 
-                         @if (in_array('Purchase Order Report', $choosePermission) || auth()->user()->is_admin == '1')
-                             <li class="nav-item">
-                                 <a class="nav-link {{ request()->is('report_po') ? 'active' : '' }}"
-                                     href="{{ url('report_po') }}">Purchase Orders</a>
-                             </li>
-                         @endif
+                            @if (in_array('Purchase Order Report', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report_po') ? 'active' : '' }}"
+                                        href="{{ url('report_po') }}">Purchase Orders</a>
+                                </li>
+                            @endif
 
-                         @if (in_array('Purchase Return', $choosePermission) || auth()->user()->is_admin == '1')
-                             <li class="nav-item">
-                                 <a class="nav-link {{ request()->is('report_purchase_return') ? 'active' : '' }}"
-                                     href="{{ url('report_purchase_return') }}">Purchase Return</a>
-                             </li>
-                         @endif
+                            @if (in_array('Purchase Return', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report_purchase_return') ? 'active' : '' }}"
+                                        href="{{ url('report_purchase_return') }}">Purchase Return</a>
+                                </li>
+                            @endif
 
-                         @if (in_array('Sale Return (Invoice)', $choosePermission) || auth()->user()->is_admin == '1')
-                             <li class="nav-item">
-                                 <a class="nav-link {{ request()->is('report_sale_return') ? 'active' : '' }}"
-                                     href="{{ url('report_sale_return') }}">Sale Return (Invoice)</a>
-                             </li>
-                         @endif
+                            @if (in_array('Sale Return (Invoice)', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report_sale_return') ? 'active' : '' }}"
+                                        href="{{ url('report_sale_return') }}">Sale Return (Invoice)</a>
+                                </li>
+                            @endif
 
-                         @if (in_array('Item Report', $choosePermission) || auth()->user()->is_admin == '1')
-                             <li class="nav-item">
-                                 <a class="nav-link {{ request()->is('report_item') ? 'active' : '' }}"
-                                     href="{{ url('report_item') }}">Items</a>
-                             </li>
-                         @endif
+                            @if (in_array('Item Report', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report_item') ? 'active' : '' }}"
+                                        href="{{ url('report_item') }}">Items</a>
+                                </li>
+                            @endif
 
-                         @if (in_array('Sale Return (POS)', $choosePermission) || auth()->user()->is_admin == '1')
-                             <li class="nav-item">
-                                 <a class="nav-link {{ request()->is('sale_return') ? 'active' : '' }}"
-                                     href="{{ url('sale_return') }}">Sale Return (POS)</a>
-                             </li>
-                         @endif
+                            @if (in_array('Sale Return (POS)', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('sale_return') ? 'active' : '' }}"
+                                        href="{{ url('sale_return') }}">Sale Return (POS)</a>
+                                </li>
+                            @endif
 
-                         @if (in_array('Expenses Report', $choosePermission) || auth()->user()->is_admin == '1')
-                             <li class="nav-item">
-                                 <a class="nav-link {{ request()->is('report_expense') ? 'active' : '' }}"
-                                     href="{{ url('report_expense') }}">Expenses</a>
-                             </li>
-                         @endif
+                            @if (in_array('Expenses Report', $choosePermission) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a class="nav-link {{ request()->is('report_expense') ? 'active' : '' }}"
+                                        href="{{ url('report_expense') }}">Expenses</a>
+                                </li>
+                            @endif
 
-                     </ul>
-                 </div><!-- /.container-fluid -->
-             </section>
+                        </ul>
+                    </div><!-- /.container-fluid -->
+                </section>
 
 
 
@@ -189,6 +189,7 @@
                             <div class="card-header">
                                 <h3 class="card-title">Purchase Return Report</h3>
                             </div>
+
                             <!-- /.card-header -->
                             <div class="card-body">
 
@@ -196,9 +197,13 @@
                                     <thead>
                                         <tr>
                                             <th>No.</th>
-                                            <th>Purchase Order No.</th>
+                                            <th>Invoice No.</th>
                                             <th>Location</th>
-                                            <th>Purchase Return</th>
+                                            <th>Customer Name</th>
+                                            <th>Phone Number</th>
+                                            <th>Customer Type</th>
+                                            <th>Address</th>
+                                            <th>Sale Return</th>
                                             <th>Total Amount</th>
                                         </tr>
                                     </thead>
@@ -206,64 +211,64 @@
                                         @php
                                             $no = '1';
                                         @endphp
-
-                                        @if (!empty($search_pos))
-                                            @foreach ($search_pos as $po)
+                                        @if (!empty($search_invoices))
+                                            @foreach ($search_invoices as $invoice)
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td><a
-                                                            href="{{ url('purchase_order_details', $po->id) }}">{{ $po->quote_no }}</a>
+                                                            href="{{ url('invoice_detail', $invoice->id) }}">{{ $invoice->invoice_no }}</a>
                                                     </td>
                                                     <td>
                                                         @foreach ($branchs as $branch)
-                                                            @if ($branch->id == $po->branch)
+                                                            @if ($branch->id == $invoice->branch)
                                                                 {{ $branch->name }}
                                                             @endif
                                                         @endforeach
                                                     </td>
-
-                                                    <td>{{ $po->balance_due }}</td>
-                                                    <td>{{ $po->total }}</td>
+                                                    <td>{{ $invoice->customer_name }}</td>
+                                                    <td>{{ $invoice->phno }}</td>
+                                                    <td>{{ $invoice->type }}</td>
+                                                    <td>{{ $invoice->address }}</td>
+                                                    <td>{{ $invoice->balance_due }}</td>
+                                                    <td>{{ $invoice->total }}</td>
                                                 </tr>
-                                                @php
-                                                    $no++;
-                                                @endphp
                                             @endforeach
                                         @else
-                                            @foreach ($pos as $po)
+                                            @foreach ($invoices as $invoice)
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td><a
-                                                            href="{{ url('purchase_order_details', $po->id) }}">{{ $po->quote_no }}</a>
+                                                            href="{{ url('invoice_detail', $invoice->id) }}">{{ $invoice->invoice_no }}</a>
                                                     </td>
                                                     <td>
                                                         @foreach ($branchs as $branch)
-                                                            @if ($branch->id == $po->branch)
+                                                            @if ($branch->id == $invoice->branch)
                                                                 {{ $branch->name }}
                                                             @endif
                                                         @endforeach
                                                     </td>
-
-                                                    <td>{{ $po->balance_due }}</td>
-
-                                                    <td>{{ $po->total }}</td>
+                                                    <td>{{ $invoice->customer_name }}</td>
+                                                    <td>{{ $invoice->phno }}</td>
+                                                    <td>{{ $invoice->type }}</td>
+                                                    <td>{{ $invoice->address }}</td>
+                                                    <td>{{ $invoice->balance_due }}</td>
+                                                    <td>{{ $invoice->total }}</td>
                                                 </tr>
-                                                @php
-                                                    $no++;
-                                                @endphp
                                             @endforeach
-
                                         @endif
+
+
+                                        @php
+                                            $no++;
+                                        @endphp
 
                                     <tfoot>
                                         <tr>
                                             <td></td>
-                                            <td colspan="3" style="text-align:right">Total</td>
+                                            <td colspan="7" style="text-align:right">Total</td>
                                             <td colspan="">
-                                                @if (!empty($search_pos))
-                                                    {{ $search_total }}
-                                                @else
-                                                    {{ $total }}
+                                                @if (!empty($search_invoices))
+                                                    {{ $search_total }}@else{{ $total }}
                                                 @endif
                                             </td>
                                         </tr>

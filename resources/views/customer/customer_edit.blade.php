@@ -7,7 +7,10 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
+                    <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
 
                 <li class="nav-item">
@@ -16,45 +19,66 @@
                 </li>
 
                 @if (Auth::user()->type === '1')
-                <li class="nav-item ml-auto">
-                    <a class="nav-link" href="#">
-                        @if (Auth::user()->branch_id)
-                        {{ Auth::user()->branch->branch_name }}
-                        @else
-                        Admin
-                        @endif
+                    <li class="nav-item ml-auto">
+                        <a class="nav-link" href="#">
+                            @if (Auth::user()->branch_id)
+                                {{ Auth::user()->branch->branch_name }}
+                            @else
+                                Admin
+                            @endif
+                    <li class="nav-item ml-auto">
+                        <a class="nav-link" href="#">
+                            @if (Auth::user()->branch_id)
+                                {{ Auth::user()->branch->branch_name }}
+                            @else
+                                Admin
+                            @endif
 
+                        </a>
+                    </li>
                     </a>
-                </li>
+                    </li>
                 @else
-                <li class="nav-item ml-auto">
-                    <a class="nav-link" href="#">
-                        @if (Auth::user()->branch_id)
-                        {{ Auth::user()->branch->branch_name }}
-                        @else
-                        N/A
-                        @endif
-                    </a>
-                </li>
+                    <li class="nav-item ml-auto">
+                        <a class="nav-link" href="#">
+                            @if (Auth::user()->branch_id)
+                                {{ Auth::user()->branch->branch_name }}
+                            @else
+                                N/A
+                            @endif
+                        </a>
+                    </li>
+                    <li class="nav-item ml-auto">
+                        <a class="nav-link" href="#">
+                            @if (Auth::user()->branch_id)
+                                {{ Auth::user()->branch->branch_name }}
+                            @else
+                                N/A
+                            @endif
+                        </a>
+                    </li>
                 @endif
             </ul>
 
             <!-- Right navbar links -->
             <ul class="navbar-nav ml-auto">
                 <div class="btn-group">
-                    <button type="button" class=" text-white btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ auth()->user()->name }}
-                    </button>
-                    <div class="dropdown-menu ">
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="p-1 btn changelogout " style="width: 157px">
-                                <i class="fa-solid fa-right-from-bracket "></i> Logout</button>
+                    <button type="button" class=" text-white btn dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <button type="button" class=" text-white btn dropdown-toggle" data-toggle="dropdown"
+                            aria-haspopup="true" aria-expanded="false">
+                            {{ auth()->user()->name }}
+                        </button>
+                        <div class="dropdown-menu ">
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <button type="submit" class="p-1 btn changelogout " style="width: 157px">
+                                    <i class="fa-solid fa-right-from-bracket "></i> Logout</button>
 
-                        </form>
+                            </form>
 
 
-                    </div>
+                        </div>
                 </div>
             </ul>
         </nav>
@@ -100,12 +124,16 @@
 
                                             <div class="form-group">
                                                 <label for="name">Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="name" required autofocus name="name" value="{{ $showCustomer->name }}">
+                                                <input type="text" class="form-control" id="name" required
+                                                    autofocus name="name" value="{{ $showCustomer->name }}">
+
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="phno">Phone Number <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="phone number" name="phno" value="{{ $showCustomer->phno }}" required>
+                                                <label for="phno">Phone Number</label>
+                                                <input type="text" class="form-control" id="phone number"
+                                                    name="phno" value="{{ $showCustomer->phno }}">
+
                                             </div>
 
 
@@ -113,17 +141,70 @@
                                                 <label for="crc">Customer Type </label>
                                                 <!-- <input type="text" class="form-control"
                                                     placeholder="Enter Customer Type" name="type"> -->
-                                                <select name="type" id="type" class="form-control" required>
-                                                    <option value="{{ $showCustomer->type }}">{{ $showCustomer->type }}
+                                                <select name="type" id="type" class="form-control">
+                                                    <option value="{{ $showCustomer->type }}">
+                                                        {{ $showCustomer->type }}
                                                     </option>
                                                     <option value="Retail">Retail</option>
                                                     <option value="Whole Sale">Whole Sale</option>
                                                 </select>
                                             </div>
 
+                                            @if (auth()->user()->is_admin == '1')
+                                                <div class="form-group">
+                                                    <label for="branch">Location<span
+                                                            class="text-danger">*</span></label>
+
+                                                    <select name="branch" id="branch" class="form-control"
+                                                        required>
+
+                                                        @foreach ($branchs as $branch)
+                                                            @if ($branch->id == $showCustomer->branch)
+                                                                <option value="{{ $branch->id }}" selected>
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                        @foreach ($branchs as $branch)
+                                                            <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @else
+                                                <div class="form-group">
+                                                    <label for="branch">Location<span
+                                                            class="text-danger">*</span></label>
+
+                                                    <select name="branch" id="branch" class="form-control"
+                                                        required>
+                                                        @php
+                                                            $userPermissions = auth()->user()->level
+                                                                ? json_decode(auth()->user()->level)
+                                                                : [];
+                                                        @endphp
+                                                        @foreach ($branchs as $branch)
+                                                            @if ($branch->id == $showCustomer->branch)
+                                                                <option value="{{ $branch->id }}" selected>
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                        @foreach ($branchs as $branch)
+                                                            @if (in_array($branch->id, $userPermissions))
+                                                                <option value="{{ $branch->id }}">
+                                                                    {{ $branch->name }}
+                                                                </option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            @endif
+
                                             <div class="form-group">
-                                                <label for="address">Address <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="phone number" name="address" value="{{ $showCustomer->address }}" required>
+                                                <label for="address">Address</label>
+                                                <input type="text" class="form-control" id="phone number"
+                                                    name="address" value="{{ $showCustomer->address }}">
                                             </div>
 
 

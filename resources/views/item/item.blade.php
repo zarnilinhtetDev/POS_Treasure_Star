@@ -278,7 +278,6 @@
                                                 <th>Location</th>
                                                 <th>လက်လီစျေး</th>
                                                 <th>လက်ကားစျေး</th>
-                                                <th>ဝယ်စျေး</th>
                                                 <th>Barcode</th>
                                                 <th>Expired Date</th>
 
@@ -309,7 +308,7 @@
                                                     <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
                                                     <td>{{ $item->retail_price ?? '0' }}</td>
                                                     <td>{{ $item->wholesale_price ?? '0' }}</td>
-                                                    <td>{{ $item->buy_price ?? '0' }}</td>
+
                                                     <td>{{ $item->barcode }}</td>
 
                                                     <td>
