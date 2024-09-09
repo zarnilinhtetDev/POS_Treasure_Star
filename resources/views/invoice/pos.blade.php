@@ -899,7 +899,7 @@
 
 
 
-
+                //Drop down list for item name
                 function updateItemName(item) {
                     // Cache DOM elements
                     var $location = $('#location');
@@ -1087,7 +1087,7 @@
                     }
                 }
 
-
+                //Drop down list for item name
 
 
                 $(document).on('click', '.remove_item_btn', function(e) {
