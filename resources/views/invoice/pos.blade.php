@@ -7,7 +7,7 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}" />
@@ -293,7 +293,7 @@
                         <input type="date" name="overdue_date" id="overdue_date" class="form-control round"
                             autocomplete="off" min="<?= date('Y-m-d') ?>">
                     </div>
-                    <div class="col-md-3 ">
+                    {{-- <div class="col-md-3 ">
                         <label for="payment_method" style="font-weight:bolder">{{ trans('Payment Methods') }}</label>
                         <select class="mb-4 form-control round" aria-label="Default select example"
                             name="payment_method" required>
@@ -303,7 +303,7 @@
                             <option value="Wave">Wave</option>
                             <option value="Others">Others</option>
                         </select>
-                    </div>
+                    </div> --}}
 
                     <input type="hidden" name="quote_category" id="quote_category" value="POS">
                 </div>
@@ -473,7 +473,8 @@
                                                     <label for="cst"
                                                         class="caption">{{ trans('Search Item Barcode') }}&nbsp;</label>
                                                 </span>
-                                                <input type="text" class="form-control productname typeahead"
+                                                <input type="text"
+                                                    class="form-control productname typeahead barcode-input"
                                                     name="barcode" id='barcode' autocomplete="off"
                                                     placeholder="Search Item Barcode ">
                                                 <div id="customer-box-result"></div>
@@ -709,6 +710,9 @@
                                                         </td>
 
                                                     </tr>
+
+
+
                                                     <tr class="sub_c" style="display: table-row;">
                                                         <td colspan="2">
 
@@ -739,60 +743,86 @@
 
                                                     </tr>
 
-
-
+                                                <tbody id="trContainer">
                                                     <tr class="sub_c">
-                                                        <td colspan="2">
-
+                                                        <td colspan="2"></td>
+                                                        <td colspan="3" align="right"><strong>Payment
+                                                                Method</strong></td>
+                                                        <td align="left" colspan="1" class="col-md-2">
+                                                            <input type="text" name="payment_amount[]"
+                                                                class="form-control payment_amount"
+                                                                id="payment_amount">
                                                         </td>
-                                                        <td colspan="3" align="right"><strong>Cash
-                                                            </strong>
+                                                        <td align="left" colspan="1"
+                                                            class="col-md-2 payment_method">
+                                                            <select name="payment_method[]" id="payment_method"
+                                                                class="form-control">
+                                                                <option value="Cash">Cash</option>
+                                                                <option value="K Pay">K Pay</option>
+                                                                <option value="Wave">Wave</option>
+                                                                <option value="Others">Others</option>
+                                                            </select>
                                                         </td>
-                                                        <td align="left" colspan="2"><input type="text"
-                                                                name="paid" class="form-control" id="paid"
-                                                                onchange="paidFunction()">
-
-                                                        </td>
-
-                                                    </tr>
-                                                    <tr class="sub_c">
-                                                        <td colspan="2">
-
-                                                        </td>
-                                                        <td colspan="3" align="right"><strong>Change Due
-                                                            </strong>
-                                                        </td>
-                                                        <td align="left" colspan="2"><input type="text"
-                                                                name="balance" class="form-control" id="balance"
-                                                                readonly="">
-
+                                                        <td align="left" colspan="1" class="col-md-1">
+                                                            <button type="button" id="addRow"
+                                                                class="btn btn-primary"><i
+                                                                    class="fa-solid fa-plus"></i></button>
                                                         </td>
                                                     </tr>
+                                                </tbody>
 
-                                                    <tr class="sub_c " style="display: table-row;">
-                                                        <td colspan="12"> <label for="remark">Remark</label>
-                                                            <textarea name="remark" id="remark" class="form-control" rows="2"></textarea>
+                                                <tr class="sub_c">
+                                                    <td colspan="2">
 
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="sub_c " style="display: table-row;">
+                                                    </td>
+                                                    <td colspan="3" align="right"><strong>Cash
+                                                        </strong>
+                                                    </td>
+                                                    <td align="left" colspan="2"><input type="text"
+                                                            name="paid" class="form-control" id="paid"
+                                                            onchange="paidFunction()">
+
+                                                    </td>
+
+                                                </tr>
+                                                <tr class="sub_c">
+                                                    <td colspan="2">
+
+                                                    </td>
+                                                    <td colspan="3" align="right"><strong>Change Due
+                                                        </strong>
+                                                    </td>
+                                                    <td align="left" colspan="2"><input type="text"
+                                                            name="balance" class="form-control" id="balance"
+                                                            readonly="">
+
+                                                    </td>
+                                                </tr>
+
+                                                <tr class="sub_c " style="display: table-row;">
+                                                    <td colspan="12"> <label for="remark">Remark</label>
+                                                        <textarea name="remark" id="remark" class="form-control" rows="2"></textarea>
+
+                                                    </td>
+                                                </tr>
+                                                <tr class="sub_c " style="display: table-row;">
 
 
-                                                        <td align="right" colspan="9">
-                                                            @if (in_array('Suspend', $choosePermission) || auth()->user()->is_admin == '1')
-                                                                <button id="suspend" class="mt-3 btn btn-primary"
-                                                                    type="submit">Suspend</button>
-                                                            @endif
-                                                            <button id="submitButton" class="mt-3 btn btn-primary"
-                                                                type="submit">Save</button>
+                                                    <td align="right" colspan="9">
+                                                        @if (in_array('Suspend', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <button id="suspend" class="mt-3 btn btn-primary"
+                                                                type="submit">Suspend</button>
+                                                        @endif
+                                                        <button id="submitButton" class="mt-3 btn btn-primary"
+                                                            type="submit">Save</button>
 
 
-                                                            <a href="{{ url('pos') }}" type="submit"
-                                                                class="mt-3 btn btn-danger">Cancel
-                                                            </a>
+                                                        <a href="{{ url('pos') }}" type="submit"
+                                                            class="mt-3 btn btn-danger">Cancel
+                                                        </a>
 
-                                                        </td>
-                                                    </tr>
+                                                    </td>
+                                                </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -810,7 +840,6 @@
             </div>
 
         </form>
-        <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script>
             $.ajaxSetup({
                 headers: {
@@ -890,6 +919,7 @@
                     var $amount0 = $("#amount-0");
 
                     var selectedLocation = $location.val();
+
                     var cuzName = $("#type").val();
 
                     function handleSuccess(data) {
@@ -916,37 +946,23 @@
                     }
 
                     if ($itemName0.val() === "") {
-                        $.ajax({
-                            type: 'POST',
-                            url: "{{ route('get.part.data-invoice') }}",
-                            data: {
-                                _token: "{{ csrf_token() }}",
-                                itemname: item,
-                                location: selectedLocation,
-                            },
-                            success: handleSuccess,
-                            error: handleError
-                        });
 
-                        $.ajax({
-                            type: 'POST',
-                            url: "{{ route('get.barcode.data-invoice') }}",
-                            data: {
-                                _token: "{{ csrf_token() }}",
-                                barcode: item,
-                                location: selectedLocation,
-                            },
-                            success: handleSuccess,
-                            error: handleError
-                        });
 
-                    } else {
-                        if ($itemName0.val() === $productname.val() || $barcode0.val() === $barcode.val()) {
-                            var currentQuantity = parseInt($amount0.val());
-                            $amount0.val(currentQuantity + 1);
-                            $barcode.val('');
-                            $productname.val('');
+                        var $barcodeInput = $('.barcode-input');
+                        var item_barcode = $barcodeInput.val();
 
+                        if (item_barcode.length > 5) {
+                            $.ajax({
+                                type: 'POST',
+                                url: "{{ route('get.barcode.data-invoice') }}",
+                                data: {
+                                    _token: "{{ csrf_token() }}",
+                                    barcode: item,
+                                    location: selectedLocation,
+                                },
+                                success: handleSuccess,
+                                error: handleError
+                            });
                         } else {
                             $.ajax({
                                 type: 'POST',
@@ -956,35 +972,66 @@
                                     itemname: item,
                                     location: selectedLocation,
                                 },
-                                success: function(data) {
-                                    if (parseFloat(data.reorder_level_stock) >= parseFloat(data.quantity)) {
-                                        alert(data.quantity + " quantity!");
-                                    }
-                                    addNewRow(data['item']);
-                                    $barcode.val('');
-                                    $productname.val('');
-                                },
+                                success: handleSuccess,
                                 error: handleError
                             });
 
-                            $.ajax({
-                                type: 'POST',
-                                url: "{{ route('get.barcode.data-invoice') }}",
-                                data: {
-                                    _token: "{{ csrf_token() }}",
-                                    barcode: item,
-                                    location: selectedLocation,
-                                },
-                                success: function(data) {
-                                    if (parseFloat(data.reorder_level_stock) >= parseFloat(data.quantity)) {
-                                        alert(data.quantity + " quantity!");
-                                    }
-                                    addNewRow(data['item']);
-                                    $barcode.val('');
-                                    $productname.val('');
-                                },
-                                error: handleError
-                            });
+                        }
+
+
+                    } else {
+                        if ($itemName0.val() === $productname.val() || $barcode0.val() === $barcode.val()) {
+                            var currentQuantity = parseInt($amount0.val());
+                            $amount0.val(currentQuantity + 1);
+                            $barcode.val('');
+                            $productname.val('');
+
+                        } else {
+
+                            var $barcodeInput = $('.barcode-input');
+                            var item_barcode = $barcodeInput.val();
+                            if (item_barcode.length > 5) {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "{{ route('get.barcode.data-invoice') }}",
+                                    data: {
+                                        _token: "{{ csrf_token() }}",
+                                        barcode: item,
+                                        location: selectedLocation,
+                                    },
+                                    success: function(data) {
+                                        if (parseFloat(data.reorder_level_stock) >= parseFloat(data
+                                                .quantity)) {
+                                            alert(data.quantity + " quantity!");
+                                        }
+                                        addNewRow(data['item']);
+                                        $barcode.val('');
+                                        $productname.val('');
+                                    },
+                                    error: handleError
+                                });
+                            } else {
+                                $.ajax({
+                                    type: 'POST',
+                                    url: "{{ route('get.part.data-invoice') }}",
+                                    data: {
+                                        _token: "{{ csrf_token() }}",
+                                        itemname: item,
+                                        location: selectedLocation,
+                                    },
+                                    success: function(data) {
+                                        if (parseFloat(data.reorder_level_stock) >= parseFloat(data
+                                                .quantity)) {
+                                            alert(data.quantity + " quantity!");
+                                        }
+                                        addNewRow(data['item']);
+                                        $barcode.val('');
+                                        $productname.val('');
+                                    },
+                                    error: handleError
+                                });
+                            }
+
                         }
                     }
                 }
@@ -1076,12 +1123,109 @@
                     initializeTypeaheads();
                 });
 
-                $(document).on('change', '.productname', function() {
+                $(document).ready(function() {
+                    function calculatePayment() {
+                        let total = 0;
+                        $('.payment_amount').each(function() {
+                            let value = parseFloat($(this).val()) || 0;
+                            total += value;
+                        });
+                        total = Math.round(total);
+                        $('#paid').val(total);
+                        paidFunction();
+                    }
+
+                    function paidFunction() {
+                        let paid = parseFloat($('#paid').val()) || 0;
+                        let total_p = parseFloat($('#total_total').val()) || 0;
+                        let balance = total_p - paid;
+                        balance = Math.round(balance);
+                        $('#balance').val(balance);
+                    }
+
+                    $(document).on('input', '.payment_amount', function() {
+                        calculatePayment();
+                    });
+
+                    $('#paid').on('input', function() {
+                        paidFunction();
+                    });
+
+                    // Function to add a new row
+                    $('#addRow').click(function() {
+                        if ($('#trContainer tr.sub_c').length < 4) {
+                            var newRow = `<tr class="sub_c">
+                <td colspan="2"></td>
+                <td colspan="3" align="right"><strong></strong></td>
+                <td align="left" colspan="1" class="col-md-2">
+                    <input type="text" name="payment_amount[]" class="form-control payment_amount">
+                </td>
+                <td align="left" colspan="1" class="col-md-2">
+                    <select name="payment_method[]" class="form-control">
+                        <option value="Cash">Cash</option>
+                        <option value="K Pay">K Pay</option>
+                        <option value="Wave">Wave</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </td>
+                <td align="left" colspan="1" class="col-md-1">
+                    <button class="removeRow btn btn-danger"><i class="fa-solid fa-minus"></i></button>
+                </td>
+            </tr>`;
+
+                            $('#trContainer').append(newRow);
+                        } else {
+                            alert('You can only add a maximum of 4 payment rows.');
+                        }
+                    });
+                    $(document).on('click', '.removeRow', function() {
+                        $(this).closest('tr').remove();
+                        calculatePayment();
+                    });
+
+                    calculatePayment();
+                });
+
+
+
+                // $(document).on('change', '.productname', function() {
+                //     let itemCode = $(this).val();
+                //     let row = $(this).closest('tr');
+                //     updateItemName(itemCode);
+                //     $(this).val('');
+                // });
+
+                // $(document).on('change', '.typeahead.dropdown-menu .dropdown-item', function(event) {
+                //     // Check if the Enter key (keyCode 13) is pressed
+                //     // if (event.keyCode === 13) {
+                //     event.preventDefault(); // Prevent the default action (e.g., form submission)
+                //     let itemCode = $(this).val(); // Get the input value
+                //     let row = $(this).closest('tr');
+                //     updateItemName(itemCode); // Call your function with the input value
+                //     $(this).val(''); // Clear the input field
+                //     // }
+                // });
+
+                $(document).on('change', '#barcode', function() {
                     let itemCode = $(this).val();
                     let row = $(this).closest('tr');
-                    updateItemName(itemCode);
-                    $(this).val('');
+                    let cuz_name = $("#type").val();
+                    updateItemName(itemCode, row, cuz_name);
+                    $('#barcode').val('');
                 });
+
+                $(document).on('click', '.typeahead .dropdown-item', function(e) {
+                    e.preventDefault();
+                    const selectedItem = $(this).text().trim();
+                    const row = $(this).closest('tr');
+                    updateItemName(selectedItem, row);
+                    $('#productname').val('');
+                });
+
+
+
+
+
                 // Initialize typeahead for the first row
                 initializeTypeahead(count);
                 $(document).on("click", '#calculate', function(e) {
@@ -1180,10 +1324,6 @@
                     }
                 });
 
-
-
-
-
                 $(document).on('click', '#customer_search', function(e) {
                     e.preventDefault();
                     let serialNumber = $("#customer").val();
@@ -1250,20 +1390,6 @@
 
         <!-- Bootstrap 4 -->
         <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-        <!-- DataTables  & Plugins -->
-        <script src="{{ asset('plugins/datatables/jquery.dataTables.min.js') }}"></script>
-        <script src="{{ asset('plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
-        <script src="{{ asset('plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
-        <script src="{{ asset('plugins/datatables-responsive/js/responsive.bootstrap4.min.js ') }}"></script>
-        <script src="{{ asset('plugins/datatables-buttons/js/dataTables.buttons.min.js ') }}"></script>
-        <script src="{{ asset('plugins/datatables-buttons/js/buttons.bootstrap4.min.js') }}"></script>
-        <script src="{{ asset('plugins/jszip/jszip.min.js') }}"></script>
-        <script src="{{ asset('plugins/pdfmake/pdfmake.min.js') }}"></script>
-        <script src="{{ asset('plugins/pdfmake/vfs_fonts.js ') }}"></script>
-        <script src="{{ asset('plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
-        <script src="{{ asset('plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
-        <script src="{{ asset('plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-        <!-- AdminLTE App -->
         <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
 </body>
 

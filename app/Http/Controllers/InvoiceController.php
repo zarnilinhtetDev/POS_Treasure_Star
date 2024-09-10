@@ -15,6 +15,7 @@ use App\Models\Warehouse;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use App\Models\PurchaseOrder;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
@@ -448,6 +449,7 @@ class InvoiceController extends Controller
         $quotation = Invoice::find($id);
         $quotation->status = 'invoice';
         $quotation->invoice_no = $invoice_no;
+        $quotation->balance_due = 'Invoice';
         $quotation->invoice_date = Carbon::today()->format('Y-m-d');
         $quotation->update();
 
@@ -478,34 +480,50 @@ class InvoiceController extends Controller
     {
         $query = $request->get('query');
         $location = $request->get('location');
-        $items = Item::where('item_name', 'like', '%' . $query . '%')->where('warehouse_id', $location)
-            ->pluck('item_name');
+        $items = Cache::remember("items_{$query}_{$location}", 60, function () use ($query, $location) {
+            return Item::where('item_name', 'like', '%' . $query . '%')
+                ->where('warehouse_id', $location)
+                ->pluck('item_name');
+        });
         return response()->json($items);
     }
+
+
 
     public function autocompleteBarCode(Request $request)
     {
         $query = $request->get('query');
 
         $location = $request->get('location');
-
-        $barcode = Item::where('barcode', 'like', '%' . $query . '%')->where('warehouse_id', $location)
-            ->pluck('barcode');
+        $barcode = Cache::remember("items_{$query}_{$location}", 60, function () use ($query, $location) {
+            return  Item::where('barcode', 'like', '%' . $query . '%')->where('warehouse_id', $location)
+                ->pluck('barcode');
+        });
         info($barcode);
         return response()->json($barcode);
     }
 
     public function getPartData(Request $request)
     {
+        $itemname = $request->itemname;
+        $location = $request->location;
 
-        $item = Item::where('item_name', $request->itemname)->where('warehouse_id', $request->location)
-            ->orderBy('created_at', 'desc')
-            ->first();
+        $cacheKey = "part_data_{$itemname}_{$location}";
+        info($itemname);
 
+        $item = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($itemname, $location) {
+            return Item::where('item_name', $itemname)
+                ->where('warehouse_id', $location)
+                ->first();
 
+            // Item::where('item_name', 'like', '%' . $itemname . '%')
+            //     ->where('warehouse_id', $location)
+            //     ->first();
+        });
         if (!$item) {
             return response()->json(['error' => 'Product not found'], 404);
         }
+
         $resdata = [
             'item' => $item,
         ];
@@ -515,15 +533,22 @@ class InvoiceController extends Controller
 
     public function getBarcodeData(Request $request)
     {
+        $barcode = $request->barcode;
+        $location = $request->location;
 
-        $item = Item::where('barcode', $request->barcode)->where('warehouse_id', $request->location)
-            ->orderBy('created_at', 'desc')
-            ->first();
+        $cacheKey = "barcode_data_{$barcode}_{$location}";
 
+        $item = Cache::remember($cacheKey, now()->addMinutes(10), function () use ($barcode, $location) {
+            return Item::where('barcode', $barcode)
+                ->where('warehouse_id', $location)
+                ->orderBy('created_at', 'desc')
+                ->first();
+        });
 
         if (!$item) {
             return response()->json(['error' => 'Product not found'], 404);
         }
+
         $resdata = [
             'item' => $item,
         ];

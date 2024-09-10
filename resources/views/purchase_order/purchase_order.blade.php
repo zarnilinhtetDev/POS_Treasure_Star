@@ -163,14 +163,17 @@
 
                                             <div class="frmSearch col-sm-4" id="supplier_box">
                                                 <span style="font-weight:bolder">
-                                                    <label for="cst"
+                                                    <label for="supplier_id"
                                                         class="caption">{{ trans('Supplier Name') }}</label>
                                                 </span>
-                                                <select name="supplier_id" id="" class="form-control">
+                                                <select name="supplier_id" id="supplier_id" class="form-control">
                                                     <option value="" selected disabled>Choose Supplier
                                                     </option>
                                                     @foreach ($suppliers as $supplier)
-                                                        <option value="{{ $supplier->id }}">{{ $supplier->name }}
+                                                        <option value="{{ $supplier->id }}"
+                                                            data-branch="{{ $supplier->branch }}"
+                                                            data-id="{{ $supplier->id }}">
+                                                            {{ $supplier->name }}
                                                         </option>
                                                     @endforeach
                                                 </select>
@@ -874,6 +877,22 @@
                     $("#supplier_box").hide(); // Hide the supplier_box if balance_due is not empty
                 }
             });
+        });
+
+        $(document).ready(function() {
+            $('#location').change(function() {
+                var selectedLocation = $(this).val();
+                $('#supplier_id option').each(function() {
+                    var supplierBranch = $(this).data(
+                        'branch');
+                    if (supplierBranch == selectedLocation || $(this).val() == '') {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+                $('#supplier_id').val('');
+            }).change();
         });
     </script>
 
