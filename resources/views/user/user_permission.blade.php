@@ -363,19 +363,7 @@
                                                             </tr>
                                                             <tr>
                                                                 <td>
-                                                                    <div class="form-group">
-                                                                        <div class="form-check">
-                                                                            <input class="form-check-input"
-                                                                                type="checkbox" id="permission-inout"
-                                                                                name="permission[]"
-                                                                                value="Inout History"
-                                                                                @if (in_array('Inout History', $permissions)) checked @endif>
-                                                                            <label class="form-check-label"
-                                                                                for="permission-item">
-                                                                                Inout History
-                                                                            </label>
-                                                                        </div>
-                                                                    </div>
+
                                                                 </td>
                                                                 <td>
 

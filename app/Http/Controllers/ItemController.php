@@ -33,14 +33,69 @@ class ItemController extends Controller
 
         if (auth()->user()->is_admin == '1') {
             $warehouses = Warehouse::all();
-            $items = Item::with('warehouse')->latest()->get();
+            $items = Item::with('warehouse')->latest()->paginate(100);
         } else {
             $warehouses = Warehouse::all();
-            $items = Item::whereIn('warehouse_id', $warehousePermission)->with('warehouse')->latest()->get();
+            $items = Item::whereIn('warehouse_id', $warehousePermission)->with('warehouse')->latest()->paginate(100);
         }
 
         return view('item.item', compact('items', 'warehouses'));
     }
+
+    public function item_filter(Request $request)
+    {
+        $searchTerm = $request->input('query');
+
+        $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
+
+        if (auth()->user()->is_admin == '1') {
+            $items = Item::with('warehouse')
+                ->where(function ($query) use ($searchTerm) {
+                    $query->where('item_name', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('radio_category', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('category', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('barcode', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('retail_price', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('wholesale_price', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhereHas('warehouse', function ($query) use ($searchTerm) {
+                            $query->where('name', 'LIKE', '%' . $searchTerm . '%');
+                        })
+                        ->orWhere('expired_date', 'LIKE', '%' . $searchTerm . '%');
+                })
+                ->latest()
+                ->paginate(100);
+        } else {
+            $items = Item::whereIn('warehouse_id', $warehousePermission)
+                ->where(function ($query) use ($searchTerm) {
+                    $query->where('item_name', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('radio_category', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('category', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('barcode', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('retail_price', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhere('wholesale_price', 'LIKE', '%' . $searchTerm . '%')
+                        ->orWhereHas('warehouse', function ($query) use ($searchTerm) {
+                            $query->where('name', 'LIKE', '%' . $searchTerm . '%');
+                        })
+                        ->orWhere('expired_date', 'LIKE', '%' . $searchTerm . '%');
+                })
+                ->with('warehouse')
+                ->latest()
+                ->paginate(100);
+        }
+
+        $choosePermission = auth()->user()->permissions ?? [];
+
+        $items->transform(function ($item) use ($choosePermission) {
+            $item->can_view = in_array('Item Details', $choosePermission) || auth()->user()->is_admin == '1';
+            $item->can_edit = in_array('Item Edit', $choosePermission) || auth()->user()->is_admin == '1';
+            $item->can_delete = in_array('Item Delete', $choosePermission) || auth()->user()->is_admin == '1';
+            return $item;
+        });
+
+        return response()->json($items);
+    }
+
+
 
     public function register()
     {

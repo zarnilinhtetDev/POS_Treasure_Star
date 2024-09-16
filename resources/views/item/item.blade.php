@@ -267,106 +267,117 @@
 
                                 <!-- /.card-header -->
                                 <div class="card-body">
-                                    <table id="example1"
-                                        class="table table-bordered table-striped table-responsive-lg">
-                                        <thead>
-                                            <tr>
-                                                <th>No.</th>
-                                                <th>Item Image</th>
-                                                <th>Item Name</th>
-                                                <th>Category</th>
-                                                <th>Location</th>
-                                                <th>လက်လီစျေး</th>
-                                                <th>လက်ကားစျေး</th>
-                                                <th>Barcode</th>
-                                                <th>Expired Date</th>
-
-                                                <th style="background-color: rgb(221, 215, 215)">Quantity</th>
-                                                <th>Bar Code
-                                                </th>
-                                                <th style="width: 15%">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @php
-                                                $no = '1';
-                                            @endphp
-
-                                            @foreach ($items as $item)
+                                    <div class="d-flex justify-content-end mb-3">
+                                        <input type="text" id="search" class="form-control col-2 ms-auto"
+                                            placeholder="Search items">
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table id="example1" class="table table-bordered table-striped items-table">
+                                            <thead>
                                                 <tr>
-                                                    <td>{{ $no }}</td>
-                                                    <td> <a href="{{ asset('item_images/' . $item->item_image) }}"
-                                                            target="_blank" id="logoLink">
-                                                            <img src="{{ asset('item_images/' . $item->item_image) }}"
-                                                                id="logoPreview" class="img-thumbnail"
-                                                                style="max-width: 150px; max-height: 100px;"
-                                                                alt="Item Image Preview">
-                                                        </a>
-                                                    </td>
-                                                    <td>{{ $item->item_name }}</td>
-                                                    <td>{{ $item->category }}</td>
-                                                    <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
-                                                    <td>{{ $item->retail_price ?? '0' }}</td>
-                                                    <td>{{ $item->wholesale_price ?? '0' }}</td>
-
-                                                    <td>{{ $item->barcode }}</td>
-
-                                                    <td>
-                                                        @if ($item->expired_date)
-                                                            {{ $item->expired_date }}
-                                                        @else
-                                                            No Expired Date
-                                                        @endif
-                                                    </td>
-
-                                                    <td style="background-color: rgb(221, 215, 215)">
-                                                        @if ($item->quantity <= $item->reorder_level_stock)
-                                                            <span class="text-danger">{{ $item->quantity }}</span>
-                                                        @else
-                                                            {{ $item->quantity }}
-                                                        @endif
-
-                                                    </td>
-                                                    <td><a href="{{ url('barcode', $item->id) }}"
-                                                            class="mt-1 text-white btn btn-warning btn-sm">Generate</a>
-                                                    </td>
-                                                    <td>
-                                                        @if (in_array('Item Details', $choosePermission) || auth()->user()->is_admin == '1')
-                                                            <a href="{{ url('item_details', $item->id) }}"
-                                                                class="btn btn-primary btn-sm"><i
-                                                                    class="fa-solid fa-eye"></i></a>
-                                                        @endif
-
-                                                        @if (in_array('Item Edit', $choosePermission) || auth()->user()->is_admin == '1')
-                                                            <a href="{{ url('item_edit', $item->id) }}"
-                                                                class="btn btn-success btn-sm"><i
-                                                                    class="fa-solid fa-pen-to-square"></i></a>
-                                                        @endif
-
-                                                        @if (in_array('Item Delete', $choosePermission) || auth()->user()->is_admin == '1')
-                                                            <a href="{{ url('item_delete', $item->id) }}"
-                                                                class="btn btn-danger btn-sm"
-                                                                onclick="return confirm('Are you sure you want to delete this Item ?')"><i
-                                                                    class="fa-solid fa-trash"></i></a>
-                                                        @endif
-
-                                                        @if (in_array('Inout History', $choosePermission) || auth()->user()->is_admin == '1')
-                                                            <a href="{{ url('in_out', $item->id) }}"
-                                                                class="mt-1 btn btn-info btn-sm">In/Out
-                                                                History </a>
-                                                        @endif
-
-                                                    </td>
+                                                    <th>No.</th>
+                                                    <th>Item Image</th>
+                                                    <th>Item Name</th>
+                                                    <th>Options</th>
+                                                    <th>Category</th>
+                                                    <th>Location</th>
+                                                    <th>လက်လီစျေး</th>
+                                                    <th>လက်ကားစျေး</th>
+                                                    <th>Barcode</th>
+                                                    <th>Expired Date</th>
+                                                    <th style="background-color: rgb(221, 215, 215)">Quantity</th>
+                                                    <th>Bar Code</th>
+                                                    <th style="width: 15%">Action</th>
                                                 </tr>
+                                            </thead>
+                                            <tbody>
                                                 @php
-                                                    $no++;
+                                                    $no = 1;
                                                 @endphp
-                                            @endforeach
 
-                                        </tbody>
+                                                @foreach ($items as $item)
+                                                    <tr>
+                                                        <td>{{ $no }}</td>
+                                                        <td>
+                                                            <a href="{{ asset($item->item_image ? 'item_images/' . $item->item_image : 'img/default.png') }}"
+                                                                target="_blank" id="logoLink">
+                                                                <img src="{{ asset($item->item_image ? 'item_images/' . $item->item_image : 'img/default.png') }}"
+                                                                    id="logoPreview" class="img-thumbnail"
+                                                                    style="max-width: 150px; max-height: 100px;"
+                                                                    alt="Item Image Preview">
+                                                            </a>
+                                                        </td>
+                                                        <td>{{ $item->item_name }}</td>
+                                                        <td>{{ $item->radio_category }}</td>
+                                                        <td>{{ $item->category }}</td>
+                                                        <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
+                                                        <td>{{ $item->retail_price ?? '0' }}</td>
+                                                        <td>{{ $item->wholesale_price ?? '0' }}</td>
+                                                        <td>{{ $item->barcode }}</td>
+                                                        <td>
+                                                            @if ($item->expired_date)
+                                                                {{ $item->expired_date }}
+                                                            @else
+                                                                No Expired Date
+                                                            @endif
+                                                        </td>
+                                                        <td style="background-color: rgb(221, 215, 215)">
+                                                            @if ($item->quantity <= $item->reorder_level_stock)
+                                                                <span class="text-danger">{{ $item->quantity }}</span>
+                                                            @else
+                                                                {{ $item->quantity }}
+                                                            @endif
+                                                        </td>
+                                                        <td><a href="{{ url('barcode', $item->id) }}"
+                                                                class="mt-1 text-white btn btn-warning btn-sm">Generate</a>
+                                                        </td>
+                                                        <td>
+                                                            @if (in_array('Item Details', $choosePermission) || auth()->user()->is_admin == '1')
+                                                                <a href="{{ url('item_details', $item->id) }}"
+                                                                    class="btn btn-primary btn-sm"><i
+                                                                        class="fa-solid fa-eye"></i></a>
+                                                            @endif
+                                                            @if (in_array('Item Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                                                <a href="{{ url('item_edit', $item->id) }}"
+                                                                    class="btn btn-success btn-sm"><i
+                                                                        class="fa-solid fa-pen-to-square"></i></a>
+                                                            @endif
+                                                            @if (in_array('Item Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                                <a href="{{ url('item_delete', $item->id) }}"
+                                                                    class="btn btn-danger btn-sm"
+                                                                    onclick="return confirm('Are you sure you want to delete this Item ?')"><i
+                                                                        class="fa-solid fa-trash"></i></a>
+                                                            @endif
+                                                            {{-- @if (in_array('Inout History', $choosePermission) || auth()->user()->is_admin == '1')
+                                                                <a href="{{ url('in_out', $item->id) }}"
+                                                                    class="mt-1 btn btn-info btn-sm">In/Out History</a>
+                                                            @endif --}}
+                                                        </td>
+                                                    </tr>
+                                                    @php
+                                                        $no++;
+                                                    @endphp
+                                                @endforeach
+                                            </tbody>
+                                        </table>
 
-                                    </table>
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <div class="pagination-info text-start">
+                                                Showing {{ $items->firstItem() }} to {{ $items->lastItem() }} of
+                                                {{ $items->total() }} results
+                                            </div>
+                                            <div>
+                                                {{ $items->links('pagination::bootstrap-4') }}
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+
                                 </div>
+
+
                                 <!-- /.card-body -->
                             </div>
                         </div>
@@ -401,23 +412,118 @@
     <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
     <!-- AdminLTE for demo purposes -->
 
-    <!-- Page specific script -->
     <script>
+        $(document).ready(function() {
+
+            $('#search').on('keyup', function() {
+                var query = $(this).val();
+                var no = 1;
+
+                $.ajax({
+                    url: "{{ route('items.filter') }}",
+                    method: 'GET',
+                    data: {
+                        query: query
+                    },
+                    success: function(response) {
+                        var rows = '';
+
+                        $.each(response.data, function(index, item) {
+                            rows += '<tr>';
+                            rows += '<td>' + no +
+                                '</td>';
+                            rows += '<td><a href="' + (item.item_image ?
+                                    '{{ asset('item_images') }}/' + item.item_image :
+                                    '{{ asset('img/default.png') }}') +
+                                '" target="_blank" id="logoLink">' +
+                                '<img src="' + (item.item_image ?
+                                    '{{ asset('item_images') }}/' + item.item_image :
+                                    '{{ asset('img/default.png') }}') +
+                                '" class="img-thumbnail" style="max-width: 150px; max-height: 100px;" alt="Item Image Preview">' +
+                                '</a></td>';
+                            rows += '<td>' + item.item_name + '</td>';
+                            rows += '<td>' + item.radio_category + '</td>';
+                            rows += '<td>' + item.category + '</td>';
+                            rows += '<td>' + (item.warehouse ? item.warehouse.name :
+                                'N/A') + '</td>';
+                            rows += '<td>' + (item.retail_price ? item.retail_price :
+                                '0') + '</td>';
+                            rows += '<td>' + (item.wholesale_price ? item
+                                .wholesale_price : '0') + '</td>';
+                            rows += '<td>' + item.barcode + '</td>';
+                            rows += '<td>' + (item.expired_date ? item.expired_date :
+                                'No Expired Date') + '</td>';
+
+
+                            if (item.quantity <= item.reorder_level_stock) {
+                                rows +=
+                                    '<td style="background-color: rgb(221, 215, 215)"><span class="text-danger">' +
+                                    item.quantity + '</span></td>';
+                            } else {
+                                rows +=
+                                    '<td style="background-color: rgb(221, 215, 215)">' +
+                                    item.quantity + '</td>';
+                            }
+
+
+                            rows += '<td><a href="{{ url('barcode') }}/' +
+                                item.id +
+                                '" class="mt-1 text-white btn btn-warning btn-sm">Generate</a></td>';
+
+
+                            rows += '<td>';
+                            if (item.can_view) {
+                                rows += '<a href="{{ url('item_details') }}/' + item
+                                    .id +
+                                    '" class="btn btn-primary btn-sm"><i class="fa-solid fa-eye"></i></a> ';
+                            }
+                            if (item.can_edit) {
+                                rows += '<a href="{{ url('item_edit') }}/' + item.id +
+                                    '" class="btn btn-success btn-sm"><i class="fa-solid fa-pen-to-square"></i></a> ';
+                            }
+                            if (item.can_delete) {
+                                rows += '<a href="{{ url('item_delete') }}/' + item
+                                    .id +
+                                    '" class="btn btn-danger btn-sm" onclick="return confirm(\'Are you sure you want to delete this Item ?\')"><i class="fa-solid fa-trash"></i></a> ';
+                            }
+
+                            rows += '</td>';
+                            rows += '</tr>';
+
+                            no++;
+                        });
+
+                        $('.items-table tbody').html(
+                            rows);
+                    }
+                });
+            });
+        });
+
+
         $(document).ready(function() {
             new DataTable('#example1', {
                 "lengthChange": false,
-                "paging": true,
+                "paging": false,
                 "pageLength": 100,
+                "searching": false,
                 "dom": 'Bfrtip',
                 "buttons": [{
                     extend: 'excelHtml5',
                     text: 'Change Price Excel',
                     exportOptions: {
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8,
-                            9
-                        ]
+                        modifier: {
+                            selected: null,
+                            search: 'applied',
+                        },
+                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
                     }
-                }]
+                }],
+                "language": {
+                    "info": "",
+                    "infoEmpty": "",
+                    "infoFiltered": ""
+                }
             });
         });
     </script>

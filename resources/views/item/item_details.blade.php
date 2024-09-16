@@ -155,10 +155,10 @@
                                             class="fa-solid fa-pen-to-square"></i>Edit</a>
                                 @endif
 
-                                @if (in_array('Inout History', $choosePermission) || auth()->user()->is_admin == '1')
+                                {{-- @if (in_array('Inout History', $choosePermission) || auth()->user()->is_admin == '1')
                                     <a href="{{ url('in_out', $items->id) }}" class="btn btn-info mt-3 mx-1">In/Out
                                         History</a>
-                                @endif
+                                @endif --}}
                             </div>
                             <a href="{{ asset('item_images/' . $items->item_image) }}" target="_blank" id="logoLink">
                                 <img src="{{ asset('item_images/' . $items->item_image) }}" id="logoPreview"
@@ -167,17 +167,74 @@
                             </a>
                         </div>
 
+                        <div class="row mt-3">
+                            <div class="frmSearch col-sm-6 mt-2">
+                                <label>
+                                    <input type="radio" name="radio_category" value="ဆေး" id="radio_category"
+                                        {{ $items->radio_category == 'ဆေး' ? 'checked' : '' }}>
+                                    ဆေး
+                                </label>
 
-                        <tr>
+                                <label>
+                                    <input type="radio" class="ml-3" name="radio_category" id="radio_category"
+                                        value="Lenses" {{ $items->radio_category == 'Lenses' ? 'checked' : '' }}>
+                                    Lenses
+                                </label>
 
-                            <td class="fw-light" style="width: 200px;">Item Name</td>
-                            <td class="fw-normal" style="width: 200px;">{{ $items->item_name }}</td>
+                                <label>
+                                    <input type="radio" class="ml-3" name="radio_category" id="radio_category"
+                                        value="Frame" {{ $items->radio_category == 'Frame' ? 'checked' : '' }}>
+                                    Frame
+                                </label><br>
+                            </div>
+                        </div>
+                        <tr id="madeInCountry">
+                            <td class="fw-light" style="width: 200px;">Made In Country</td>
+                            <td class="fw-normal" style="width: 200px;">{{ $items->madeIn }}</td>
+                        </tr>
+                        <tr id="category">
+
+                            <td class="fw-light" style="width: 200px;">Category</td>
+                            <td class="fw-normal" style="width: 200px;">{{ $items->lense }}</td>
+
+                        </tr>
+                        <tr id="degreeCategory">
+
+                            <td class="fw-light" style="width: 200px;">Degree Category</td>
+                            <td class="fw-normal" style="width: 200px;">{{ $items->degree }}</td>
+
+                        </tr>
+                        <tr id="nearAndFar">
+
+                            <td class="fw-light" style="width: 200px;">Near And Far Category</td>
+                            <td class="fw-normal" style="width: 200px;">
+
+                                @if ($items->near_and_far == 'near')
+                                    အနီး
+                                @elseif ($items->near_and_far == 'far')
+                                    အ‌ဝေး
+                                @elseif ($items->near_and_far == 'sun_glass')
+                                    နေကာ
+                                @elseif ($items->near_and_far == 'normal')
+                                    ရိုးရိုး
+                                @else
+                                    N/A
+                                @endif
+
+                            </td>
 
                         </tr>
                         {{-- <tr>
                             <td class="fw-light" style="width:200px">Remark</td>
                             <td class="fw-normal">{{ $parts->description }}</td>
                         </tr> --}}
+                        <tr>
+                            <td class="fw-light" style="width:200px">Item Name</td>
+                            <td class="fw-normal" style="width: 200px;">
+                                {{ $items->item_name }}
+
+                            </td>
+                        </tr>
                         <tr>
                             <td class="fw-light" style="width:200px">Barcode</td>
                             <td class="fw-normal" style="width: 200px;">
@@ -273,6 +330,54 @@
     </div>
 
     </div>
+
+    <script src="{{ asset('locallink/js/ajax_jquery.js') }}"></script>
+    <script src="{{ asset('locallink/js/typehead.min.js') }}"></script>
+    <script src="{{ asset('locallink/js/moment.min.js') }}"></script>
+
+    <script>
+        $(document).ready(function() {
+            function toggleDropdownVisibility() {
+                let selectedValue = $('input[name="radio_category"]:checked').val();
+
+                if (selectedValue === 'Lenses') {
+                    $('#madeInCountry').hide();
+                    $('#category').show();
+                    $('#degreeCategory').show();
+                    $('#nearAndFar').show();
+
+                } else if (selectedValue === 'Frame') {
+                    $('#madeInCountry').show();
+                    $('#category').hide();
+                    $('#degreeCategory').hide();
+                    $('#nearAndFar').show();
+                } else {
+                    $('#madeInCountry').hide();
+                    $('#category').hide();
+                    $('#degreeCategory').hide();
+                    $('#nearAndFar').hide();
+
+                }
+            }
+
+            toggleDropdownVisibility();
+
+            $('input[name="radio_category"]').change(function() {
+                toggleDropdownVisibility();
+            });
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var radioButtons = document.querySelectorAll('.frmSearch input[type="radio"]');
+
+            radioButtons.forEach(function(radioButton) {
+                radioButton.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                });
+            });
+        });
+    </script>
     <script>
         function printPage() {
             window.print();

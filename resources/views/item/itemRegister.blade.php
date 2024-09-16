@@ -79,20 +79,94 @@
                             <div class="card-body">
 
 
-                                <div class="frmSearch col-sm-6">
-                                    <input type="checkbox" id="show" class=""> Items ရှိပြီးသားလား?
-                                    <div id="additional-elements" style="display: none;" class="mt-2">
-                                        <span style="font-weight: bolder;">
-                                            <label for="cst"
-                                                class="caption">{{ trans('Search With Item Name') }}</label>
-                                        </span>
-                                        <input type="text" id="customer" name="customer" class="form-control round"
-                                            autocomplete="off">
-                                        <button type="submit" class="my-3 btn btn-primary"
-                                            id="customer_search">Add</button>
-                                        <div id="customer-box-result"></div>
+
+                                <div class="row">
+                                    <div class="frmSearch col-sm-6">
+                                        <input type="checkbox" id="show" class=""><label for="">
+                                            Items ရှိပြီးသားလား?</label>
+                                        <div id="additional-elements" style="display: none;" class="mt-2">
+                                            <span style="font-weight: bolder;">
+                                                <label for="cst"
+                                                    class="caption">{{ trans('Search With Item Name') }}</label>
+                                            </span>
+                                            <input type="text" id="customer" name="customer"
+                                                class="form-control round" autocomplete="off">
+                                            <button type="submit" class="my-3 btn btn-primary"
+                                                id="customer_search">Add</button>
+                                            <div id="customer-box-result"></div>
+                                        </div>
+                                    </div>
+                                    <div class="frmSearch col-sm-6 mt-2">
+                                        <label>
+                                            <input type="radio" name="radio_category" value="ဆေး"
+                                                id="radio_category" checked>
+                                            ဆေး
+                                        </label>
+
+                                        <label>
+                                            <input type="radio" class="ml-3" name="radio_category"
+                                                id="radio_category" value="Lenses">
+                                            Lenses
+                                        </label>
+
+                                        <label>
+                                            <input type="radio" class="ml-3" name="radio_category"
+                                                id="radio_category" value="Frame">
+                                            Frame
+                                        </label><br>
+
                                     </div>
                                 </div>
+                                <div class="row mt-3" id="madeInDropdown" style="display: none;">
+                                    <div class="form-group col-md-6">
+                                        <label for="lensOptions">Choose Made In Country:</label>
+                                        <select id="madeIn" name="madeIn" class="form-control ">
+                                            <option value="" selected disabled>Choose One</option>
+                                            <option value="China">China</option>
+                                            <option value="Thai">Thai</option>
+                                            <option value="Korea">Korea</option>
+
+                                        </select>
+                                    </div>
+
+
+                                </div>
+                                <div class="row mt-3" id="lensDropdown" style="display:none;">
+                                    <div class="form-group col-md-6">
+                                        <label for="lensOptions">Choose Category:</label>
+                                        <select id="lensOptions" name="lense" class="form-control ">
+                                            <option value="" selected disabled>Choose One</option>
+                                            <option value="CR">CR</option>
+                                            <option value="MC">MC</option>
+                                            <option value="BB">BB</option>
+                                            <option value="PG">PG</option>
+                                            <option value="BBPG">BBPG</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label for="lensOptions">Choose Degree Category:</label>
+                                        <select id="degree" name="degree" class="form-control ">
+                                            <option value="" selected disabled>Choose One</option>
+
+
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row mt-3" id="near_and_far_dropdown" style="display: none;">
+                                    <div class="form-group col-md-6">
+                                        <label for="lensOptions">Select Near And Far Category:</label>
+                                        <select id="near_and_far" name="near_and_far" class="form-control ">
+                                            <option value="" selected disabled>Choose One</option>
+                                            <option value="near">အနီး</option>
+                                            <option value="far">အ‌‌ဝေး</option>
+                                            <option value="sun_glass">နေကာ</option>
+                                            <option value="normal">ရိုးရိုး</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
 
                                 <div class="mt-4 row">
                                     <div class="form-group col-md-6">
@@ -111,8 +185,8 @@
                                                         alt="Item Image Preview">
                                                 </span>
                                             </div>
-                                            <input type="file" class="form-control" id="item_image" name="item_image"
-                                                accept="image/*" onchange="previewImage(event)">
+                                            <input type="file" class="form-control" id="item_image"
+                                                name="item_image" accept="image/*" onchange="previewImage(event)">
                                         </div>
                                         @error('item_image')
                                             <p class="text-danger">{{ $message }}</p>
@@ -278,14 +352,51 @@
     </div>
 
 
+
+
     @include('layouts.footer')
+    <script src="{{ asset('locallink/js/ajax_jquery.js') }}"></script>
+    <script src="{{ asset('locallink/js/typehead.min.js') }}"></script>
+    <script src="{{ asset('locallink/js/moment.min.js') }}"></script>
 
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script> -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            let dropdown = $('#degree');
+            let startValue = 25;
+            let endValue = 500;
+            let step = 25;
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+            for (let i = startValue; i <= endValue; i += step) {
+                dropdown.append($('<option>', {
+                    value: i,
+                    text: i
+                }));
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $('input[name="radio_category"]').change(function() {
+                if ($('input[name="radio_category"]:checked').val() == 'Lenses') {
+
+                    $('#madeInDropdown').hide();
+                    $('#lensDropdown').show();
+                    $('#near_and_far_dropdown').show();
+
+                } else if ($('input[name="radio_category"]:checked').val() === 'Frame') {
+
+                    $('#madeInDropdown').show();
+                    $('#lensDropdown').hide();
+                    $('#near_and_far_dropdown').show();
+
+                } else {
+                    $('#madeInDropdown').hide();
+                    $('#lensDropdown').hide();
+                    $('#near_and_far_dropdown').hide();
+                }
+            });
+        });
+    </script>
     <script>
         $(document).ready(function() {
             $('.option-checkbox').on('change', function() {
@@ -299,13 +410,13 @@
             $('#customer').typeahead({
                 source: function(query, process) {
                     return $.get(path, {
-                        query: query
+                        query: query,
                     }, function(data) {
-                        console.log("Data received:", data); // Log the received data
                         return process(data);
-                    })
+                    });
                 }
-            })
+            });
+
             $(document).on('click', '#customer_search', function(e) {
                 e.preventDefault();
                 let serialNumber = $("#customer").val();

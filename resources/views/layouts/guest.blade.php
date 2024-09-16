@@ -11,9 +11,8 @@
     <link rel="shortcut icon" href="{{ asset('img/logo.jpg') }}" type="image/x-icon">
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link href="{{ asset('locallink/css/font_bunny.css') }}" rel="stylesheet" />
+    <link rel="stylesheet" href="{{ asset('locallink/css/google_font_source_sans_pro.css') }}">
     <!-- Font Awesome -->
 
 
@@ -22,14 +21,14 @@
 
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
 
     <!-- Scripts -->
 
 </head>
 <style>
     body {
-        background-image: linear-gradient(#0047AA,#A8F0FD );
+        background-image: linear-gradient(#0047AA, #A8F0FD);
         background-size: cover;
         background-repeat: no-repeat;
 
@@ -49,9 +48,9 @@
         </div>
         <div class="container">
             <div class="p-2 text-center" style="margin-top: 13%">
-                        <img src="{{ asset('img/navlogo.png') }}" alt="Login Image" width="200px">
-                    </div>
-            <div class="row justify-content-center" >
+                <img src="{{ asset('img/navlogo.png') }}" alt="Login Image" width="200px">
+            </div>
+            <div class="row justify-content-center">
                 <div class="mx-auto my-auto card col-md-5" style="border-radius: 10px">
 
                     <div class="p-2">

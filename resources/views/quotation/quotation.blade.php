@@ -2,12 +2,12 @@
 <HTML>
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
+    <link rel="stylesheet" href="{{ asset('locallink/css/bootstrap.min.css') }}">
+    <script src="{{ asset('locallink/js/ajax_jquery.js') }}"></script>
+    <script src="{{ asset('locallink/js/typehead.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <script src="{{ asset('locallink/js/moment.min.js') }}"></script>
+    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <style>
@@ -296,11 +296,28 @@
 
 
                                                         <td class="text-center" id="count">1</td>
-                                                        <td><input type="text"
-                                                                class="form-control productname typeahead"
-                                                                name="part_number[]" value="{{ old('part_number') }}"
-                                                                placeholder="{{ trans('Enter Part Number') }}"
-                                                                id='productname-0' autocomplete="off">
+                                                        <td>
+                                                            <div class="row align-items-center">
+                                                                <div class="col-auto">
+                                                                    <input type="checkbox" id="sell_status-0"
+                                                                        value="1"
+                                                                        class="form-check-input sell_status" />
+
+                                                                    <input type="hidden" name="sell_status[]"
+                                                                        id="sell_status_input-0"
+                                                                        class="form-control sell_status_input"
+                                                                        value="0" />
+                                                                </div>
+
+                                                                <div class="col">
+                                                                    <input type="text"
+                                                                        class="form-control productname typeahead item_name"
+                                                                        name="part_number[]"
+                                                                        value="{{ old('part_number') }}"
+                                                                        placeholder="{{ trans('Enter Part Number') }}"
+                                                                        id="productname-0" autocomplete="off">
+                                                                </div>
+                                                            </div>
                                                         </td>
 
                                                         <td><input type="text"
@@ -560,23 +577,26 @@
             function initializeTypeahead(count) {
                 $('#productname-' + count).typeahead({
                     source: function(query, process) {
-                        var Selectedlocation = $('#location').val();
-                        return $.ajax({
-                            url: "{{ route('autocomplete-part-code-invoice') }}",
-                            method: 'POST',
-                            data: {
-                                query: query,
-                                location: Selectedlocation
-                            },
-                            dataType: 'json',
-                            success: function(data) {
-                                console.log(data);
-                                process(data);
-                            }
-                        });
+                        if (!$('#sell_status-' + count).is(':checked')) {
+                            var Selectedlocation = $('#location').val();
+                            return $.ajax({
+                                url: "{{ route('autocomplete-part-code-invoice') }}",
+                                method: 'POST',
+                                data: {
+                                    query: query,
+                                    location: Selectedlocation,
+                                },
+                                dataType: 'json',
+                                success: function(data) {
+                                    console.log(data);
+                                    process(data);
+                                }
+                            });
+                        }
                     }
                 });
             }
+
 
             function initializeTypeaheads() {
                 for (let i = 0; i <= count; i++) {
@@ -624,51 +644,27 @@
             $("#addproduct").click(function(e) {
                 e.preventDefault();
                 count++;
-                $.ajax({
 
-                    type: 'GET',
-                    url: "{{ route('get.part.data-unit') }}",
-                    data: {
-                        // _token: "{{ csrf_token() }}",
-
-                    },
-                    success: function(data) {
-                        // itemNameInput.val(data.retail_price);
-                        // partDesc.val(data.descriptions);
-                        // exp_date.val(data.expired_date);
-
-                        var selectBox = document.getElementById("unit-" + count);
-
-                        // Loop through the data array
-                        data.forEach(function(item) {
-                            // Create an option element
-                            var option = document.createElement("option");
-
-                            // Set the value attribute to the unit id
-                            option.value = item.unit;
-
-                            // Set the text of the option to the unit name
-                            option.text = item.unit;
-
-                            // Append the option to the select element
-                            selectBox.appendChild(option);
-                        });
-
-
-                    },
-                    error: function(error) {
-                        console.error(error);
-                    }
-                });
                 let rowCount = $("#showitem123 tr").length;
                 let newRow = '<tr>' +
-
                     '<td class="text-center">' + (rowCount + 1) + '</td>' +
                     '<td style="display:none"><input type="hidden" class="form-control barcode typeahead" name="barcode[]" id="barcode-' +
                     count + '" autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="productname-' +
-                    count + '" autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control description typeahead" name="part_description[]" required id="description-' +
+                    '<td>' +
+                    '<div class="row align-items-center">' +
+                    '<div class="col-auto">' +
+                    '<input type="checkbox" id="sell_status-' + count +
+                    '" value="1" class="form-check-input sell_status" />' +
+                    '<input type="hidden" name="sell_status[]" id="sell_status_input-' + count +
+                    '" value="0" class="form-control sell_status_input" />' +
+                    '</div>' +
+                    '<div class="col">' +
+                    '<input type="text" class="form-control productname typeahead item_name" name="part_number[]" id="productname-' +
+                    count + '" autocomplete="off" placeholder="Enter Part Number">' +
+                    '</div>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td><input type="text" class="form-control description typeahead" name="part_description[]"  id="description-' +
                     count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
                     count +
@@ -681,14 +677,16 @@
                     count + '"   autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control retail_price" name="retail_price[]" value="0" id="retail_price-' +
                     count + '"   autocomplete="off"></td>' +
+                    '<td style="display : none;"><input type="text" class="form-control buy_price" name="buy_price[]" value="0" id="buy_price-' +
+                    count + '"   autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control exp_date " name="exp_date[]" id="exp_date-' +
                     count +
                     '"   autocomplete="off"></td>' +
-                    '<td style ="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
+                    '<td style="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
                     count +
                     '"   autocomplete="off"></td>' +
 
-                    '<td style="text-align:center"><span class="currenty"></span><strong><span id="result-' +
+                    '<td style="text-align:center"><span class="currenty"></span><strong><span class="ttlText1" id="result-' +
                     count + '">0</span></strong></td>' +
                     '<input type="hidden" name="total_tax[]" id="taxa-' + count + '" value="0">' +
 
@@ -718,12 +716,20 @@
                 initializeTypeaheads();
             });
 
-            $(document).on('change', '.productname', function() {
-                let itemCode = $(this).val();
-                let row = $(this).closest('tr');
-                let cuz_name = $("#type").val();
-                updateItemName(itemCode, row, cuz_name);
+            $(document).on('click', '.typeahead .dropdown-item', function(e) {
+                e.preventDefault();
+                if ($("#customer").val()) {
+
+                } else {
+                    const itemCode = $(this).text().trim();
+                    const row = $(this).closest('tr');
+                    let cuz_name = $("#type").val();
+                    updateItemName(itemCode, row, cuz_name);
+                    $('#productname').val('');
+                }
             });
+
+
             // Initialize typeahead for the first row
             initializeTypeahead(count);
             $(document).on("click", '#calculate', function(e) {
@@ -843,22 +849,29 @@
                     url: "{{ route('customer_service_search_fill') }}",
                     data: {
                         _token: "{{ csrf_token() }}",
-                        model: serialNumber // Adjusted to match server-side parameter name
+                        model: serialNumber,
+                        location: $('#location').val()
                     },
                     success: function(data) {
                         console.log(data);
 
-                        $("#name").val(data['customer']['name']);
-                        $("#customer_id").val(data['customer']['id']);
-                        $("#phone_no").val(data['customer']['phno']);
-                        $("#type").val(data['customer']['type']);
-                        $("#address").val(data['customer']['address']);
-                        // Adjusted to match server-side data
+                        if (data.customer) {
+                            $("#name").val(data.customer.name);
+                            $("#customer_id").val(data.customer.id);
+                            $("#phone_no").val(data.customer.phno);
+                            $("#type").val(data.customer.type);
+                            $("#address").val(data.customer.address);
+                            $("#customer").val('');
+                        } else {
+                            console.error("Customer not found");
+                            $("#customer").val('');
+                        }
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
                     }
                 });
+
             });
         });
     </script>
@@ -870,7 +883,7 @@
 
 
     <script>
-        $("input").on("change", function() {
+        $("input[type='date']").on("change", function() {
             if (this.value && moment(this.value, "YYYY-MM-DD").isValid()) {
                 this.setAttribute(
                     "data-date",
@@ -896,6 +909,20 @@
             let discount = parseFloat($(this).val()) || 0;
             let total = subtotal - discount;
             $("#total_total").val(total);
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('change', function(e) {
+                if (e.target && e.target.classList.contains('sell_status')) {
+                    const checkbox = e.target;
+                    const inputId = checkbox.id.replace('sell_status-', 'sell_status_input-');
+                    const input = document.getElementById(inputId);
+                    if (input) {
+                        input.value = checkbox.checked ? '1' : '0';
+                    }
+                }
+            });
         });
     </script>
 </body>

@@ -36,6 +36,10 @@ class ItemsImportTemplate implements WithHeadings
             'လက်လီစျေး',
             'လက်ကားစျေး',
             'ဝယ်စျေး',
+            'Options',
+            'Made In Country',
+            'Lense',
+            'Degree',
             'Parent ID',
         ];
     }

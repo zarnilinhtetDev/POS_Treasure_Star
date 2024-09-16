@@ -2,12 +2,13 @@
 <HTML>
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
+    <link rel="stylesheet" href="{{ asset('locallink/css/bootstrap.min.css') }}">
+    <script src="{{ asset('locallink/js/ajax_jquery.js') }}"></script>
+    <script src="{{ asset('locallink/js/typehead.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <script src="{{ asset('locallink/js/moment.min.js') }}"></script>
+    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <style>
@@ -90,7 +91,7 @@
                         <input type="date" name="overdue_date" id="overdue_date" class="form-control round"
                             autocomplete="off" min="<?= date('Y-m-d') ?>" value="{{ $invoice->overdue_date }}">
                     </div>
-                    <div class="col-md-3">
+                    {{-- <div class="col-md-3">
                         <label for="payment_method" style="font-weight: bolder;">{{ trans('Payment Methods') }}</label>
                         <select class="mb-4 form-control round" aria-label="Default select example"
                             name="payment_method" required>
@@ -103,7 +104,7 @@
                             <option value="Others" {{ $invoice->payment_method == 'Others' ? 'selected' : '' }}>Others
                             </option>
                         </select>
-                    </div>
+                    </div> --}}
 
 
                     <input type="hidden" name="quote_category" id="quote_category" value="Invoice">
@@ -383,12 +384,33 @@
                                                             <td class="text-center" id="count">
                                                                 {{ $key + 1 }}
                                                             </td>
-                                                            <td><input type="text"
-                                                                    class="form-control productname typeahead"
-                                                                    name="part_number[]"
-                                                                    value="{{ $sell->part_number }}"
-                                                                    placeholder="{{ trans('Enter Part Number') }}"
-                                                                    id='productname-0' autocomplete="off">
+
+                                                            <td>
+
+                                                                <div class="row align-items-center">
+                                                                    <div class="col-auto">
+                                                                        <input type="checkbox" id="sell_status-0"
+                                                                            value="1"
+                                                                            class="form-check-input sell_status"
+                                                                            {{ $sell->status == 1 ? 'checked' : '0' }} />
+
+
+                                                                        <input type="hidden" name="sell_status[]"
+                                                                            id="sell_status_input-0"
+                                                                            class="form-control sell_status_input"
+                                                                            value="0" />
+
+                                                                    </div>
+                                                                    <div class="col">
+                                                                        <input type="text"
+                                                                            class="form-control productname typeahead"
+                                                                            name="part_number[]"
+                                                                            value="{{ $sell->part_number }}"
+                                                                            placeholder="{{ trans('Enter Part Number') }}"
+                                                                            id='productname-0' autocomplete="off">
+                                                                    </div>
+                                                                </div>
+
                                                             </td>
 
                                                             <td><input type="text"
@@ -598,57 +620,111 @@
                                                     </tr>
 
 
+                                                <tbody id="trContainer">
+                                                    @foreach ($payment_method as $index => $payment)
+                                                        <tr class="sub_c">
+                                                            <td colspan="2"></td>
+                                                            <td colspan="3" align="right">
+                                                                @if ($index === 0)
+                                                                    <strong>Payment Method</strong>
+                                                                @endif
+                                                            </td>
+                                                            <td align="left" colspan="1" class="col-md-2">
+                                                                <input type="text" name="payment_amount[]"
+                                                                    class="form-control payment_amount"
+                                                                    id="payment_amount"
+                                                                    value="{{ $payment->payment_amount }}" required>
+                                                            </td>
+                                                            <td align="left" colspan="1"
+                                                                class="col-md-2 payment_method">
+                                                                <select name="payment_method[]" id="payment_method"
+                                                                    class="form-control" required>
+                                                                    <option value="Cash"
+                                                                        {{ $payment->payment_method === 'Cash' ? 'selected' : '' }}>
+                                                                        Cash</option>
+                                                                    <option value="K Pay"
+                                                                        {{ $payment->payment_method === 'K Pay' ? 'selected' : '' }}>
+                                                                        K Pay</option>
+                                                                    <option value="Wave"
+                                                                        {{ $payment->payment_method === 'Wave' ? 'selected' : '' }}>
+                                                                        Wave</option>
+                                                                    <option value="Others"
+                                                                        {{ $payment->payment_method === 'Others' ? 'selected' : '' }}>
+                                                                        Others</option>
+                                                                </select>
+                                                            </td>
+                                                            <td align="left" colspan="1" class="col-md-1">
+                                                                @if ($index === 0)
+                                                                    <button type="button" id="addRow"
+                                                                        class="btn btn-primary">
+                                                                        <i class="fa-solid fa-plus"></i>
+                                                                    </button>
+                                                                @endif
 
-                                                    <tr class="sub_c" style="display: table-row;">
-                                                        <td colspan="2">
-
-                                                        </td>
-                                                        <td colspan="3" align="right"><strong>Deposit
-                                                            </strong>
-                                                        </td>
-                                                        <td align="left" colspan="2"><input type="text"
-                                                                name="paid" class="form-control" id="paid"
-                                                                onchange="paidFunction()"
-                                                                value="{{ $invoice->deposit }}">
-
-                                                        </td>
-
-                                                    </tr>
-                                                    <tr class="sub_c" style="display: table-row;">
-                                                        <td colspan="2">
-
-                                                        </td>
-                                                        <td colspan="3" align="right"><strong>Remaining Balance
-                                                            </strong>
-                                                        </td>
-                                                        <td align="left" colspan="2"><input type="text"
-                                                                name="balance" class="form-control" id="balance"
-                                                                readonly value="{{ $invoice->remain_balance }}">
-
-                                                        </td>
-                                                    </tr>
-
-                                                    <tr class="sub_c " style="display: table-row;">
-                                                        <td colspan="12"> <label for="remark">Remark</label>
-                                                            <textarea name="remark" id="remark" class="form-control" rows="2">{{ $invoice->remark }}</textarea>
-
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="sub_c " style="display: table-row;">
+                                                                @if ($index === 1)
+                                                                    <button class="removeRow btn btn-danger"><i
+                                                                            class="fa-solid fa-minus"></i></button>
+                                                                @endif
+                                                            </td>
+                                                        </tr>
+                                                    @endforeach
 
 
-                                                        <td align="right" colspan="9">
-
-                                                            <button id="submitButton" class="mt-3 btn btn-primary"
-                                                                type="submit">Save</button>
+                                                </tbody>
 
 
-                                                            <a href="{{ url('invoice') }}" type="submit"
-                                                                class="mt-3 btn btn-danger">Cancel
-                                                            </a>
 
-                                                        </td>
-                                                    </tr>
+
+                                                <tr class="sub_c" style="display: table-row;">
+                                                    <td colspan="2">
+
+                                                    </td>
+                                                    <td colspan="3" align="right"><strong>Deposit
+                                                        </strong>
+                                                    </td>
+                                                    <td align="left" colspan="2"><input type="text"
+                                                            name="paid" class="form-control" id="paid"
+                                                            onchange="paidFunction()"
+                                                            value="{{ $invoice->deposit }}">
+
+                                                    </td>
+
+                                                </tr>
+                                                <tr class="sub_c" style="display: table-row;">
+                                                    <td colspan="2">
+
+                                                    </td>
+                                                    <td colspan="3" align="right"><strong>Remaining Balance
+                                                        </strong>
+                                                    </td>
+                                                    <td align="left" colspan="2"><input type="text"
+                                                            name="balance" class="form-control" id="balance"
+                                                            readonly value="{{ $invoice->remain_balance }}">
+
+                                                    </td>
+                                                </tr>
+
+                                                <tr class="sub_c " style="display: table-row;">
+                                                    <td colspan="12"> <label for="remark">Remark</label>
+                                                        <textarea name="remark" id="remark" class="form-control" rows="2">{{ $invoice->remark }}</textarea>
+
+                                                    </td>
+                                                </tr>
+                                                <tr class="sub_c " style="display: table-row;">
+
+
+                                                    <td align="right" colspan="9">
+
+                                                        <button id="submitButton" class="mt-3 btn btn-primary"
+                                                            type="submit">Save</button>
+
+
+                                                        <a href="{{ url('invoice') }}" type="submit"
+                                                            class="mt-3 btn btn-danger">Cancel
+                                                        </a>
+
+                                                    </td>
+                                                </tr>
                                                 </tbody>
                                             </table>
                                         </div>
@@ -671,20 +747,22 @@
             function initializeTypeahead(count) {
                 $('#productname-' + count).typeahead({
                     source: function(query, process) {
-                        var Selectedlocation = $('#location').val();
-                        return $.ajax({
-                            url: "{{ route('autocomplete-part-code-invoice') }}",
-                            method: 'POST',
-                            data: {
-                                query: query,
-                                location: Selectedlocation,
-                            },
-                            dataType: 'json',
-                            success: function(data) {
-                                console.log(data);
-                                process(data);
-                            }
-                        });
+                        if (!$('#sell_status-' + count).is(':checked')) {
+                            var Selectedlocation = $('#location').val();
+                            return $.ajax({
+                                url: "{{ route('autocomplete-part-code-invoice') }}",
+                                method: 'POST',
+                                data: {
+                                    query: query,
+                                    location: Selectedlocation,
+                                },
+                                dataType: 'json',
+                                success: function(data) {
+                                    console.log(data);
+                                    process(data);
+                                }
+                            });
+                        }
                     }
                 });
             }
@@ -734,51 +812,27 @@
             $("#addproduct").click(function(e) {
                 e.preventDefault();
                 count++;
-                $.ajax({
 
-                    type: 'GET',
-                    url: "{{ route('get.part.data-unit') }}",
-                    data: {
-                        // _token: "{{ csrf_token() }}",
-
-                    },
-                    success: function(data) {
-                        // itemNameInput.val(data.retail_price);
-                        // partDesc.val(data.descriptions);
-                        // exp_date.val(data.expired_date);
-
-                        var selectBox = document.getElementById("unit-" + count);
-
-                        // Loop through the data array
-                        data.forEach(function(item) {
-                            // Create an option element
-                            var option = document.createElement("option");
-
-                            // Set the value attribute to the unit id
-                            option.value = item.unit;
-
-                            // Set the text of the option to the unit name
-                            option.text = item.unit;
-
-                            // Append the option to the select element
-                            selectBox.appendChild(option);
-                        });
-
-
-                    },
-                    error: function(error) {
-                        console.error(error);
-                    }
-                });
                 let rowCount = $("#showitem123 tr").length;
                 let newRow = '<tr>' +
-
                     '<td class="text-center">' + (rowCount + 1) + '</td>' +
                     '<td style="display:none"><input type="hidden" class="form-control barcode typeahead" name="barcode[]" id="barcode-' +
                     count + '" autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="productname-' +
-                    count + '" autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control description typeahead" name="part_description[]" id="description-' +
+                    '<td>' +
+                    '<div class="row align-items-center">' +
+                    '<div class="col-auto">' +
+                    '<input type="checkbox" id="sell_status-' + count +
+                    '" value="1" class="form-check-input sell_status" />' +
+                    '<input type="hidden" name="sell_status[]" id="sell_status_input-' + count +
+                    '" value="0" class="form-control sell_status_input" />' +
+                    '</div>' +
+                    '<div class="col">' +
+                    '<input type="text" class="form-control productname typeahead item_name" name="part_number[]" id="productname-' +
+                    count + '" autocomplete="off" placeholder="Enter Part Number">' +
+                    '</div>' +
+                    '</div>' +
+                    '</td>' +
+                    '<td><input type="text" class="form-control description typeahead" name="part_description[]"  id="description-' +
                     count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
                     count +
@@ -791,10 +845,11 @@
                     count + '"   autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control retail_price" name="retail_price[]" value="0" id="retail_price-' +
                     count + '"   autocomplete="off"></td>' +
+                    '<td style="display : none;"><input type="text" class="form-control buy_price" name="buy_price[]" value="0" id="buy_price-' +
+                    count + '"   autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control exp_date " name="exp_date[]" id="exp_date-' +
                     count +
                     '"   autocomplete="off"></td>' +
-
                     '<td style="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
                     count +
                     '"   autocomplete="off"></td>' +
@@ -829,102 +884,86 @@
                 initializeTypeaheads();
             });
 
-            $(document).on('change', '.productname', function() {
-                let itemCode = $(this).val();
-                let row = $(this).closest('tr');
-                let cuz_name = $("#type").val();
-                updateItemName(itemCode, row, cuz_name);
+
+            $(document).ready(function() {
+                function calculatePayment() {
+                    let total = 0;
+                    $('.payment_amount').each(function() {
+                        let value = parseFloat($(this).val()) || 0;
+                        total += value;
+                    });
+                    total = Math.round(total);
+                    $('#paid').val(total);
+                    paidFunction();
+                }
+
+                function paidFunction() {
+                    let paid = parseFloat($('#paid').val()) || 0;
+                    let total_p = parseFloat($('#total_total').val()) || 0;
+                    let balance = total_p - paid;
+                    balance = Math.round(balance);
+                    $('#balance').val(balance);
+                }
+
+                $(document).on('input', '.payment_amount', function() {
+                    calculatePayment();
+                });
+
+                $('#paid').on('input', function() {
+                    paidFunction();
+                });
+
+                $('#addRow').click(function() {
+                    // Check the number of rows
+                    if ($('#trContainer tr.sub_c').length < 4) {
+                        var newRow = `<tr class="sub_c">
+                <td colspan="2"></td>
+                <td colspan="3" align="right"><strong></strong></td>
+                <td align="left" colspan="1" class="col-md-2">
+                    <input type="text" name="payment_amount[]" class="form-control payment_amount">
+                </td>
+                <td align="left" colspan="1" class="col-md-2">
+                    <select name="payment_method[]" class="form-control">
+                        <option value="Cash">Cash</option>
+                        <option value="K Pay">K Pay</option>
+                        <option value="Wave">Wave</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </td>
+                <td align="left" colspan="1" class="col-md-1">
+                    <button class="removeRow btn btn-danger"><i class="fa-solid fa-minus"></i></button>
+                </td>
+            </tr>`;
+
+                        $('#trContainer').append(newRow);
+                    } else {
+                        alert('You can only add a maximum of 4 payment rows.');
+                    }
+                });
+
+                $(document).on('click', '.removeRow', function() {
+                    $(this).closest('tr').remove();
+                    calculatePayment();
+                });
+
+                calculatePayment();
             });
-            // Initialize typeahead for the first row
-            initializeTypeahead(count);
-            // $(document).on("click", '#calculate', function(e) {
-            //     e.preventDefault();
-            //     let salePriceCategory = $('#sale_price_category').val();
 
-            //     $('#showitem123 tr').each(function(index) {
-            //         let row = $(this);
-            //         let qty = parseInt(row.find('.req.amnt').val()) || 0;
-            //         let price;
 
-            //         if (salePriceCategory === 'Default') {
-            //             let cuz_name = $("#type").val();
-            //             price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
-            //                     .val()) || 0 :
-            //                 parseFloat(row.find('.retail_price').val()) || 0;
-            //         } else if (salePriceCategory === 'Whole Sale') {
-            //             price = parseFloat(row.find('.price').val()) || 0;
-            //         } else if (salePriceCategory === 'Retail') {
-            //             price = parseFloat(row.find('.retail_price').val()) || 0;
-            //         }
+            $(document).on('click', '.typeahead .dropdown-item', function(e) {
+                e.preventDefault();
+                if ($("#customer").val()) {
 
-            //         let discount = parseFloat(row.find('.vat').val()) || 0;
+                } else {
+                    const itemCode = $(this).text().trim();
+                    const row = $(this).closest('tr');
+                    let cuz_name = $("#type").val();
+                    updateItemName(itemCode, row, cuz_name);
+                    $('#productname').val('');
+                }
+            });
 
-            //         let total = qty * price;
-            //         let discountAmount = (total * discount) / 100;
-            //         let subtotal = total - discountAmount;
 
-            //         row.find('.ttlText1').text(subtotal.toFixed(2));
-            //     });
-
-            //     let total = 0;
-            //     let totalTax = 0;
-
-            //     $('#showitem123 tr').each(function(index) {
-            //         let row = $(this);
-            //         let qty = parseInt(row.find('.req.amnt').val()) || 0;
-            //         let price;
-
-            //         if (salePriceCategory === 'Default') {
-            //             let cuz_name = $("#type").val();
-            //             price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
-            //                     .val()) || 0 :
-            //                 parseFloat(row.find('.retail_price').val()) || 0;
-            //         } else if (salePriceCategory === 'Whole Sale') {
-            //             price = parseFloat(row.find('.price').val()) || 0;
-            //         } else if (salePriceCategory === 'Retail') {
-            //             price = parseFloat(row.find('.retail_price').val()) || 0;
-            //         }
-
-            //         let discount = parseFloat(row.find('.vat').val()) || 0;
-
-            //         let itemTotal = qty * price;
-
-            //         if (!isNaN(discount) && discount >= 0) {
-            //             let itemTax = (itemTotal * discount) / 100;
-            //             totalTax += itemTax;
-            //         }
-
-            //         if (!isNaN(discount) && discount > 0) {
-            //             let discountAmount = (itemTotal * discount) / 100;
-            //             itemTotal -= discountAmount;
-            //         }
-
-            //         total += itemTotal;
-
-            //         row.find('.ttlText1').text(itemTotal.toFixed(2));
-            //         if (price > 0) {
-            //             row.find('.ttlText1').show();
-            //             row.find('.ttlText').hide();
-            //         } else {
-            //             row.find('.ttlText1').hide();
-            //             row.find('.ttlText').show();
-            //         }
-            //     });
-
-            //     let tax = total * 0.05;
-            //     tax = Math.ceil(tax);
-
-            //     let totalTotal = total - totalTax;
-
-            //     $('#invoiceyoghtml').val(total.toFixed(2));
-            //     $('#commercial_text').val(totalTax.toFixed(2));
-            //     $('#total').val(totalTotal.toFixed(2));
-            //     $('#extra_discount').val('');
-            //     $('#paid').val('');
-            //     $('#balance').val('');
-            //     $('#total_total').val(total_total);
-            //     $('#total_discount').val('');
-            // });
             $(document).ready(function() {
                 function calculateTotals() {
                     let salePriceCategory = $('#sale_price_category').val();
@@ -1028,6 +1067,14 @@
 
 
         });
+
+
+        function paidFunction() {
+            let paid = document.getElementById("paid").value;
+            let total_p = document.getElementById("invoiceyoghtml").value;
+            let balance = total_p - paid;
+            $("#balance").val(balance);
+        }
     </script>
     <script>
         $(document).on('click', '.remove_item_btn', function(e) {
@@ -1043,14 +1090,6 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
-        function paidFunction() {
-
-            let paid = document.getElementById("paid").value;
-            let total_p = document.getElementById("total_total").value;
-            let balance = total_p - paid;
-            $("#balance").val(balance); //update balance
-        }
     </script>
 
     <script>
@@ -1095,22 +1134,29 @@
                     url: "{{ route('customer_service_search_fill') }}",
                     data: {
                         _token: "{{ csrf_token() }}",
-                        model: serialNumber // Adjusted to match server-side parameter name
+                        model: serialNumber,
+                        location: $('#location').val()
                     },
                     success: function(data) {
                         console.log(data);
 
-                        $("#name").val(data['customer']['name']);
-                        $("#customer_id").val(data['customer']['id']);
-                        $("#phone_no").val(data['customer']['phno']);
-                        $("#type").val(data['customer']['type']);
-                        $("#address").val(data['customer']['address']);
-                        // Adjusted to match server-side data
+                        if (data.customer) {
+                            $("#name").val(data.customer.name);
+                            $("#customer_id").val(data.customer.id);
+                            $("#phone_no").val(data.customer.phno);
+                            $("#type").val(data.customer.type);
+                            $("#address").val(data.customer.address);
+                            $("#customer").val('');
+                        } else {
+                            console.error("Customer not found");
+                            $("#customer").val('');
+                        }
                     },
                     error: function(xhr, status, error) {
                         console.error(xhr.responseText);
                     }
                 });
+
             });
         });
     </script>
@@ -1122,7 +1168,7 @@
 
 
     <script>
-        $("input").on("change", function() {
+        $("input[type='date']").on("change", function() {
             if (this.value && moment(this.value, "YYYY-MM-DD").isValid()) {
                 this.setAttribute(
                     "data-date",
@@ -1150,6 +1196,28 @@
             $("#total_total").val(total);
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function updateHiddenInput(checkbox) {
+                const input = checkbox.closest('tr').querySelector('.sell_status_input');
+                if (input) {
+                    input.value = checkbox.checked ? '1' : '0';
+                }
+            }
+
+            document.addEventListener('change', function(e) {
+                if (e.target && e.target.classList.contains('sell_status')) {
+                    updateHiddenInput(e.target);
+                }
+            });
+
+            document.querySelectorAll('.sell_status').forEach(function(checkbox) {
+                updateHiddenInput(checkbox);
+            });
+        });
+    </script>
+
+
 </body>
 
 </HTML>

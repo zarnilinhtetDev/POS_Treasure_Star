@@ -3,13 +3,12 @@
 
 <head>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
-
+    <link rel="stylesheet" href="{{ asset('locallink/css/bootstrap.min.css') }}">
+    <script src="{{ asset('locallink/js/ajax_jquery.js') }}"></script>
+    <script src="{{ asset('locallink/js/typehead.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <script src="{{ asset('locallink/js/moment.min.js') }}"></script>
+    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <style>
         input {
@@ -249,6 +248,7 @@
                                         </select>
                                     </div>
                                 @endif
+
                                 <div class="form-group mt-3">
                                     <label for="address">Address</label>
                                     <input type="text" class="form-control" id="phone number"
@@ -524,6 +524,9 @@
                                                         <th width="9%" class="text-center">
                                                             {{ trans('လက်လီစျေး') }}
                                                         </th>
+                                                        <th style="display: none;"width="9%" class="text-center">
+                                                            {{ trans('၀ယ်စျေး') }}
+                                                        </th>
                                                         <!-- <th width="9%" class="text-center">
                                                             {{ trans('Expiry') }}
                                                         </th> -->
@@ -579,6 +582,10 @@
                                                         <td><input type="text" class="form-control retail_price"
                                                                 name="retail_price[]" id="retail_price-0"
                                                                 autocomplete="off" value="0">
+                                                        </td>
+                                                        <td style="display: none;"><input type="text"
+                                                                class="form-control buy_price" name="buy_price[]"
+                                                                id="buy_price-0" autocomplete="off" value="0">
                                                         </td>
                                                         <td style="display:none;"><input type="hidden"
                                                                 class="form-control exp_date " name="exp_date[]"
@@ -695,6 +702,22 @@
 
                                                         </td>
                                                     </tr>
+                                                    <tr style="display: none;" class="sub_c"
+                                                        style="display: table-row;">
+                                                        <td colspan="2">
+
+                                                        </td>
+                                                        <td colspan="3" align="right"><strong>Total Purchase
+                                                            </strong>
+                                                        </td>
+                                                        <td align="left" colspan="2" class="col-md-4"><input
+                                                                type="text" name="total_buy_price"
+                                                                class="form-control" id="total_buy_price" readonly
+                                                                style="background-color: #E9ECEF">
+
+                                                        </td>
+
+                                                    </tr>
                                                     <tr class="sub_c" style="display: table-row;">
                                                         <td colspan="2">
 
@@ -710,9 +733,6 @@
                                                         </td>
 
                                                     </tr>
-
-
-
                                                     <tr class="sub_c" style="display: table-row;">
                                                         <td colspan="2">
 
@@ -770,6 +790,7 @@
                                                         </td>
                                                     </tr>
                                                 </tbody>
+
 
                                                 <tr class="sub_c">
                                                     <td colspan="2">
@@ -898,7 +919,6 @@
 
                     });
                 }
-
 
 
 
@@ -1107,7 +1127,7 @@
                     }
                 }
 
-
+                //Drop down list for item name
 
 
                 $(document).on('click', '.remove_item_btn', function(e) {
@@ -1122,6 +1142,7 @@
 
                     initializeTypeaheads();
                 });
+
 
                 $(document).ready(function() {
                     function calculatePayment() {
@@ -1186,26 +1207,6 @@
                     calculatePayment();
                 });
 
-
-
-                // $(document).on('change', '.productname', function() {
-                //     let itemCode = $(this).val();
-                //     let row = $(this).closest('tr');
-                //     updateItemName(itemCode);
-                //     $(this).val('');
-                // });
-
-                // $(document).on('change', '.typeahead.dropdown-menu .dropdown-item', function(event) {
-                //     // Check if the Enter key (keyCode 13) is pressed
-                //     // if (event.keyCode === 13) {
-                //     event.preventDefault(); // Prevent the default action (e.g., form submission)
-                //     let itemCode = $(this).val(); // Get the input value
-                //     let row = $(this).closest('tr');
-                //     updateItemName(itemCode); // Call your function with the input value
-                //     $(this).val(''); // Clear the input field
-                //     // }
-                // });
-
                 $(document).on('change', '#barcode', function() {
                     let itemCode = $(this).val();
                     let row = $(this).closest('tr');
@@ -1216,14 +1217,16 @@
 
                 $(document).on('click', '.typeahead .dropdown-item', function(e) {
                     e.preventDefault();
-                    const selectedItem = $(this).text().trim();
-                    const row = $(this).closest('tr');
-                    updateItemName(selectedItem, row);
-                    $('#productname').val('');
+                    if ($("#customer").val()) {
+
+                    } else {
+                        const itemCode = $(this).text().trim();
+                        const row = $(this).closest('tr');
+                        let cuz_name = $("#type").val();
+                        updateItemName(itemCode, row, cuz_name);
+                        $('#productname').val('');
+                    }
                 });
-
-
-
 
 
                 // Initialize typeahead for the first row
@@ -1324,6 +1327,10 @@
                     }
                 });
 
+
+
+
+
                 $(document).on('click', '#customer_search', function(e) {
                     e.preventDefault();
                     let serialNumber = $("#customer").val();
@@ -1333,22 +1340,29 @@
                         url: "{{ route('customer_service_search_fill') }}",
                         data: {
                             _token: "{{ csrf_token() }}",
-                            model: serialNumber // Adjusted to match server-side parameter name
+                            model: serialNumber,
+                            location: $('#location').val()
                         },
                         success: function(data) {
                             console.log(data);
 
-                            $("#name").val(data['customer']['name']);
-                            $("#customer_id").val(data['customer']['id']);
-                            $("#phone_no").val(data['customer']['phno']);
-                            $("#type").val(data['customer']['type']);
-                            $("#address").val(data['customer']['address']);
-                            // Adjusted to match server-side data
+                            if (data.customer) {
+                                $("#name").val(data.customer.name);
+                                $("#customer_id").val(data.customer.id);
+                                $("#phone_no").val(data.customer.phno);
+                                $("#type").val(data.customer.type);
+                                $("#address").val(data.customer.address);
+                                $("#customer").val('');
+                            } else {
+                                console.error("Customer not found");
+                                 $("#customer").val('');
+                            }
                         },
                         error: function(xhr, status, error) {
                             console.error(xhr.responseText);
                         }
                     });
+
                 });
             });
 
@@ -1388,7 +1402,6 @@
         </script>
 
 
-        <!-- Bootstrap 4 -->
         <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
 </body>

@@ -7,6 +7,7 @@ use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\TransferHistory;
 use App\Models\Transfer_Historyy;
+use Illuminate\Support\Facades\Cache;
 
 
 class WarehouseController extends Controller
@@ -128,10 +129,13 @@ class WarehouseController extends Controller
                 $item->retail_price = $item_from->retail_price;
                 $item->wholesale_price = $item_from->wholesale_price;
                 $item->buy_price = $item_from->buy_price;
+                $item->radio_category = $item_from->radio_category;
+                $item->madeIn = $item_from->madeIn;
+                $item->lense = $item_from->lense;
+                $item->degree = $item_from->degree;
                 $item->item_unit = $item_from->item_unit;
                 $item->parent_id
                     = $lastItem->id + 1;
-
                 $item->quantity = $request->product_qty[$i];
                 $item->warehouse_id = $request->to_location;
                 $item->save();
@@ -158,22 +162,37 @@ class WarehouseController extends Controller
         $query = $request->get('query');
         $location = $request->get('location');
 
+        $cacheKey = "autocomplete_part_code_{$query}_{$location}";
 
-        $items = Item::where('item_name', 'like', '%' . $query . '%')->where('warehouse_id', $location)
-            ->pluck('item_name');
+        $items = Cache::remember($cacheKey, 60, function () use ($query, $location) {
+            return Item::where('item_name', 'like', '%' . $query . '%')
+                ->where('warehouse_id', $location)
+                ->pluck('item_name');
+        });
 
         return response()->json($items);
     }
+
     public function getPartData(Request $request)
     {
-        $result = Item::where('item_name', $request->item_name)->where('warehouse_id', $request->location)
-            ->first();
+        $itemName = $request->item_name;
+        $location = $request->location;
+
+        $cacheKey = "get_part_data_{$itemName}_{$location}";
+
+        $result = Cache::remember($cacheKey, 60, function () use ($itemName, $location) {
+            return Item::where('item_name', $itemName)
+                ->where('warehouse_id', $location)
+                ->first();
+        });
 
         if (!$result) {
             return response()->json(['error' => 'Product not found'], 404);
         }
+
         return response()->json($result);
     }
+
     public function show_history()
     {
 

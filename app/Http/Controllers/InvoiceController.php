@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\InvoicePaymentMethod;
+use App\Models\PurchaseOrderPaymentMethod;
 use Carbon\Carbon;
 use App\Models\Item;
 use App\Models\Sell;
@@ -59,7 +61,7 @@ class InvoiceController extends Controller
 
     public function quotation_register()
     {
-        $quotations = Invoice::whereNotNull('quote_no')->latest()->get();
+        $quotations = Invoice::withTrashed()->whereNotNull('quote_no')->latest()->get();
         $quotation_no = "Quote-" . count($quotations) + 1;
         $units = Unit::all();
         $warehouses = Warehouse::all();
@@ -68,15 +70,17 @@ class InvoiceController extends Controller
 
     public function invoice()
     {
-        $invoices = Invoice::where('status', 'invoice')->latest()->get();
-        $invoice_no = "Invoice-" . count($invoices) + 1;
+        $totalInvoices = Invoice::withTrashed()->where('status', 'invoice')->count();
+        $invoice_no = "Invoice-" . ($totalInvoices + 1);
         $units = Unit::all();
         $warehouses = Warehouse::all();
+
         return view('invoice.invoice', compact('invoice_no', 'units', 'warehouses'));
     }
+
     public function pos_register()
     {
-        $invoices = Invoice::whereIn('status',  ['pos', 'suspend'])->latest()->get();
+        $invoices = Invoice::withTrashed()->whereIn('status',  ['pos', 'suspend'])->latest()->get();
         $suspends = Invoice::where('status', 'suspend')->latest()->get();
         $invoice_no = "POS-" . count($invoices) + 1;
         $units = Unit::all();
@@ -156,12 +160,9 @@ class InvoiceController extends Controller
         $invoice->deposit  = $request->paid;
         $invoice->remain_balance  = $request->balance;
         $invoice->remark = $request->remark;
-
-        $invoice->payment_method   = $request->payment_method;
-
-
         $invoice->save();
         $last_id = $invoice->id;
+        // dd($request->all());
         for ($i = 0; $i < $count; $i++) {
             $result = new Sell();
             $result->invoiceid = $last_id;
@@ -174,7 +175,20 @@ class InvoiceController extends Controller
             $result->exp_date = $request->exp_date[$i];
             $result->unit = $request->item_unit[$i];
             $result->warehouse = $request->warehouse[$i];
+            $result->status = $request->sell_status[$i] ?? '0';
             $result->save();
+        }
+
+
+        if ($invoice->status === 'pos' || $invoice->status === 'invoice' || $invoice->status === 'suspend') {
+            $count2 = count($request->payment_method);
+            for ($i = 0; $i < $count2; $i++) {
+                $payment_method = new InvoicePaymentMethod();
+                $payment_method->invoice_id = $last_id;
+                $payment_method->payment_method = $request->payment_method[$i];
+                $payment_method->payment_amount = $request->payment_amount[$i];
+                $payment_method->save();
+            }
         }
 
         if ($request->status == 'quotation') {
@@ -226,29 +240,54 @@ class InvoiceController extends Controller
 
     public function customer_service_search(Request $request)
     {
-        $data = Customer::select('name', 'phno')
-            ->where('branch', $request->location)
-            ->where('name', 'LIKE', '%' . $request->get('query') . '%')
-            ->orWhere('phno', 'LIKE', '%' . $request->get('query') . '%')
-            ->get(); // Retrieve all matching records
+        $query = $request->get('query');
+        $location = $request->location;
+
+        $cacheKey = "customer_service_search_{$query}_{$location}";
+        $data = Cache::remember($cacheKey, 60, function () use ($query, $location) {
+            return Customer::select('name', 'phno')
+                ->where('branch', $location)
+                ->where(function ($queryBuilder) use ($query) {
+                    $queryBuilder->where('name', 'LIKE', '%' . $query . '%')
+                        ->orWhere('phno', 'LIKE', '%' . $query . '%');
+                })
+                ->get();
+        });
+
         info($request->location);
         return response()->json($data);
     }
 
 
+
     public function customer_service_search_fill(Request $request)
     {
+        $model = $request->model;
+        $location = $request->location;
 
-        $product = Customer::where('name', $request->model)->orWhere('phno', $request->model)
-            ->where('branch', $request->location)
-            ->orderBy('created_at', 'desc')
-            ->first();
-        if (!$product) {
-            return response()->json(['error' => 'Customer not found'], 404);
+        $cacheKey = "customer_service_search_fill_{$model}_{$location}";
+
+        $responseData = Cache::remember($cacheKey, 60, function () use ($model, $location) {
+            $product = Customer::where(function ($query) use ($model) {
+                $query->where('name', $model)
+                    ->orWhere('phno', $model);
+            })
+                ->where('branch', $location)
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            if (!$product) {
+                return ['error' => 'Customer not found'];
+            }
+
+            return [
+                'customer' => $product,
+            ];
+        });
+
+        if (isset($responseData['error'])) {
+            return response()->json($responseData, 404);
         }
-        $responseData = [
-            'customer' => $product,
-        ];
 
         return response()->json($responseData);
     }
@@ -268,12 +307,12 @@ class InvoiceController extends Controller
         if ($invoice) {
             Sell::where('invoiceid', $id)->delete();
 
+            InvoicePaymentMethod::where('invoice_id', $invoice->id)->delete();
             $invoice->delete();
-
             if ($invoice->status == 'pos') {
-                return back()->with('success', 'POS Deleted Successful!');
+                return back()->with('success', 'POS Deleted Successfully!');
             } else {
-                return redirect('/invoice')->with('success', 'Invoice Deleted Successful!');
+                return redirect('/invoice')->with('success', 'Invoice Deleted Successfully!');
             }
         } else {
             return redirect('/invoice')->with('error', 'Invoice Not Found!');
@@ -295,20 +334,22 @@ class InvoiceController extends Controller
         $suspend->delete();
         return redirect()->back()->with('delete', 'Suspend Deleted Successful!');
     }
+
+
     public function invoice_edit($id)
     {
 
         $invoice = Invoice::find($id);
         $warehouses = Warehouse::all();
+        $payment_method = InvoicePaymentMethod::where('invoice_id', $id)->get();
 
 
         if ($invoice->status === 'suspend') {
             $sells = Sell::where('invoiceid', $id)->get();
-
-            return view('invoice.pos_edit', compact('invoice', 'sells', 'warehouses'));
+            return view('invoice.pos_edit', compact('invoice', 'sells', 'warehouses', 'payment_method'));
         } else {
             $sell = Sell::where('invoiceid', $id)->get();
-            return view('invoice.invoice_edit', compact('invoice', 'sell', 'warehouses'));
+            return view('invoice.invoice_edit', compact('invoice', 'sell', 'warehouses', 'payment_method'));
         }
     }
 
@@ -352,12 +393,11 @@ class InvoiceController extends Controller
         $invoice->remain_balance  = $request->balance;
         $invoice->remark = $request->remark;
 
-        $invoice->payment_method   = $request->payment_method;
+        // $invoice->payment_method   = $request->payment_method;
         $invoice->save();
 
         $sellsData = [];
         $now = Carbon::now();
-
         if ($request->input('part_description')) {
             foreach ($request->input('part_description') as $key => $partDescription) {
                 $sellsData[] = [
@@ -369,10 +409,26 @@ class InvoiceController extends Controller
                     'unit' => $request->input('item_unit')[$key],
                     'exp_date' => $request->input('exp_date')[$key],
                     'warehouse' => $request->input('warehouse')[$key],
+                    'status' => $request->input('sell_status')[$key] ?? '0',
                     'invoiceid' => $id,
                     'created_at' => $now, // Add created_at field
                     'updated_at' => $now, // Add updated_at field
                 ];
+            }
+        }
+        if ($invoice->status === 'invoice' || $invoice->status === 'pos' || $invoice->status === 'suspend') {
+            InvoicePaymentMethod::where('invoice_id', $id)->delete();
+            if ($request->input('payment_method')) {
+                foreach ($request->input('payment_method') as $key => $paymentMethod) {
+                    $payment_amount = $request->input('payment_amount')[$key] ?? 0;
+                    $payment_method = new InvoicePaymentMethod();
+                    $payment_method->invoice_id = $id;
+                    $payment_method->payment_method = $paymentMethod;
+                    $payment_method->payment_amount = $payment_amount;
+                    $payment_method->created_at = $now;
+                    $payment_method->updated_at = $now;
+                    $payment_method->save();
+                }
             }
         }
 
@@ -445,6 +501,7 @@ class InvoiceController extends Controller
                 continue;
             }
         }
+
         $invoice_no =  "Invoice-" . count($invoice) + 1;
         $quotation = Invoice::find($id);
         $quotation->status = 'invoice';
@@ -456,23 +513,43 @@ class InvoiceController extends Controller
         return redirect('/invoice')->with('success', 'Change Invoice Successful!');
     }
 
+    //invoice , quotation , purchaseOrder
     public function autocompletePartCodeInvoice(Request $request)
     {
         $query = $request->get('query');
         $location = $request->get('location');
-        $items = Item::where('item_name', 'like', '%' . $query . '%')->where('warehouse_id', $location)
-            ->pluck('item_name');
+
+        $cacheKey = "autocomplete_{$query}_{$location}";
+        $items = Cache::remember($cacheKey, 60, function () use ($query, $location) {
+            return Item::where('item_name', 'like', '%' . $query . '%')
+                ->where('warehouse_id', $location)
+                ->pluck('item_name');
+        });
+
         return response()->json($items);
     }
+
     public function getPartDataInvoice(Request $request)
     {
-        $result = Item::where('item_name', $request->item_name)->where('warehouse_id', $request->location)
-            ->first();
+        $itemName = $request->item_name;
+        $location = $request->location;
+
+        $cacheKey = "part_data_{$itemName}_{$location}";
+
+        $result = Cache::remember($cacheKey, 60, function () use ($itemName, $location) {
+            return Item::where('item_name', $itemName)
+                ->where('warehouse_id', $location)
+                ->first();
+        });
+
         if (!$result) {
             return response()->json(['error' => 'Product not found'], 404);
         }
+
         return response()->json($result);
     }
+
+    //End invoice , quotation , purchaseOrder
 
 
     //Pos
@@ -567,23 +644,45 @@ class InvoiceController extends Controller
             $profile = UserProfile::all();
             $sells = Sell::where('invoiceid', $invoice->id)->get();
             $invoices = Invoice::where('id', $invoice->id)->get();
+            $payment_methods = InvoicePaymentMethod::where('invoice_id', $invoice->id)->get();
             return view('invoice.pos_detail', [
                 'invoice' => $invoice,
                 'invoices' => $invoices,
                 'sells' => $sells,
-                'profile' => $profile
+                'profile' => $profile,
+                'payment_methods' => $payment_methods,
             ]);
         } else {
+            $payment_methods = InvoicePaymentMethod::where('invoice_id', $invoice->id)->get();
             $profile = UserProfile::all();
             $sells = Sell::where('invoiceid', $invoice->id)->get();
             return view('invoice.invoice_details', [
                 'invoice' => $invoice,
                 'sells' => $sells,
-                'profile' => $profile
+                'profile' => $profile,
+                'payment_methods' => $payment_methods,
 
             ]);
         }
     }
+
+    public function invoice_receipt_print(Invoice $invoice)
+
+    {
+        $profile = UserProfile::all();
+        $sells = Sell::where('invoiceid', $invoice->id)->get();
+        $invoices = Invoice::where('id', $invoice->id)->get();
+        $payment_methods = InvoicePaymentMethod::where('invoice_id', $invoice->id)->get();
+        return view('invoice.invoice_receipt_print', [
+            'invoice' => $invoice,
+            'invoices' => $invoices,
+            'sells' => $sells,
+            'profile' => $profile,
+            'payment_methods' => $payment_methods,
+        ]);
+    }
+
+
     public function daily_sales()
     {
 
@@ -602,26 +701,50 @@ class InvoiceController extends Controller
     }
     public function item_search(Request $request)
     {
-        $data = Item::select('item_name')
-            ->where('item_name', 'LIKE', '%' . $request->get('query') . '%')->where('parent_id', 0)
-            ->pluck('item_name'); // Retrieve all matching records
+        $query = $request->get('query');
+
+        $cacheKey = "item_search_{$query}";
+
+        $data = Cache::remember($cacheKey, 60, function () use ($query) {
+            return Item::select('item_name')
+                ->where('item_name', 'LIKE', '%' . $query . '%')
+                ->where('parent_id', 0)
+                ->pluck('item_name');
+        });
+
         return response()->json($data);
     }
+
     public function item_data_search_fill(Request $request)
     {
-        $product = Item::where('item_name', $request->model)
-            ->orderBy('created_at', 'desc')
-            ->first();
-        if (!$product) {
-            return response()->json(['error' => 'Item not found'], 404);
+        $model = $request->model;
+
+        $cacheKey = "item_data_search_fill_{$model}";
+
+        $responseData = Cache::remember($cacheKey, 60, function () use ($model) {
+            $product = Item::where('item_name', $model)
+                ->orderBy('created_at', 'desc')
+                ->first();
+
+            if (!$product) {
+                return ['error' => 'Item not found'];
+            }
+
+            $warehouse = Warehouse::find($product->warehouse_id);
+
+            return [
+                'item' => $product,
+                'warehouse' => $warehouse,
+            ];
+        });
+
+        if (isset($responseData['error'])) {
+            return response()->json($responseData, 404);
         }
-        $warehouse = Warehouse::find($product->warehouse_id);
-        $responseData = [
-            'item' => $product,
-            'warehouse' => $warehouse,
-        ];
+
         return response()->json($responseData);
     }
+
 
     public function quotation_detail($id)
     {
@@ -710,7 +833,7 @@ class InvoiceController extends Controller
 
     public function sale_return_register()
     {
-        $po_number = PurchaseOrder::where('quote_no', 'like', 'SR%')->latest()->get();
+        $po_number = PurchaseOrder::withTrashed()->where('quote_no', 'like', 'SR%')->latest()->get();
         $units = Unit::all();
         $po_no = 'SR-' . (count($po_number) + 1);
         $warehouses = Warehouse::all();
@@ -723,7 +846,9 @@ class InvoiceController extends Controller
         $purchase_orders = PurchaseOrder::find($id);
         $purchase_sells = PO_sells::where('invoiceid', $id)->get();
         $warehouses = Warehouse::all();
-        return view('invoice.sale_return_edit', compact('purchase_orders', 'suppliers', 'purchase_sells', 'warehouses'));
+        $payment_method = PurchaseOrderPaymentMethod::where('po_id', $id)->get();
+
+        return view('invoice.sale_return_edit', compact('purchase_orders', 'suppliers', 'purchase_sells', 'warehouses', 'payment_method'));
     }
 
     public function sale_return_detail($id)
@@ -731,7 +856,8 @@ class InvoiceController extends Controller
         $purchase_order = PurchaseOrder::find($id);
         $purchase_sells = PO_sells::where('invoiceid', $id)->get();
         $profile = UserProfile::all();
-        return view('invoice.sale_return_detail', compact('purchase_order', 'purchase_sells', 'profile'));
+        $payment_methods = PurchaseOrderPaymentMethod::where('po_id', $id)->get();
+        return view('invoice.sale_return_detail', compact('purchase_order', 'purchase_sells', 'profile', 'payment_methods'));
     }
 
     public function sale_return_delete($id)

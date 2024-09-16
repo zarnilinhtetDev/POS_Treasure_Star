@@ -269,7 +269,6 @@
                                                 <th>Customer Type</th>
                                                 <th>Address</th>
                                                 <th>Date</th>
-                                                <th>Payment Method</th>
                                                 <th>Total Amount</th>
                                             </tr>
                                         </thead>
@@ -294,7 +293,6 @@
                                                         <td>{{ $invoice->type }}</td>
                                                         <td>{{ $invoice->address }}</td>
                                                         <td>{{ $invoice->invoice_date }}</td>
-                                                        <td>{{ $invoice->payment_method }}</td>
                                                         <td>{{ number_format($invoice->total) }}</td>
                                                     </tr>
                                                     @php
@@ -318,7 +316,6 @@
                                                         <td>{{ $invoice->type }}</td>
                                                         <td>{{ $invoice->address }}</td>
                                                         <td>{{ $invoice->invoice_date }}</td>
-                                                        <td>{{ $invoice->payment_method }}</td>
                                                         <td>{{ number_format($invoice->total) }}</td>
                                                     </tr>
                                                     @php
@@ -330,7 +327,7 @@
                                         <tfoot>
                                             <tr>
                                                 <td></td>
-                                                <td colspan="8" style="text-align:right">Total</td>
+                                                <td colspan="7" style="text-align:right">Total</td>
                                                 <td colspan="">
                                                     @if (!empty($search_invoices))
                                                         {{ number_format($search_total) }}@else{{ number_format($total) }}

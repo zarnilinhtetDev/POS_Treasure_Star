@@ -226,7 +226,7 @@
                                             <div class="form-group">
                                                 <label for="amount">Description<span
                                                         class="text-danger">*</span></label>
-                                                <textarea class="form-control" id="description" placeholder="Enter description" required autofocus
+                                                <textarea class="form-control" id="description" placeholder="Enter description" autofocus
                                                     name="description" rows="5"></textarea>
                                             </div>
 

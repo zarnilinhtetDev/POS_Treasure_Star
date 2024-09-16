@@ -200,10 +200,10 @@
                                             <td>{{ $invoices->isNotEmpty() ? $invoices->first()->created_at->format('F /Y') : '' }}
                                             </td>
 
-                                            <td>{{ $totalSum }}</td>
-                                            <td>{{ $totalPurchase }}</td>
-                                            <td>{{ $totalExpense }}</td>
-                                            <td>{{ $totalSum - ($totalPurchase + $totalExpense) }}
+                                            <td>{{ number_format($totalSum) }}</td>
+                                            <td>{{ number_format($totalPurchase) }}</td>
+                                            <td>{{ number_format($totalExpense) }}</td>
+                                            <td>{{ number_format($totalSum - ($totalPurchase + $totalExpense)) }}
 
                                             </td>
 
