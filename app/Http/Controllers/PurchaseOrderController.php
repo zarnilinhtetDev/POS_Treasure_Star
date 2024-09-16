@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\PurchaseOrderPaymentMethod;
 use App\Models\Unit;
 use App\Models\PO_sells;
 use App\Models\Supplier;
@@ -11,6 +12,7 @@ use Illuminate\Http\Request;
 use App\Models\PurchaseOrder;
 use App\Models\UserProfile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class PurchaseOrderController extends Controller
 {
@@ -32,7 +34,7 @@ class PurchaseOrderController extends Controller
     public function purchase_order_register()
     {
         $suppliers = Supplier::all();
-        $po_number = PurchaseOrder::where('quote_no', 'like', 'PO%')->latest()->get();
+        $po_number = PurchaseOrder::withTrashed()->where('quote_no', 'like', 'PO%')->latest()->get();
         $units = Unit::all();
         $po_no = 'PO-' . (count($po_number) + 1);
         $warehouses = Warehouse::all();
@@ -113,7 +115,7 @@ class PurchaseOrderController extends Controller
         $invoice->deposit  = $request->paid;
         $invoice->remain_balance  = $request->balance;
         $invoice->remark = $request->remark;
-        $invoice->payment_method   = $request->payment_method;
+        // $invoice->payment_method   = $request->payment_method;
         $invoice->save();
         $last_id = $invoice->id;
         for ($i = 0; $i < $count; $i++) {
@@ -127,8 +129,19 @@ class PurchaseOrderController extends Controller
             $result->product_qty = $request->product_qty[$i];
             $result->product_price = $request->product_price[$i];
             $result->warehouse = $request->warehouse[$i];
+            $result->status = $request->sell_status[$i];
             $result->save();
         }
+
+        $count2 = count($request->payment_method);
+        for ($i = 0; $i < $count2; $i++) {
+            $payment_method = new PurchaseOrderPaymentMethod();
+            $payment_method->po_id = $last_id;
+            $payment_method->payment_method = $request->payment_method[$i];
+            $payment_method->payment_amount = $request->payment_amount[$i];
+            $payment_method->save();
+        }
+
         foreach ($invoice->po_sells as $po_sell) {
             $item = Item::where('item_name', $po_sell->part_number)
                 ->where('warehouse_id', $po_sell->warehouse)
@@ -141,20 +154,21 @@ class PurchaseOrderController extends Controller
             }
         }
 
-        if ($invoice->balance_due == 'PO') {
+        if (Str::contains($invoice->quote_no, 'PO')) {
             return redirect('/purchase_order_manage')->with('success', 'Purchase Order Added Successful!');
         } else {
             return redirect('/sale_return')->with('success', 'Sale Return Added Successful!');
         }
     }
-
     public function edit($id)
     {
         $suppliers = Supplier::all();
         $purchase_orders = PurchaseOrder::find($id);
         $purchase_sells = PO_sells::where('invoiceid', $id)->get();
         $warehouses = Warehouse::all();
-        return view('purchase_order.purchase_order_edit', compact('purchase_orders', 'suppliers', 'purchase_sells', 'warehouses'));
+        $payment_method = PurchaseOrderPaymentMethod::where('po_id', $id)->get();
+
+        return view('purchase_order.purchase_order_edit', compact('purchase_orders', 'suppliers', 'purchase_sells', 'warehouses', 'payment_method'));
     }
 
     public function purchase_order_update(Request $request, $id)
@@ -196,10 +210,26 @@ class PurchaseOrderController extends Controller
                 'exp_date' => $request->exp_date[$i],
                 'product_price' => $request->product_price[$i],
                 'warehouse' => $request->warehouse[$i],
+                'status' => $request->sell_status[$i] ?? '0',
                 'created_at' => now(),
                 'updated_at' => now(),
             ];
         }
+
+        PurchaseOrderPaymentMethod::where('po_id', $id)->delete();
+        if ($request->input('payment_method')) {
+            foreach ($request->input('payment_method') as $key => $paymentMethod) {
+                $payment_amount = $request->input('payment_amount')[$key] ?? 0;
+                $payment_method = new PurchaseOrderPaymentMethod();
+                $payment_method->po_id = $id;
+                $payment_method->payment_method = $paymentMethod;
+                $payment_method->payment_amount = $payment_amount;
+                $payment_method->created_at = now();
+                $payment_method->updated_at = now();
+                $payment_method->save();
+            }
+        }
+
 
 
         $oldQuantities = [];
@@ -227,7 +257,7 @@ class PurchaseOrderController extends Controller
         PO_sells::where('invoiceid', $id)->delete();
         PO_sells::insert($po);
 
-        if ($invoice->balance_due == 'PO') {
+        if (Str::contains($invoice->quote_no, 'PO')) {
             return redirect('/purchase_order_manage')->with('success', 'Purchase Order Updated Successful!');
         } else {
             return redirect('/sale_return')->with('success', 'Sale Return Updated Successful!');
@@ -243,6 +273,7 @@ class PurchaseOrderController extends Controller
 
             PurchaseOrder::findOrFail($id)->delete();
             PO_sells::where('invoiceid', $id)->delete();
+            PurchaseOrderPaymentMethod::where('invoice_id', $id)->delete();
             DB::commit();
             return redirect('/purchase_order_manage')->with('success', 'Purchase Order Deleted Successfully!');
         } catch (\Exception $e) {
@@ -258,6 +289,7 @@ class PurchaseOrderController extends Controller
         $purchase_order = PurchaseOrder::find($id);
         $purchase_sells = PO_sells::where('invoiceid', $id)->get();
         $profile = UserProfile::all();
-        return view('purchase_order.purchase_order_details', compact('purchase_order', 'purchase_sells', 'profile'));
+        $payment_methods = PurchaseOrderPaymentMethod::where('po_id', $id)->get();
+        return view('purchase_order.purchase_order_details', compact('purchase_order', 'purchase_sells', 'profile', 'payment_methods'));
     }
 }

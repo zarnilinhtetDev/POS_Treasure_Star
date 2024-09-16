@@ -2,9 +2,8 @@
 <HTML>
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
+    <link rel="stylesheet" href="{{ asset('locallink/css/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
 
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
@@ -66,9 +65,11 @@
                                 </div>
                                 <div style="width:30%;position:absolute;right:0px;top:0px;">
 
-                                    <label for="invociedate" class="caption" style="font-weight:bolder">{{ trans('Quotations Number') }}</label>
+                                    <label for="invociedate" class="caption"
+                                        style="font-weight:bolder">{{ trans('Quotations Number') }}</label>
                                     <div class="input-group"> {{ $quotation->quote_no }} </div>
-                                    <label for="invociedate" class="caption" style="font-weight:bolder">{{ trans('Quotation Date') }}</label>
+                                    <label for="invociedate" class="caption"
+                                        style="font-weight:bolder">{{ trans('Quotation Date') }}</label>
                                     <div class="input-group"> {{ $quotation->quote_date }}</div>
 
                                 </div>
@@ -119,29 +120,28 @@
                                         </thead>
                                         <tbody>
                                             @php
-                                            $no = 1;
+                                                $no = 1;
                                             @endphp
                                             @foreach ($sells as $sell)
-                                            <tr>
-                                                <td>{{ $no }}</td>
-                                                <td>{{ $sell->part_number }}</td>
-                                                <td>{{ $sell->description }}</td>
-                                                <td>{{ $sell->product_qty }}</td>
-                                                @if ($sell->product_price)
-                                                <td>{{ $sell->product_price }}</td>
-                                                @elseif($sell->retail_price)
-                                                <td>{{ $sell->retail_price }}</td>
-                                                @endif
-                                                <td>{{ $sell->unit }}</td>
+                                                <tr>
+                                                    <td>{{ $no }}</td>
+                                                    <td>{{ $sell->part_number }}</td>
+                                                    <td>{{ $sell->description }}</td>
+                                                    <td>{{ $sell->product_qty }}</td>
 
-                                                <td>
-                                                    <span class="currenty"></span>
-                                                    <span class='ttlText'>{{ $sell->product_qty * ($sell->product_price ?? $sell->retail_price) }}</span>
-                                                </td>
-                                            </tr>
-                                            @php
-                                            $no++;
-                                            @endphp
+                                                    <td>{{ $sell->retail_price }}</td>
+
+                                                    <td>{{ $sell->unit }}</td>
+
+                                                    <td>
+                                                        <span class="currenty"></span>
+                                                        <span
+                                                            class='ttlText'>{{ $sell->product_qty * $sell->retail_price }}</span>
+                                                    </td>
+                                                </tr>
+                                                @php
+                                                    $no++;
+                                                @endphp
                                             @endforeach
                                         </tbody>
                                         <tfoot>

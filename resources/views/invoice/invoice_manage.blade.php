@@ -150,6 +150,10 @@
                                                 <td>
 
                                                     @if (in_array('Invoice Details', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ url('/invoice_receipt_print', $invoice->id) }}"
+                                                            class="btn btn-info btn-sm"><i
+                                                                class="fa-solid fa-print"></i></a>
+
                                                         <a href="{{ url('/invoice_detail', $invoice->id) }}"
                                                             class="btn btn-primary btn-sm"><i
                                                                 class="fa-solid fa-eye"></i></a>

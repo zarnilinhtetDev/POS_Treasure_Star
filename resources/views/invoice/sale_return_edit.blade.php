@@ -2,13 +2,12 @@
 <HTML>
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
-
+    <link rel="stylesheet" href="{{ asset('locallink/css/bootstrap.min.css') }}">
+    <script src="{{ asset('locallink/js/ajax_jquery.js') }}"></script>
+    <script src="{{ asset('locallink/js/typehead.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <script src="{{ asset('locallink/js/moment.min.js') }}"></script>
+    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <style>
@@ -104,7 +103,7 @@
                     </div>
                 </div>
 
-                <div class="mt-3 col-md-3">
+                {{-- <div class="mt-3 col-md-3">
                     <label for="remark" style="font-weight:bolder">{{ trans('Payment Method') }}
                     </label>
 
@@ -118,7 +117,7 @@
                         <option value="Credit">Credit</option>
                         <option value="Consignment Terms">Consignment Terms</option>
                     </select>
-                </div>
+                </div> --}}
 
 
                 @if (auth()->user()->is_admin == '1')
@@ -130,7 +129,7 @@
                             <select name="location" id="location" class="mb-4 form-control location" required>
                                 @foreach ($warehouses as $warehouse)
                                     <option value="{{ $warehouse->id }}"
-                                        {{ $invoice->branch == $warehouse->id ? 'selected' : '' }}>
+                                        {{ $purchase_orders->branch == $warehouse->id ? 'selected' : '' }}>
                                         {{ $warehouse->name }}
                                     </option>
                                 @endforeach
@@ -287,10 +286,32 @@
                                             @foreach ($purchase_sells as $key => $po)
                                                 <tr>
                                                     <td class="text-center" id="count">{{ $key + 1 }}</td>
-                                                    <td><input type="text"
-                                                            class="form-control productname typeahead"
-                                                            name="part_number[]" value="{{ $po->part_number }}"
-                                                            id='productname-0' autocomplete="off">
+                                                    <td>
+
+                                                        <div class="row align-items-center">
+                                                            <div class="col-auto">
+                                                                <input type="checkbox" id="sell_status-0"
+                                                                    value="1"
+                                                                    class="form-check-input sell_status"
+                                                                    {{ $po->status == 1 ? 'checked' : '0' }} />
+
+
+                                                                <input type="hidden" name="sell_status[]"
+                                                                    id="sell_status_input-0"
+                                                                    class="form-control sell_status_input"
+                                                                    value="0" />
+
+                                                            </div>
+                                                            <div class="col">
+                                                                <input type="text"
+                                                                    class="form-control productname typeahead"
+                                                                    name="part_number[]"
+                                                                    value="{{ $po->part_number }}"
+                                                                    placeholder="{{ trans('Enter Part Number') }}"
+                                                                    id='productname-0' autocomplete="off">
+                                                            </div>
+                                                        </div>
+
                                                     </td>
                                                     <td><input type="text"
                                                             class="form-control description typeahead"
@@ -475,58 +496,109 @@
 
                                             </tr>
 
+                                        <tbody id="trContainer">
+                                            @foreach ($payment_method as $index => $payment)
+                                                <tr class="sub_c">
+                                                    <td colspan="2"></td>
+                                                    <td colspan="3" align="right">
+                                                        @if ($index === 0)
+                                                            <strong>Payment Method</strong>
+                                                        @endif
+                                                    </td>
+                                                    <td align="left" colspan="1" class="col-md-2">
+                                                        <input type="text" name="payment_amount[]"
+                                                            class="form-control payment_amount" id="payment_amount"
+                                                            value="{{ $payment->payment_amount }}" required>
+                                                    </td>
+                                                    <td align="left" colspan="1"
+                                                        class="col-md-2 payment_method">
+                                                        <select name="payment_method[]" id="payment_method"
+                                                            class="form-control" required>
+                                                            <option value="Cash"
+                                                                {{ $payment->payment_method === 'Cash' ? 'selected' : '' }}>
+                                                                Cash</option>
+                                                            <option value="K Pay"
+                                                                {{ $payment->payment_method === 'K Pay' ? 'selected' : '' }}>
+                                                                K Pay</option>
+                                                            <option value="Wave"
+                                                                {{ $payment->payment_method === 'Wave' ? 'selected' : '' }}>
+                                                                Wave</option>
+                                                            <option value="Others"
+                                                                {{ $payment->payment_method === 'Others' ? 'selected' : '' }}>
+                                                                Others</option>
+                                                        </select>
+                                                    </td>
+                                                    <td align="left" colspan="1" class="col-md-1">
+                                                        @if ($index === 0)
+                                                            <button type="button" id="addRow"
+                                                                class="btn btn-primary">
+                                                                <i class="fa-solid fa-plus"></i>
+                                                            </button>
+                                                        @endif
+
+                                                        @if ($index === 1)
+                                                            <button class="removeRow btn btn-danger"><i
+                                                                    class="fa-solid fa-minus"></i></button>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                            @endforeach
 
 
-                                            <tr class="sub_c" style="display: table-row;">
-                                                <td colspan="2">
-
-                                                </td>
-                                                <td colspan="3" align="right"><strong>Deposit
-                                                    </strong>
-                                                </td>
-                                                <td align="left" colspan="2"><input type="text"
-                                                        name="paid" class="form-control" id="paid"
-                                                        onchange="paidFunction()"
-                                                        value="{{ $purchase_orders->deposit }}">
-
-                                                </td>
-
-                                            </tr>
-                                            <tr class="sub_c" style="display: table-row;">
-                                                <td colspan="2">
-
-                                                </td>
-                                                <td colspan="3" align="right"><strong>Remaining Balance
-                                                    </strong>
-                                                </td>
-                                                <td align="left" colspan="2"><input type="text"
-                                                        name="balance" class="form-control" id="balance" readonly
-                                                        value="{{ $purchase_orders->remain_balance }}">
-
-                                                </td>
-                                            </tr>
-
-                                            <tr class="sub_c " style="display: table-row;">
-                                                <td colspan="12"> <label for="remark">Remark</label>
-                                                    <textarea name="remark" id="remark" class="form-control" rows="2">{{ $purchase_orders->remark }}</textarea>
-
-                                                </td>
-                                            </tr>
-                                            <tr class="sub_c " style="display: table-row;">
+                                        </tbody>
 
 
-                                                <td align="right" colspan="9">
-
-                                                    <button id="submitButton" class="mt-3 btn btn-primary"
-                                                        type="submit">Save</button>
 
 
-                                                    <a href="{{ url('purchase_order_manage') }}" type="submit"
-                                                        class="mt-3 btn btn-danger">Cancel
-                                                    </a>
+                                        <tr class="sub_c" style="display: table-row;">
+                                            <td colspan="2">
 
-                                                </td>
-                                            </tr>
+                                            </td>
+                                            <td colspan="3" align="right"><strong>Deposit
+                                                </strong>
+                                            </td>
+                                            <td align="left" colspan="2"><input type="text" name="paid"
+                                                    class="form-control" id="paid" onchange="paidFunction()"
+                                                    value="{{ $purchase_orders->deposit }}">
+
+                                            </td>
+
+                                        </tr>
+                                        <tr class="sub_c" style="display: table-row;">
+                                            <td colspan="2">
+
+                                            </td>
+                                            <td colspan="3" align="right"><strong>Remaining Balance
+                                                </strong>
+                                            </td>
+                                            <td align="left" colspan="2"><input type="text" name="balance"
+                                                    class="form-control" id="balance" readonly
+                                                    value="{{ $purchase_orders->remain_balance }}">
+
+                                            </td>
+                                        </tr>
+
+                                        <tr class="sub_c " style="display: table-row;">
+                                            <td colspan="12"> <label for="remark">Remark</label>
+                                                <textarea name="remark" id="remark" class="form-control" rows="2">{{ $purchase_orders->remark }}</textarea>
+
+                                            </td>
+                                        </tr>
+                                        <tr class="sub_c " style="display: table-row;">
+
+
+                                            <td align="right" colspan="9">
+
+                                                <button id="submitButton" class="mt-3 btn btn-primary"
+                                                    type="submit">Save</button>
+
+
+                                                <a href="{{ url('purchase_order_manage') }}" type="submit"
+                                                    class="mt-3 btn btn-danger">Cancel
+                                                </a>
+
+                                            </td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -579,19 +651,22 @@
             function initializeTypeahead(count) {
                 $('#productname-' + count).typeahead({
                     source: function(query, process) {
-                        var Selectedlocation = $('#location').val();
-                        return $.ajax({
-                            url: "{{ route('autocomplete.part-code-invoice') }}",
-                            method: 'POST',
-                            data: {
-                                query: query,
-                                location: Selectedlocation,
-                            },
-                            dataType: 'json',
-                            success: function(data) {
-                                process(data);
-                            }
-                        });
+                        if (!$('#sell_status-' + count).is(':checked')) {
+                            var Selectedlocation = $('#location').val();
+                            return $.ajax({
+                                url: "{{ route('autocomplete-part-code-invoice') }}",
+                                method: 'POST',
+                                data: {
+                                    query: query,
+                                    location: Selectedlocation,
+                                },
+                                dataType: 'json',
+                                success: function(data) {
+                                    console.log(data);
+                                    process(data);
+                                }
+                            });
+                        }
                     }
                 });
             }
@@ -643,8 +718,20 @@
                 let rowCount = $("#showitem123 tr").length + 0;
                 let newRow = '<tr>' +
                     '<td class="text-center">' + (rowCount + 1) + '</td>' +
-                    '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="productname-' +
-                    count + '" autocomplete="off"></td>' +
+                    '<td>' +
+                    '<div class="row align-items-center">' +
+                    '<div class="col-auto">' +
+                    '<input type="checkbox" id="sell_status-' + count +
+                    '" value="1" class="form-check-input sell_status" />' +
+                    '<input type="hidden" name="sell_status[]" id="sell_status_input-' + count +
+                    '" value="0" class="form-control sell_status_input" />' +
+                    '</div>' +
+                    '<div class="col">' +
+                    '<input type="text" class="form-control productname typeahead item_name" name="part_number[]" id="productname-' +
+                    count + '" autocomplete="off" placeholder="Enter Part Number">' +
+                    '</div>' +
+                    '</div>' +
+                    '</td>' +
                     '<td><input type="text" class="form-control description typeahead" name="part_description[]" id="description-' +
                     count + '" autocomplete="off"></td>' +
 
@@ -684,6 +771,7 @@
                 initializeTypeahead(count);
             });
 
+
             $(document).on('click', '.remove_item_btn', function(e) {
                 e.preventDefault();
                 let row_item = $(this).parent().parent();
@@ -697,11 +785,77 @@
                 initializeTypeaheads();
             });
 
+            $(document).ready(function() {
+                function calculatePayment() {
+                    let total = 0;
+                    $('.payment_amount').each(function() {
+                        let value = parseFloat($(this).val()) || 0;
+                        total += value;
+                    });
+                    total = Math.round(total);
+                    $('#paid').val(total);
+                    paidFunction();
+                }
 
-            $(document).on('change', '.productname', function() {
-                let itemCode = $(this).val();
-                let row = $(this).closest('tr');
+                function paidFunction() {
+                    let paid = parseFloat($('#paid').val()) || 0;
+                    let total_p = parseFloat($('#total_total').val()) || 0;
+                    let balance = total_p - paid;
+                    balance = Math.round(balance);
+                    $('#balance').val(balance);
+                }
+
+                $(document).on('input', '.payment_amount', function() {
+                    calculatePayment();
+                });
+
+                $('#paid').on('input', function() {
+                    paidFunction();
+                });
+
+                $('#addRow').click(function() {
+                    // Check the number of rows
+                    if ($('#trContainer tr.sub_c').length < 4) {
+                        var newRow = `<tr class="sub_c">
+                <td colspan="2"></td>
+                <td colspan="3" align="right"><strong></strong></td>
+                <td align="left" colspan="1" class="col-md-2">
+                    <input type="text" name="payment_amount[]" class="form-control payment_amount">
+                </td>
+                <td align="left" colspan="1" class="col-md-2">
+                    <select name="payment_method[]" class="form-control">
+                        <option value="Cash">Cash</option>
+                        <option value="K Pay">K Pay</option>
+                        <option value="Wave">Wave</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </td>
+                <td align="left" colspan="1" class="col-md-1">
+                    <button class="removeRow btn btn-danger"><i class="fa-solid fa-minus"></i></button>
+                </td>
+            </tr>`;
+
+                        $('#trContainer').append(newRow);
+                    } else {
+                        alert('You can only add a maximum of 4 payment rows.');
+                    }
+                });
+
+                $(document).on('click', '.removeRow', function() {
+                    $(this).closest('tr').remove();
+                    calculatePayment();
+                });
+
+                calculatePayment();
+            });
+
+
+            $(document).on('click', '.typeahead .dropdown-item', function(e) {
+                e.preventDefault();
+                const itemCode = $(this).text().trim();
+                const row = $(this).closest('tr');
                 updateItemName(itemCode, row);
+                $('#productname').val('');
             });
 
             // Initialize typeahead for the first row
@@ -968,7 +1122,7 @@
         });
     </script>
     <script>
-        $("input").on("change", function() {
+        $("input[type='date']").on("change", function() {
             if (this.value && moment(this.value, "YYYY-MM-DD").isValid()) {
                 this.setAttribute(
                     "data-date",
@@ -995,6 +1149,25 @@
             let discount = parseFloat($(this).val()) || 0;
             let total = subtotal - discount;
             $("#total_total").val(total);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            function updateHiddenInput(checkbox) {
+                const input = checkbox.closest('tr').querySelector('.sell_status_input');
+                if (input) {
+                    input.value = checkbox.checked ? '1' : '0';
+                }
+            }
+
+            document.addEventListener('change', function(e) {
+                if (e.target && e.target.classList.contains('sell_status')) {
+                    updateHiddenInput(e.target);
+                }
+            });
+
+            document.querySelectorAll('.sell_status').forEach(function(checkbox) {
+                updateHiddenInput(checkbox);
+            });
         });
     </script>
 

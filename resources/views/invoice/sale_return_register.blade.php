@@ -2,13 +2,12 @@
 <HTML>
 
 <head>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.3/moment.min.js"></script>
-
+    <link rel="stylesheet" href="{{ asset('locallink/css/bootstrap.min.css') }}">
+    <script src="{{ asset('locallink/js/ajax_jquery.js') }}"></script>
+    <script src="{{ asset('locallink/js/typehead.min.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
+    <script src="{{ asset('locallink/js/moment.min.js') }}"></script>
+    <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <style>
@@ -102,7 +101,7 @@
                     </div>
                 </div>
 
-                <div class="mt-3 col-md-3">
+                {{-- <div class="mt-3 col-md-3">
                     <label for="remark" class="mt-1" style="font-weight:bolder">{{ trans('Payment Method') }}
                     </label>
                     <select class="mb-4 form-control round" aria-label="Default select example" name="payment_method"
@@ -112,7 +111,7 @@
                         <option value="Credit">Credit</option>
                         <option value="Consignment Terms">Consignment Terms</option>
                     </select>
-                </div>
+                </div> --}}
 
 
 
@@ -276,10 +275,28 @@
                                         <tbody id="showitem123">
                                             <tr>
                                                 <td class="text-center" id="count">1</td>
-                                                <td><input type="text" class="form-control productname typeahead"
-                                                        name="part_number[]"
-                                                        placeholder="{{ trans('Enter Part Number') }}"
-                                                        id='productname-0' autocomplete="off">
+                                                <td>
+
+                                                    <div class="row align-items-center">
+                                                        <div class="col-auto">
+                                                            <input type="checkbox" id="sell_status-0" value="1"
+                                                                class="form-check-input sell_status" />
+
+                                                            <input type="hidden" name="sell_status[]"
+                                                                id="sell_status_input-0"
+                                                                class="form-control sell_status_input"
+                                                                value="0" />
+                                                        </div>
+
+                                                        <div class="col">
+                                                            <input type="text"
+                                                                class="form-control productname typeahead item_name"
+                                                                name="part_number[]" value="{{ old('part_number') }}"
+                                                                placeholder="{{ trans('Enter Part Number') }}"
+                                                                id="productname-0" autocomplete="off">
+                                                        </div>
+                                                    </div>
+
                                                 </td>
                                                 <td><input type="text" class="form-control description typeahead"
                                                         name="part_description[]" placeholder="{{ trans('') }}"
@@ -448,57 +465,81 @@
 
                                             </tr>
 
-
-
-                                            <tr class="sub_c" style="display: table-row;">
-                                                <td colspan="2">
-
+                                        <tbody id="trContainer">
+                                            <tr class="sub_c">
+                                                <td colspan="2"></td>
+                                                <td colspan="3" align="right"><strong>Payment
+                                                        Method</strong></td>
+                                                <td align="left" colspan="1" class="col-md-2">
+                                                    <input type="text" name="payment_amount[]"
+                                                        class="form-control payment_amount" id="payment_amount"
+                                                        required>
                                                 </td>
-                                                <td colspan="3" align="right"><strong>Deposit
-                                                    </strong>
+                                                <td align="left" colspan="1" class="col-md-2 payment_method">
+                                                    <select name="payment_method[]" id="payment_method"
+                                                        class="form-control" required>
+                                                        <option value="Cash">Cash</option>
+                                                        <option value="K Pay">K Pay</option>
+                                                        <option value="Wave">Wave</option>
+                                                        <option value="Others">Others</option>
+                                                    </select>
                                                 </td>
-                                                <td align="left" colspan="2"><input type="text"
-                                                        name="paid" class="form-control" id="paid"
-                                                        onchange="paidFunction()">
-
-                                                </td>
-
-                                            </tr>
-                                            <tr class="sub_c" style="display: table-row;">
-                                                <td colspan="2">
-
-                                                </td>
-                                                <td colspan="3" align="right"><strong>Remaining Balance
-                                                    </strong>
-                                                </td>
-                                                <td align="left" colspan="2"><input type="text"
-                                                        name="balance" class="form-control" id="balance"
-                                                        readonly="">
-
+                                                <td align="left" colspan="1" class="col-md-1">
+                                                    <button type="button" id="addRow" class="btn btn-primary"><i
+                                                            class="fa-solid fa-plus"></i></button>
                                                 </td>
                                             </tr>
-
-                                            <tr class="sub_c " style="display: table-row;">
-                                                <td colspan="12"> <label for="remark">Remark</label>
-                                                    <textarea name="remark" id="remark" class="form-control" rows="2"></textarea>
-
-                                                </td>
-                                            </tr>
-                                            <tr class="sub_c " style="display: table-row;">
+                                        </tbody>
 
 
-                                                <td align="right" colspan="9">
 
-                                                    <button id="submitButton" class="mt-3 btn btn-primary"
-                                                        type="submit">Save</button>
+                                        <tr class="sub_c" style="display: table-row;">
+                                            <td colspan="2">
+
+                                            </td>
+                                            <td colspan="3" align="right"><strong>Deposit
+                                                </strong>
+                                            </td>
+                                            <td align="left" colspan="2"><input type="text" name="paid"
+                                                    class="form-control" id="paid" onchange="paidFunction()">
+
+                                            </td>
+
+                                        </tr>
+                                        <tr class="sub_c" style="display: table-row;">
+                                            <td colspan="2">
+
+                                            </td>
+                                            <td colspan="3" align="right"><strong>Remaining Balance
+                                                </strong>
+                                            </td>
+                                            <td align="left" colspan="2"><input type="text" name="balance"
+                                                    class="form-control" id="balance" readonly="">
+
+                                            </td>
+                                        </tr>
+
+                                        <tr class="sub_c " style="display: table-row;">
+                                            <td colspan="12"> <label for="remark">Remark</label>
+                                                <textarea name="remark" id="remark" class="form-control" rows="2"></textarea>
+
+                                            </td>
+                                        </tr>
+                                        <tr class="sub_c " style="display: table-row;">
 
 
-                                                    <a href="{{ url('sale_return') }}" type="submit"
-                                                        class="mt-3 btn btn-danger">Cancel
-                                                    </a>
+                                            <td align="right" colspan="9">
 
-                                                </td>
-                                            </tr>
+                                                <button id="submitButton" class="mt-3 btn btn-primary"
+                                                    type="submit">Save</button>
+
+
+                                                <a href="{{ url('sale_return') }}" type="submit"
+                                                    class="mt-3 btn btn-danger">Cancel
+                                                </a>
+
+                                            </td>
+                                        </tr>
                                         </tbody>
                                     </table>
                                 </div>
@@ -604,7 +645,7 @@
 
 
     <script>
-        $("input").on("change", function() {
+        $("input[type='date']").on("change", function() {
             if (this.value && moment(this.value, "YYYY-MM-DD").isValid()) {
                 this.setAttribute(
                     "data-date",
@@ -617,15 +658,7 @@
     </script>
 
 
-    <script>
-        $(document).on('keydown', '.form-control', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                $('#addproduct').click();
 
-            }
-        });
-    </script>
     <script>
         $(document).ready(function() {
             let count = 0;
@@ -633,19 +666,22 @@
             function initializeTypeahead(count) {
                 $('#productname-' + count).typeahead({
                     source: function(query, process) {
-                        var Selectedlocation = $('#location').val();
-                        return $.ajax({
-                            url: "{{ route('autocomplete-part-code-invoice') }}",
-                            method: 'POST',
-                            data: {
-                                query: query,
-                                location: Selectedlocation,
-                            },
-                            dataType: 'json',
-                            success: function(data) {
-                                process(data);
-                            }
-                        });
+                        if (!$('#sell_status-' + count).is(':checked')) {
+                            var Selectedlocation = $('#location').val();
+                            return $.ajax({
+                                url: "{{ route('autocomplete-part-code-invoice') }}",
+                                method: 'POST',
+                                data: {
+                                    query: query,
+                                    location: Selectedlocation,
+                                },
+                                dataType: 'json',
+                                success: function(data) {
+                                    console.log(data);
+                                    process(data);
+                                }
+                            });
+                        }
                     }
                 });
             }
@@ -703,8 +739,20 @@
                 let rowCount = $("#showitem123 tr").length;
                 let newRow = '<tr>' +
                     '<td class="text-center">' + (rowCount + 1) + '</td>' +
-                    '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="productname-' +
-                    count + '" autocomplete="off"></td>' +
+                    '<td>' +
+                    '<div class="row align-items-center">' +
+                    '<div class="col-auto">' +
+                    '<input type="checkbox" id="sell_status-' + count +
+                    '" value="1" class="form-check-input sell_status" />' +
+                    '<input type="hidden" name="sell_status[]" id="sell_status_input-' + count +
+                    '" value="0" class="form-control sell_status_input" />' +
+                    '</div>' +
+                    '<div class="col">' +
+                    '<input type="text" class="form-control productname typeahead item_name" name="part_number[]" id="productname-' +
+                    count + '" autocomplete="off" placeholder="Enter Part Number">' +
+                    '</div>' +
+                    '</div>' +
+                    '</td>' +
                     '<td><input type="text" class="form-control description typeahead" name="part_description[]"  id="description-' +
                     count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
@@ -713,9 +761,6 @@
                     '<td><input type="text" class="form-control item_unit" name="item_unit[]" id="item_unit-' +
                     count +
                     '"   autocomplete="off"></td>' +
-
-
-
                     '<td><input type="text" class="form-control price" name="product_price[]" value="0" id="price-' +
                     count + '"   autocomplete="off"></td>' +
 
@@ -762,10 +807,75 @@
                 initializeTypeaheads();
             });
 
-            $(document).on('change', '.productname', function() {
-                let itemCode = $(this).val();
-                let row = $(this).closest('tr');
+            $(document).ready(function() {
+                function calculatePayment() {
+                    let total = 0;
+                    $('.payment_amount').each(function() {
+                        let value = parseFloat($(this).val()) || 0;
+                        total += value;
+                    });
+                    total = Math.round(total);
+                    $('#paid').val(total);
+                    paidFunction();
+                }
+
+                function paidFunction() {
+                    let paid = parseFloat($('#paid').val()) || 0;
+                    let total_p = parseFloat($('#total_total').val()) || 0;
+                    let balance = total_p - paid;
+                    balance = Math.round(balance);
+                    $('#balance').val(balance);
+                }
+
+                $(document).on('input', '.payment_amount', function() {
+                    calculatePayment();
+                });
+
+                $('#paid').on('input', function() {
+                    paidFunction();
+                });
+
+                // Function to add a new row
+                $('#addRow').click(function() {
+                    if ($('#trContainer tr.sub_c').length < 4) {
+                        var newRow = `<tr class="sub_c">
+                <td colspan="2"></td>
+                <td colspan="3" align="right"><strong></strong></td>
+                <td align="left" colspan="1" class="col-md-2">
+                    <input type="text" name="payment_amount[]" class="form-control payment_amount">
+                </td>
+                <td align="left" colspan="1" class="col-md-2">
+                    <select name="payment_method[]" class="form-control">
+                        <option value="Cash">Cash</option>
+                        <option value="K Pay">K Pay</option>
+                        <option value="Wave">Wave</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </td>
+                <td align="left" colspan="1" class="col-md-1">
+                    <button class="removeRow btn btn-danger"><i class="fa-solid fa-minus"></i></button>
+                </td>
+            </tr>`;
+
+                        $('#trContainer').append(newRow);
+                    } else {
+                        alert('You can only add a maximum of 4 payment rows.');
+                    }
+                });
+                $(document).on('click', '.removeRow', function() {
+                    $(this).closest('tr').remove();
+                    calculatePayment();
+                });
+
+                calculatePayment();
+            });
+
+            $(document).on('click', '.typeahead .dropdown-item', function(e) {
+                e.preventDefault();
+                const itemCode = $(this).text().trim();
+                const row = $(this).closest('tr');
                 updateItemName(itemCode, row);
+                $('#productname').val('');
             });
 
             // Initialize typeahead for the first row
@@ -836,6 +946,19 @@
             let discount = parseFloat($(this).val()) || 0;
             let total = subtotal - discount;
             $("#total_total").val(total);
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('change', function(e) {
+                if (e.target && e.target.classList.contains('sell_status')) {
+                    const checkbox = e.target;
+                    const inputId = checkbox.id.replace('sell_status-', 'sell_status_input-');
+                    const input = document.getElementById(inputId);
+                    if (input) {
+                        input.value = checkbox.checked ? '1' : '0';
+                    }
+                }
+            });
         });
     </script>
 

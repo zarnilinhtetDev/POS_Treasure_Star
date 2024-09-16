@@ -86,8 +86,8 @@ Route::middleware('auth')->group(function () {
     Route::get('purchase_order_details/{id}', [PurchaseOrderController::class, 'details'])->name('purchase_order_details');
 
     Route::post('/autocomplete_price', [App\Http\Controllers\PurchaseOrderController::class, 'autocomplete_price'])->name('autocomplete_price');
-    Route::get('/customer_service_search', [App\Http\Controllers\PurchaseOrderController::class, 'po_search'])->name('po_search');
-    Route::post('/customer_service_search_fill', [App\Http\Controllers\PurchaseOrderController::class, 'po_search_fill'])->name('po_search_fill');
+    Route::get('/supplier_service_search', [App\Http\Controllers\PurchaseOrderController::class, 'po_search'])->name('po_search');
+    Route::post('/supplier_service_search_fill', [App\Http\Controllers\PurchaseOrderController::class, 'po_search_fill'])->name('po_search_fill');
     Route::post('/autocomplete-part-code', [PurchaseOrderController::class, 'autocompletePartCode'])->name('autocomplete.part-code');
     Route::post('/get-part-data', [PurchaseOrderController::class, 'getPartData'])->name('get.part.data');
 
@@ -100,21 +100,22 @@ Route::middleware('auth')->group(function () {
     Route::get('invoice_delete/{id}', [InvoiceController::class, 'invoice_delete']);
     Route::post('invoice_update/{id}', [InvoiceController::class, 'invoice_update']);
     Route::get('invoice_detail/{invoice}', [InvoiceController::class, 'invoice_detail'])->name('invoice_detail');
+    Route::get('invoice_receipt_print/{invoice}', [InvoiceController::class, 'invoice_receipt_print'])->name('invoice_receipt_print');
     Route::get('daily_sales', [InvoiceController::class, 'daily_sales'])->name('daily_sales');
 
     //Quotation
     Route::get('quotation', [InvoiceController::class, 'quotation']);
     Route::get('/quotation_detail/{id}', [InvoiceController::class, 'quotation_detail']);
     Route::get('quotation_register', [InvoiceController::class, 'quotation_register']);
-    Route::get('/customer_service', [InvoiceController::class, 'customer_service_search'])->name('customer_service_search');
-    Route::post('/customer_service', [InvoiceController::class, 'customer_service_search_fill'])->name('customer_service_search_fill');
+    Route::get('/customer_service_search', [InvoiceController::class, 'customer_service_search'])->name('customer_service_search');
+    Route::post('/customer_service_search_fill', [InvoiceController::class, 'customer_service_search_fill'])->name('customer_service_search_fill');
     Route::get('quotation_delete/{id}', [InvoiceController::class, 'quotation_delete']);
     Route::get('quotation_edit/{id}', [InvoiceController::class, 'quotation_edit']);
     Route::get('change_invoice/{id}', [InvoiceController::class, 'change_invoice']);
-    Route::post('/autocomplete-part-code-invoice', [InvoiceController::class, 'autocompletePartCode'])->name('autocomplete.part-code-invoice');
+    // Route::post('/autocomplete-part-code-invoice', [InvoiceController::class, 'autocompletePartCode'])->name('autocomplete.part-code-invoice');
+    // Route::post('/autocomplete-barcode-invoice', [InvoiceController::class, 'autocompleteBarCode'])->name('autocomplete.barcode-invoice');
 
-    Route::post('/autocomplete-barcode-invoice', [InvoiceController::class, 'autocompleteBarCode'])->name('autocomplete.barcode-invoice');
-
+    //invoice , quotation , purchase order
     Route::post('/autocomplete-part-code', [InvoiceController::class, 'autocompletePartCodeInvoice'])->name('autocomplete-part-code-invoice');
     Route::post('/get-part-data', [InvoiceController::class, 'getPartDataInvoice'])->name('get-part-data-invoice');
 
@@ -127,6 +128,8 @@ Route::middleware('auth')->group(function () {
     Route::post('item_update/{id}', [ItemController::class, 'update']);
     Route::get('item_delete/{id}', [ItemController::class, 'delete']);
     Route::get('barcode/{id}', [ItemController::class, 'barcode']);
+    Route::get('/item_filter', [ItemController::class, 'item_filter'])->name('items.filter');
+
 
     //inout
     Route::get('in_out/{id}', [ItemController::class, 'inout']);

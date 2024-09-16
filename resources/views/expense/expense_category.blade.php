@@ -138,7 +138,7 @@
                                                 <label for="category">Category Descripton<span
                                                         class="text-danger">*</span></label>
 
-                                                <textarea class="form-control" id="category" placeholder="Enter category description" required autofocus
+                                                <textarea class="form-control" id="category" placeholder="Enter category description"  autofocus
                                                     name="category" rows="3"></textarea>
                                             </div>
 

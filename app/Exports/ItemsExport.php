@@ -46,6 +46,10 @@ class ItemsExport implements FromCollection, FromQuery, WithMapping, WithHeading
             'လက်လီစျေး',
             'လက်ကားစျေး',
             'ဝယ်စျေး',
+            'Options',
+            'Made In Country',
+            'Lense',
+            'Degree',
             'Parent ID',
         ];
     }
@@ -57,7 +61,7 @@ class ItemsExport implements FromCollection, FromQuery, WithMapping, WithHeading
             'Warhouse' => $warehouse,
             'Item Name' => $item->item_name,
             'Barcode' => $item->barcode,
-            'Description' => $item->descriptions, // Corrected key name
+            'Description' => $item->descriptions,
             'Expired Date' => $item->expired_date,
             'Category' => $item->category,
             'Quantity' => $item->quantity,
@@ -66,6 +70,10 @@ class ItemsExport implements FromCollection, FromQuery, WithMapping, WithHeading
             'လက်လီစျေး' => $item->retail_price,
             'လက်ကားစျေး' => $item->wholesale_price,
             'ဝယ်စျေး' => $item->buy_price,
+            'Options' => $item->radio_category,
+            'Made In Country' => $item->madeIn,
+            'Lense' => $item->lense,
+            'Degree' => $item->degree,
             'Parent ID' => $item->parent_id,
         ];
     }

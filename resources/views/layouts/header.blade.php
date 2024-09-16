@@ -8,8 +8,7 @@
 
     <!-- Google Font: Source Sans Pro -->
 
-    <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="{{ asset('locallink/css/google_font_source_sans_pro.css') }}">
     <!-- Font Awesome -->
 
     <link rel="shortcut icon" href="{{ asset('img/logo.jpg') }}" type="image/x-icon">
@@ -26,7 +25,7 @@
 
     <link rel="stylesheet" href="{{ asset('dist/css/adminlte.min.css') }}">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('fontawesome/css/all.min.css') }}">
 
 </head>
 

@@ -39,28 +39,32 @@ class UserProfileController extends Controller
             'logos' => 'nullable|file|image|max:2048',
             'address' => 'required|string',
             'phno1' => 'required|string|max:15',
-            'branch' => 'required',
+            'branch' => 'required|string',
         ]);
 
-        $profile = new UserProfile();
-        $profile->name = $request->input('name');
-        $profile->address = $request->input('address');
-        $profile->description = $request->input('description');
-        $profile->phno1 = $request->input('phno1');
-        $profile->phno2 = $request->input('phno2');
-        $profile->email = $request->input('email');
-        $profile->address = $request->input('address');
-        $profile->branch = $request->input('branch');
+        $data = [
+            'name' => $request->input('name'),
+            'address' => $request->input('address'),
+            'description' => $request->input('description'),
+            'phno1' => $request->input('phno1'),
+            'phno2' => $request->input('phno2'),
+            'email' => $request->input('email'),
+            'branch' => $request->input('branch'),
+        ];
+
         $logo = $request->file('logos');
         if ($logo) {
             $imagename = time() . '.' . $logo->getClientOriginalExtension();
             $logo->move(public_path('logos'), $imagename);
-            $profile->logos = $imagename;
+            $data['logos'] = $imagename;
         }
 
-        $profile->save();
+        UserProfile::updateOrCreate(
+            ['branch' => $request->input('branch')],
+            $data
+        );
 
-        return redirect(url('config_manage'))->with('success', 'Configuration Successfully');
+        return redirect(url('config_manage'))->with('success', 'Configuration saved successfully.');
     }
 
     public function edit($id)

@@ -55,7 +55,11 @@ class ItemsImport implements ToModel
             'retail_price' => $row[9],
             'wholesale_price' => $row[10],
             'buy_price' => $row[11],
-            'parent_id' => $row[12],
+            'radio_category' => $row[12],
+            'madeIn' => $row[13],
+            'lense' => $row[14],
+            'degree' => $row[15],
+            'parent_id' => $row[16],
         ]);
     }
 

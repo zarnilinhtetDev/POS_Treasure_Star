@@ -4,9 +4,6 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.1/bootstrap3-typeahead.min.js"></script>
-
     <meta name="csrf-token" content="{{ csrf_token() }}" />
 
 </head>
@@ -153,17 +150,41 @@
                                                     <td>{{ $sell->part_number }}</td>
                                                     <td>{{ $sell->description }}</td>
                                                     <td>{{ $sell->product_qty }}</td>
-                                                    @if ($sell->product_price)
-                                                        <td>{{ $sell->product_price }}</td>
-                                                    @elseif($sell->retail_price)
-                                                        <td>{{ $sell->retail_price }}</td>
-                                                    @endif
+                                                    <td>
+                                                        @if ($invoice->sale_price_category == 'Default')
+                                                            @if ($invoice->type == 'Whole Sale')
+                                                                {{ number_format($sell->product_price) }}
+                                                            @else
+                                                                {{ number_format($sell->retail_price) }}
+                                                            @endif
+                                                        @elseif ($invoice->sale_price_category == 'Whole Sale')
+                                                            {{ number_format($sell->product_price) }}
+                                                        @elseif ($invoice->sale_price_category == 'Retail')
+                                                            {{ number_format($sell->retail_price) }}
+                                                        @else
+                                                            {{ number_format($sell->retail_price) }}
+                                                        @endif
+                                                    </td>
                                                     <td>{{ $sell->unit }}</td>
 
                                                     <td>
                                                         <span class="currenty"></span>
-                                                        <span
-                                                            class='ttlText'>{{ $sell->product_qty * ($sell->product_price ?? $sell->retail_price) }}</span>
+                                                        <span class='ttlText'>
+
+                                                            @if ($invoice->sale_price_category == 'Default')
+                                                                @if ($invoice->type == 'Whole Sale')
+                                                                    {{ number_format($sell->product_price * $sell->product_qty) }}
+                                                                @else
+                                                                    {{ number_format($sell->retail_price * $sell->product_qty) }}
+                                                                @endif
+                                                            @elseif ($invoice->sale_price_category == 'Whole Sale')
+                                                                {{ number_format($sell->product_price * $sell->product_qty) }}
+                                                            @elseif ($invoice->sale_price_category == 'Retail')
+                                                                {{ number_format($sell->retail_price * $sell->product_qty) }}
+                                                            @else
+                                                                {{ number_format($sell->retail_price * $sell->product_qty) }}
+                                                            @endif
+                                                        </span>
                                                     </td>
                                                 </tr>
                                                 @php
@@ -197,6 +218,27 @@
                                                     {{ number_format($invoice->total) }}
                                                 </td>
                                             </tr>
+
+                                            @foreach ($payment_methods as $index => $payment_method)
+                                                <tr>
+                                                    <td colspan="5" class="text-right"></td>
+                                                    @if ($index == 0)
+                                                        <td style="font-weight: bolder;">Payment Method
+                                                            - {{ $payment_method->payment_method }}
+                                                        </td>
+                                                    @else
+                                                        <td style="font-weight: bolder;">
+                                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            {{ $payment_method->payment_method }}
+                                                        </td>
+                                                    @endif
+
+                                                    <td style="font-weight: bolder;">
+                                                        {{ number_format($payment_method->payment_amount) }}
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+
                                             <tr>
                                                 <td colspan="5" class="text-right"></td>
                                                 <td style="font-weight: bolder;">Deposit
