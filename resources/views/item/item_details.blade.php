@@ -207,12 +207,14 @@
                         <tr id="nearAndFar">
 
                             <td class="fw-light" style="width: 200px;">Near And Far Category</td>
-                            <td class="fw-normal" style="width: 200px;">
+                            <td class="fw-normal" style="width: 200px;" id="near_and_far_text">
 
                                 @if ($items->near_and_far == 'near')
                                     အနီး
                                 @elseif ($items->near_and_far == 'far')
                                     အ‌ဝေး
+                                @elseif ($items->near_and_far == 'near_and_far')
+                                    အနီး/အ‌ဝေး
                                 @elseif ($items->near_and_far == 'sun_glass')
                                     နေကာ
                                 @elseif ($items->near_and_far == 'normal')
@@ -222,6 +224,16 @@
                                 @endif
 
                             </td>
+
+                        </tr>
+                        <tr id="near_and_far_degree">
+                            <td class="fw-light" style="width: 200px;">Choose Lense Degree</td>
+                            <td class="fw-normal" style="width: 200px;">{{ $items->near_and_far_degree }}</td>
+
+                        </tr>
+                        <tr id="cylinder">
+                            <td class="fw-light" style="width: 200px;">Cylinder Degree</td>
+                            <td class="fw-normal" style="width: 200px;">{{ $items->cylinder }}</td>
 
                         </tr>
                         {{-- <tr>
@@ -345,18 +357,20 @@
                     $('#category').show();
                     $('#degreeCategory').show();
                     $('#nearAndFar').show();
+                    $('#cylinder').show();
 
                 } else if (selectedValue === 'Frame') {
                     $('#madeInCountry').show();
                     $('#category').hide();
                     $('#degreeCategory').hide();
                     $('#nearAndFar').show();
+                    $('#cylinder').hide();
                 } else {
                     $('#madeInCountry').hide();
                     $('#category').hide();
                     $('#degreeCategory').hide();
                     $('#nearAndFar').hide();
-
+                    $('#cylinder').hide();
                 }
             }
 
@@ -366,6 +380,22 @@
                 toggleDropdownVisibility();
             });
         });
+
+        $(document).ready(function() {
+            function toggleDegreeRow() {
+                var nearAndFarText = $('#near_and_far_text').text().trim();
+
+                if (nearAndFarText === 'အနီး/အ‌ဝေး') {
+                    $('#near_and_far_degree').show();
+                } else {
+                    $('#near_and_far_degree').hide();
+                }
+            }
+
+            toggleDegreeRow();
+        });
+
+
 
         document.addEventListener('DOMContentLoaded', function() {
             var radioButtons = document.querySelectorAll('.frmSearch input[type="radio"]');

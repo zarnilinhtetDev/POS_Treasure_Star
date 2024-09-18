@@ -106,6 +106,7 @@
                                             <th>No.</th>
                                             <th>Invoice No.</th>
                                             <th>Customer Name</th>
+                                            <th>Customer Phone</th>
                                             <th>Register Mode</th>
                                             <th>Total</th>
                                             <th>Payment Status</th>
@@ -136,6 +137,7 @@
                                                 <td> {{ $invoice->invoice_no }}</td>
 
                                                 <td>{{ $invoice->customer_name }}</td>
+                                                <td>{{ $invoice->phno }}</td>
                                                 <td>{{ $invoice->balance_due }}</td>
 
                                                 <td>{{ number_format($invoice->total) }}</td>

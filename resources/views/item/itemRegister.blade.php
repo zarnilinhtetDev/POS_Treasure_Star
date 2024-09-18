@@ -154,14 +154,33 @@
                                 </div>
 
                                 <div class="row mt-3" id="near_and_far_dropdown" style="display: none;">
-                                    <div class="form-group col-md-6">
-                                        <label for="lensOptions">Select Near And Far Category:</label>
+                                    <div class="form-group col-md-6 mb-4">
+                                        <label for="lensOptions">Lense Category:</label>
                                         <select id="near_and_far" name="near_and_far" class="form-control ">
                                             <option value="" selected disabled>Choose One</option>
                                             <option value="near">အနီး</option>
                                             <option value="far">အ‌‌ဝေး</option>
+                                            <option value="near_and_far">အနီး/အ‌‌ဝေး</option>
                                             <option value="sun_glass">နေကာ</option>
                                             <option value="normal">ရိုးရိုး</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-6" style="display: none"
+                                        id="near_and_far_degree_dropdown">
+                                        <label for="near_and_far_degree">Choose Lense Degree:</label>
+                                        <select id="near_and_far_degree" name="near_and_far_degree"
+                                            class="form-control ">
+                                            <option value="" selected disabled>Choose One</option>
+
+
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group col-md-6" style="display: none;" id="cylinder_dropdown">
+                                        <label for="lensOptions">Cylinder Degree:</label>
+                                        <select id="cylinder" name="cylinder" class="form-control ">
+                                            <option value="" selected disabled>Choose Cylinder</option>
                                         </select>
                                     </div>
                                 </div>
@@ -373,6 +392,34 @@
                 }));
             }
         });
+
+        $(document).ready(function() {
+            let dropdown = $('#cylinder');
+            let startValue = 25;
+            let endValue = 500;
+            let step = 25;
+
+            for (let i = startValue; i <= endValue; i += step) {
+                dropdown.append($('<option>', {
+                    value: i,
+                    text: i
+                }));
+            }
+        });
+
+        $(document).ready(function() {
+            let dropdown = $('#near_and_far_degree');
+            let startValue = 25;
+            let endValue = 500;
+            let step = 25;
+
+            for (let i = startValue; i <= endValue; i += step) {
+                dropdown.append($('<option>', {
+                    value: i,
+                    text: i
+                }));
+            }
+        });
     </script>
     <script>
         $(document).ready(function() {
@@ -382,17 +429,29 @@
                     $('#madeInDropdown').hide();
                     $('#lensDropdown').show();
                     $('#near_and_far_dropdown').show();
-
+                    $('#cylinder_dropdown').show();
                 } else if ($('input[name="radio_category"]:checked').val() === 'Frame') {
-
                     $('#madeInDropdown').show();
                     $('#lensDropdown').hide();
                     $('#near_and_far_dropdown').show();
-
+                    $('#cylinder_dropdown').hide();
                 } else {
                     $('#madeInDropdown').hide();
                     $('#lensDropdown').hide();
                     $('#near_and_far_dropdown').hide();
+                    $('#cylinder_dropdown').hide();
+                }
+            });
+        });
+
+        $(document).ready(function() {
+            $('#near_and_far_degree_dropdown').hide();
+            $('#near_and_far').on('change', function() {
+                var selectedValue = $(this).val();
+                if (selectedValue === 'near_and_far') {
+                    $('#near_and_far_degree_dropdown').show();
+                } else {
+                    $('#near_and_far_degree_dropdown').hide();
                 }
             });
         });

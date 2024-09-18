@@ -75,7 +75,7 @@ class PurchaseOrderController extends Controller
     public function purchase_order_store(Request $request)
     {
 
-        $count = count($request->part_description);
+        $count = count($request->part_number);
         $invoice = new PurchaseOrder();
         // $invoice->supplier_id = $request->supplier_id;
         // $invoice->supplier_name = $request->supplier_name;
@@ -111,7 +111,7 @@ class PurchaseOrderController extends Controller
         $invoice->sub_total  = $request->sub_total;
         $invoice->total  = $request->total;
         $invoice->balance_due  = $request->balance_due;
-        $invoice->discount_total  = $request->discount;
+        $invoice->discount_total  = $request->total_discount;
         $invoice->deposit  = $request->paid;
         $invoice->remain_balance  = $request->balance;
         $invoice->remark = $request->remark;
@@ -122,13 +122,12 @@ class PurchaseOrderController extends Controller
             $result = new PO_sells();
             $result->invoiceid = $last_id;
             $result->supplier_id = $request->supplier_id;
-            $result->description = $request->part_description[$i];
             $result->part_number = $request->part_number[$i];
             $result->unit = $request->item_unit[$i];
-            $result->exp_date = $request->exp_date[$i];
             $result->product_qty = $request->product_qty[$i];
             $result->product_price = $request->product_price[$i];
             $result->warehouse = $request->warehouse[$i];
+            $result->discount = $request->discount[$i];
             $result->status = $request->sell_status[$i];
             $result->save();
         }
@@ -173,7 +172,7 @@ class PurchaseOrderController extends Controller
 
     public function purchase_order_update(Request $request, $id)
     {
-        $count = count($request->part_description);
+        $count = count($request->part_number);
         $invoice = PurchaseOrder::find($id);
         $invoice->supplier_id = $request->supplier_id;
         $invoice->invoice_category = $request->quote_category;
@@ -189,7 +188,7 @@ class PurchaseOrderController extends Controller
         $invoice->sub_total  = $request->sub_total;
         $invoice->total  = $request->total;
         $invoice->balance_due  = $request->balance_due;
-        $invoice->discount_total  = $request->discount;
+        $invoice->discount_total  = $request->total_discount;
         $invoice->deposit  = $request->paid;
         $invoice->remain_balance  = $request->balance;
         $invoice->remark = $request->remark;
@@ -203,12 +202,11 @@ class PurchaseOrderController extends Controller
             $po[] = [
                 'invoiceid' => $last_id,
                 'supplier_id' => $request->supplier_id,
-                'description' => $request->part_description[$i],
                 'part_number' => $request->part_number[$i],
                 'unit' => $request->item_unit[$i],
                 'product_qty' => $request->product_qty[$i],
-                'exp_date' => $request->exp_date[$i],
                 'product_price' => $request->product_price[$i],
+                'discount' => $request->discount[$i],
                 'warehouse' => $request->warehouse[$i],
                 'status' => $request->sell_status[$i] ?? '0',
                 'created_at' => now(),

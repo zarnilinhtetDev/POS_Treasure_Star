@@ -132,7 +132,7 @@ class InvoiceController extends Controller
         }
 
 
-        $count = count($request->part_description);
+        $count = count($request->part_number);
         $invoice = new Invoice();
 
         $invoice->customer_id = $request->customer_id;
@@ -156,7 +156,7 @@ class InvoiceController extends Controller
         $invoice->total  = $request->total;
 
         $invoice->balance_due  = $request->balance_due;
-        $invoice->discount_total  = $request->discount;
+        $invoice->discount_total  = $request->total_discount;
         $invoice->deposit  = $request->paid;
         $invoice->remain_balance  = $request->balance;
         $invoice->remark = $request->remark;
@@ -167,12 +167,11 @@ class InvoiceController extends Controller
             $result = new Sell();
             $result->invoiceid = $last_id;
             $result->customer_id = $request->customer_id;
-            $result->description = $request->part_description[$i];
             $result->part_number = $request->part_number[$i];
             $result->product_qty = $request->product_qty[$i];
             $result->product_price = $request->product_price[$i];
             $result->retail_price = $request->retail_price[$i];
-            $result->exp_date = $request->exp_date[$i];
+            $result->discount = $request->discount[$i];
             $result->unit = $request->item_unit[$i];
             $result->warehouse = $request->warehouse[$i];
             $result->status = $request->sell_status[$i] ?? '0';
@@ -388,7 +387,7 @@ class InvoiceController extends Controller
         $invoice->location = $request->location;
         $invoice->branch  = $request->branch;
         $invoice->balance_due  = $request->balance_due;
-        $invoice->discount_total  = $request->discount;
+        $invoice->discount_total  = $request->total_discount;
         $invoice->deposit  = $request->paid;
         $invoice->remain_balance  = $request->balance;
         $invoice->remark = $request->remark;
@@ -398,16 +397,15 @@ class InvoiceController extends Controller
 
         $sellsData = [];
         $now = Carbon::now();
-        if ($request->input('part_description')) {
-            foreach ($request->input('part_description') as $key => $partDescription) {
+        if ($request->input('part_number')) {
+            foreach ($request->input('part_number') as $key => $partDescription) {
                 $sellsData[] = [
-                    'description' => $partDescription,
-                    'part_number' => $request->input('part_number')[$key],
+                    'part_number' => $partDescription,
                     'product_qty' => $request->input('product_qty')[$key],
                     'product_price' => $request->input('product_price')[$key],
                     'retail_price' => $request->input('retail_price')[$key],
                     'unit' => $request->input('item_unit')[$key],
-                    'exp_date' => $request->input('exp_date')[$key],
+                    'discount' => $request->input('discount')[$key],
                     'warehouse' => $request->input('warehouse')[$key],
                     'status' => $request->input('sell_status')[$key] ?? '0',
                     'invoiceid' => $id,

@@ -108,19 +108,17 @@
                             <br>
 
 
-                            <div class="row" style="margin-top: 1vh;">
+                            <div class="row">
                                 <div class="table-responsive">
                                     <table class="table text-center table-bordered" style="width: 100%">
                                         <thead class="bg-primary" style="color: black;">
                                             <tr class="text-white">
                                                 <th>{{ trans('No') }}</th>
                                                 <th>{{ trans('Item Name') }}</th>
-
-                                                <th>{{ trans('Description') }}</th>
                                                 <th>{{ trans('Qty') }}</th>
-                                                <th>{{ trans('Price') }}</th>
                                                 <th>{{ trans('Unit') }}</th>
-
+                                                <th>{{ trans('Price') }}</th>
+                                                <th>{{ trans('Discounts') }}</th>
                                                 {{-- <th style="width: 3%;"></th> --}}
                                                 <th>{{ trans('Total') }}
                                                     {{-- ({{ config('currency.symbol') }}) --}}
@@ -135,16 +133,15 @@
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td>{{ $sell->part_number }}</td>
-
-                                                    <td>{{ $sell->description }}</td>
                                                     <td>{{ $sell->product_qty }}</td>
-                                                    <td>{{ $sell->product_price }}</td>
                                                     <td>{{ $sell->unit }}</td>
+                                                    <td>{{ number_format($sell->product_price) }}</td>
+                                                    <td>{{ number_format($sell->discount) }}</td>
 
                                                     <td>
                                                         <span class="currenty"></span>
                                                         <span
-                                                            class='ttlText'>{{ $sell->product_qty * $sell->product_price }}</span>
+                                                            class='ttlText'>{{ number_format($sell->product_qty * $sell->product_price - $sell->discount) }}</span>
                                                     </td>
                                                 </tr>
                                                 @php

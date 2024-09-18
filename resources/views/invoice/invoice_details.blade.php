@@ -42,20 +42,20 @@
 
     <div>
         @foreach ($profile as $pic)
-            <div class="mt-1 text-center">
+            @if ($invoice->branch == $pic->branch)
+                <div class="mt-1 text-center">
+                    <img src="{{ asset('logos/' . ($pic->logos ?? 'null')) }}" width="180" height="120">
+                </div>
+                <div class="row" style="margin-top: 10px;">
+                    <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
 
-
-                <img src="{{ asset('logos/' . ($pic->logos ?? 'null')) }}" width="180" height="120">
-            </div>
-            <div class="row" style="margin-top: 10px;">
-                <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
-
-                <p class="text-center fw-bold" style="font-size: 14px;">
-                    {{ $pic->address }}
-                    <br>
-                    {{ $pic->phno1 }}, {{ $pic->phno2 }}
-                </p>
-            </div>
+                    <p class="text-center fw-bold" style="font-size: 14px;">
+                        {{ $pic->address }}
+                        <br>
+                        {{ $pic->phno1 }}, {{ $pic->phno2 }}
+                    </p>
+                </div>
+            @endif
         @endforeach
 
         {{-- <h1>
@@ -96,7 +96,7 @@
 
                             </div>
                             <br>
-                            <div class="row" style="margin: 5;">
+                            <div class="row" style="margin: 5;margin-top: -50px;">
                                 <h3>Information</h3>
                                 <div class="table-responsive">
                                     <table class="table text-center table-bordered">
@@ -128,11 +128,10 @@
                                             <tr class="text-white">
                                                 <th>{{ trans('No') }}</th>
                                                 <th>{{ trans('Item Name') }}</th>
-
-                                                <th>{{ trans('Description') }}</th>
                                                 <th>{{ trans('Qty') }}</th>
-                                                <th>{{ trans('Price') }}</th>
                                                 <th>{{ trans('Unit') }}</th>
+                                                <th>{{ trans('Price') }}</th>
+                                                <th>{{ trans('Discounts') }}</th>
 
                                                 {{-- <th style="width: 3%;"></th> --}}
                                                 <th>{{ trans('Total') }}
@@ -148,8 +147,8 @@
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td>{{ $sell->part_number }}</td>
-                                                    <td>{{ $sell->description }}</td>
                                                     <td>{{ $sell->product_qty }}</td>
+                                                    <td>{{ $sell->unit }}</td>
                                                     <td>
                                                         @if ($invoice->sale_price_category == 'Default')
                                                             @if ($invoice->type == 'Whole Sale')
@@ -165,7 +164,7 @@
                                                             {{ number_format($sell->retail_price) }}
                                                         @endif
                                                     </td>
-                                                    <td>{{ $sell->unit }}</td>
+                                                    <td>{{ number_format($sell->discount) }}</td>
 
                                                     <td>
                                                         <span class="currenty"></span>
@@ -204,10 +203,18 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="5" class="text-right"></td>
-                                                <td style="font-weight: bolder; ">Discount
+                                                <td style="font-weight: bolder; ">Overall Discount
                                                 </td>
                                                 <td style="font-weight: bolder;">
                                                     {{ number_format($invoice->discount_total) }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" class="text-right"></td>
+                                                <td style="font-weight: bolder; ">Item Discount
+                                                </td>
+                                                <td style="font-weight: bolder;">
+                                                    {{ number_format($sells->sum('discount')) }}
                                                 </td>
                                             </tr>
                                             <tr>

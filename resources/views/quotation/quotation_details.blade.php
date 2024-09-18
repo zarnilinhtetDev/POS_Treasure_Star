@@ -76,7 +76,7 @@
 
                             </div>
                             <br>
-                            <div class="row" style="margin: 5;">
+                            <div class="row" style="margin: 5;margin-top: -50px;">
                                 <h3>Information</h3>
                                 <div class="table-responsive">
                                     <table class="table table-bordered text-center">
@@ -107,10 +107,10 @@
                                             <tr class="text-white">
                                                 <th>{{ trans('No') }}</th>
                                                 <th>{{ trans('Item Name') }}</th>
-                                                <th>{{ trans('Description') }}</th>
                                                 <th>{{ trans('Qty') }}</th>
-                                                <th>{{ trans('Price') }}</th>
                                                 <th>{{ trans('Unit') }}</th>
+                                                <th>{{ trans('Price') }}</th>
+                                                <th>{{ trans('Discounts') }}</th>
 
                                                 {{-- <th style="width: 3%;"></th> --}}
                                                 <th>{{ trans('Total') }}
@@ -126,23 +126,50 @@
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td>{{ $sell->part_number }}</td>
-                                                    <td>{{ $sell->description }}</td>
                                                     <td>{{ $sell->product_qty }}</td>
-
-                                                    <td>{{ $sell->retail_price }}</td>
-
                                                     <td>{{ $sell->unit }}</td>
+                                                    <td>
+                                                        @if ($quotation->sale_price_category == 'Default')
+                                                            @if ($quotation->type == 'Whole Sale')
+                                                                {{ number_format($sell->product_price) }}
+                                                            @else
+                                                                {{ number_format($sell->retail_price) }}
+                                                            @endif
+                                                        @elseif ($quotation->sale_price_category == 'Whole Sale')
+                                                            {{ number_format($sell->product_price) }}
+                                                        @elseif ($quotation->sale_price_category == 'Retail')
+                                                            {{ number_format($sell->retail_price) }}
+                                                        @else
+                                                            {{ number_format($sell->retail_price) }}
+                                                        @endif
+                                                    </td>
+                                                    <td>{{ number_format($sell->discount) }}</td>
 
                                                     <td>
                                                         <span class="currenty"></span>
-                                                        <span
-                                                            class='ttlText'>{{ $sell->product_qty * $sell->retail_price }}</span>
+                                                        <span class='ttlText'>
+
+                                                            @if ($quotation->sale_price_category == 'Default')
+                                                                @if ($quotation->type == 'Whole Sale')
+                                                                    {{ number_format($sell->product_price * $sell->product_qty - $sell->discount) }}
+                                                                @else
+                                                                    {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
+                                                                @endif
+                                                            @elseif ($quotation->sale_price_category == 'Whole Sale')
+                                                                {{ number_format($sell->product_price * $sell->product_qty - $sell->discount) }}
+                                                            @elseif ($quotation->sale_price_category == 'Retail')
+                                                                {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
+                                                            @else
+                                                                {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
+                                                            @endif
+                                                        </span>
                                                     </td>
                                                 </tr>
                                                 @php
                                                     $no++;
                                                 @endphp
                                             @endforeach
+
                                         </tbody>
                                         <tfoot>
                                             <tr>
@@ -155,10 +182,18 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="5" class="text-right"></td>
-                                                <td style="font-weight: bolder;">Discount
+                                                <td style="font-weight: bolder; ">Overall Discount
                                                 </td>
-                                                <td style="font-weight: bolder; ">
+                                                <td style="font-weight: bolder;">
                                                     {{ number_format($quotation->discount_total) }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" class="text-right"></td>
+                                                <td style="font-weight: bolder; ">Item Discount
+                                                </td>
+                                                <td style="font-weight: bolder;">
+                                                    {{ number_format($sells->sum('discount')) }}
                                                 </td>
                                             </tr>
                                             <tr>

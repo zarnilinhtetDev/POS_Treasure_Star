@@ -145,7 +145,7 @@
                                                 <td>{{ $quotation->customer_name }}</td>
 
                                                 <td>{{ $quotation->quote_date }}</td>
-                                                <td>{{ $quotation->total }}</td>
+                                                <td>{{ number_format($quotation->total) }}</td>
                                                 @if (in_array('Change Invoice', $choosePermission) || auth()->user()->is_admin == '1')
                                                     <td>
                                                         <a href="{{ url('/change_invoice', $quotation->id) }}"

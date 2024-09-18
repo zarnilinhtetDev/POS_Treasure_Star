@@ -134,7 +134,7 @@
 
                 </div> --}}
                 @if (auth()->user()->is_admin == '1')
-                    <div class="frmSearch col-md-3">
+                    <div class="frmSearch col-md-3 mt-3">
                         <div class="frmSearch col-sm-12">
                             <span style="font-weight: bolder;">
                                 <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
@@ -150,7 +150,7 @@
                         </div>
                     </div>
                 @else
-                    <div class="frmSearch col-md-3">
+                    <div class="frmSearch col-md-3 mt-3">
                         <div class="frmSearch col-sm-12">
                             <span style="font-weight:bolder">
                                 <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
@@ -299,9 +299,7 @@
                                                 <th width="5%" class="text-center">{{ trans('No') }}</th>
                                                 <th width="18%" class="text-center">{{ trans('Item Name') }}
                                                 </th>
-                                                <th width="23%" class="text-center">
-                                                    {{ trans('Item Descriptions') }}
-                                                </th>
+
                                                 <th width="8%" class="text-center">{{ trans('Quantity') }}
                                                 </th>
                                                 <th width="8%" class="text-center">{{ trans('Unit') }}
@@ -309,7 +307,8 @@
 
                                                 <th width="7%" class="text-center">{{ trans('Unit Price') }}
                                                 </th>
-                                                <th width="10%" class="text-center">{{ trans('Expiry') }}
+                                                <th width="10%" class="text-center">
+                                                    {{ trans('Discounts') }}
                                                 </th>
 
 
@@ -352,10 +351,7 @@
                                                         </div>
 
                                                     </td>
-                                                    <td><input type="text"
-                                                            class="form-control description typeahead"
-                                                            name="part_description[]" value="{{ $po->description }}"
-                                                            id='description-0' autocomplete="off"></td>
+
                                                     <td><input type="text" class="form-control req amnt"
                                                             name="product_qty[]" id="amount-{{ $key }}"
                                                             autocomplete="off" value="{{ $po->product_qty }}"><input
@@ -372,10 +368,12 @@
                                                             name="product_price[]" id="price-{{ $key }}"
                                                             autocomplete="off" value="{{ $po->product_price }}">
                                                     </td>
-                                                    <td><input type="text" class="form-control exp_date "
-                                                            name="exp_date[]" id="exp_date-0" autocomplete="off"
-                                                            value="{{ $po->exp_date }}">
+
+                                                    <td><input type="text" class="form-control vat"
+                                                            name="discount[]" id="vat-0" autocomplete="off"
+                                                            value="{{ $po->discount }}">
                                                     </td>
+
                                                     <td style="display: none;"><input type="text"
                                                             class="form-control warehouse " name="warehouse[]"
                                                             id="warehouse-0" autocomplete="off"
@@ -387,33 +385,11 @@
                                                         <strong>
                                                             <span class='ttlText1' id="foc-0"></span>
                                                         </strong>
-                                                        <span class="currenty">{{ config('currency.symbol') }}</span>
-                                                        <strong>
-                                                            <span class='ttlText' id="result-{{ $key }}">
-                                                                {{ intval($po->product_qty) * floatval($po->product_price) - (intval($po->product_qty) * floatval($po->product_price) * intval($po->discount)) / 100 }}
-                                                            </span>
-                                                        </strong>
                                                     </td>
 
-                                                    <input type="hidden" class="form-control vat "
-                                                        name="product_tax[]" id="vat-0" value="0">
-                                                    <input type="hidden" name="total_tax[]" id="taxa-0"
-                                                        value="0">
-                                                    <input type="hidden" name="total_discount[]" id="disca-0"
-                                                        value="0">
-                                                    <input type="hidden" class="ttInput" name="product_subtotal[]"
-                                                        id="total-0" value="0">
-                                                    <input type="hidden" class="pdIn" name="product_id[]"
-                                                        id="pid-0" value="0">
 
-                                                    <input type="hidden" name="unit_m[]" id="unit_m-0"
-                                                        value="1">
-                                                    <input type="hidden" name="code[]" id="hsn-0"
-                                                        value="">
-                                                    <input type="hidden" name="serial[]" id="serial-0"
-                                                        value="">
-                                                    {{-- <td></td> --}}
-                                                    <td><button type="submit" class="btn btn-danger remove_item_btn"
+                                                    <td style="width: 5%;"><button type="submit"
+                                                            class="btn btn-danger remove_item_btn"
                                                             id="removebutton">Remove</button></td>
                                                 </tr>
                                             @endforeach
@@ -512,13 +488,27 @@
                                                 <td colspan="2">
 
                                                 </td>
-                                                <td colspan="3" align="right"><strong>Discount
+                                                <td colspan="3" align="right"><strong>Overall Discount
                                                     </strong>
                                                 </td>
                                                 <td align="left" colspan="2" class="col-md-4"><input
-                                                        type="text" name="discount" class="form-control"
+                                                        type="text" name="total_discount" class="form-control"
                                                         id="total_discount"
                                                         value="{{ $purchase_orders->discount_total }}">
+
+                                                </td>
+
+                                            </tr>
+                                            <tr class="sub_c" style="display: table-row;">
+                                                <td colspan="2">
+
+                                                </td>
+                                                <td colspan="3" align="right"><strong>Item Discount
+                                                    </strong>
+                                                </td>
+                                                <td align="left" colspan="2" class="col-md-4"><input
+                                                        type="text" class="form-control" id="item_discount"
+                                                        readonly>
 
                                                 </td>
 
@@ -700,8 +690,6 @@
 
             function updateItemName(item_name, row) {
                 let itemNameInput = row.find('.price');
-                let partDesc = row.find('.description');
-                let exp_date = row.find('.exp_date');
                 let item_unit = row.find('.item_unit');
                 var Selectedlocation = $('#location').val();
                 let warehouse = row.find('.warehouse');
@@ -717,8 +705,6 @@
                     },
                     success: function(data) {
                         itemNameInput.val(data.buy_price);
-                        partDesc.val(data.descriptions);
-                        exp_date.val(data.expired_date);
                         item_unit.val(data.item_unit);
                         warehouse.val(data.warehouse_id);
 
@@ -753,9 +739,6 @@
                     '</div>' +
                     '</div>' +
                     '</td>' +
-                    '<td><input type="text" class="form-control description typeahead" name="part_description[]" id="description-' +
-                    count + '" autocomplete="off"></td>' +
-
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
                     count +
                     '"   autocomplete="off" value="1"><input type="hidden" id="alert-0" value="" name="alert[]"></td>' +
@@ -765,26 +748,14 @@
                     '<td><input type="text" class="form-control price" name="product_price[]" value="0" id="price-' +
                     count + '"   autocomplete="off"></td>' +
 
-                    '<td><input type="text" class="form-control exp_date " name="exp_date[]" id="exp_date-' +
-                    count +
-                    '"   autocomplete="off"></td>' +
+                    '<td><input type="text" class="form-control vat" name="discount[]" value="0" id="vat-' +
+                    count + '"   autocomplete="off"></td>' +
                     '<td style="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
                     count +
                     '"   autocomplete="off"></td>' +
-
-
                     '<td style="text-align:center"><span class="currenty"></span><strong><span class="ttlText1" id="result-' +
                     count + '">0</span></strong></td>' +
-                    '<input type="hidden" name="total_tax[]" id="taxa-' + count + '" value="0">' +
-                    '<input type="hidden" name="total_discount[]" id="disca-' + count + '" value="0">' +
-                    '<input type="hidden" class="ttInput" name="product_subtotal[]" id="total-' +
-                    count + '" value="0">' +
-                    '<input type="hidden" class="pdIn" name="product_id[]" id="pid-0" value="0">' +
-
-                    '<input type="hidden" name="unit_m[]" id="unit_m-0" value="1">' +
-                    '<input type="hidden" name="code[]" id="hsn-0" value="">' +
-                    '<input type="hidden" name="serial[]" id="serial-0" value="">' +
-                    '<td><button type="submit" class="btn btn-danger remove_item_btn" id="removebutton">Remove</button></td>' +
+                    '<td style="width: 5%;"><button type="submit" class="btn btn-danger remove_item_btn" id="removebutton">Remove</button></td>' +
                     '</tr>';
 
                 $("#showitem123").append(newRow);
@@ -879,75 +850,71 @@
             // Initialize typeahead for the first row
             initializeTypeahead(count);
 
-            $(document).on("click", '#calculate', function(e) {
-                e.preventDefault();
+            $(document).ready(function() {
+                function calculateTotals() {
+                    let salePriceCategory = $('#sale_price_category').val();
 
-                // Iterate over each row in the table
-                $('#showitem123 tr').each(function(index) {
-                    let row = $(this);
-                    let qty = parseInt(row.find('.req.amnt').val()) || 0;
-                    let price = parseFloat(row.find('.price').val()) || 0;
-                    let discount = parseFloat(row.find('.vat').val()) || 0;
+                    let total = 0;
+                    let totalTax = 0;
+                    let totalTotal = 0;
+                    let itemDiscount = 0;
 
-                    let total = qty * price;
-                    let discountAmount = (total * discount) / 100;
-                    let subtotal = total - discountAmount;
+                    $('#showitem123 tr').each(function() {
+                        let row = $(this);
+                        let qty = parseInt(row.find('.req.amnt').val()) || 0;
+                        var price = parseFloat(row.find('.price').val()) || 0;
+                        let discount = parseFloat(row.find('.vat').val()) || 0;
+                        let itemTotal = qty * price;
+                        totalTotal += itemTotal;
 
-                    // Update the subtotal for the current row
-                    row.find('.ttlText1').text(subtotal);
+
+                        if (!isNaN(discount) && discount >= 0) {
+                            let itemTax = itemTotal - discount;
+                            totalTax += itemTax;
+                        }
+
+                        if (!isNaN(discount) && discount > 0) {
+                            let discountAmount = itemTotal - discount;
+                            itemTotal = discountAmount;
+                        }
+
+                        total += itemTotal;
+                        itemDiscount += discount;
+
+
+                        row.find('.ttlText1').text(itemTotal);
+
+                    });
+
+
+                    let paid = parseFloat(document.getElementById("paid").value) ||
+                        0;
+                    let total_p = parseFloat(document.getElementById("total_total").value) ||
+                        0;
+                    let total_discount = parseFloat(document.getElementById("total_discount").value) ||
+                        0;
+
+
+                    let totalDiscount = total - total_discount;
+                    let balance = total - paid - total_discount;
+
+
+                    $("#balance").val(balance);
+                    $("#item_discount").val(itemDiscount);
+                    $('#invoiceyoghtml').val(totalTotal);
+                    $('#total_total').val(totalDiscount);
+                }
+
+                // Bind function to button click
+                $(document).on("click", '#calculate', function(e) {
+                    e.preventDefault();
+                    calculateTotals();
                 });
 
-                // Calculate the total for all rows
-                let total = 0;
-                let totalTax = 0;
+                // Automatically run on page load
+                calculateTotals();
 
-                $('#showitem123 tr').each(function(index) {
-                    let row = $(this);
-                    let qty = parseInt(row.find('.req.amnt').val()) || 0;
-                    let price = parseFloat(row.find('.price').val()) || 0;
-                    let discount = parseFloat(row.find('.vat').val()) || 0;
 
-                    let itemTotal = qty * price;
-
-                    if (!isNaN(discount) && discount >= 0) {
-                        let itemTax = (itemTotal * discount) / 100;
-                        totalTax += itemTax;
-
-                    }
-
-                    if (!isNaN(discount) && discount > 0) {
-                        let discountAmount = (itemTotal * discount) / 100;
-                        itemTotal -= discountAmount;
-                    }
-
-                    total += itemTotal;
-
-                    // Update the displayed result for the item
-                    row.find('.ttlText1').text(itemTotal.toFixed(2));
-                    if (price > 0) {
-                        row.find('.ttlText1').show();
-                        row.find('.ttlText').hide();
-                    } else {
-                        row.find('.ttlText1').hide();
-                        row.find('.ttlText').show();
-                    }
-
-                });
-
-                let tax = total * 0.05; // Calculate tax based on the total
-                tax = Math.ceil(tax);
-
-                let totalTotal = total - totalTax;
-
-                // Update the total, tax, and balance fields
-                $('#invoiceyoghtml').val(total);
-                $('#commercial_text').val(totalTax);
-                $('#total').val(totalTotal);
-                $('#extra_discount').val('');
-                $('#paid').val('');
-                $('#balance').val('');
-                $('#total_total').val(totalTotal);
-                $('#total_discount').val('');
             });
 
             function paidFunction() {
@@ -973,55 +940,6 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
-        $(document).on("click", '#calculate', function(e) {
-            e.preventDefault();
-            let total = 0;
-            for (let i = 0; i < (count + 1); i++) {
-
-
-                var qty = parseInt($('#amount-' + i).val()); //get value from amount
-                var item_name = $('#productname-' + i).val(); //get value from amount
-                var sel = $('#focsel-' + i).val(); //get value from amount
-
-
-
-                let price = parseInt($('#price-' + i).val()); //get vlaue from price
-
-                console.log("price" + price)
-                // console.log("price2"+Object.values(price2))
-                $("#result-" + i).text((price *
-                    qty));
-
-                //  $("#price-"+ i).val(data['retail_sale']);
-                if (sel >= 1) {
-                    $("#foc-" + i).text('FOC');
-                    price = 0;
-                    // total = 0; //total adding (amount*price)
-                }
-                if (sel < 1) {
-                    $("#foc-" + i).text((price * qty));
-                    //  total = total + (price * qty); //total adding (amount*price)
-                } /// set  (amount*price) to result subtotal for each product
-
-                total = total + (price * qty); //total adding (amount*price)
-
-            }
-            let taxt = total * 0.05;
-            taxt = Math.ceil(taxt);
-            let total_total = taxt + total;
-            $("#invoiceyoghtml").val(total); //set  (amount*price)  per invoice  subtotal
-            // $("#commercial_text").val(taxt); //commercial taxt 5% of total (sub total)
-            $("#total").val(total_total); //super total
-            $("#total_total").val(total_total); //super total
-
-            // alert("Text:sdfgsdf"+ qty + "count is ;" + count);
-
-        });
-
-
-
-
 
 
         function paidFunction() {
@@ -1154,8 +1072,12 @@
     <script>
         $(document).on("input", "#total_discount", function() {
             let subtotal = parseFloat($("#invoiceyoghtml").val()) || 0;
-            let discount = parseFloat($(this).val()) || 0;
-            let total = subtotal - discount;
+            let totalDiscount = parseFloat($("#total_discount").val()) || 0;
+            let totalVAT = 0;
+            $(".vat").each(function() {
+                totalVAT += parseFloat($(this).val()) || 0;
+            });
+            let total = subtotal - totalDiscount - totalVAT;
             $("#total_total").val(total);
         });
     </script>
