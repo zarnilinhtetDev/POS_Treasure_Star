@@ -154,10 +154,18 @@
                                             </tr>
                                             <tr>
                                                 <td colspan="5" class="text-right"></td>
-                                                <td style="font-weight: bolder; ">Discount
+                                                <td style="font-weight: bolder; ">Overall Discount
                                                 </td>
                                                 <td style="font-weight: bolder; ">
                                                     {{ number_format($purchase_order->discount_total) }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="5" class="text-right"></td>
+                                                <td style="font-weight: bolder; ">Item Discount
+                                                </td>
+                                                <td style="font-weight: bolder; ">
+                                                    {{ number_format($purchase_sells->sum('discount')) }}
                                                 </td>
                                             </tr>
                                             <tr>
