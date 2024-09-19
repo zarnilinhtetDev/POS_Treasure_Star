@@ -244,7 +244,7 @@
                                                             <div class="frmSearch col-sm-12">
                                                                 <span style="font-weight:bolder">
                                                                     <label for="cst"
-                                                                        class="caption">{{ trans('Search  Customer Name & Phone No.') }}</label>
+                                                                        class="caption">{{ trans('Search  Customer Name & Phone ') }}</label>
                                                                 </span>
                                                                 <div class="form-group d-flex">
                                                                     <input type="text" id="customer"
@@ -455,33 +455,33 @@
                                                         style="margin-bottom:10px;">
                                                         <th width="5%" class="text-center">{{ trans('No') }}
                                                         </th>
-                                                        <th width="18%" class="text-center">
+                                                        <th width="30%" class="text-center">
                                                             {{ trans('Item Name') }}
                                                         </th>
                                                         {{-- <th width="23%" class="text-center">
                                                             {{ trans('Descriptions') }}
                                                         </th> --}}
-                                                        <th width="8%" class="text-center">
+                                                        <th width="5%" class="text-center">
                                                             {{ trans('Qty') }}
                                                         </th>
-                                                        <th width="10%" class="text-center">{{ trans('Unit') }}
+                                                        <th width="5%" class="text-center">{{ trans('Unit') }}
                                                         </th>
 
-                                                        <th width="9%" class="text-center">
+                                                        <th width="7%" class="text-center">
                                                             {{ trans('လက်ကားစျေး') }}
                                                         </th>
-                                                        <th width="9%" class="text-center">
+                                                        <th width="7%" class="text-center">
                                                             {{ trans('လက်လီစျေး') }}
                                                         </th>
                                                         {{-- <th width="9%" class="text-center">
                                                             {{ trans('Expiry') }}
                                                         </th> --}}
 
-                                                        <th width="10%" class="text-center">
+                                                        <th width="7%" class="text-center">
                                                             {{ trans('Discounts') }}
                                                         </th>
 
-                                                        <th width="14%" class="text-center">{{ trans('Amount') }}
+                                                        <th width="7%" class="text-center">{{ trans('Amount') }}
                                                             ({{ config('currency.symbol') }})
                                                         </th>
 

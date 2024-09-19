@@ -91,20 +91,6 @@
                         <input type="date" name="overdue_date" id="overdue_date" class="form-control round"
                             autocomplete="off" min="<?= date('Y-m-d') ?>" value="{{ $invoice->overdue_date }}">
                     </div>
-                    {{-- <div class="col-md-3">
-                        <label for="payment_method" style="font-weight: bolder;">{{ trans('Payment Methods') }}</label>
-                        <select class="mb-4 form-control round" aria-label="Default select example"
-                            name="payment_method" required>
-                            <option value="Cash" {{ $invoice->payment_method == 'Cash' ? 'selected' : '' }}>Cash
-                            </option>
-                            <option value="K Pay" {{ $invoice->payment_method == 'K Pay' ? 'selected' : '' }}>K Pay
-                            </option>
-                            <option value="Wave" {{ $invoice->payment_method == 'Wave' ? 'selected' : '' }}>Wave
-                            </option>
-                            <option value="Others" {{ $invoice->payment_method == 'Others' ? 'selected' : '' }}>Others
-                            </option>
-                        </select>
-                    </div> --}}
 
 
                     <input type="hidden" name="quote_category" id="quote_category" value="Invoice">
@@ -315,27 +301,7 @@
 
 
                                             @endif
-                                            {{-- @else
-                                            <div class="mt-4 frmSearch col-md-3">
-                                                <div class="frmSearch col-sm-12">
-                                                    <span style="font-weight:bolder">
-                                                        <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                    </span> <select name="location" id="location" class="mb-4 form-control location" required>
 
-                                                        @foreach ($warehouses as $warehouse)
-                                                        @if (auth()->user()->level == $warehouse->id)
-                                                        <option value="{{ $warehouse->id }}" selected>
-                                                            {{ $warehouse->name }}
-                                                        </option>
-                                                        @endif
-                                                        @endforeach
-                                                    </select>
-
-                                                </div>
-
-
-                                            </div>
-                                            @endif --}}
 
                                             <!-- <table class="table-responsive tfr my_stripe"> -->
                                             <table class="table table-bordered">
@@ -344,28 +310,28 @@
                                                         style="margin-bottom:10px;">
                                                         <th width="5%" class="text-center">{{ trans('No') }}
                                                         </th>
-                                                        <th width="18%" class="text-center">
+                                                        <th width="30%" class="text-center">
                                                             {{ trans('Item Name') }}
                                                         </th>
 
-                                                        <th width="8%" class="text-center">
+                                                        <th width="5%" class="text-center">
                                                             {{ trans('Qty') }}
                                                         </th>
-                                                        <th width="10%" class="text-center">{{ trans('Unit') }}
+                                                        <th width="7%" class="text-center">{{ trans('Unit') }}
                                                         </th>
 
-                                                        <th width="9%" class="text-center">
+                                                        <th width="7%" class="text-center">
                                                             {{ trans('လက်ကားစျေး') }}
                                                         </th>
-                                                        <th width="9%" class="text-center">
+                                                        <th width="7%" class="text-center">
                                                             {{ trans('လက်လီစျေး') }}
                                                         </th>
 
-                                                        <th width="10%" class="text-center">
+                                                        <th width="7%" class="text-center">
                                                             {{ trans('Discounts') }}
                                                         </th>
 
-                                                        <th width="14%" class="text-center">{{ trans('Amount') }}
+                                                        <th width="7%" class="text-center">{{ trans('Amount') }}
                                                             ({{ config('currency.symbol') }})
                                                         </th>
 
