@@ -280,7 +280,12 @@
                                                 @foreach ($search_invoices as $invoice)
                                                     <tr>
                                                         <td>{{ $no }}</td>
-                                                        <td>{{ $invoice->invoice_no }}</td>
+                                                        <td>
+                                                            <a
+                                                                href="{{ url('report_invoice_details', $invoice->id) }}">
+                                                                {{ $invoice->invoice_no }}
+                                                            </a>
+                                                        </td>
                                                         <td>
                                                             @foreach ($branchs as $branch)
                                                                 @if ($branch->id == $invoice->branch)
@@ -294,6 +299,10 @@
                                                         <td>{{ $invoice->address }}</td>
                                                         <td>{{ $invoice->invoice_date }}</td>
                                                         <td>{{ number_format($invoice->total) }}</td>
+                                                        <td>{{ number_format($invoice->total_buy_price) }}</td>
+
+                                                        <td>{{ number_format($invoice->total - $invoice->total_buy_price) }}
+                                                        </td>
                                                     </tr>
                                                     @php
                                                         $no++;
@@ -303,7 +312,12 @@
                                                 @foreach ($invoices as $invoice)
                                                     <tr>
                                                         <td>{{ $no }}</td>
-                                                        <td>{{ $invoice->invoice_no }}</td>
+                                                        <td>
+                                                            <a
+                                                                href="{{ url('report_invoice_details', $invoice->id) }}">
+                                                                {{ $invoice->invoice_no }}
+                                                            </a>
+                                                        </td>
                                                         <td>
                                                             @foreach ($branchs as $branch)
                                                                 @if ($branch->id == $invoice->branch)
@@ -317,6 +331,10 @@
                                                         <td>{{ $invoice->address }}</td>
                                                         <td>{{ $invoice->invoice_date }}</td>
                                                         <td>{{ number_format($invoice->total) }}</td>
+                                                        <td>{{ number_format($invoice->total_buy_price) }}</td>
+
+                                                        <td>{{ number_format($invoice->total - $invoice->total_buy_price) }}
+                                                        </td>
                                                     </tr>
                                                     @php
                                                         $no++;
@@ -331,6 +349,16 @@
                                                 <td colspan="">
                                                     @if (!empty($search_invoices))
                                                         {{ number_format($search_total) }}@else{{ number_format($total) }}
+                                                    @endif
+                                                </td>
+                                                <td colspan="">
+                                                    @if (!empty($search_invoices))
+                                                        {{ number_format($search_total_purchase) }}@else{{ number_format($totalPurchase) }}
+                                                    @endif
+                                                </td>
+                                                <td colspan="">
+                                                    @if (!empty($search_invoices))
+                                                        {{ number_format($search_total - $search_total_purchase) }}@else{{ number_format($total - $totalPurchase) }}
                                                     @endif
                                                 </td>
                                             </tr>
@@ -349,7 +377,9 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Payment Method</th>
-                                            <th>Amount</th>
+                                            <th>Total Sale</th>
+                                            <th>Total Purchase</th>
+                                            <th>Profit</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -357,25 +387,37 @@
                                             <td>1.</td>
                                             <td>Cash</td>
                                             <td>{{ number_format($totalCash) }}</td>
+                                            <td>{{ number_format($totalCashPurchase) }}</td>
+                                            <td>{{ number_format($totalCash - $totalCashPurchase) }}</td>
                                         </tr>
                                         <tr>
                                             <td>2.</td>
                                             <td>K Pay</td>
                                             <td>{{ number_format($totalKbz) }}</td>
+                                            <td>{{ number_format($totalKbzPurchase) }}</td>
+                                            <td>{{ number_format($totalKbz - $totalKbzPurchase) }}</td>
                                         </tr>
                                         <tr>
                                             <td>3.</td>
                                             <td>Wave</td>
                                             <td>{{ number_format($totalCB) }}</td>
+                                            <td>{{ number_format($totalCBPurchase) }}</td>
+                                            <td>{{ number_format($totalCB - $totalCBPurchase) }}</td>
                                         </tr>
                                         <tr>
                                             <td>4.</td>
                                             <td>Other</td>
                                             <td>{{ number_format($totalOther) }}</td>
+                                            <td>{{ number_format($totalOtherPurchase) }}</td>
+                                            <td>{{ number_format($totalOther - $totalOtherPurchase) }}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="2" style="text-align:right">Total</td>
+                                            <td>{{ number_format($totalCashPurchase + $totalKbzPurchase + $totalCBPurchase + $totalOtherPurchase) }}
+                                            </td>
                                             <td>{{ number_format($totalCash + $totalKbz + $totalCB + $totalOther) }}
+                                            </td>
+                                            <td>{{ number_format($totalCash + $totalKbz + $totalCB + $totalOther - ($totalCashPurchase + $totalKbzPurchase + $totalCBPurchase + $totalOtherPurchase)) }}
                                             </td>
                                         </tr>
                                     </tbody>

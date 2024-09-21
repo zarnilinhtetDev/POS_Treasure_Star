@@ -360,9 +360,12 @@
                                                         <th width="9%" class="text-center">
                                                             {{ trans('လက်လီစျေး') }}
                                                         </th>
-
-                                                        <th width="10%" class="text-center">
-                                                            {{ trans('Discounts') }}
+                                                        <th style="display: none;" width="9%"
+                                                            class="text-center">
+                                                            {{ trans('၀ယ်စျေး') }}
+                                                        </th>
+                                                        <th width="9%" class="text-center">
+                                                            {{ trans('Expiry') }}
                                                         </th>
 
                                                         <th width="14%" class="text-center">{{ trans('Amount') }}
@@ -431,7 +434,15 @@
                                                                     autocomplete="off"
                                                                     value="{{ $sell->retail_price }}">
                                                             </td>
-
+                                                            <td style="display: none;"><input type="text"
+                                                                    class="form-control buy_price" name="buy_price[]"
+                                                                    id="buy_price-0" autocomplete="off"
+                                                                    value="{{ $sell->buy_price }}">
+                                                            </td>
+                                                            <td><input type="text" class="form-control exp_date "
+                                                                    name="exp_date[]" id="exp_date-0"
+                                                                    autocomplete="off" value="{{ $sell->exp_date }}">
+                                                            </td>
                                                             <td style="display: none;"><input type="text"
                                                                     class="form-control warehouse " name="warehouse[]"
                                                                     id="warehouse-0" autocomplete="off"
@@ -531,6 +542,23 @@
                                                         <td>
 
                                                         </td>
+                                                    </tr>
+                                                    <tr style="display: none;" class="sub_c"
+                                                        style="display: table-row;">
+                                                        <td colspan="2">
+
+                                                        </td>
+                                                        <td colspan="3" align="right"><strong>Total Purchase
+                                                            </strong>
+                                                        </td>
+                                                        <td align="left" colspan="2" class="col-md-4"><input
+                                                                type="text" name="total_buy_price"
+                                                                class="form-control" id="total_buy_price" readonly
+                                                                style="background-color: #E9ECEF"
+                                                                value="{{ $invoice->total_buy_price }}">
+
+                                                        </td>
+
                                                     </tr>
                                                     <tr class="sub_c" style="display: table-row;">
                                                         <td colspan="2">
@@ -754,6 +782,7 @@
                 let exp_date = row.find('.exp_date');
                 let warehouse = row.find('.warehouse');
                 let item_unit = row.find('.item_unit');
+                let buy_price = row.find('.buy_price');
                 let retail_price = row.find('.retail_price');
                 var Selectedlocation = $('#location').val();
                 $.ajax({
@@ -774,6 +803,7 @@
                         item_unit.val(data.item_unit);
                         warehouse.val(data.warehouse_id);
                         retail_price.val(data.retail_price);
+                        buy_price.val(data.buy_price);
                         if (parseFloat(data.reorder_level_stock) >= parseFloat(data.quantity)) {
                             alert(data.quantity + " quantity!");
                         }
@@ -813,7 +843,6 @@
                     '<td><input type="text" class="form-control item_unit " name="item_unit[]" id="item_unit-' +
                     count +
                     '" autocomplete ="off" required> </td>' +
-
                     '<td><input type="text" class="form-control price" name="product_price[]" value="0" id="price-' +
                     count + '"   autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control retail_price" name="retail_price[]" value="0" id="retail_price-' +

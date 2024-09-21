@@ -154,7 +154,7 @@ class InvoiceController extends Controller
         $invoice->overdue_date  = $request->overdue_date;
         $invoice->sub_total  = $request->sub_total;
         $invoice->total  = $request->total;
-
+        $invoice->total_buy_price  = $request->total_buy_price;
         $invoice->balance_due  = $request->balance_due;
         $invoice->discount_total  = $request->total_discount;
         $invoice->deposit  = $request->paid;
@@ -171,7 +171,8 @@ class InvoiceController extends Controller
             $result->product_qty = $request->product_qty[$i];
             $result->product_price = $request->product_price[$i];
             $result->retail_price = $request->retail_price[$i];
-            $result->discount = $request->discount[$i];
+            $result->buy_price = $request->buy_price[$i];
+            $result->exp_date = $request->exp_date[$i];
             $result->unit = $request->item_unit[$i];
             $result->warehouse = $request->warehouse[$i];
             $result->status = $request->sell_status[$i] ?? '0';
@@ -387,7 +388,8 @@ class InvoiceController extends Controller
         $invoice->location = $request->location;
         $invoice->branch  = $request->branch;
         $invoice->balance_due  = $request->balance_due;
-        $invoice->discount_total  = $request->total_discount;
+        $invoice->discount_total  = $request->discount;
+        $invoice->total_buy_price  = $request->total_buy_price;
         $invoice->deposit  = $request->paid;
         $invoice->remain_balance  = $request->balance;
         $invoice->remark = $request->remark;
@@ -404,6 +406,7 @@ class InvoiceController extends Controller
                     'product_qty' => $request->input('product_qty')[$key],
                     'product_price' => $request->input('product_price')[$key],
                     'retail_price' => $request->input('retail_price')[$key],
+                    'buy_price' => $request->input('buy_price')[$key],
                     'unit' => $request->input('item_unit')[$key],
                     'discount' => $request->input('discount')[$key],
                     'warehouse' => $request->input('warehouse')[$key],

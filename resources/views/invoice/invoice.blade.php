@@ -430,22 +430,22 @@
                                                 <div class="frmSearch col-sm-12">
                                                     <span style="font-weight:bolder">
                                                         <label for="cst" class="caption">{{ trans('ChooseLocation') }}&nbsp;</label>
-                                                    </span> <select name="location" id="location" class="mb-4 form-control location" required>
+                                            </span> <select name="location" id="location" class="mb-4 form-control location" required>
 
-                                                        @foreach ($warehouses as $warehouse)
-                                                        @if (auth()->user()->level == $warehouse->id)
-                                                        <option value="{{ $warehouse->id }}" selected>
-                                                            {{ $warehouse->name }}
-                                                        </option>
-                                                        @endif
-                                                        @endforeach
-                                                    </select>
+                                                @foreach ($warehouses as $warehouse)
+                                                @if (auth()->user()->level == $warehouse->id)
+                                                <option value="{{ $warehouse->id }}" selected>
+                                                    {{ $warehouse->name }}
+                                                </option>
+                                                @endif
+                                                @endforeach
+                                            </select>
 
-                                                </div>
+                                        </div>
 
 
-                                            </div>
-                                            @endif --}}
+                                    </div>
+                                    @endif --}}
 
 
                                             <!-- <table class="table-responsive tfr my_stripe"> -->
@@ -473,7 +473,11 @@
                                                         <th width="9%" class="text-center">
                                                             {{ trans('လက်လီစျေး') }}
                                                         </th>
-                                                        {{-- <th width="9%" class="text-center">
+                                                        <th style="display: none;" width="9%"
+                                                            class="text-center">
+                                                            {{ trans('၀ယ်စျေး') }}
+                                                        </th>
+                                                        <th width="9%" class="text-center">
                                                             {{ trans('Expiry') }}
                                                         </th> --}}
 
@@ -543,7 +547,11 @@
                                                                 name="retail_price[]" id="retail_price-0"
                                                                 autocomplete="off" value="0">
                                                         </td>
-                                                        {{-- <td><input type="text" class="form-control exp_date "
+                                                        <td style="display: none;"><input type="text"
+                                                                class="form-control buy_price" name="buy_price[]"
+                                                                id="buy_price-0" autocomplete="off" value="0">
+                                                        </td>
+                                                        <td><input type="text" class="form-control exp_date "
                                                                 name="exp_date[]" id="exp_date-0" autocomplete="off">
                                                         </td> --}}
 
@@ -641,10 +649,27 @@
                                                             @endif
                                                         </td>
                                                     </tr>
+
                                                     <tr class="sub_c" style="display: table-row;">
                                                         <td>
 
                                                         </td>
+                                                    </tr>
+                                                    <tr style="display: none;" class="sub_c"
+                                                        style="display: table-row;">
+                                                        <td colspan="2">
+
+                                                        </td>
+                                                        <td colspan="3" align="right"><strong>Total Purchase
+                                                            </strong>
+                                                        </td>
+                                                        <td align="left" colspan="2" class="col-md-4"><input
+                                                                type="text" name="total_buy_price"
+                                                                class="form-control" id="total_buy_price" readonly
+                                                                style="background-color: #E9ECEF">
+
+                                                        </td>
+
                                                     </tr>
                                                     <tr class="sub_c" style="display: table-row;">
                                                         <td colspan="2">

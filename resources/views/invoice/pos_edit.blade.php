@@ -336,9 +336,12 @@
                                                         <th width="9%" class="text-center">
                                                             {{ trans('လက်လီစျေး') }}
                                                         </th>
-
-                                                        <th width="10%" class="text-center">
-                                                            {{ trans('Discounts') }}
+                                                        <th style="display: none;" width="9%"
+                                                            class="text-center">
+                                                            {{ trans('၀ယ်စျေး') }}
+                                                        </th>
+                                                        <th width="9%" class="text-center" style="display:none">
+                                                            {{ trans('Expiry') }}
                                                         </th>
 
                                                         <th width="14%" class="text-center">{{ trans('Amount') }}
@@ -392,9 +395,15 @@
                                                                     autocomplete="off"
                                                                     value="{{ $sell->retail_price }}">
                                                             </td>
-                                                            <td><input type="text" class="form-control vat"
-                                                                    name="discount[]" id="vat-0"
-                                                                    autocomplete="off" value="{{ $sell->discount }}">
+                                                            <td style="display: none;"><input type="text"
+                                                                    class="form-control buy_price" name="buy_price[]"
+                                                                    id="buy_price-0" autocomplete="off"
+                                                                    value="{{ $sell->buy_price }}">
+                                                            </td>
+                                                            <td style="display:none"><input type="text"
+                                                                    class="form-control exp_date " name="exp_date[]"
+                                                                    id="exp_date-0" autocomplete="off"
+                                                                    value="{{ $sell->exp_date }}">
                                                             </td>
 
                                                             <td style="display: none;"><input type="text"
@@ -493,6 +502,23 @@
                                                         <td>
 
                                                         </td>
+                                                    </tr>
+                                                    <tr style="display: none;" class="sub_c"
+                                                        style="display: table-row;">
+                                                        <td colspan="2">
+
+                                                        </td>
+                                                        <td colspan="3" align="right"><strong>Total Purchase
+                                                            </strong>
+                                                        </td>
+                                                        <td align="left" colspan="2" class="col-md-4"><input
+                                                                type="text" name="total_buy_price"
+                                                                class="form-control" id="total_buy_price" readonly
+                                                                style="background-color: #E9ECEF"
+                                                                value="{{ $invoice->total_buy_price }}">
+
+                                                        </td>
+
                                                     </tr>
                                                     <tr class="sub_c" style="display: table-row;">
                                                         <td colspan="2">
@@ -912,8 +938,11 @@
                             '<td><input type="text" class="form-control retail_price" name="retail_price[]" id="retail_price-' +
                             count + '" autocomplete="off" value="' + (item['retail_price'] ?? 0) +
                             '"></td>' +
-                            '<td><input type="text" class="form-control vat" name="discount[]" value="0" id="vat-' +
-                            count + '"   autocomplete="off"></td>' +
+                            '<td style="display:none"><input type="text" class="form-control buy_price" name="buy_price[]" id="buy_price-' +
+                            count + '" autocomplete="off" value="' + (item['buy_price'] ?? 0) +
+                            '"></td>' +
+                            '<td style="display:none"><input type="text" class="form-control exp_date" name="exp_date[]" id="exp_date-' +
+                            count + '" autocomplete="off" value="' + item['expired_date'] + '"></td>' +
                             '<td style="display: none;"><input  type="text" class="form-control warehouse" name="warehouse[]" id="warehouse-' +
                             count + '" autocomplete="off" value="' + item['warehouse_id'] + '"></td>' +
                             '<td style="text-align:center"><span class="currenty"></span><strong><span class ="ttlText1" id="result-' +

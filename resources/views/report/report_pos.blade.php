@@ -263,7 +263,9 @@
                                             <th>Date</th>
                                             <th>Sub Total</th>
                                             <th>Discount</th>
-                                            <th>Total Amount</th>
+                                            <th>Total Sale Amount</th>
+                                            <th>Total Purchase</th>
+                                            <th>Profit</th>
                                             <th>Sale By</th>
                                         </tr>
                                     </thead>
@@ -274,13 +276,14 @@
                                             $subtotal = 0;
                                             $discounttotal = 0;
                                             $amounttotal = 0;
+                                            $purchase = 0;
                                         @endphp
 
                                         @if (!empty($search_pos))
                                             @foreach ($search_pos as $pos)
                                                 <tr>
                                                     <td>{{ $no }}</td>
-                                                    <td><a href="{{ url('invoice_detail', $pos->id) }}">
+                                                    <td><a href="{{ url('report_pos_receipt', $pos->id) }}">
                                                             {{ $pos->invoice_no }}</a>
                                                     </td>
                                                     <td>
@@ -296,6 +299,8 @@
 
                                                     <td>{{ $pos->discount_total ?? 0 }}</td>
                                                     <td>{{ number_format($pos->total) }}</td>
+                                                    <td>{{ number_format($pos->total_buy_price) }}</td>
+                                                    <td>{{ number_format($pos->total - $pos->total_buy_price) }}</td>
                                                     <td>{{ $pos->sale_by }}</td>
                                                 </tr>
                                                 @php
@@ -303,6 +308,7 @@
                                                     $subtotal += $pos->discount_total + $pos->total; // Add subtotal for each $discounttotal += $pos_datas->discount_total;
                                                     $discounttotal += $pos->discount_total;
                                                     $amounttotal += $pos->total;
+                                                    $purchase += $pos->total_buy_price;
 
                                                 @endphp
                                             @endforeach
@@ -311,7 +317,7 @@
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td><a
-                                                            href="{{ url('invoice_detail', $pos_datas->id) }}">{{ $pos_datas->invoice_no }}</a>
+                                                            href="{{ url('report_pos_receipt', $pos_datas->id) }}">{{ $pos_datas->invoice_no }}</a>
                                                     </td>
                                                     <td>
                                                         @foreach ($branchs as $branch)
@@ -326,13 +332,17 @@
 
                                                     <td>{{ $pos_datas->discount_total ?? 0 }}</td>
                                                     <td>{{ number_format($pos_datas->total) }}</td>
+                                                    <td>{{ number_format($pos_datas->total_buy_price) }}</td>
+                                                    <td>{{ number_format($pos_datas->total - $pos_datas->total_buy_price) }}
+                                                    </td>
                                                     <td>{{ $pos_datas->sale_by }}</td>
                                                 </tr>
                                                 @php
                                                     $no++;
-                                                    $subtotal += $pos_datas->discount_total + $pos_datas->total; // Add subtotal for each row
+                                                    $subtotal += $pos_datas->discount_total + $pos_datas->total;
                                                     $discounttotal += $pos_datas->discount_total;
                                                     $amounttotal += $pos_datas->total;
+                                                    $purchase += $pos_datas->total_buy_price;
                                                 @endphp
                                             @endforeach
                                         @endif
@@ -344,6 +354,8 @@
                                             <td colspan="">{{ number_format($subtotal) }}</td>
                                             <td colspan="">{{ number_format($discounttotal) }}</td>
                                             <td colspan="">{{ number_format($amounttotal) }}</td>
+                                            <td colspan="">{{ number_format($purchase) }}</td>
+                                            <td colspan="">{{ number_format($amounttotal - $purchase) }}</td>
                                             <td></td>
                                         </tr>
 
@@ -369,8 +381,6 @@
                                             <td>{{ $no }}</td>
                                             <td colspan="">{{ $sale_total->sale_by }}</td>
                                             <td>{{ number_format($sale_total->sale_total) }}</td>
-
-
                                             <!-- Display the subtotal here -->
                                         </tr>
                                         @php
@@ -389,7 +399,9 @@
                                         <tr>
                                             <th>No.</th>
                                             <th>Payment Method</th>
-                                            <th>Amount</th>
+                                            <th>Total Sale</th>
+                                            <th>Total Purchase</th>
+                                            <th>Profit</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -397,25 +409,37 @@
                                             <td>1.</td>
                                             <td>Cash</td>
                                             <td>{{ number_format($totalCash) }}</td>
+                                            <td>{{ number_format($totalCashPurchase) }}</td>
+                                            <td>{{ number_format($totalCash - $totalCashPurchase) }}</td>
                                         </tr>
                                         <tr>
                                             <td>2.</td>
                                             <td>K Pay</td>
                                             <td>{{ number_format($totalKbz) }}</td>
+                                            <td>{{ number_format($totalKbzPurchase) }}</td>
+                                            <td>{{ number_format($totalKbz - $totalKbzPurchase) }}</td>
                                         </tr>
                                         <tr>
                                             <td>3.</td>
                                             <td>Wave</td>
                                             <td>{{ number_format($totalCB) }}</td>
+                                            <td>{{ number_format($totalCBPurchase) }}</td>
+                                            <td>{{ number_format($totalCB - $totalCBPurchase) }}</td>
                                         </tr>
                                         <tr>
                                             <td>4.</td>
                                             <td>Other</td>
                                             <td>{{ number_format($totalOther) }}</td>
+                                            <td>{{ number_format($totalOtherPurchase) }}</td>
+                                            <td>{{ number_format($totalOther - $totalOtherPurchase) }}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="2" style="text-align:right">Total</td>
                                             <td>{{ number_format($totalCash + $totalKbz + $totalCB + $totalOther) }}
+                                            </td>
+                                            <td>{{ number_format($totalCashPurchase + $totalKbzPurchase + $totalCBPurchase + $totalOtherPurchase) }}
+                                            </td>
+                                            <td>{{ number_format($totalCash + $totalKbz + $totalCB + $totalOther - ($totalCashPurchase + $totalKbzPurchase + $totalCBPurchase + $totalOtherPurchase)) }}
                                             </td>
                                         </tr>
                                     </tbody>
