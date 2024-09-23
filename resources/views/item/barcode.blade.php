@@ -49,7 +49,7 @@
                 </tr>
                 <tr>
                     <td style="font-size: 10px;font-weight:bolder " class="text-center">{{ $productCode->barcode }}
-                    </td>0 
+                    </td>
                 </tr>
                 <tr>
                     <td style="font-size: 10px;font-weight:bolder" class="text-center">{{ $productCode->retail_price }}

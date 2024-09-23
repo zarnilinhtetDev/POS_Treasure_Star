@@ -131,6 +131,7 @@ class ItemController extends Controller
             $request->merge(['barcode' => $randomBarcode]);
         } else {
             $barcodeWithoutCheckDigit = $request->barcode;
+
             if (strlen($barcodeWithoutCheckDigit) < 12) {
                 $paddingLength = 12 - strlen($barcodeWithoutCheckDigit);
                 for ($i = 0; $i < $paddingLength; $i++) {
@@ -139,15 +140,18 @@ class ItemController extends Controller
             } elseif (strlen($barcodeWithoutCheckDigit) > 12) {
                 $barcodeWithoutCheckDigit = substr($barcodeWithoutCheckDigit, 0, 12);
             }
-            $digits = str_split($barcodeWithoutCheckDigit);
+            $digits = array_map('intval', str_split($barcodeWithoutCheckDigit));
             $sum = 0;
+
             foreach ($digits as $key => $digit) {
                 $sum += ($key % 2 === 0) ? $digit : $digit * 3;
             }
+
             $checkDigit = (10 - ($sum % 10)) % 10;
             $barcodeWithCheckDigit = $barcodeWithoutCheckDigit . $checkDigit;
             $request->merge(['barcode' => $barcodeWithCheckDigit]);
         }
+
         $items = new Item();
         $items->fill($validate);
         $items->fill($request->all());
