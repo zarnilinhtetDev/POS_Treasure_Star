@@ -255,6 +255,7 @@
                                                                 <span style="font-weight:bolder">
                                                                     <label for="cst"
                                                                         class="caption">{{ trans('Search  Customer Name & Phone ') }}</label>
+                                                                    class="caption">{{ trans('Search  Customer Name & Phone ') }}</label>
                                                                 </span>
                                                                 <div class="form-group d-flex">
                                                                     <input type="text" id="customer"
