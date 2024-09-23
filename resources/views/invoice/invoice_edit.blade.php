@@ -12,36 +12,19 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <style>
-        input {
-            position: relative;
-            width: 150px;
-            height: 40px;
-            color: white;
+        .item_table {
+            width: 1630px;
+            table-layout: fixed;
         }
 
-        input:before {
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            content: attr(data-date);
-            display: inline-block;
-            color: black;
-        }
-
-        input::-webkit-datetime-edit,
-        input::-webkit-inner-spin-button,
-        input::-webkit-clear-button {
-            display: none;
-        }
-
-        input::-webkit-calendar-picker-indicator {
-            position: absolute;
-            top: 6px;
-            right: 0;
-            color: black;
-            opacity: 1;
+        .item_table th,
+        .item_table td {
+            padding: 20px;
         }
     </style>
+
+
+
 
 </head>
 
@@ -91,20 +74,6 @@
                         <input type="date" name="overdue_date" id="overdue_date" class="form-control round"
                             autocomplete="off" min="<?= date('Y-m-d') ?>" value="{{ $invoice->overdue_date }}">
                     </div>
-                    {{-- <div class="col-md-3">
-                        <label for="payment_method" style="font-weight: bolder;">{{ trans('Payment Methods') }}</label>
-                        <select class="mb-4 form-control round" aria-label="Default select example"
-                            name="payment_method" required>
-                            <option value="Cash" {{ $invoice->payment_method == 'Cash' ? 'selected' : '' }}>Cash
-                            </option>
-                            <option value="K Pay" {{ $invoice->payment_method == 'K Pay' ? 'selected' : '' }}>K Pay
-                            </option>
-                            <option value="Wave" {{ $invoice->payment_method == 'Wave' ? 'selected' : '' }}>Wave
-                            </option>
-                            <option value="Others" {{ $invoice->payment_method == 'Others' ? 'selected' : '' }}>Others
-                            </option>
-                        </select>
-                    </div> --}}
 
 
                     <input type="hidden" name="quote_category" id="quote_category" value="Invoice">
@@ -315,158 +284,110 @@
 
 
                                             @endif
-                                            {{-- @else
-                                            <div class="mt-4 frmSearch col-md-3">
-                                                <div class="frmSearch col-sm-12">
-                                                    <span style="font-weight:bolder">
-                                                        <label for="cst" class="caption">{{ trans('Location') }}&nbsp;</label>
-                                                    </span> <select name="location" id="location" class="mb-4 form-control location" required>
-
-                                                        @foreach ($warehouses as $warehouse)
-                                                        @if (auth()->user()->level == $warehouse->id)
-                                                        <option value="{{ $warehouse->id }}" selected>
-                                                            {{ $warehouse->name }}
-                                                        </option>
-                                                        @endif
-                                                        @endforeach
-                                                    </select>
-
-                                                </div>
-
-
-                                            </div>
-                                            @endif --}}
 
                                             <!-- <table class="table-responsive tfr my_stripe"> -->
-                                            <table class="table table-bordered">
-                                                <thead style="background-color:#0047AA;color:white;">
-                                                    <tr class="item_header bg-gradient-directional-blue white"
-                                                        style="margin-bottom:10px;">
-                                                        <th width="5%" class="text-center">{{ trans('No') }}
-                                                        </th>
-                                                        <th width="18%" class="text-center">
-                                                            {{ trans('Item Name') }}
-                                                        </th>
-
-                                                        <th width="8%" class="text-center">
-                                                            {{ trans('Qty') }}
-                                                        </th>
-                                                        <th width="10%" class="text-center">{{ trans('Unit') }}
-                                                        </th>
-
-                                                        <th width="9%" class="text-center">
-                                                            {{ trans('လက်ကားစျေး') }}
-                                                        </th>
-                                                        <th width="9%" class="text-center">
-                                                            {{ trans('လက်လီစျေး') }}
-                                                        </th>
-                                                        <th style="display: none;" width="9%"
-                                                            class="text-center">
-                                                            {{ trans('၀ယ်စျေး') }}
-                                                        </th>
-                                                        <th width="9%" class="text-center">
-                                                            {{ trans('Expiry') }}
-                                                        </th>
-
-                                                        <th width="14%" class="text-center">{{ trans('Amount') }}
-                                                            ({{ config('currency.symbol') }})
-                                                        </th>
-
-                                                    </tr>
-
-                                                </thead>
-
-                                                <tbody id="showitem123">
-                                                    @foreach ($sell as $key => $sell)
-                                                        <tr>
-                                                            <td class="text-center" id="count">
-                                                                {{ $key + 1 }}
-                                                            </td>
-
-                                                            <td>
-
-                                                                <div class="row align-items-center">
-                                                                    <div class="col-auto">
-                                                                        <input type="checkbox" id="sell_status-0"
-                                                                            value="1"
-                                                                            class="form-check-input sell_status"
-                                                                            {{ $sell->status == 1 ? 'checked' : '0' }} />
-
-
-                                                                        <input type="hidden" name="sell_status[]"
-                                                                            id="sell_status_input-0"
-                                                                            class="form-control sell_status_input"
-                                                                            value="0" />
-
-                                                                    </div>
-                                                                    <div class="col">
-                                                                        <input type="text"
-                                                                            class="form-control productname typeahead"
-                                                                            name="part_number[]"
-                                                                            value="{{ $sell->part_number }}"
-                                                                            placeholder="{{ trans('Enter Part Number') }}"
-                                                                            id='productname-0' autocomplete="off">
-                                                                    </div>
-                                                                </div>
-
-                                                            </td>
-
-
-                                                            <td><input type="text" class="form-control req amnt"
-                                                                    name="product_qty[]" id="amount-0"
-                                                                    autocomplete="off"
-                                                                    value="{{ $sell->product_qty }}"><input
-                                                                    type="hidden" id="alert-0" value=""
-                                                                    name="alert[]"></td>
-                                                            <td><input type="text" class="form-control item_unit"
-                                                                    name="item_unit[]" id="item_unit-0"
-                                                                    value="{{ $sell->unit }}">
-
-                                                            </td>
-                                                            <td><input type="text" class="form-control price"
-                                                                    name="product_price[]" id="price-0"
-                                                                    autocomplete="off"
-                                                                    value="{{ $sell->product_price }}">
-                                                            </td>
-                                                            <td><input type="text"
-                                                                    class="form-control retail_price"
-                                                                    name="retail_price[]" id="retail_price-0"
-                                                                    autocomplete="off"
-                                                                    value="{{ $sell->retail_price }}">
-                                                            </td>
-                                                            <td style="display: none;"><input type="text"
-                                                                    class="form-control buy_price" name="buy_price[]"
-                                                                    id="buy_price-0" autocomplete="off"
-                                                                    value="{{ $sell->buy_price }}">
-                                                            </td>
-                                                            <td><input type="text" class="form-control exp_date "
-                                                                    name="exp_date[]" id="exp_date-0"
-                                                                    autocomplete="off" value="{{ $sell->exp_date }}">
-                                                            </td>
-                                                            <td style="display: none;"><input type="text"
-                                                                    class="form-control warehouse " name="warehouse[]"
-                                                                    id="warehouse-0" autocomplete="off"
-                                                                    value="{{ $sell->warehouse }}">
-                                                            </td>
-                                                            <td><input type="text" class="form-control vat"
-                                                                    name="discount[]" id="vat-0"
-                                                                    autocomplete="off" value="{{ $sell->discount }}">
-                                                            </td>
-
-                                                            <td style="text-align:center">
-                                                                <strong>
-                                                                    <span class='ttlText1' id="foc-0"></span>
-                                                                </strong>
-                                                            </td>
-                                                            <td style="width: 5%;"><button type="button"
-                                                                    class="btn btn-danger remove_item_btn"
-                                                                    id="removebutton">Remove</button></td>
-
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered item_table" style="width: 1630px;">
+                                                    <!-- Fixed width -->
+                                                    <thead style="background-color:#0047AA;color:white;">
+                                                        <tr class="item_header bg-gradient-directional-blue white"
+                                                            style="margin-bottom:10px;">
+                                                            <th width="5%" class="text-center">
+                                                                {{ trans('No') }}
+                                                            </th>
+                                                            <th width="35%" class="text-center">
+                                                                {{ trans('Item Name') }}
+                                                            </th>
+                                                            <th width="10%" class="text-center">
+                                                                {{ trans('Qty') }}
+                                                            </th>
+                                                            <th width="10%" class="text-center">
+                                                                {{ trans('Unit') }}
+                                                            </th>
+                                                            <th width="12%" class="text-center">
+                                                                {{ trans('လက်လီစျေး') }}
+                                                            </th>
+                                                            <th width="10%" class="text-center">
+                                                                {{ trans('Discounts') }}
+                                                            </th>
+                                                            <th width="13%" class="text-center">
+                                                                {{ trans('Amount') }}
+                                                                ({{ config('currency.symbol') }})
+                                                            </th>
                                                         </tr>
-                                                    @endforeach
-                                                </tbody>
+                                                    </thead>
+                                                    <tbody id="showitem123">
+                                                        @foreach ($sell as $key => $sell)
+                                                            <tr>
+                                                                <td class="text-center" id="count">
+                                                                    {{ $key + 1 }}</td>
+                                                                <td>
+                                                                    <div class="row align-items-center">
+                                                                        <div class="col-auto">
+                                                                            <input type="checkbox" id="sell_status-0"
+                                                                                value="1"
+                                                                                class="form-check-input sell_status"
+                                                                                {{ $sell->status == 1 ? 'checked' : '0' }} />
+                                                                            <input type="hidden" name="sell_status[]"
+                                                                                id="sell_status_input-0"
+                                                                                class="form-control sell_status_input"
+                                                                                value="0" />
+                                                                        </div>
+                                                                        <div class="col">
+                                                                            <input type="text"
+                                                                                class="form-control productname typeahead"
+                                                                                name="part_number[]"
+                                                                                value="{{ $sell->part_number }}"
+                                                                                placeholder="{{ trans('Enter Part Number') }}"
+                                                                                id='productname-0' autocomplete="off">
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td><input type="text"
+                                                                        class="form-control req amnt"
+                                                                        name="product_qty[]" id="amount-0"
+                                                                        autocomplete="off"
+                                                                        value="{{ $sell->product_qty }}"><input
+                                                                        type="hidden" id="alert-0" value=""
+                                                                        name="alert[]"></td>
+                                                                <td><input type="text"
+                                                                        class="form-control item_unit"
+                                                                        name="item_unit[]" id="item_unit-0"
+                                                                        value="{{ $sell->unit }}"></td>
+                                                                <td><input type="text"
+                                                                        class="form-control retail_price"
+                                                                        name="retail_price[]" id="retail_price-0"
+                                                                        autocomplete="off"
+                                                                        value="{{ $sell->retail_price }}"></td>
+                                                                <td style="display: none;"><input type="text"
+                                                                        class="form-control warehouse"
+                                                                        name="warehouse[]" id="warehouse-0"
+                                                                        autocomplete="off"
+                                                                        value="{{ $sell->warehouse }}"></td>
+                                                                <td style="display: none;"><input type="text"
+                                                                        class="form-control exp_date"
+                                                                        name="exp_date[]" id="vat-0"
+                                                                        autocomplete="off"
+                                                                        value="{{ $sell->exp_date }}"></td>
+                                                                <td><input type="text" class="form-control vat"
+                                                                        name="discount[]" id="vat-0"
+                                                                        autocomplete="off"
+                                                                        value="{{ $sell->discount }}"></td>
+                                                                <td style="text-align:center"><strong><span
+                                                                            class='ttlText1'
+                                                                            id="foc-0"></span></strong></td>
+                                                                <td style="width: 3%;"><button type="button"
+                                                                        class="btn btn-danger remove_item_btn"
+                                                                        id="removebutton"><i
+                                                                            class="fa-solid fa-minus"></i></button>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
 
-                                            </table>
+
 
                                             <table class="mt-3">
                                                 <tbody id="showitem">
@@ -542,23 +463,6 @@
                                                         <td>
 
                                                         </td>
-                                                    </tr>
-                                                    <tr style="display: none;" class="sub_c"
-                                                        style="display: table-row;">
-                                                        <td colspan="2">
-
-                                                        </td>
-                                                        <td colspan="3" align="right"><strong>Total Purchase
-                                                            </strong>
-                                                        </td>
-                                                        <td align="left" colspan="2" class="col-md-4"><input
-                                                                type="text" name="total_buy_price"
-                                                                class="form-control" id="total_buy_price" readonly
-                                                                style="background-color: #E9ECEF"
-                                                                value="{{ $invoice->total_buy_price }}">
-
-                                                        </td>
-
                                                     </tr>
                                                     <tr class="sub_c" style="display: table-row;">
                                                         <td colspan="2">
@@ -782,7 +686,6 @@
                 let exp_date = row.find('.exp_date');
                 let warehouse = row.find('.warehouse');
                 let item_unit = row.find('.item_unit');
-                let buy_price = row.find('.buy_price');
                 let retail_price = row.find('.retail_price');
                 var Selectedlocation = $('#location').val();
                 $.ajax({
@@ -799,11 +702,10 @@
                         itemNameInput.val(data.wholesale_price);
 
                         partDesc.val(data.descriptions);
-                        exp_date.val(data.expired_date);
+                        exp_date.val(data.radio_category);
                         item_unit.val(data.item_unit);
                         warehouse.val(data.warehouse_id);
                         retail_price.val(data.retail_price);
-                        buy_price.val(data.buy_price);
                         if (parseFloat(data.reorder_level_stock) >= parseFloat(data.quantity)) {
                             alert(data.quantity + " quantity!");
                         }
@@ -843,13 +745,11 @@
                     '<td><input type="text" class="form-control item_unit " name="item_unit[]" id="item_unit-' +
                     count +
                     '" autocomplete ="off" required> </td>' +
-                    '<td><input type="text" class="form-control price" name="product_price[]" value="0" id="price-' +
-                    count + '"   autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control retail_price" name="retail_price[]" value="0" id="retail_price-' +
                     count + '"   autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control vat" name="discount[]" value="0" id="vat-' +
                     count + '"   autocomplete="off"></td>' +
-                    '<td style="display : none;"><input type="text" class="form-control buy_price" name="buy_price[]" value="0" id="buy_price-' +
+                    '<td style="display : none;"><input type="text" class="form-control exp_date" name="exp_date[]" value="0" id="exp_date-' +
                     count + '"   autocomplete="off"></td>' +
                     '<td style="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
                     count +
@@ -857,7 +757,7 @@
 
                     '<td style="text-align:center"><span class="currenty"></span><strong><span class="ttlText1" id="result-' +
                     count + '">0</span></strong></td>' +
-                    '<td style="width: 5%;"><button type="submit" class="btn btn-danger remove_item_btn" id="removebutton">Remove</button></td>' +
+                    '<td style="width: 3%;"><button type="submit" class="btn btn-danger remove_item_btn" id="removebutton"><i class="fa-solid fa-minus"></i></button></td>' +
                     '</tr>';
                 $("#showitem123").append(newRow);
                 initializeTypeahead(count);
@@ -1138,7 +1038,7 @@
 
 
 
-    <script>
+    {{-- <script>
         $("input[type='date']").on("change", function() {
             if (this.value && moment(this.value, "YYYY-MM-DD").isValid()) {
                 this.setAttribute(
@@ -1149,7 +1049,7 @@
                 this.setAttribute("data-date", "dd/mm/yyyy");
             }
         }).trigger("change");
-    </script>
+    </script> --}}
     <script>
         //Enter Key click add row
         $(document).on('keydown', '.form-control', function(e) {

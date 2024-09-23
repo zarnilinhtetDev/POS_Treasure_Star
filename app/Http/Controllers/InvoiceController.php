@@ -154,7 +154,6 @@ class InvoiceController extends Controller
         $invoice->overdue_date  = $request->overdue_date;
         $invoice->sub_total  = $request->sub_total;
         $invoice->total  = $request->total;
-        $invoice->total_buy_price  = $request->total_buy_price;
         $invoice->balance_due  = $request->balance_due;
         $invoice->discount_total  = $request->total_discount;
         $invoice->deposit  = $request->paid;
@@ -169,11 +168,10 @@ class InvoiceController extends Controller
             $result->customer_id = $request->customer_id;
             $result->part_number = $request->part_number[$i];
             $result->product_qty = $request->product_qty[$i];
-            $result->product_price = $request->product_price[$i];
+            // $result->product_price = $request->product_price[$i];
             $result->retail_price = $request->retail_price[$i];
-            $result->buy_price = $request->buy_price[$i];
-            $result->exp_date = $request->exp_date[$i];
             $result->unit = $request->item_unit[$i];
+            $result->exp_date = $request->exp_date[$i];
             $result->warehouse = $request->warehouse[$i];
             $result->status = $request->sell_status[$i] ?? '0';
             $result->save();
@@ -388,8 +386,7 @@ class InvoiceController extends Controller
         $invoice->location = $request->location;
         $invoice->branch  = $request->branch;
         $invoice->balance_due  = $request->balance_due;
-        $invoice->discount_total  = $request->discount;
-        $invoice->total_buy_price  = $request->total_buy_price;
+        $invoice->discount_total  = $request->total_discount;
         $invoice->deposit  = $request->paid;
         $invoice->remain_balance  = $request->balance;
         $invoice->remark = $request->remark;
@@ -404,12 +401,12 @@ class InvoiceController extends Controller
                 $sellsData[] = [
                     'part_number' => $partDescription,
                     'product_qty' => $request->input('product_qty')[$key],
-                    'product_price' => $request->input('product_price')[$key],
+                    // 'product_price' => $request->input('product_price')[$key],
                     'retail_price' => $request->input('retail_price')[$key],
-                    'buy_price' => $request->input('buy_price')[$key],
                     'unit' => $request->input('item_unit')[$key],
                     'discount' => $request->input('discount')[$key],
                     'warehouse' => $request->input('warehouse')[$key],
+                    'exp_date' => $request->input('exp_date')[$key],
                     'status' => $request->input('sell_status')[$key] ?? '0',
                     'invoiceid' => $id,
                     'created_at' => $now, // Add created_at field
@@ -654,11 +651,13 @@ class InvoiceController extends Controller
                 'payment_methods' => $payment_methods,
             ]);
         } else {
+            $invoices = Invoice::where('id', $invoice->id)->get();
             $payment_methods = InvoicePaymentMethod::where('invoice_id', $invoice->id)->get();
             $profile = UserProfile::all();
             $sells = Sell::where('invoiceid', $invoice->id)->get();
             return view('invoice.invoice_details', [
                 'invoice' => $invoice,
+                'invoices' => $invoices,
                 'sells' => $sells,
                 'profile' => $profile,
                 'payment_methods' => $payment_methods,

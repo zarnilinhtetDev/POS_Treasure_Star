@@ -74,8 +74,8 @@ class ProfitController extends Controller
         $invoicesQuery = Invoice::whereMonth('invoice_date', $currentMonth)
             ->whereYear('invoice_date', $currentYear);
 
-        $purchasesQuery = Invoice::whereMonth('invoice_date', $currentMonth)
-            ->whereYear('invoice_date', $currentYear);
+        $purchasesQuery = PurchaseOrder::whereMonth('po_date', $currentMonth)
+            ->whereYear('po_date', $currentYear);
 
         $expensesQuery = Expense::whereMonth('date', $currentMonth)
             ->whereYear('date', $currentYear);
@@ -107,8 +107,8 @@ class ProfitController extends Controller
         $expenses = $expensesQuery->get();
 
         // Calculate totals
-        $totalSum = $invoices->sum('total');
-        $totalPurchase = $purchases->sum('total_buy_price');
+        $totalSum = $invoices->sum('deposit');
+        $totalPurchase = $purchases->sum('deposit');
         $totalExpense = $expenses->sum('amount');
 
         $branchs = Warehouse::all();
@@ -129,7 +129,7 @@ class ProfitController extends Controller
 
         // Initialize the base queries
         $invoicesQuery = Invoice::whereBetween('invoice_date', [$startDate, $endDate]);
-        $purchasesQuery = Invoice::whereBetween('invoice_date', [$startDate, $endDate]);
+        $purchasesQuery = PurchaseOrder::whereBetween('po_date', [$startDate, $endDate]);
         $expensesQuery = Expense::whereBetween('date', [$startDate, $endDate]);
 
         // Check if the user is an admin
@@ -153,8 +153,8 @@ class ProfitController extends Controller
         $expenses = $expensesQuery->get();
 
         // Calculate totals
-        $totalSum = $invoices->sum('total');
-        $totalPurchase = $purchases->sum('total_buy_price');
+        $totalSum = $invoices->sum('deposit');
+        $totalPurchase = $purchases->sum('deposit');
         $totalExpense = $expenses->sum('amount');
 
         // Get the branch name

@@ -192,7 +192,7 @@ class PurchaseOrderController extends Controller
         $invoice->deposit  = $request->paid;
         $invoice->remain_balance  = $request->balance;
         $invoice->remark = $request->remark;
-        $invoice->payment_method   = $request->payment_method;
+        // $invoice->payment_method   = $request->payment_method;
         $invoice->save();
         $last_id = $invoice->id;
 

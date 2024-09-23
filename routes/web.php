@@ -51,6 +51,7 @@ Route::middleware('auth')->group(function () {
     //Customer
     Route::get('customer', [CustomerController::class, 'index']);
     Route::get('customer_credit/{id}', [CustomerController::class, 'credit']);
+    Route::get('customer_invoice/{id}', [CustomerController::class, 'customer_invoice']);
     Route::post('customer_register', [CustomerController::class, 'store']);
     Route::get('customer_edit/{id}', [CustomerController::class, 'edit']);
     Route::post('customer_update/{id}', [CustomerController::class, 'update']);

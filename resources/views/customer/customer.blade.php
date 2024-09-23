@@ -274,13 +274,19 @@
                                                                     class="fa-solid fa-trash"></i></a>
                                                         @endif
 
-                                                        @if (in_array('Customer Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        @if (in_array('Customer Credit', $choosePermission) || auth()->user()->is_admin == '1')
                                                             <a href="{{ url('customer_credit', $customer->id) }}"
-                                                                type="button" class="mx-2 btn btn-warning ">
+                                                                type="button"
+                                                                class="mx-2 btn btn-warning text-white">
                                                                 Credit</a>
                                                         @endif
-                                                    </div>
 
+                                                        @if (in_array('Customer Invoice', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            <a href="{{ url('customer_invoice', $customer->id) }}"
+                                                                type="button" class="btn btn-info text-white">
+                                                                Invoice</a>
+                                                        @endif
+                                                    </div>
 
 
                                                 </td>

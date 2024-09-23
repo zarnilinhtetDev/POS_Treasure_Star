@@ -444,7 +444,7 @@
                                                                     </div>
                                                                 </td>
                                                                 <td>
-                                                                    <div class="form-group">
+                                                                    {{-- <div class="form-group">
                                                                         <div class="form-check">
                                                                             <input class="form-check-input"
                                                                                 type="checkbox"
@@ -455,6 +455,34 @@
                                                                             <label class="form-check-label"
                                                                                 for="permission">
                                                                                 Customer Credit
+                                                                            </label>
+                                                                        </div>
+                                                                    </div> --}}
+                                                                    <div class="form-group">
+                                                                        <div
+                                                                            class="form-check form-check-inline d-flex align-items-center">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                id="permission-customer-other-4"
+                                                                                name="permission[]"
+                                                                                value="Customer Credit"
+                                                                                @if (in_array('Customer Credit', $permissions)) checked @endif>
+                                                                            <label class="form-check-label ms-2"
+                                                                                for="permission-quotation-other-4">
+                                                                                Customer Credit
+                                                                            </label>
+                                                                        </div>
+                                                                        <div
+                                                                            class="form-check form-check-inline d-flex align-items-center ms-4 mt-3">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                id="permission-customer-other-5"
+                                                                                name="permission[]"
+                                                                                value="Customer Invoice"
+                                                                                @if (in_array('Customer Invoice', $permissions)) checked @endif>
+                                                                            <label class="form-check-label ms-2"
+                                                                                for="permission-quotation-other-5">
+                                                                                Customer Invoice
                                                                             </label>
                                                                         </div>
                                                                     </div>
@@ -1688,11 +1716,13 @@
                     $('#permission-customer-other-2').prop('checked', true);
                     $('#permission-customer-other-3').prop('checked', true);
                     $('#permission-customer-other-4').prop('checked', true);
+                    $('#permission-customer-other-5').prop('checked', true);
                 } else {
                     $('#permission-customer-other-1').prop('checked', false);
                     $('#permission-customer-other-2').prop('checked', false);
                     $('#permission-customer-other-3').prop('checked', false);
                     $('#permission-customer-other-4').prop('checked', false);
+                    $('#permission-customer-other-5').prop('checked', false);
                 }
             });
         });

@@ -31,12 +31,27 @@ class CustomerController extends Controller
     public function credit($id)
     {
         $customer = Customer::find($id);
-        $invoices = Invoice::where('customer_id', $id)->get();
+        $invoices = Invoice::where('customer_id', $id)
+            ->where('status', 'Invoice')
+            ->get();
         $total_amount = $invoices->sum('total');
         $balance = $invoices->sum('remain_balance');
         $deposit = $invoices->sum('deposit');
         return view('customer.credit', compact('invoices', 'customer', 'total_amount', 'balance', 'deposit'));
     }
+
+    public function customer_invoice($id)
+    {
+        $customer = Customer::find($id);
+        $invoices = Invoice::where('customer_id', $id)
+            ->where('status', 'Invoice')
+            ->get();
+        $total_amount = $invoices->sum('total');
+        $balance = $invoices->sum('remain_balance');
+        $deposit = $invoices->sum('deposit');
+        return view('customer.customer_invoice', compact('invoices', 'customer', 'total_amount', 'balance', 'deposit'));
+    }
+
     public function store(Request $request)
     {
 
