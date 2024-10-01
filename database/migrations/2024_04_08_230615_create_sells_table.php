@@ -21,10 +21,13 @@ return new class extends Migration
             $table->string('product_qty', 191)->nullable();
             $table->string('product_price', 191)->nullable();
             $table->string('retail_price', 191)->nullable();
+            $table->string('buy_price')->nullable();
             $table->string('discount', 191)->nullable();
             $table->string('unit', 191)->nullable();
             $table->string('exp_date', 191)->nullable();
             $table->string('part_number', 191)->nullable();
+            $table->string('warehouse', 191)->nullable();
+            $table->string('status')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

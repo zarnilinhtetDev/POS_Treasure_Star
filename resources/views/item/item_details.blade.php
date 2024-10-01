@@ -200,7 +200,7 @@
                             <td class="fw-light" style="width:200px">Expired Date</td>
                             <td class="fw-normal" style="width: 200px;">
                                 @if ($items->expired_date)
-                                    {{ \Carbon\Carbon::parse($items->expired_date)->format('d F Y') }}
+                                    {{ \Carbon\Carbon::parse($items->expired_date)->format('d / F / Y') }}
                                 @else
                                     N/A
                                 @endif
@@ -211,6 +211,12 @@
                             <td class="fw-light" style="width:200px">Item Category</td>
                             <td class="fw-normal" style="width: 200px;">
                                 {{ $items->category }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="fw-light" style="width:200px">Item Type</td>
+                            <td class="fw-normal" style="width: 200px;">
+                                {{ $items->item_type }}
                             </td>
                         </tr>
                         <tr>

@@ -13,16 +13,18 @@ return new class extends Migration
     {
         Schema::create('p_o_sells', function (Blueprint $table) {
             $table->id();
-            $table->string('invoiceid',191);
+            $table->string('invoiceid', 191);
 
             $table->integer('supplier_id')->nullable();
-            $table->string('description',191)->nullable();
-            $table->string('product_qty',191)->nullable();
-            $table->string('product_price',191)->nullable();
-            $table->string('discount',191)->nullable();
-            $table->string('unit',191)->nullable();
-            $table->string('exp_date',191)->nullable();
-            $table->string('part_number',191)->nullable();
+            $table->string('description', 191)->nullable();
+            $table->string('product_qty', 191)->nullable();
+            $table->string('product_price', 191)->nullable();
+            $table->string('discount', 191)->nullable();
+            $table->string('unit', 191)->nullable();
+            $table->string('exp_date', 191)->nullable();
+            $table->string('part_number', 191)->nullable();
+            $table->string('warehouse', 191)->nullable();
+            $table->string('status')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

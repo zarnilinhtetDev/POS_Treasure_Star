@@ -27,8 +27,19 @@
 
 </head>
 <style>
-    body {
+    /* body {
         background-image: linear-gradient(#0047AA, #A8F0FD);
+        background-size: cover;
+        background-repeat: no-repeat;
+
+        margin: 0;
+
+        height: 70vh;
+
+    } */
+
+    body {
+        background-image: url('{{ asset('img/sse.png') }}');
         background-size: cover;
         background-repeat: no-repeat;
 

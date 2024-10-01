@@ -183,6 +183,18 @@
                                             required>
                                     </div>
 
+                                    <div class="form-group col-md-6">
+                                        <label for="item_type">Item Type<span class="text-danger">
+                                                *</span></label>
+                                        <select name="item_type" class="form-control" id="item_type">
+                                            <option value="Stock"
+                                                {{ $items->item_type == 'Stock' ? 'selected' : '' }}>Stock</option>
+                                            <option value="Service"
+                                                {{ $items->item_type == 'Service' ? 'selected' : '' }}>Service</option>
+                                        </select>
+                                    </div>
+
+
                                     @if (auth()->user()->is_admin == '1')
                                         <div class="form-group col-md-6">
                                             <label for="warehouse_id">Location<span
@@ -190,12 +202,13 @@
                                             <input type="hidden" id="warehouse_id_from" name="warehouse_id_from">
                                             <select name="warehouse_id" id="warehouse_id" class="form-control"
                                                 required>
-                                                <option value="{{ $items->warehouse_id }}" selected>
-                                                    {{ $items->warehouse->name }}
-                                                </option>
                                                 @foreach ($branchs as $branch)
-                                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                                    <option value="{{ $branch->id }}"
+                                                        {{ $branch->id == $items->warehouse_id ? 'selected' : '' }}>
+                                                        {{ $branch->name }}
+                                                    </option>
                                                 @endforeach
+
                                             </select>
                                         </div>
                                     @else
@@ -210,18 +223,19 @@
                                                         ? json_decode(auth()->user()->level)
                                                         : [];
                                                 @endphp
-                                                <option value="{{ $items->warehouse_id }}" selected>
-                                                    {{ $items->warehouse->name }}
-                                                </option>
                                                 @foreach ($branchs as $branch)
                                                     @if (in_array($branch->id, $userPermissions))
-                                                        <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                        <option value="{{ $branch->id }}"
+                                                            {{ $branch->id == $items->warehouse_id ? 'selected' : '' }}>
+                                                            {{ $branch->name }}
                                                         </option>
                                                     @endif
                                                 @endforeach
                                             </select>
+
                                         </div>
                                     @endif
+
 
 
                                 </div>

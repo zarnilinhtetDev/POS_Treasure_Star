@@ -13,11 +13,12 @@ return new class extends Migration
     {
         Schema::create('customers', function (Blueprint $table) {
             $table->id();
-            $table->string('name',191)->nullable();
-            $table->string('phno',191)->nullable();
-            $table->string('shopname',191)->nullable();
-            $table->string('type',191)->nullable();
-            $table->string('address',191)->nullable();
+            $table->string('name', 191)->nullable();
+            $table->string('phno', 191)->nullable();
+            $table->string('branch', 191)->nullable();
+            $table->string('shopname', 191)->nullable();
+            $table->string('type', 191)->nullable();
+            $table->string('address', 191)->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
