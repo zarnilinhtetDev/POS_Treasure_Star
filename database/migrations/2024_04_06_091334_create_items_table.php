@@ -30,10 +30,8 @@ return new class extends Migration
             $table->string('buy_price', 191)->nullable();
             $table->string('item_image', 191)->nullable();
             $table->string('parent_id', 191)->default('0');
-            $table->string('radio_category', 191)->nullable();
-            $table->string('madeIn', 191)->nullable();
-            $table->string('lense', 191)->nullable();
-            $table->string('degree', 191)->nullable();
+         
+
             $table->softDeletes();
             $table->timestamps();
         });
