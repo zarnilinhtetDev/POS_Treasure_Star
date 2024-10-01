@@ -115,6 +115,7 @@
                                             <tr class="text-white">
                                                 <th>{{ trans('No') }}</th>
                                                 <th>{{ trans('Item Name') }}</th>
+                                                <th>{{ trans('Description') }}</th>
                                                 <th>{{ trans('Qty') }}</th>
                                                 <th>{{ trans('Unit') }}</th>
                                                 <th>{{ trans('Price') }}</th>
@@ -133,6 +134,7 @@
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td>{{ $sell->part_number }}</td>
+                                                    <td>{{ $sell->description }}</td>
                                                     <td>{{ $sell->product_qty }}</td>
                                                     <td>{{ $sell->unit }}</td>
                                                     <td>{{ number_format($sell->product_price) }}</td>
@@ -151,7 +153,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <td colspan="5" class="text-right"></td>
+                                                <td colspan="6" class="text-right"></td>
                                                 <td style="font-weight: bolder; ">Sub Total
                                                 </td>
                                                 <td style="font-weight: bolder; ">
@@ -159,7 +161,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="5" class="text-right"></td>
+                                                <td colspan="6" class="text-right"></td>
                                                 <td style="font-weight: bolder; ">Overall Discount
                                                 </td>
                                                 <td style="font-weight: bolder; ">
@@ -167,7 +169,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="5" class="text-right"></td>
+                                                <td colspan="6" class="text-right"></td>
                                                 <td style="font-weight: bolder; ">Item Discount
                                                 </td>
                                                 <td style="font-weight: bolder; ">
@@ -175,7 +177,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="5" class="text-right"></td>
+                                                <td colspan="6" class="text-right"></td>
                                                 <td style="font-weight: bolder; ">Total
                                                 </td>
                                                 <td style="font-weight: bolder; ">
@@ -184,7 +186,7 @@
                                             </tr>
                                             @foreach ($payment_methods as $index => $payment_method)
                                                 <tr>
-                                                    <td colspan="5" class="text-right"></td>
+                                                    <td colspan="6" class="text-right"></td>
                                                     @if ($index == 0)
                                                         <td style="font-weight: bolder;">Payment Method
                                                             - {{ $payment_method->payment_method }}
@@ -202,7 +204,7 @@
                                                 </tr>
                                             @endforeach
                                             <tr>
-                                                <td colspan="5" class="text-right"></td>
+                                                <td colspan="6" class="text-right"></td>
                                                 <td style="font-weight: bolder;">Deposit
                                                 </td>
                                                 <td style="font-weight: bolder;">
@@ -210,7 +212,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="5" class="text-right"></td>
+                                                <td colspan="6" class="text-right"></td>
                                                 <td style="font-weight: bolder;">Remaning Balance
                                                 </td>
                                                 <td style="font-weight: bolder;">

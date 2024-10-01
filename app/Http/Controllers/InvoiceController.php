@@ -166,14 +166,15 @@ class InvoiceController extends Controller
             $result = new Sell();
             $result->invoiceid = $last_id;
             $result->customer_id = $request->customer_id;
+            $result->description = $request->part_description[$i];
             $result->part_number = $request->part_number[$i];
             $result->product_qty = $request->product_qty[$i];
-            // $result->product_price = $request->product_price[$i];
+            $result->discount = $request->discount[$i];
+            $result->product_price = $request->product_price[$i];
             $result->retail_price = $request->retail_price[$i];
-            $result->unit = $request->item_unit[$i];
             $result->exp_date = $request->exp_date[$i];
+            $result->unit = $request->item_unit[$i];
             $result->warehouse = $request->warehouse[$i];
-            $result->status = $request->sell_status[$i] ?? '0';
             $result->save();
         }
 
@@ -399,15 +400,15 @@ class InvoiceController extends Controller
         if ($request->input('part_number')) {
             foreach ($request->input('part_number') as $key => $partDescription) {
                 $sellsData[] = [
-                    'part_number' => $partDescription,
+                    'description' => $partDescription,
+                    'part_number' => $request->input('part_number')[$key],
                     'product_qty' => $request->input('product_qty')[$key],
-                    // 'product_price' => $request->input('product_price')[$key],
+                    'product_price' => $request->input('product_price')[$key],
+                    'discount' => $request->input('discount')[$key],
                     'retail_price' => $request->input('retail_price')[$key],
                     'unit' => $request->input('item_unit')[$key],
-                    'discount' => $request->input('discount')[$key],
-                    'warehouse' => $request->input('warehouse')[$key],
                     'exp_date' => $request->input('exp_date')[$key],
-                    'status' => $request->input('sell_status')[$key] ?? '0',
+                    'warehouse' => $request->input('warehouse')[$key],
                     'invoiceid' => $id,
                     'created_at' => $now, // Add created_at field
                     'updated_at' => $now, // Add updated_at field

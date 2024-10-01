@@ -121,113 +121,9 @@
                             <div class="card-body">
 
 
-                                <div class="row">
-                                    <div class="frmSearch col-sm-6 mt-2">
-                                        <label>
-                                            <input type="radio" name="radio_category" value="ဆေး"
-                                                id="radio_category"
-                                                {{ $items->radio_category == 'ဆေး' ? 'checked' : '' }}>
-                                            ဆေး
-                                        </label>
 
-                                        <label>
-                                            <input type="radio" class="ml-3" name="radio_category"
-                                                id="radio_category" value="Lenses"
-                                                {{ $items->radio_category == 'Lenses' ? 'checked' : '' }}>
-                                            Lenses
-                                        </label>
 
-                                        <label>
-                                            <input type="radio" class="ml-3" name="radio_category"
-                                                id="radio_category" value="Frame"
-                                                {{ $items->radio_category == 'Frame' ? 'checked' : '' }}>
-                                            Frame
-                                        </label><br>
-                                    </div>
-                                </div>
 
-                                <div class="row mt-3" id="madeInDropdown" style="display: none;">
-                                    <div class="form-group col-md-6">
-                                        <label for="madeIn">Choose Made In Country:</label>
-                                        <select id="madeIn" name="madeIn" class="form-control">
-                                            <option value="">Choose One</option>
-                                            <option value="China" {{ $items->madeIn == 'China' ? 'selected' : '' }}>
-                                                China</option>
-                                            <option value="Thai" {{ $items->madeIn == 'Thai' ? 'selected' : '' }}>Thai
-                                            </option>
-                                            <option value="Korea" {{ $items->madeIn == 'Korea' ? 'selected' : '' }}>
-                                                Korea</option>
-                                        </select>
-                                    </div>
-
-                                </div>
-                                <div class="row mt-3" id="lensDropdown" style="display:none;">
-                                    <div class="form-group col-md-6">
-                                        <label for="lensOptions">Choose Category:</label>
-                                        <select id="lensOptions" name="lense" class="form-control">
-                                            <option value="" {{ $items->lense == '' ? 'selected' : '' }}>Choose
-                                                One</option>
-                                            <option value="CR" {{ $items->lense == 'CR' ? 'selected' : '' }}>CR
-                                            </option>
-                                            <option value="MC" {{ $items->lense == 'MC' ? 'selected' : '' }}>MC
-                                            </option>
-                                            <option value="BB" {{ $items->lense == 'BB' ? 'selected' : '' }}>BB
-                                            </option>
-                                            <option value="PG" {{ $items->lense == 'PG' ? 'selected' : '' }}>PG
-                                            </option>
-                                            <option value="BBPG" {{ $items->lense == 'BBPG' ? 'selected' : '' }}>BBPG
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-6">
-                                        <label for="lensOptions">Choose Degree Category:</label>
-                                        <select id="degree" name="degree" class="form-control ">
-                                            <option value="" selected>Choose One</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row mt-3" id="near_and_far_dropdown" style="display: none;">
-                                    <div class="form-group col-md-6">
-                                        <label for="lensOptions">Lense Category:</label>
-                                        <select id="near_and_far" name="near_and_far" class="form-control">
-                                            <option value="">
-                                                Choose One</option>
-                                            <option value="near"
-                                                {{ $items->near_and_far == 'near' ? 'selected' : '' }}>အနီး</option>
-                                            <option value="far"
-                                                {{ $items->near_and_far == 'far' ? 'selected' : '' }}>အ‌‌ဝေး</option>
-                                            <option value="near_and_far"
-                                                {{ $items->near_and_far == 'near_and_far' ? 'selected' : '' }}>
-                                                အနီး/အ‌‌ဝေး
-                                            </option>
-                                            <option value="sun_glass"
-                                                {{ $items->near_and_far == 'sun_glass' ? 'selected' : '' }}>နေကာ
-                                            </option>
-                                            <option value="normal"
-                                                {{ $items->near_and_far == 'normal' ? 'selected' : '' }}>ရိုးရိုး
-                                            </option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-6" style="display: none"
-                                        id="near_and_far_degree_dropdown">
-                                        <label for="near_and_far_degree">Choose Lense Degree:</label>
-                                        <select id="near_and_far_degree" name="near_and_far_degree"
-                                            class="form-control ">
-                                            <option value="" selected>Choose One</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-6" style="display: none;" id="cylinder_dropdown">
-                                        <label for="lensOptions">Cylinder Degree:</label>
-                                        <select id="cylinder" name="cylinder" class="form-control ">
-                                            <option value="" selected>Choose Cylinder</option>
-                                        </select>
-                                    </div>
-
-                                </div>
 
 
                                 <div class="row">
@@ -251,8 +147,8 @@
                                                         alt="Item Image Preview">
                                                 </span>
                                             </div>
-                                            <input type="file" class="form-control" id="item_image"
-                                                name="item_image" accept="image/*" onchange="previewImage(event)">
+                                            <input type="file" class="form-control" id="item_image" name="item_image"
+                                                accept="image/*" onchange="previewImage(event)">
                                         </div>
                                         <span class="text-danger">Old: {{ $items->item_image }}</span>
                                         @error('item_image')
@@ -421,111 +317,7 @@
     <script src="{{ asset('locallink/js/typehead.min.js') }}"></script>
     <script src="{{ asset('locallink/js/moment.min.js') }}"></script>
 
-    <script>
-        $(document).ready(function() {
-            function toggleDropdownVisibility() {
-                let selectedValue = $('input[name="radio_category"]:checked').val();
 
-                if (selectedValue === 'Lenses') {
-                    $('#madeInDropdown').hide();
-                    $('#madeIn').val('');
-                    $('#cylinder_dropdown').show();
-                    $('#lensDropdown').show();
-                    $('#near_and_far_dropdown').show();
-
-                } else if (selectedValue === 'Frame') {
-                    $('#madeInDropdown').show();
-                    $('#lensDropdown').hide();
-                    $('#cylinder_dropdown').hide();
-                    $('#cylinder').val('');
-                    $('#lensOptions').val('');
-                    $('#degree').val('');
-                    $('#near_and_far_dropdown').show();
-
-                } else {
-                    $('#madeInDropdown').hide();
-                    $('#lensDropdown').hide();
-                    $('#madeIn').val('');
-                    $('#lensOptions').val('');
-                    $('#near_and_far_dropdown').hide();
-                    $('#near_and_far').val('');
-                    $('#cylinder_dropdown').hide();
-                    $('#cylinder').val('');
-
-                }
-            }
-
-            toggleDropdownVisibility();
-
-            $('input[name="radio_category"]').change(function() {
-                toggleDropdownVisibility();
-            });
-
-            let dropdown = $('#degree');
-            let startValue = 25;
-            let endValue = 500;
-            let step = 25;
-            let selectedDegree = "{{ $items->degree }}";
-
-            for (let i = startValue; i <= endValue; i += step) {
-                dropdown.append($('<option>', {
-                    value: i,
-                    text: i,
-                    selected: i == selectedDegree
-                }));
-            }
-        });
-
-        $(document).ready(function() {
-            let dropdownCylinder = $('#cylinder');
-            let dropdownNearAndFarDegree = $('#near_and_far_degree');
-            let startValue = 25;
-            let endValue = 500;
-            let step = 25;
-
-            let selectedCylinder = "{{ $items->cylinder ?? '' }}";
-            let selectedNearAndFarDegree = "{{ $items->near_and_far_degree ?? '' }}";
-
-            for (let i = startValue; i <= endValue; i += step) {
-                dropdownCylinder.append($('<option>', {
-                    value: i,
-                    text: i
-                }));
-            }
-
-            for (let i = startValue; i <= endValue; i += step) {
-                dropdownNearAndFarDegree.append($('<option>', {
-                    value: i,
-                    text: i
-                }));
-            }
-
-            if (selectedCylinder) {
-                dropdownCylinder.val(selectedCylinder);
-            }
-
-            if (selectedNearAndFarDegree) {
-                dropdownNearAndFarDegree.val(selectedNearAndFarDegree);
-            }
-        });
-
-        $(document).ready(function() {
-            function toggleDegreeDropdown() {
-                var selectedValue = $('#near_and_far').val();
-                if (selectedValue === 'near_and_far') {
-                    $('#near_and_far_degree_dropdown').show();
-                } else {
-                    $('#near_and_far_degree_dropdown').hide();
-                    $('#near_and_far_degree').val('');
-                }
-            }
-
-            toggleDegreeDropdown();
-            $('#near_and_far').on('change', function() {
-                toggleDegreeDropdown();
-            });
-        });
-    </script>
     <script>
         $(document).ready(function() {
             $('.option-checkbox').on('change', function() {

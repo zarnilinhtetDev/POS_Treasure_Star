@@ -134,8 +134,6 @@
                 </div>
 
                 <div class="ml-2 container-fluid">
-
-
                     <div class="mt-3 col-md-12">
                         <div class="card ">
                             <div class="card-header d-flex justify-content-between align-items-center">
@@ -185,7 +183,68 @@
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
+                                            <th>No.</th>
                                             <th>Date</th>
+                                            <th>Stock</th>
+                                            <th>Total Sale</th>
+                                            <th>Total Purchase</th>
+                                            <th>Total Expense</th>
+                                            <th>Profit</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        @foreach ($invoicesByDay as $date => $totalSale)
+                                            @php
+                                                $stock = $filteredStockSellsByDay->get($date, 0);
+                                                $purchase = $purchasesByDay->get($date, 0);
+                                                $expense = $expensesByDay->get($date, 0);
+                                                $profit = $totalSale - ($purchase + $expense);
+                                            @endphp
+
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $date }}</td>
+                                                <td>{{ number_format($stock) }}</td>
+                                                <td>{{ number_format($totalSale) }}</td>
+                                                <td>{{ number_format($purchase) }}</td>
+                                                <td>{{ number_format($expense) }}</td>
+                                                <td>{{ number_format($profit) }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+
+                                    <tfoot style="background-color: #d7f0d9">
+                                        <tr>
+                                            <td colspan="2"><strong>Total</strong></td>
+                                            <td>{{ number_format($filteredStockSellsByDay->sum()) }}</td>
+                                            <td>{{ number_format($invoicesByDay->sum()) }}</td>
+                                            <td>{{ number_format($purchasesByDay->sum()) }}</td>
+                                            <td>{{ number_format($expensesByDay->sum()) }}</td>
+                                            <td>{{ number_format($invoicesByDay->sum() - ($purchasesByDay->sum() + $expensesByDay->sum())) }}
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+
+
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+
+                        <div class="card ">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h3 class="card-title">Monthly Net Profit Table</h3>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body">
+
+                                <table id="" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Stock</th>
                                             <th>Total Sale</th>
                                             <th>Total Purchase</th>
                                             <th>Total Expense</th>
@@ -193,13 +252,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @php
 
-                                        @endphp
                                         <tr>
-                                            <td>{{ $invoices->isNotEmpty() ? $invoices->first()->created_at->format('F /Y') : '' }}
+                                            <td> {{ $invoices->isNotEmpty() && $invoices->first()->date
+                                                ? Carbon::parse($invoices->first()->date)->format('F / Y')
+                                                : 'No Invoices' }}
                                             </td>
-
+                                            <td>{{ number_format($totalStockDeposit) }}</td>
                                             <td>{{ number_format($totalSum) }}</td>
                                             <td>{{ number_format($totalPurchase) }}</td>
                                             <td>{{ number_format($totalExpense) }}</td>

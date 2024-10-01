@@ -11,7 +11,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <style>
-        input {
+        /* input {
             position: relative;
             width: 150px;
             height: 40px;
@@ -39,7 +39,7 @@
             right: 0;
             color: black;
             opacity: 1;
-        }
+        } */
     </style>
 
 </head>
@@ -251,76 +251,75 @@
 
 
                                         @endif
-
                                         <table class="table table-bordered">
+                                            <!-- Fixed width -->
                                             <thead style="background-color:#0047AA;color:white;">
                                                 <tr class="item_header bg-gradient-directional-blue white"
                                                     style="margin-bottom:10px;">
-                                                    <th width="5%" class="text-center">{{ trans('No') }}
+                                                    <th width="5%" class="text-center">
+                                                        {{ trans('No') }}
                                                     </th>
                                                     <th width="18%" class="text-center">
                                                         {{ trans('Item Name') }}
                                                     </th>
-
+                                                    <th width="20%" class="text-center">
+                                                        {{ trans('Descriptions') }}
+                                                    </th>
                                                     <th width="8%" class="text-center">
                                                         {{ trans('Qty') }}
                                                     </th>
                                                     <th width="10%" class="text-center">{{ trans('Unit') }}
                                                     </th>
-
-                                                    <th width="9%" class="text-center">
+                                                    <th width="9%" class="text-center wholesale_th">
                                                         {{ trans('လက်ကားစျေး') }}
                                                     </th>
-                                                    <th width="9%" class="text-center">
+                                                    <th width="9%" class="text-center retail_th">
                                                         {{ trans('လက်လီစျေး') }}
                                                     </th>
-
-                                                    <th width="10%" class="text-center">
+                                                    <th width="9%" class="text-center">
                                                         {{ trans('Discounts') }}
                                                     </th>
-
-                                                    <th width="14%" class="text-center">{{ trans('Amount') }}
+                                                    <th width="9%" class="text-center">
+                                                        {{ trans('Expiry') }}
+                                                    </th>
+                                                    <th width="14%" class="text-center">
+                                                        {{ trans('Amount') }}
                                                         ({{ config('currency.symbol') }})
                                                     </th>
-
                                                 </tr>
-
                                             </thead>
-
                                             <tbody id="showitem123">
                                                 @foreach ($sell as $key => $sell)
                                                     <tr>
                                                         <td class="text-center" id="count">
-                                                            {{ $key + 1 }}
-                                                        </td>
+                                                            {{ $key + 1 }}</td>
                                                         <td>
-
-                                                            <div class="row align-items-center">
-                                                                <div class="col-auto">
+                                                            {{-- <div class="row align-items-center"> --}}
+                                                            {{-- <div class="col-auto">
                                                                     <input type="checkbox" id="sell_status-0"
                                                                         value="1"
                                                                         class="form-check-input sell_status"
                                                                         {{ $sell->status == 1 ? 'checked' : '0' }} />
-
-
                                                                     <input type="hidden" name="sell_status[]"
                                                                         id="sell_status_input-0"
                                                                         class="form-control sell_status_input"
                                                                         value="0" />
-
-                                                                </div>
-                                                                <div class="col">
-                                                                    <input type="text"
-                                                                        class="form-control productname typeahead"
-                                                                        name="part_number[]"
-                                                                        value="{{ $sell->part_number }}"
-                                                                        placeholder="{{ trans('Enter Part Number') }}"
-                                                                        id='productname-0' autocomplete="off">
-                                                                </div>
-                                                            </div>
-
+                                                                </div> --}}
+                                                            {{-- <div class="col"> --}}
+                                                            <input type="text"
+                                                                class="form-control productname typeahead"
+                                                                name="part_number[]"
+                                                                value="{{ $sell->part_number }}"
+                                                                placeholder="{{ trans('Enter Part Number') }}"
+                                                                id='productname-0' autocomplete="off">
+                                                            {{-- </div> --}}
+                                                            {{-- </div> --}}
                                                         </td>
-
+                                                        <td><input type="text"
+                                                                class="form-control description typeahead"
+                                                                value="{{ $sell->description }}"
+                                                                name="part_description[]" id='description-0'
+                                                                autocomplete="off"></td>
                                                         <td><input type="text" class="form-control req amnt"
                                                                 name="product_qty[]" id="amount-0"
                                                                 autocomplete="off"
@@ -329,45 +328,42 @@
                                                                 name="alert[]"></td>
                                                         <td><input type="text" class="form-control item_unit"
                                                                 name="item_unit[]" id="item_unit-0"
-                                                                value="{{ $sell->unit }}">
-
-                                                        </td>
-                                                        <td><input type="text" class="form-control price"
-                                                                name="product_price[]" id="price-0"
-                                                                autocomplete="off"
+                                                                value="{{ $sell->unit }}"></td>
+                                                        <td class="wholesale_td"><input type="text"
+                                                                class="form-control price" name="product_price[]"
+                                                                id="price-0" autocomplete="off"
                                                                 value="{{ $sell->product_price }}">
                                                         </td>
-                                                        <td><input type="text" class="form-control retail_price"
+                                                        <td class="retail_td"><input type="text"
+                                                                class="form-control retail_price"
                                                                 name="retail_price[]" id="retail_price-0"
-                                                                autocomplete="off" value="{{ $sell->retail_price }}">
-                                                        </td>
+                                                                autocomplete="off"
+                                                                value="{{ $sell->retail_price }}"></td>
                                                         <td><input type="text" class="form-control vat"
-                                                                name="discount[]" id="vat-0" autocomplete="off"
-                                                                value="{{ $sell->discount }}">
+                                                                name="discount[]" id="vat-0"
+                                                                autocomplete="off" value="{{ $sell->discount }}">
                                                         </td>
-
+                                                        <td><input type="text" class="form-control exp_date"
+                                                                name="exp_date[]" id="vat-0"
+                                                                autocomplete="off" value="{{ $sell->exp_date }}">
+                                                        </td>
                                                         <td style="display: none;"><input type="text"
-                                                                class="form-control warehouse " name="warehouse[]"
+                                                                class="form-control warehouse" name="warehouse[]"
                                                                 id="warehouse-0" autocomplete="off"
-                                                                value="{{ $sell->warehouse }}">
-                                                        </td>
+                                                                value="{{ $sell->warehouse }}"></td>
 
 
-                                                        <td style="text-align:center">
-                                                            <strong>
-                                                                <span class='ttlText1' id="foc-0"></span>
-                                                            </strong>
-
-
-                                                        </td>
-
-                                                        <td style="width: 5%;"><button type="button"
+                                                        <td style="text-align:center"><strong><span
+                                                                    class='ttlText1'
+                                                                    id="foc-0"></span></strong></td>
+                                                        <td style="width: 3%;"><button type="button"
                                                                 class="btn btn-danger remove_item_btn"
-                                                                id="removebutton">Remove</button></td>
+                                                                id="removebutton"><i
+                                                                    class="fa-solid fa-minus"></i></button>
+                                                        </td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
-
                                         </table>
 
                                         <table class="mt-3">
@@ -579,20 +575,22 @@
             function initializeTypeahead(count) {
                 $('#productname-' + count).typeahead({
                     source: function(query, process) {
-                        var Selectedlocation = $('#location').val();
-                        return $.ajax({
-                            url: "{{ route('autocomplete-part-code-invoice') }}",
-                            method: 'POST',
-                            data: {
-                                query: query,
-                                location: Selectedlocation,
-                            },
-                            dataType: 'json',
-                            success: function(data) {
-                                console.log(data);
-                                process(data);
-                            }
-                        });
+                        if (!$('#sell_status-' + count).is(':checked')) {
+                            var Selectedlocation = $('#location').val();
+                            return $.ajax({
+                                url: "{{ route('autocomplete-part-code-invoice') }}",
+                                method: 'POST',
+                                data: {
+                                    query: query,
+                                    location: Selectedlocation,
+                                },
+                                dataType: 'json',
+                                success: function(data) {
+                                    console.log(data);
+                                    process(data);
+                                }
+                            });
+                        }
                     }
                 });
             }
@@ -609,9 +607,9 @@
                 let exp_date = row.find('.exp_date');
                 let item_unit = row.find('.item_unit');
                 let retail_price = row.find('.retail_price');
-                var Selectedlocation = $('#location').val();
                 let warehouse = row.find('.warehouse');
-
+                let buy_price = row.find('.buy_price');
+                var Selectedlocation = $('#location').val();
                 $.ajax({
                     type: 'POST',
                     url: "{{ route('get-part-data-invoice') }}",
@@ -621,15 +619,13 @@
                         location: Selectedlocation,
                     },
                     success: function(data) {
-                        //  itemNameInput.val(data.retail_price);
-
                         itemNameInput.val(data.wholesale_price);
-
                         partDesc.val(data.descriptions);
-                        warehouse.val(data.warehouse_id);
                         exp_date.val(data.expired_date);
                         item_unit.val(data.item_unit);
                         retail_price.val(data.retail_price);
+                        warehouse.val(data.warehouse_id);
+                        buy_price.val(data.buy_price);
                         if (parseFloat(data.reorder_level_stock) >= parseFloat(data.quantity)) {
                             alert(data.quantity + " quantity!");
                         }
@@ -650,19 +646,11 @@
                     '<td style="display:none"><input type="hidden" class="form-control barcode typeahead" name="barcode[]" id="barcode-' +
                     count + '" autocomplete="off"></td>' +
                     '<td>' +
-                    '<div class="row align-items-center">' +
-                    '<div class="col-auto">' +
-                    '<input type="checkbox" id="sell_status-' + count +
-                    '" value="1" class="form-check-input sell_status" />' +
-                    '<input type="hidden" name="sell_status[]" id="sell_status_input-' + count +
-                    '" value="0" class="form-control sell_status_input" />' +
-                    '</div>' +
-                    '<div class="col">' +
                     '<input type="text" class="form-control productname typeahead item_name" name="part_number[]" id="productname-' +
                     count + '" autocomplete="off" placeholder="Enter Part Number">' +
-                    '</div>' +
-                    '</div>' +
                     '</td>' +
+                    '<td><input type="text" class="form-control description typeahead" name="part_description[]"  id="description-' +
+                    count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
                     count +
                     '"   autocomplete="off" value="1"><input type="hidden" id="alert-0" value="" name="alert[]"></td>' +
@@ -670,13 +658,13 @@
                     count +
                     '" autocomplete ="off" required> </td>' +
 
-                    '<td><input type="text" class="form-control price" name="product_price[]" value="0" id="price-' +
+                    '<td class="wholesale_td"><input type="text" class="form-control price" name="product_price[]" value="0" id="price-' +
                     count + '"   autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control retail_price" name="retail_price[]" value="0" id="retail_price-' +
+                    '<td class="retail_td"><input type="text" class="form-control retail_price" name="retail_price[]" value="0" id="retail_price-' +
                     count + '"   autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control vat" name="discount[]" value="0" id="vat-' +
                     count + '"   autocomplete="off"></td>' +
-                    '<td style="display : none;"><input type="text" class="form-control buy_price" name="buy_price[]" value="0" id="buy_price-' +
+                    '<td><input type="text" class="form-control exp_date" name="exp_date[]" id="exp_date-' +
                     count + '"   autocomplete="off"></td>' +
                     '<td style="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
                     count +
@@ -684,10 +672,56 @@
 
                     '<td style="text-align:center"><span class="currenty"></span><strong><span class="ttlText1" id="result-' +
                     count + '">0</span></strong></td>' +
-                    '<td style="width: 5%;"><button type="submit" class="btn btn-danger remove_item_btn" id="removebutton">Remove</button></td>' +
+
+                    '<td style="width: 3%;"><button type="submit" class="btn btn-danger remove_item_btn" id="removebutton"><i class="fa-solid fa-minus"></i></button></td>' +
                     '</tr>';
                 $("#showitem123").append(newRow);
                 initializeTypeahead(count);
+                updatePriceCategory();
+            });
+
+            function updatePriceCategory() {
+                var selectedCategory = $('#sale_price_category').val();
+                var cuzName = $('#type').val();
+
+                if (selectedCategory === 'Whole Sale') {
+                    $('.wholesale_td').show();
+                    $('.wholesale_th').show();
+                    $('.retail_td').hide();
+                    $('.retail_th').hide();
+                } else if (selectedCategory === 'Retail') {
+                    $('.wholesale_td').hide();
+                    $('.wholesale_th').hide();
+                    $('.retail_td').show();
+                    $('.retail_th').show();
+                } else {
+                    if ($('#type').val() == 'Whole Sale') {
+                        $('.wholesale_td').show();
+                        $('.wholesale_th').show();
+                        $('.retail_td').hide();
+                        $('.retail_th').hide();
+                    } else if ($('#type').val() == 'Retail') {
+                        $('.wholesale_td').hide();
+                        $('.wholesale_th').hide();
+                        $('.retail_td').show();
+                        $('.retail_th').show();
+                    } else {
+                        $('.wholesale_td').hide();
+                        $('.wholesale_th').hide();
+                        $('.retail_td').show();
+                        $('.retail_th').show();
+                    }
+                }
+            }
+
+            $('#type').val('{{ $quotation->type }}');
+            updatePriceCategory();
+            $('#sale_price_category').on('input', function() {
+                updatePriceCategory();
+            });
+
+            $('#type').on('input', function() {
+                updatePriceCategory();
             });
 
             $(document).on('click', '.remove_item_btn', function(e) {
@@ -703,6 +737,72 @@
                 initializeTypeaheads();
             });
 
+
+            $(document).ready(function() {
+                function calculatePayment() {
+                    let total = 0;
+                    $('.payment_amount').each(function() {
+                        let value = parseFloat($(this).val()) || 0;
+                        total += value;
+                    });
+                    total = Math.round(total);
+                    $('#paid').val(total);
+                    paidFunction();
+                }
+
+                function paidFunction() {
+                    let paid = parseFloat($('#paid').val()) || 0;
+                    let total_p = parseFloat($('#total_total').val()) || 0;
+                    let balance = total_p - paid;
+                    balance = Math.round(balance);
+                    $('#balance').val(balance);
+                }
+
+                $(document).on('input', '.payment_amount', function() {
+                    calculatePayment();
+                });
+
+                $('#paid').on('input', function() {
+                    paidFunction();
+                });
+
+                $('#addRow').click(function() {
+                    // Check the number of rows
+                    if ($('#trContainer tr.sub_c').length < 4) {
+                        var newRow = `<tr class="sub_c">
+                <td colspan="2"></td>
+                <td colspan="3" align="right"><strong></strong></td>
+                <td align="left" colspan="1" class="col-md-2">
+                    <input type="text" name="payment_amount[]" class="form-control payment_amount">
+                </td>
+                <td align="left" colspan="1" class="col-md-2">
+                    <select name="payment_method[]" class="form-control">
+                        <option value="Cash">Cash</option>
+                        <option value="K Pay">K Pay</option>
+                        <option value="Wave">Wave</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </td>
+                <td align="left" colspan="1" class="col-md-1">
+                    <button class="removeRow btn btn-danger"><i class="fa-solid fa-minus"></i></button>
+                </td>
+            </tr>`;
+
+                        $('#trContainer').append(newRow);
+                    } else {
+                        alert('You can only add a maximum of 4 payment rows.');
+                    }
+                });
+
+                $(document).on('click', '.removeRow', function() {
+                    $(this).closest('tr').remove();
+                    calculatePayment();
+                });
+
+                calculatePayment();
+            });
+
+
             $(document).on('click', '.typeahead .dropdown-item', function(e) {
                 e.preventDefault();
                 if ($("#customer").val()) {
@@ -716,8 +816,7 @@
                 }
             });
 
-            // Initialize typeahead for the first row
-            initializeTypeahead(count);
+
             $(document).ready(function() {
                 function calculateTotals() {
                     let salePriceCategory = $('#sale_price_category').val();
@@ -798,7 +897,16 @@
 
 
 
+
         });
+
+
+        function paidFunction() {
+            let paid = document.getElementById("paid").value;
+            let total_p = document.getElementById("invoiceyoghtml").value;
+            let balance = total_p - paid;
+            $("#balance").val(balance);
+        }
     </script>
     <script>
         $(document).on('click', '.remove_item_btn', function(e) {
@@ -814,14 +922,6 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-
-        function paidFunction() {
-
-            let paid = document.getElementById("paid").value;
-            let total_p = document.getElementById("total_total").value;
-            let balance = (total_p) - paid;
-            $("#balance").val(balance); //update balance
-        }
     </script>
 
     <script>
@@ -854,39 +954,95 @@
             });
 
 
-            $(document).on('click', '#customer_search', function(e) {
-                e.preventDefault();
-                let serialNumber = $("#customer").val();
 
-                $.ajax({
-                    type: 'POST',
-                    url: "{{ route('customer_service_search_fill') }}",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        model: serialNumber,
-                        location: $('#location').val()
-                    },
-                    success: function(data) {
-                        console.log(data);
 
-                        if (data.customer) {
-                            $("#name").val(data.customer.name);
-                            $("#customer_id").val(data.customer.id);
-                            $("#phone_no").val(data.customer.phno);
-                            $("#type").val(data.customer.type);
-                            $("#address").val(data.customer.address);
-                            $("#customer").val('');
+
+            $(document).ready(function() {
+                function updatePriceCategory() {
+                    var selectedCategory = $('#sale_price_category').val();
+                    var cuzName = $('#type').val();
+
+                    if (selectedCategory === 'Whole Sale') {
+                        $('.wholesale_td').show();
+                        $('.wholesale_th').show();
+                        $('.retail_td').hide();
+                        $('.retail_th').hide();
+                    } else if (selectedCategory === 'Retail') {
+                        $('.wholesale_td').hide();
+                        $('.wholesale_th').hide();
+                        $('.retail_td').show();
+                        $('.retail_th').show();
+                    } else {
+                        if ($('#type').val() == 'Whole Sale') {
+                            $('.wholesale_td').show();
+                            $('.wholesale_th').show();
+                            $('.retail_td').hide();
+                            $('.retail_th').hide();
+                        } else if ($('#type').val() == 'Retail') {
+                            $('.wholesale_td').hide();
+                            $('.wholesale_th').hide();
+                            $('.retail_td').show();
+                            $('.retail_th').show();
                         } else {
-                            console.error("Customer not found");
-                            $("#customer").val('');
+                            $('.wholesale_td').hide();
+                            $('.wholesale_th').hide();
+                            $('.retail_td').show();
+                            $('.retail_th').show();
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
                     }
+                }
+
+                $('#type').val('{{ $quotation->type }}');
+                updatePriceCategory();
+                $('#sale_price_category').on('input', function() {
+                    updatePriceCategory();
                 });
 
+                $('#type').on('input', function() {
+                    updatePriceCategory();
+                });
+
+                $(document).on('click', '#customer_search', function(e) {
+                    e.preventDefault();
+                    let serialNumber = $("#customer").val();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('customer_service_search_fill') }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            model: serialNumber,
+                            location: $('#location').val()
+                        },
+                        success: function(data) {
+                            console.log(data);
+
+                            if (data.customer) {
+                                // Populate fields with customer data
+                                $("#name").val(data.customer.name);
+                                $("#customer_id").val(data.customer.id);
+                                $("#phone_no").val(data.customer.phno);
+                                $("#type").val(data.customer
+                                    .type); // Set type from AJAX
+
+                                // Call to update price category based on new type
+                                updatePriceCategory();
+
+                                $("#address").val(data.customer.address);
+                                $("#customer").val(
+                                    ''); // Clear the customer search input
+                            } else {
+                                console.error("Customer not found");
+                                $("#customer").val(''); // Clear the input if not found
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText); // Log error for debugging
+                        }
+                    });
+                });
             });
+
         });
     </script>
 
@@ -894,7 +1050,9 @@
 
 
 
-    <script>
+
+
+    {{-- <script>
         $("input[type='date']").on("change", function() {
             if (this.value && moment(this.value, "YYYY-MM-DD").isValid()) {
                 this.setAttribute(
@@ -905,7 +1063,7 @@
                 this.setAttribute("data-date", "dd/mm/yyyy");
             }
         }).trigger("change");
-    </script>
+    </script> --}}
     <script>
         //Enter Key click add row
         $(document).on('keydown', '.form-control', function(e) {

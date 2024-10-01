@@ -11,7 +11,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <style>
-        input {
+        /* input {
             position: relative;
             width: 150px;
             height: 40px;
@@ -39,7 +39,7 @@
             right: 12px;
             color: black;
             opacity: 1;
-        }
+        } */
     </style>
     </style>
 </head>
@@ -252,15 +252,23 @@
                                                 <th width="18%" class="text-center">{{ trans('Item Name') }}
                                                 </th>
 
-                                                <th width="8%" class="text-center">{{ trans('Quantity') }}
+                                                <th width="20%" class="text-center">{{ trans('Descriptions') }}
+                                                </th>
+
+                                                <th width="7%" class="text-center">{{ trans('Quantity') }}
                                                 </th>
                                                 <th width="10%" class="text-center">{{ trans('Unit') }}
                                                 </th>
 
-                                                <th width="7%" class="text-center">{{ trans('Unit Price') }}
+                                                <th width="10%" class="text-center">{{ trans('Unit Price') }}
                                                 </th>
+
                                                 <th width="10%" class="text-center">
                                                     {{ trans('Discounts') }}
+                                                </th>
+
+                                                <th width="10%" class="text-center">
+                                                    {{ trans('Expiry') }}
                                                 </th>
 
                                                 <th width="14%" class="text-center">{{ trans('Amount') }}
@@ -273,50 +281,60 @@
                                         <tbody id="showitem123">
                                             <tr>
                                                 <td class="text-center" id="count">1</td>
+
                                                 <td>
 
-                                                    <div class="row align-items-center">
-                                                        <div class="col-auto">
-                                                            <input type="checkbox" id="sell_status-0" value="1"
-                                                                class="form-check-input sell_status" />
+                                                    {{-- <div class="row align-items-center"> --}}
+                                                    {{-- <div class="col-auto">
+                                                                <input type="checkbox" id="sell_status-0" value="1"
+                                                                    class="form-check-input sell_status" />
+    
+                                                                <input type="hidden" name="sell_status[]"
+                                                                    id="sell_status_input-0"
+                                                                    class="form-control sell_status_input"
+                                                                    value="0" />
+                                                            </div> --}}
 
-                                                            <input type="hidden" name="sell_status[]"
-                                                                id="sell_status_input-0"
-                                                                class="form-control sell_status_input"
-                                                                value="0" />
-                                                        </div>
-
-                                                        <div class="col">
-                                                            <input type="text"
-                                                                class="form-control productname typeahead item_name"
-                                                                name="part_number[]" value="{{ old('part_number') }}"
-                                                                placeholder="{{ trans('Enter Part Number') }}"
-                                                                id="productname-0" autocomplete="off">
-                                                        </div>
-                                                    </div>
+                                                    {{-- <div class="col"> --}}
+                                                    <input type="text"
+                                                        class="form-control productname typeahead item_name"
+                                                        name="part_number[]" value="{{ old('part_number') }}"
+                                                        placeholder="{{ trans('Enter Part Number') }}"
+                                                        id="productname-0" autocomplete="off">
+                                                    {{-- </div>
+                                                        </div> --}}
 
                                                 </td>
+
+                                                <td><input type="text" class="form-control description typeahead"
+                                                        value="{{ old('part_description') }}"
+                                                        name="part_description[]" placeholder="{{ trans('') }}"
+                                                        id='description-0' autocomplete="off"></td>
 
                                                 <td><input type="text" class="form-control req amnt"
                                                         name="product_qty[]" id="amount-0" autocomplete="off"
                                                         value="1"><input type="hidden" id="alert-0"
                                                         value="" name="alert[]"></td>
-                                                <!-- <td><input type="text" class="form-control unit " name="unit[]" id="unit-0" autocomplete="off">  </td> -->
+
                                                 <td>
                                                     <input type="text" name="item_unit[]"
                                                         class="form-control item_unit" id="item_unit-0">
                                                 </td>
 
-
-
                                                 <td><input type="text" class="form-control price"
                                                         name="product_price[]" id="price-0" autocomplete="off"
                                                         value="0">
                                                 </td>
+
                                                 <td><input type="text" class="form-control vat " name="discount[]"
                                                         id="vat-0" value="0" autocomplete="off"
                                                         value="{{ old('discount') }}">
                                                 </td>
+
+                                                <td><input type="text" class="form-control exp_date "
+                                                        name="exp_date[]" id="exp_date-0" autocomplete="off">
+                                                </td>
+
                                                 <td style="display: none;"><input type="text"
                                                         class="form-control warehouse " name="warehouse[]"
                                                         id="warehouse-0" autocomplete="off">
@@ -595,18 +613,17 @@
 
 
     <script>
-        $("input[type='date']").on("change", function() {
-            if (this.value && moment(this.value, "YYYY-MM-DD").isValid()) {
-                this.setAttribute(
-                    "data-date",
-                    moment(this.value, "YYYY-MM-DD").format("DD/MM/YYYY")
-                );
-            } else {
-                this.setAttribute("data-date", "dd/mm/yyyy");
-            }
-        }).trigger("change");
+        // $("input[type='date']").on("change", function() {
+        //     if (this.value && moment(this.value, "YYYY-MM-DD").isValid()) {
+        //         this.setAttribute(
+        //             "data-date",
+        //             moment(this.value, "YYYY-MM-DD").format("DD/MM/YYYY")
+        //         );
+        //     } else {
+        //         this.setAttribute("data-date", "dd/mm/yyyy");
+        //     }
+        // }).trigger("change");
     </script>
-
 
 
     <script>
@@ -644,6 +661,8 @@
 
             function updateItemName(item_name, row) {
                 let itemNameInput = row.find('.price');
+                let partDesc = row.find('.description');
+                let exp_date = row.find('.exp_date');
                 let item_unit = row.find('.item_unit');
                 var Selectedlocation = $('#location').val();
                 let warehouse = row.find('.warehouse');
@@ -660,6 +679,8 @@
                     },
                     success: function(data) {
                         itemNameInput.val(data.buy_price);
+                        partDesc.val(data.descriptions);
+                        exp_date.val(data.expired_date);
                         item_unit.val(data.item_unit);
                         warehouse.val(data.warehouse_id);
 
@@ -686,19 +707,11 @@
                 let newRow = '<tr>' +
                     '<td class="text-center">' + (rowCount + 1) + '</td>' +
                     '<td>' +
-                    '<div class="row align-items-center">' +
-                    '<div class="col-auto">' +
-                    '<input type="checkbox" id="sell_status-' + count +
-                    '" value="1" class="form-check-input sell_status" />' +
-                    '<input type="hidden" name="sell_status[]" id="sell_status_input-' + count +
-                    '" value="0" class="form-control sell_status_input" />' +
-                    '</div>' +
-                    '<div class="col">' +
                     '<input type="text" class="form-control productname typeahead item_name" name="part_number[]" id="productname-' +
                     count + '" autocomplete="off" placeholder="Enter Part Number">' +
-                    '</div>' +
-                    '</div>' +
                     '</td>' +
+                    '<td><input type="text" class="form-control description typeahead" name="part_description[]"  id="description-' +
+                    count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
                     count +
                     '"   autocomplete="off" value="1"><input type="hidden" id="alert-0" value="" name="alert[]"></td>' +
@@ -709,6 +722,8 @@
                     count + '"   autocomplete="off"></td>' +
 
                     '<td><input type="text" class="form-control vat" name="discount[]" value="0" id="vat-' +
+                    count + '"   autocomplete="off"></td>' +
+                    '<td><input type="text" class="form-control exp_date" name="exp_date[]" id="exp_date-' +
                     count + '"   autocomplete="off"></td>' +
                     '<td style="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
                     count +
@@ -807,7 +822,6 @@
                 updateItemName(itemCode, row);
                 $('#productname').val('');
             });
-
             // Initialize typeahead for the first row
             initializeTypeahead(count);
 
@@ -856,6 +870,7 @@
                 $('#total_discount').val('');
             });
 
+
             function paidFunction() {
                 let paid = document.getElementById("paid").value;
                 let total_p = document.getElementById("invoiceyoghtml").value;
@@ -886,7 +901,35 @@
             let total = subtotal - totalDiscount - totalVAT;
             $("#total_total").val(total);
         });
+    </script>
+    <script>
+        $(document).ready(function() {
+            $(document).on("change", "#balance_due", function() {
+                if ($(this).val() == "PO") { // Check if balance_due is empty
+                    $("#supplier_box").show(); // Show the supplier_box
+                } else {
+                    $("#supplier_box").hide(); // Hide the supplier_box if balance_due is not empty
+                }
+            });
+        });
 
+        $(document).ready(function() {
+            $('#location').change(function() {
+                var selectedLocation = $(this).val();
+                $('#supplier_id option').each(function() {
+                    var supplierBranch = $(this).data(
+                        'branch');
+                    if (supplierBranch == selectedLocation || $(this).val() == '') {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+                $('#supplier_id').val('');
+            }).change();
+        });
+    </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.addEventListener('change', function(e) {
                 if (e.target && e.target.classList.contains('sell_status')) {
@@ -900,7 +943,6 @@
             });
         });
     </script>
-
 
 
 </body>

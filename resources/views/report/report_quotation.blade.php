@@ -275,7 +275,10 @@
                                             @foreach ($search_quotations as $quotation)
                                                 <tr>
                                                     <td>{{ $no }}</td>
-                                                    <td>{{ $quotation->quote_no }}</td>
+                                                    <td> <a href="{{ url('/quotation_detail', $quotation->id) }}">
+                                                            {{ $quotation->quote_no }}
+                                                        </a>
+                                                    </td>
                                                     <td>
                                                         @foreach ($branchs as $branch)
                                                             @if ($branch->id == $quotation->branch)
@@ -294,7 +297,11 @@
                                             @foreach ($quotations as $quotation)
                                                 <tr>
                                                     <td>{{ $no }}</td>
-                                                    <td>{{ $quotation->quote_no }}</td>
+                                                    <td>
+                                                        <a href="{{ url('/quotation_detail', $quotation->id) }}">
+                                                            {{ $quotation->quote_no }}
+                                                        </a>
+                                                    </td>
                                                     <td>
                                                         @foreach ($branchs as $branch)
                                                             @if ($branch->id == $quotation->branch)

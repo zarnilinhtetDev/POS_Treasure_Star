@@ -122,13 +122,14 @@ class PurchaseOrderController extends Controller
             $result = new PO_sells();
             $result->invoiceid = $last_id;
             $result->supplier_id = $request->supplier_id;
+            $result->description = $request->part_description[$i];
             $result->part_number = $request->part_number[$i];
             $result->unit = $request->item_unit[$i];
+            $result->exp_date = $request->exp_date[$i];
             $result->product_qty = $request->product_qty[$i];
             $result->product_price = $request->product_price[$i];
             $result->warehouse = $request->warehouse[$i];
             $result->discount = $request->discount[$i];
-            $result->status = $request->sell_status[$i];
             $result->save();
         }
 
@@ -202,13 +203,14 @@ class PurchaseOrderController extends Controller
             $po[] = [
                 'invoiceid' => $last_id,
                 'supplier_id' => $request->supplier_id,
+                'description' => $request->part_description[$i],
                 'part_number' => $request->part_number[$i],
                 'unit' => $request->item_unit[$i],
                 'product_qty' => $request->product_qty[$i],
+                'exp_date' => $request->exp_date[$i],
                 'product_price' => $request->product_price[$i],
                 'discount' => $request->discount[$i],
                 'warehouse' => $request->warehouse[$i],
-                'status' => $request->sell_status[$i] ?? '0',
                 'created_at' => now(),
                 'updated_at' => now(),
             ];

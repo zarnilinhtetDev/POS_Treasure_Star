@@ -255,7 +255,7 @@
                                                                 <span style="font-weight:bolder">
                                                                     <label for="cst"
                                                                         class="caption">{{ trans('Search  Customer Name & Phone ') }}</label>
-                                                                    class="caption">{{ trans('Search  Customer Name & Phone ') }}</label>
+
                                                                 </span>
                                                                 <div class="form-group d-flex">
                                                                     <input type="text" id="customer"
@@ -364,12 +364,9 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-                                        </div>
 
 
 
-
-                                        <div class="row table-responsive " style="margin-top:1vh;">
                                             <div class="mt-4 frmSearch col-md-4">
                                                 <label for="payment"
                                                     style="font-weight:bolder">{{ trans('Sale Price Category') }}
@@ -442,7 +439,7 @@
                                                     <span style="font-weight:bolder">
                                                         <label for="cst" class="caption">{{ trans('ChooseLocation') }}&nbsp;</label>
                                                     </span> <select name="location" id="location" class="mb-4 form-control location" required>
-
+    
                                                         @foreach ($warehouses as $warehouse)
                                                         @if (auth()->user()->level == $warehouse->id)
                                                         <option value="{{ $warehouse->id }}" selected>
@@ -451,135 +448,144 @@
                                                         @endif
                                                         @endforeach
                                                     </select>
-
+    
                                                 </div>
-
-
+    
+    
                                             </div>
                                             @endif --}}
 
 
                                             <!-- <table class="table-responsive tfr my_stripe"> -->
-                                            <div class="table-responsive">
 
-                                                <table class="table table-bordered item_table" style="width: 1630px;">
-                                                    <!-- Fixed width -->
-                                                    <thead style="background-color:#0047AA;color:white;">
-                                                        <tr class="item_header bg-gradient-directional-blue white"
-                                                            style="margin-bottom:10px;">
-                                                            <th width="5%" class="text-center">
-                                                                {{ trans('No') }}
-                                                            </th>
-                                                            <th width="35%" class="text-center">
-                                                                {{ trans('Item Name') }}
-                                                            </th>
-                                                            <th width="10%" class="text-center">
-                                                                {{ trans('Qty') }}
-                                                            </th>
-                                                            <th width="10%" class="text-center">
-                                                                {{ trans('Unit') }}
-                                                            </th>
-                                                            <th width="12%" class="text-center">
-                                                                {{ trans('လက်လီစျေး') }}
-                                                            </th>
-                                                            <th width="10%" class="text-center">
-                                                                {{ trans('Discounts') }}
-                                                            </th>
-                                                            <th width="13%" class="text-center">
-                                                                {{ trans('Amount') }}
-                                                                ({{ config('currency.symbol') }})
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
+                                            <table class="table table-bordered">
+                                                <!-- Fixed width -->
+                                                <thead style="background-color:#0047AA;color:white;">
+                                                    <tr class="item_header bg-gradient-directional-blue white"
+                                                        style="margin-bottom:10px;">
+                                                        <th width="5%" class="text-center">
+                                                            {{ trans('No') }}
+                                                        </th>
+                                                        <th width="18%" class="text-center">
+                                                            {{ trans('Item Name') }}
+                                                        </th>
+                                                        <th width="20%" class="text-center">
+                                                            {{ trans('Descriptions') }}
+                                                        </th>
+                                                        <th width="8%" class="text-center">
+                                                            {{ trans('Qty') }}
+                                                        </th>
+                                                        <th width="10%" class="text-center">{{ trans('Unit') }}
+                                                        </th>
+                                                        <th width="9%" class="text-center wholesale_th">
+                                                            {{ trans('လက်ကားစျေး') }}
+                                                        </th>
+                                                        <th width="9%" class="text-center retail_th">
+                                                            {{ trans('လက်လီစျေး') }}
+                                                        </th>
+                                                        <th width="9%" class="text-center">
+                                                            {{ trans('Discounts') }}
+                                                        </th>
+                                                        <th width="9%" class="text-center">
+                                                            {{ trans('Expiry') }}
+                                                        </th>
+                                                        <th width="14%" class="text-center">
+                                                            {{ trans('Amount') }}
+                                                            ({{ config('currency.symbol') }})
+                                                        </th>
+                                                    </tr>
+                                                </thead>
 
-                                                    <tbody id="showitem123">
-                                                        <tr>
+                                                <tbody id="showitem123">
+                                                    <tr>
 
 
-                                                            <td class="text-center" id="count">1</td>
-                                                            <td>
+                                                        <td class="text-center" id="count">1</td>
+                                                        <td>
 
-                                                                <div class="row align-items-center">
-                                                                    <div class="col-auto">
-                                                                        <input type="checkbox" id="sell_status-0"
-                                                                            value="1"
-                                                                            class="form-check-input sell_status" />
+                                                            {{-- <div class="row align-items-center"> --}}
+                                                            {{-- <div class="col-auto">
+                                                                    <input type="checkbox" id="sell_status-0"
+                                                                        value="1"
+                                                                        class="form-check-input sell_status" />
 
-                                                                        <input type="hidden" name="sell_status[]"
-                                                                            id="sell_status_input-0"
-                                                                            class="form-control sell_status_input"
-                                                                            value="0" />
-                                                                    </div>
+                                                                    <input type="hidden" name="sell_status[]"
+                                                                        id="sell_status_input-0"
+                                                                        class="form-control sell_status_input"
+                                                                        value="0" />
+                                                                </div> --}}
 
-                                                                    <div class="col">
-                                                                        <input type="text"
-                                                                            class="form-control productname typeahead item_name"
-                                                                            name="part_number[]"
-                                                                            value="{{ old('part_number') }}"
-                                                                            placeholder="{{ trans('Enter Part Number') }}"
-                                                                            id="productname-0" autocomplete="off">
-                                                                    </div>
-                                                                </div>
+                                                            {{-- <div class="col"> --}}
+                                                            <input type="text"
+                                                                class="form-control productname typeahead item_name"
+                                                                name="part_number[]" value="{{ old('part_number') }}"
+                                                                placeholder="{{ trans('Enter Part Number') }}"
+                                                                id="productname-0" autocomplete="off">
+                                                            {{-- </div> --}}
+                                                            {{-- </div> --}}
 
-                                                            </td>
+                                                        </td>
 
-                                                            {{-- <td><input type="text"
+                                                        <td><input type="text"
                                                                 class="form-control description typeahead"
                                                                 value="{{ old('part_description') }}"
                                                                 name="part_description[]"
                                                                 placeholder="{{ trans('') }}" id='description-0'
-                                                                autocomplete="off"></td> --}}
-                                                            <td><input type="text" class="form-control req amnt"
-                                                                    name="product_qty[]" id="amount-0"
-                                                                    autocomplete="off" value="1"><input
-                                                                    type="hidden" id="alert-0" value=""
-                                                                    name="alert[]"></td>
-                                                            <td><input type="text" class="form-control item_unit"
-                                                                    name="item_unit[]" id="item_unit-0">
+                                                                autocomplete="off"></td>
+                                                        <td><input type="text" class="form-control req amnt"
+                                                                name="product_qty[]" id="amount-0"
+                                                                autocomplete="off" value="1"><input
+                                                                type="hidden" id="alert-0" value=""
+                                                                name="alert[]"></td>
+                                                        <td><input type="text" class="form-control item_unit"
+                                                                name="item_unit[]" id="item_unit-0">
 
-                                                            </td>
-                                                            {{-- <td><input type="text" class="form-control price"
-                                                                name="product_price[]" id="price-0"
+                                                        </td>
+                                                        <td class="wholesale_td"><input type="text"
+                                                                class="form-control price" name="product_price[]"
+                                                                id="price-0" autocomplete="off" value="0">
+                                                        </td>
+                                                        <td class="retail_td"><input type="text"
+                                                                class="form-control retail_price"
+                                                                name="retail_price[]" id="retail_price-0"
                                                                 autocomplete="off" value="0">
-                                                        </td> --}}
-                                                            <td><input type="text"
-                                                                    class="form-control retail_price"
-                                                                    name="retail_price[]" id="retail_price-0"
-                                                                    autocomplete="off" value="0">
-                                                            </td>
-                                                            {{-- <td><input type="text" class="form-control exp_date "
+                                                        </td>
+                                                        <td><input type="text" class="form-control vat "
+                                                                name="discount[]" id="vat-0" value="0"
+                                                                autocomplete="off" value="{{ old('discount') }}">
+                                                        </td>
+                                                        <td><input type="text" class="form-control exp_date "
                                                                 name="exp_date[]" id="exp_date-0" autocomplete="off">
-                                                        </td> --}}
+                                                        </td>
 
-                                                            <td style="display: none;"><input type="text"
-                                                                    class="form-control warehouse " name="warehouse[]"
-                                                                    id="warehouse-0" autocomplete="off">
-                                                            </td>
-                                                            <td style="display: none;"><input type="text"
-                                                                    class="form-control exp_date" name="exp_date[]"
-                                                                    id="exp_date-0" autocomplete="off">
-                                                            </td>
-                                                            <td><input type="text" class="form-control vat "
-                                                                    name="discount[]" id="vat-0" value="0"
-                                                                    autocomplete="off" value="{{ old('discount') }}">
-                                                            </td>
-
-                                                            <td style="text-align:center">
-                                                                <span class='ttlText' id="foc-0"></span>
-                                                                <span
-                                                                    class="currenty">{{ config('currency.symbol') }}</span>
-                                                                <strong>
-                                                                    <span class='ttlText' id="result-0"></span>
-                                                                </strong>
-                                                            </td>
+                                                        <td style="display: none;"><input type="text"
+                                                                class="form-control warehouse " name="warehouse[]"
+                                                                id="warehouse-0" autocomplete="off">
+                                                        </td>
+                                                      
+                                                        <td style="text-align:center">
+                                                            <span class='ttlText' id="foc-0"></span>
+                                                            <span
+                                                                class="currenty">{{ config('currency.symbol') }}</span>
+                                                            <strong>
+                                                                <span class='ttlText' id="result-0"></span>
+                                                            </strong>
+                                                        </td>
 
 
-                                                            {{-- <td></td> --}}
-                                                        </tr>
-                                                    </tbody>
+                                                        {{-- <td></td> --}}
+                                                    </tr>
+                                                </tbody>
 
-                                                </table>
-                                            </div>
+                                            </table>
+
+
+                                        </div>
+
+
+
+
+                                        <div class="row table-responsive " style="margin-top:1vh;">
 
                                             <table class="mt-3">
                                                 <tbody id="showitem">
@@ -861,11 +867,9 @@
                         location: Selectedlocation,
                     },
                     success: function(data) {
-                        //  itemNameInput.val(data.retail_price);
-
                         itemNameInput.val(data.wholesale_price);
                         partDesc.val(data.descriptions);
-                        exp_date.val(data.radio_category);
+                        exp_date.val(data.expired_date);
                         item_unit.val(data.item_unit);
                         retail_price.val(data.retail_price);
                         warehouse.val(data.warehouse_id);
@@ -890,20 +894,11 @@
                     '<td style="display:none"><input type="hidden" class="form-control barcode typeahead" name="barcode[]" id="barcode-' +
                     count + '" autocomplete="off"></td>' +
                     '<td>' +
-                    '<div class="row align-items-center">' +
-                    '<div class="col-auto">' +
-                    '<input type="checkbox" id="sell_status-' + count +
-                    '" value="1" class="form-check-input sell_status" />' +
-                    '<input type="hidden" name="sell_status[]" id="sell_status_input-' + count +
-                    '" value="0" class="form-control sell_status_input" />' +
-                    '</div>' +
-                    '<div class="col">' +
                     '<input type="text" class="form-control productname typeahead item_name" name="part_number[]" id="productname-' +
                     count + '" autocomplete="off" placeholder="Enter Part Number">' +
-                    '</div>' +
-                    '</div>' +
                     '</td>' +
-
+                    '<td><input type="text" class="form-control description typeahead" name="part_description[]"  id="description-' +
+                    count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
                     count +
                     '"   autocomplete="off" value="1"><input type="hidden" id="alert-0" value="" name="alert[]"></td>' +
@@ -911,11 +906,13 @@
                     count +
                     '" autocomplete ="off" required> </td>' +
 
-                    '<td><input type="text" class="form-control retail_price" name="retail_price[]" value="0" id="retail_price-' +
+                    '<td class="wholesale_td"><input type="text" class="form-control price" name="product_price[]" value="0" id="price-' +
+                    count + '"   autocomplete="off"></td>' +
+                    '<td class="retail_td"><input type="text" class="form-control retail_price" name="retail_price[]" value="0" id="retail_price-' +
                     count + '"   autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control vat" name="discount[]" value="0" id="vat-' +
                     count + '"   autocomplete="off"></td>' +
-                    '<td style="display : none;"><input type="text" class="form-control exp_date" name="exp_date[]" value="0" id="exp_date-' +
+                    '<td><input type="text" class="form-control exp_date" name="exp_date[]" id="exp_date-' +
                     count + '"   autocomplete="off"></td>' +
                     '<td style="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
                     count +
@@ -928,7 +925,59 @@
                     '</tr>';
                 $("#showitem123").append(newRow);
                 initializeTypeahead(count);
+                updatePriceCategory();
             });
+
+            function updatePriceCategory() {
+                var selectedCategory = $('#sale_price_category').val();
+                var cuzName = $('#type').val();
+
+
+
+
+                if (selectedCategory === 'Whole Sale') {
+                    $('.wholesale_td').show();
+                    $('.wholesale_th').show();
+                    $('.retail_td').hide();
+                    $('.retail_th').hide();
+                } else if (selectedCategory === 'Retail') {
+                    $('.wholesale_td').hide();
+                    $('.wholesale_th').hide();
+                    $('.retail_td').show();
+                    $('.retail_th').show();
+                } else {
+                    if (cuzName === 'Whole Sale') {
+                        $('.wholesale_td').show();
+                        $('.wholesale_th').show();
+                        $('.retail_td').hide();
+                        $('.retail_th').hide();
+                    } else if (cuzName === 'Retail') {
+                        $('.wholesale_td').hide();
+                        $('.wholesale_th').hide();
+                        $('.retail_td').show();
+                        $('.retail_th').show();
+                    } else {
+                        $('.wholesale_td').hide();
+                        $('.wholesale_th').hide();
+                        $('.retail_td').show();
+                        $('.retail_th').show();
+                    }
+                }
+            }
+
+            $('#type').val('');
+            updatePriceCategory();
+
+            $('#sale_price_category').on('input', function() {
+                updatePriceCategory();
+            });
+
+            $('#type').on('input', function() {
+                updatePriceCategory();
+            });
+
+
+
 
             $(document).on('click', '.remove_item_btn', function(e) {
                 e.preventDefault();
@@ -1138,39 +1187,90 @@
 
 
 
-            $(document).on('click', '#customer_search', function(e) {
-                e.preventDefault();
-                let serialNumber = $("#customer").val();
+            $(document).ready(function() {
+                function updatePriceCategory() {
+                    var selectedCategory = $('#sale_price_category').val();
+                    var cuzName = $('#type').val();
 
-                $.ajax({
-                    type: 'POST',
-                    url: "{{ route('customer_service_search_fill') }}",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        model: serialNumber,
-                        location: $('#location').val()
-                    },
-                    success: function(data) {
-                        console.log(data);
-
-                        if (data.customer) {
-                            $("#name").val(data.customer.name);
-                            $("#customer_id").val(data.customer.id);
-                            $("#phone_no").val(data.customer.phno);
-                            $("#type").val(data.customer.type);
-                            $("#address").val(data.customer.address);
-                            $("#customer").val('');
+                    if (selectedCategory === 'Whole Sale') {
+                        $('.wholesale_td').show();
+                        $('.wholesale_th').show();
+                        $('.retail_td').hide();
+                        $('.retail_th').hide();
+                    } else if (selectedCategory === 'Retail') {
+                        $('.wholesale_td').hide();
+                        $('.wholesale_th').hide();
+                        $('.retail_td').show();
+                        $('.retail_th').show();
+                    } else {
+                        if (cuzName === 'Whole Sale') {
+                            $('.wholesale_td').show();
+                            $('.wholesale_th').show();
+                            $('.retail_td').hide();
+                            $('.retail_th').hide();
+                        } else if (cuzName === 'Retail') {
+                            $('.wholesale_td').hide();
+                            $('.wholesale_th').hide();
+                            $('.retail_td').show();
+                            $('.retail_th').show();
                         } else {
-                            console.error("Customer not found");
-                            $("#customer").val('');
+                            $('.wholesale_td').hide();
+                            $('.wholesale_th').hide();
+                            $('.retail_td').show();
+                            $('.retail_th').show();
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error(xhr.responseText);
                     }
+                }
+
+                $('#type').val('');
+                updatePriceCategory();
+
+                $('#sale_price_category').on('input', function() {
+                    updatePriceCategory();
                 });
 
+                $('#type').on('input', function() {
+                    updatePriceCategory();
+                });
+
+                $(document).on('click', '#customer_search', function(e) {
+                    e.preventDefault();
+                    let serialNumber = $("#customer").val();
+
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('customer_service_search_fill') }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            model: serialNumber,
+                            location: $('#location').val()
+                        },
+                        success: function(data) {
+                            console.log(data);
+
+                            if (data.customer) {
+                                $("#name").val(data.customer.name);
+                                $("#customer_id").val(data.customer.id);
+                                $("#phone_no").val(data.customer.phno);
+                                $("#type").val(data.customer
+                                    .type);
+
+                                updatePriceCategory();
+
+                                $("#address").val(data.customer.address);
+                                $("#customer").val('');
+                            } else {
+                                console.error("Customer not found");
+                                $("#customer").val('');
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
+                        }
+                    });
+                });
             });
+
         });
     </script>
     {{-- <script>

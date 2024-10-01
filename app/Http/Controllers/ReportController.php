@@ -136,13 +136,13 @@ class ReportController extends Controller
         $totalKbz = $paymentMethods->where('payment_method', 'K Pay')->sum('payment_amount');
         $totalCB = $paymentMethods->where('payment_method', 'Wave')->sum('payment_amount');
         $totalOther = $paymentMethods->where('payment_method', 'Others')->sum('payment_amount');
-        $total = $paymentMethods->sum('payment_amount');
+        $search_total = $paymentMethods->sum('payment_amount');
 
         $branchs = Warehouse::all();
 
         return view('report.report_po', compact(
             'pos',
-            'total',
+            'search_total',
             'branchs',
             'totalCash',
             'totalKbz',
@@ -432,9 +432,9 @@ class ReportController extends Controller
             }
         }
 
-        $purchaseOrders = $query->get();
+        $pos = $query->get();
 
-        $paymentMethods = PurchaseOrderPaymentMethod::whereIn('po_id', $purchaseOrders->pluck('id'))->get();
+        $paymentMethods = PurchaseOrderPaymentMethod::whereIn('po_id', $pos->pluck('id'))->get();
 
         $totalCash = $paymentMethods->where('payment_method', 'Cash')->sum('payment_amount');
         $totalKbz = $paymentMethods->where('payment_method', 'K Pay')->sum('payment_amount');
@@ -443,7 +443,7 @@ class ReportController extends Controller
         $search_total = $paymentMethods->sum('payment_amount');
 
         return view('report.report_po', compact(
-            'purchaseOrders',
+            'pos',
             'search_total',
             'branchs',
             'totalCash',

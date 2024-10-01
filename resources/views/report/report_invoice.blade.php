@@ -280,7 +280,10 @@
                                                 @foreach ($search_invoices as $invoice)
                                                     <tr>
                                                         <td>{{ $no }}</td>
-                                                        <td>{{ $invoice->invoice_no }}</td>
+                                                        <td> <a href="{{ url('/invoice_detail', $invoice->id) }}">
+                                                                {{ $invoice->invoice_no }}
+                                                            </a>
+                                                        </td>
                                                         <td>
                                                             @foreach ($branchs as $branch)
                                                                 @if ($branch->id == $invoice->branch)
@@ -303,7 +306,9 @@
                                                 @foreach ($invoices as $invoice)
                                                     <tr>
                                                         <td>{{ $no }}</td>
-                                                        <td>{{ $invoice->invoice_no }}</td>
+                                                        <td> <a href="{{ url('/invoice_detail', $invoice->id) }}">
+                                                                {{ $invoice->invoice_no }}
+                                                            </a></td>
                                                         <td>
                                                             @foreach ($branchs as $branch)
                                                                 @if ($branch->id == $invoice->branch)

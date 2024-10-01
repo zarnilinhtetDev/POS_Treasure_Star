@@ -12,7 +12,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <style>
-        input {
+        /* input {
             position: relative;
             width: 150px;
             height: 40px;
@@ -40,9 +40,9 @@
             right: 12px;
             color: black;
             opacity: 1;
-        }
+        } */
     </style>
-    </style>
+  
 </head>
 
 <body>
@@ -300,19 +300,26 @@
                                                 <th width="18%" class="text-center">{{ trans('Item Name') }}
                                                 </th>
 
-                                                <th width="8%" class="text-center">{{ trans('Quantity') }}
-                                                </th>
-                                                <th width="8%" class="text-center">{{ trans('Unit') }}
+                                                <th width="20%" class="text-center">{{ trans('Descriptions') }}
                                                 </th>
 
-                                                <th width="7%" class="text-center">{{ trans('Unit Price') }}
+                                                <th width="7%" class="text-center">{{ trans('Quantity') }}
                                                 </th>
+                                                <th width="10%" class="text-center">{{ trans('Unit') }}
+                                                </th>
+
+                                                <th width="10%" class="text-center">{{ trans('Unit Price') }}
+                                                </th>
+
                                                 <th width="10%" class="text-center">
                                                     {{ trans('Discounts') }}
                                                 </th>
 
+                                                <th width="10%" class="text-center">
+                                                    {{ trans('Expiry') }}
+                                                </th>
 
-                                                <th width="12%" class="text-center">{{ trans('Amount') }}
+                                                <th width="14%" class="text-center">{{ trans('Amount') }}
                                                     ({{ config('currency.symbol') }})
                                                 </th>
 
@@ -326,8 +333,8 @@
 
                                                     <td>
 
-                                                        <div class="row align-items-center">
-                                                            <div class="col-auto">
+                                                        {{-- <div class="row align-items-center"> --}}
+                                                        {{-- <div class="col-auto">
                                                                 <input type="checkbox" id="sell_status-0"
                                                                     value="1"
                                                                     class="form-check-input sell_status"
@@ -339,18 +346,23 @@
                                                                     class="form-control sell_status_input"
                                                                     value="0" />
 
-                                                            </div>
-                                                            <div class="col">
-                                                                <input type="text"
-                                                                    class="form-control productname typeahead"
-                                                                    name="part_number[]"
-                                                                    value="{{ $po->part_number }}"
-                                                                    placeholder="{{ trans('Enter Part Number') }}"
-                                                                    id='productname-0' autocomplete="off">
-                                                            </div>
-                                                        </div>
+                                                            </div> --}}
+                                                        {{-- <div class="col"> --}}
+                                                        <input type="text"
+                                                            class="form-control productname typeahead"
+                                                            name="part_number[]" value="{{ $po->part_number }}"
+                                                            placeholder="{{ trans('Enter Part Number') }}"
+                                                            id='productname-0' autocomplete="off">
+                                                        {{-- </div>
+                                                        </div> --}}
 
                                                     </td>
+
+                                                    <td><input type="text"
+                                                            class="form-control description typeahead"
+                                                            value="{{ $po->description }}" name="part_description[]"
+                                                            placeholder="{{ trans('') }}" id='description-0'
+                                                            autocomplete="off"></td>
 
                                                     <td><input type="text" class="form-control req amnt"
                                                             name="product_qty[]" id="amount-{{ $key }}"
@@ -372,6 +384,12 @@
                                                     <td><input type="text" class="form-control vat"
                                                             name="discount[]" id="vat-0" autocomplete="off"
                                                             value="{{ $po->discount }}">
+                                                    </td>
+
+
+                                                    <td><input type="text" class="form-control exp_date "
+                                                            name="exp_date[]" id="exp_date-0"
+                                                            value="{{ $po->exp_date }}" autocomplete="off">
                                                     </td>
 
                                                     <td style="display: none;"><input type="text"
@@ -690,9 +708,12 @@
 
             function updateItemName(item_name, row) {
                 let itemNameInput = row.find('.price');
+                let partDesc = row.find('.description');
+                let exp_date = row.find('.exp_date');
                 let item_unit = row.find('.item_unit');
                 var Selectedlocation = $('#location').val();
                 let warehouse = row.find('.warehouse');
+
 
                 $.ajax({
 
@@ -701,10 +722,12 @@
                     data: {
                         _token: "{{ csrf_token() }}",
                         item_name: item_name,
-                        location: Selectedlocation
+                        location: Selectedlocation,
                     },
                     success: function(data) {
                         itemNameInput.val(data.buy_price);
+                        partDesc.val(data.descriptions);
+                        exp_date.val(data.expired_date);
                         item_unit.val(data.item_unit);
                         warehouse.val(data.warehouse_id);
 
@@ -726,40 +749,34 @@
                 let newRow = '<tr>' +
                     '<td class="text-center">' + (rowCount + 1) + '</td>' +
                     '<td>' +
-                    '<div class="row align-items-center">' +
-                    '<div class="col-auto">' +
-                    '<input type="checkbox" id="sell_status-' + count +
-                    '" value="1" class="form-check-input sell_status" />' +
-                    '<input type="hidden" name="sell_status[]" id="sell_status_input-' + count +
-                    '" value="0" class="form-control sell_status_input" />' +
-                    '</div>' +
-                    '<div class="col">' +
                     '<input type="text" class="form-control productname typeahead item_name" name="part_number[]" id="productname-' +
                     count + '" autocomplete="off" placeholder="Enter Part Number">' +
-                    '</div>' +
-                    '</div>' +
                     '</td>' +
+                    '<td><input type="text" class="form-control description typeahead" name="part_description[]"  id="description-' +
+                    count + '" autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control req amnt" name="product_qty[]" id="amount-' +
                     count +
                     '"   autocomplete="off" value="1"><input type="hidden" id="alert-0" value="" name="alert[]"></td>' +
-                    '<td><input type="text" class="form-control item_unit" name="item_unit[]"  id="item_unit-' +
-                    count + '"   autocomplete="off"></td>' +
-
+                    '<td><input type="text" class="form-control item_unit" name="item_unit[]" id="item_unit-' +
+                    count +
+                    '"   autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control price" name="product_price[]" value="0" id="price-' +
                     count + '"   autocomplete="off"></td>' +
 
                     '<td><input type="text" class="form-control vat" name="discount[]" value="0" id="vat-' +
                     count + '"   autocomplete="off"></td>' +
+                    '<td><input type="text" class="form-control exp_date" name="exp_date[]" id="exp_date-' +
+                    count + '"   autocomplete="off"></td>' +
                     '<td style="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
                     count +
                     '"   autocomplete="off"></td>' +
-                    '<td style="text-align:center"><span class="currenty"></span><strong><span class="ttlText1" id="result-' +
+
+                    '<td style="text-align:center"><span class="currenty"></span><strong><span  class="ttlText1" id="result-' +
                     count + '">0</span></strong></td>' +
                     '<td style="width: 5%;"><button type="submit" class="btn btn-danger remove_item_btn" id="removebutton">Remove</button></td>' +
                     '</tr>';
 
                 $("#showitem123").append(newRow);
-
                 initializeTypeahead(count);
             });
 
@@ -1048,16 +1065,16 @@
         });
     </script>
     <script>
-        $("input[type='date']").on("change", function() {
-            if (this.value && moment(this.value, "YYYY-MM-DD").isValid()) {
-                this.setAttribute(
-                    "data-date",
-                    moment(this.value, "YYYY-MM-DD").format("DD/MM/YYYY")
-                );
-            } else {
-                this.setAttribute("data-date", "dd/mm/yyyy");
-            }
-        }).trigger("change");
+        // $("input[type='date']").on("change", function() {
+        //     if (this.value && moment(this.value, "YYYY-MM-DD").isValid()) {
+        //         this.setAttribute(
+        //             "data-date",
+        //             moment(this.value, "YYYY-MM-DD").format("DD/MM/YYYY")
+        //         );
+        //     } else {
+        //         this.setAttribute("data-date", "dd/mm/yyyy");
+        //     }
+        // }).trigger("change");
     </script>
 
     <script>

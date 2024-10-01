@@ -52,7 +52,6 @@ class ItemController extends Controller
             $items = Item::with('warehouse')
                 ->where(function ($query) use ($searchTerm) {
                     $query->where('item_name', 'LIKE', '%' . $searchTerm . '%')
-                        ->orWhere('radio_category', 'LIKE', '%' . $searchTerm . '%')
                         ->orWhere('category', 'LIKE', '%' . $searchTerm . '%')
                         ->orWhere('barcode', 'LIKE', '%' . $searchTerm . '%')
                         ->orWhere('retail_price', 'LIKE', '%' . $searchTerm . '%')
@@ -68,7 +67,6 @@ class ItemController extends Controller
             $items = Item::whereIn('warehouse_id', $warehousePermission)
                 ->where(function ($query) use ($searchTerm) {
                     $query->where('item_name', 'LIKE', '%' . $searchTerm . '%')
-                        ->orWhere('radio_category', 'LIKE', '%' . $searchTerm . '%')
                         ->orWhere('category', 'LIKE', '%' . $searchTerm . '%')
                         ->orWhere('barcode', 'LIKE', '%' . $searchTerm . '%')
                         ->orWhere('retail_price', 'LIKE', '%' . $searchTerm . '%')

@@ -148,102 +148,49 @@
                                 $totalAmount = 0;
                                 $totalDiscount = 0;
                             @endphp
-                            @foreach ($groupedSells as $expDate => $sells)
-                                @if ($expDate === 'Lenses')
-                                    <tr class="text-start">
-                                        <td style="font-size: 10px;">{{ $sells->pluck('part_number')->join(', ') }}
-                                        </td>
-                                        <td style="font-size: 10px;">
-                                            {{ $sells->pluck('product_qty')->unique()->join(', ') }}</td>
-                                        <td style="font-size: 10px;">
-                                            @if ($invoice->sale_price_category == 'Default')
-                                                @if ($invoice->type == 'Whole Sale')
-                                                    {{ number_format($sells->sum('product_price')) }}
-                                                @else
-                                                    {{ number_format($sells->sum('retail_price')) }}
-                                                @endif
-                                            @elseif ($invoice->sale_price_category == 'Whole Sale')
-                                                {{ number_format($sells->sum('product_price')) }}
-                                            @elseif ($invoice->sale_price_category == 'Retail')
-                                                {{ number_format($sells->sum('retail_price')) }}
-                                            @else
-                                                {{ number_format($sells->sum('retail_price')) }}
-                                            @endif
-                                        </td>
-                                        <td style="font-size: 10px;">{{ number_format($sells->sum('discount')) }}
 
-                                            @php
-                                                $totalDiscount += $sells->sum('discount');
-                                            @endphp
-
-                                        </td>
-                                        <td class="text-end" style="font-size: 10px;">
-                                            @foreach ($sells as $sell)
-                                                @php
-                                                    $amount =
-                                                        $invoice->sale_price_category == 'Default'
-                                                            ? ($invoice->type == 'Whole Sale'
-                                                                ? $sell->product_price * $sell->product_qty -
-                                                                    $sell->discount
-                                                                : $sell->retail_price * $sell->product_qty -
-                                                                    $sell->discount)
-                                                            : ($invoice->sale_price_category == 'Whole Sale'
-                                                                ? $sell->product_price * $sell->product_qty -
-                                                                    $sell->discount
-                                                                : $sell->retail_price * $sell->product_qty -
-                                                                    $sell->discount);
-                                                    $totalAmount += $amount;
-                                                @endphp
-                                            @endforeach
-                                            {{ number_format($totalAmount) }}
-                                        </td>
-                                    </tr>
-                                @endif
-                            @endforeach
 
                             @foreach ($invoice->sells as $sell)
-                                @if ($sell->exp_date !== 'Lenses')
-                                    <tr class="text-start">
-                                        <td style="font-size: 10px;">{{ $sell->part_number }}</td>
-                                        <td style="font-size: 10px;">{{ $sell->product_qty }}</td>
-                                        <td style="font-size: 10px;">
-                                            @if ($invoice->sale_price_category == 'Default')
-                                                @if ($invoice->type == 'Whole Sale')
-                                                    {{ number_format($sell->product_price) }}
-                                                @else
-                                                    {{ number_format($sell->retail_price) }}
-                                                @endif
-                                            @elseif ($invoice->sale_price_category == 'Whole Sale')
+                                <tr class="text-start">
+                                    <td style="font-size: 10px;">{{ $sell->part_number }}</td>
+                                    <td style="font-size: 10px;">{{ $sell->product_qty }}</td>
+                                    <td style="font-size: 10px;">
+                                        @if ($invoice->sale_price_category == 'Default')
+                                            @if ($invoice->type == 'Whole Sale')
                                                 {{ number_format($sell->product_price) }}
-                                            @elseif ($invoice->sale_price_category == 'Retail')
-                                                {{ number_format($sell->retail_price) }}
                                             @else
                                                 {{ number_format($sell->retail_price) }}
                                             @endif
-                                        </td>
-                                        <td style="font-size: 10px;">{{ number_format($sell->discount) }}
+                                        @elseif ($invoice->sale_price_category == 'Whole Sale')
+                                            {{ number_format($sell->product_price) }}
+                                        @elseif ($invoice->sale_price_category == 'Retail')
+                                            {{ number_format($sell->retail_price) }}
+                                        @else
+                                            {{ number_format($sell->retail_price) }}
+                                        @endif
+                                    </td>
+                                    <td style="font-size: 10px;">{{ number_format($sell->discount) }}
 
-                                            @php
-                                                $totalDiscount += $sell->discount;
-                                            @endphp
-                                        </td>
-                                        <td class="text-end" style="font-size: 10px;">
-                                            @if ($invoice->sale_price_category == 'Default')
-                                                @if ($invoice->type == 'Whole Sale')
-                                                    {{ number_format($sell->product_price * $sell->product_qty - $sell->discount) }}
-                                                @else
-                                                    {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
-                                                @endif
-                                            @elseif ($invoice->sale_price_category == 'Whole Sale')
+                                        @php
+                                            $totalDiscount += $sell->discount;
+                                        @endphp
+                                    </td>
+                                    <td class="text-end" style="font-size: 10px;">
+                                        @if ($invoice->sale_price_category == 'Default')
+                                            @if ($invoice->type == 'Whole Sale')
                                                 {{ number_format($sell->product_price * $sell->product_qty - $sell->discount) }}
-                                            @elseif ($invoice->sale_price_category == 'Retail')
-                                                {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
                                             @else
                                                 {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
                                             @endif
-                                        </td>
-                                    </tr>
-                                @endif
+                                        @elseif ($invoice->sale_price_category == 'Whole Sale')
+                                            {{ number_format($sell->product_price * $sell->product_qty - $sell->discount) }}
+                                        @elseif ($invoice->sale_price_category == 'Retail')
+                                            {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
+                                        @else
+                                            {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
+                                        @endif
+                                    </td>
+                                </tr>
                             @endforeach
                         @endforeach
 

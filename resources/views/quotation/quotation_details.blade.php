@@ -107,6 +107,7 @@
                                             <tr class="text-white">
                                                 <th>{{ trans('No') }}</th>
                                                 <th>{{ trans('Item Name') }}</th>
+                                                <th>{{ trans('Descriptions') }}</th>
                                                 <th>{{ trans('Qty') }}</th>
                                                 <th>{{ trans('Unit') }}</th>
                                                 <th>{{ trans('Price') }}</th>
@@ -126,6 +127,7 @@
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td>{{ $sell->part_number }}</td>
+                                                    <td>{{ $sell->description }}</td>
                                                     <td>{{ $sell->product_qty }}</td>
                                                     <td>{{ $sell->unit }}</td>
                                                     <td>
@@ -173,7 +175,7 @@
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <td colspan="5" class="text-right"></td>
+                                                <td colspan="6" class="text-right"></td>
                                                 <td style="font-weight: bolder;">Sub Total
                                                 </td>
                                                 <td style="font-weight: bolder; ">
@@ -181,7 +183,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="5" class="text-right"></td>
+                                                <td colspan="6" class="text-right"></td>
                                                 <td style="font-weight: bolder; ">Overall Discount
                                                 </td>
                                                 <td style="font-weight: bolder;">
@@ -189,7 +191,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="5" class="text-right"></td>
+                                                <td colspan="6" class="text-right"></td>
                                                 <td style="font-weight: bolder; ">Item Discount
                                                 </td>
                                                 <td style="font-weight: bolder;">
@@ -197,7 +199,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="5" class="text-right"></td>
+                                                <td colspan="6" class="text-right"></td>
                                                 <td style="font-weight: bolder;">Total
                                                 </td>
                                                 <td style="font-weight: bolder; ">
@@ -205,7 +207,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="5" class="text-right"></td>
+                                                <td colspan="6" class="text-right"></td>
                                                 <td style="font-weight: bolder;">Deposit
                                                 </td>
                                                 <td style="font-weight: bolder;">
@@ -213,7 +215,7 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td colspan="5" class="text-right"></td>
+                                                <td colspan="6" class="text-right"></td>
                                                 <td style="font-weight: bolder;">Remaining Balance
                                                 </td>
                                                 <td style="font-weight: bolder;">

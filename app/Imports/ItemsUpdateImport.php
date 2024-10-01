@@ -31,23 +31,24 @@ class ItemsUpdateImport implements ToModel
         if ($this->hasErrors) {
             return null;
         }
-        if (empty($row[9])) {
-            $row[9] = $this->generateRandomBarcode();
+        if (empty($row[8])) {
+            $row[8] = $this->generateRandomBarcode();
         }
 
         $item = Item::where('warehouse_id', $this->warehouseId)
-            ->where('item_name', $row[3])
+            ->where('item_name', $row[2])
             ->first();
 
         if ($item) {
             $item->update([
-                'retail_price' => $row[7] ?? $item->retail_price,
-                'wholesale_price' => $row[8] ?? $item->wholesale_price,
+                'retail_price' => $row[5] ?? $item->retail_price,
+                'wholesale_price' => $row[6] ?? $item->wholesale_price,
+                // 'buy_price' => $row[6] ?? $item->buy_price,
             ]);
         } else {
             Log::error('Item not found:', [
                 'warehouse_id' => $this->warehouseId,
-                'item_name' => $row[3],
+                'item_name' => $row[2],
             ]);
         }
 

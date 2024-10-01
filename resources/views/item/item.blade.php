@@ -278,7 +278,6 @@
                                                     <th>No.</th>
                                                     <th>Item Image</th>
                                                     <th>Item Name</th>
-                                                    <th>Options</th>
                                                     <th>Category</th>
                                                     <th>Location</th>
                                                     <th>လက်လီစျေး</th>
@@ -308,7 +307,6 @@
                                                             </a>
                                                         </td>
                                                         <td>{{ $item->item_name }}</td>
-                                                        <td>{{ $item->radio_category }}</td>
                                                         <td>{{ $item->category }}</td>
                                                         <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
                                                         <td>{{ $item->retail_price ?? '0' }}</td>

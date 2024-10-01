@@ -78,8 +78,6 @@
                             @csrf
                             <div class="card-body">
 
-
-
                                 <div class="row">
                                     <div class="frmSearch col-sm-6">
                                         <input type="checkbox" id="show" class=""><label for="">
@@ -96,95 +94,9 @@
                                             <div id="customer-box-result"></div>
                                         </div>
                                     </div>
-                                    <div class="frmSearch col-sm-6 mt-2">
-                                        <label>
-                                            <input type="radio" name="radio_category" value="ဆေး"
-                                                id="radio_category" checked>
-                                            ဆေး
-                                        </label>
-
-                                        <label>
-                                            <input type="radio" class="ml-3" name="radio_category"
-                                                id="radio_category" value="Lenses">
-                                            Lenses
-                                        </label>
-
-                                        <label>
-                                            <input type="radio" class="ml-3" name="radio_category"
-                                                id="radio_category" value="Frame">
-                                            Frame
-                                        </label><br>
-
-                                    </div>
-                                </div>
-                                <div class="row mt-3" id="madeInDropdown" style="display: none;">
-                                    <div class="form-group col-md-6">
-                                        <label for="lensOptions">Choose Made In Country:</label>
-                                        <select id="madeIn" name="madeIn" class="form-control ">
-                                            <option value="" selected disabled>Choose One</option>
-                                            <option value="China">China</option>
-                                            <option value="Thai">Thai</option>
-                                            <option value="Korea">Korea</option>
-
-                                        </select>
-                                    </div>
-
 
                                 </div>
-                                <div class="row mt-3" id="lensDropdown" style="display:none;">
-                                    <div class="form-group col-md-6">
-                                        <label for="lensOptions">Choose Category:</label>
-                                        <select id="lensOptions" name="lense" class="form-control ">
-                                            <option value="" selected disabled>Choose One</option>
-                                            <option value="CR">CR</option>
-                                            <option value="MC">MC</option>
-                                            <option value="BB">BB</option>
-                                            <option value="PG">PG</option>
-                                            <option value="BBPG">BBPG</option>
-                                        </select>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="lensOptions">Choose Degree Category:</label>
-                                        <select id="degree" name="degree" class="form-control ">
-                                            <option value="" selected disabled>Choose One</option>
-
-
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="row mt-3" id="near_and_far_dropdown" style="display: none;">
-                                    <div class="form-group col-md-6 mb-4">
-                                        <label for="lensOptions">Lense Category:</label>
-                                        <select id="near_and_far" name="near_and_far" class="form-control ">
-                                            <option value="" selected disabled>Choose One</option>
-                                            <option value="near">အနီး</option>
-                                            <option value="far">အ‌‌ဝေး</option>
-                                            <option value="near_and_far">အနီး/အ‌‌ဝေး</option>
-                                            <option value="sun_glass">နေကာ</option>
-                                            <option value="normal">ရိုးရိုး</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-6" style="display: none"
-                                        id="near_and_far_degree_dropdown">
-                                        <label for="near_and_far_degree">Choose Lense Degree:</label>
-                                        <select id="near_and_far_degree" name="near_and_far_degree"
-                                            class="form-control ">
-                                            <option value="" selected disabled>Choose One</option>
-
-
-                                        </select>
-                                    </div>
-
-                                    <div class="form-group col-md-6" style="display: none;" id="cylinder_dropdown">
-                                        <label for="lensOptions">Cylinder Degree:</label>
-                                        <select id="cylinder" name="cylinder" class="form-control ">
-                                            <option value="" selected disabled>Choose Cylinder</option>
-                                        </select>
-                                    </div>
-                                </div>
-
+                              
 
 
                                 <div class="mt-4 row">
@@ -378,84 +290,8 @@
     <script src="{{ asset('locallink/js/typehead.min.js') }}"></script>
     <script src="{{ asset('locallink/js/moment.min.js') }}"></script>
 
-    <script>
-        $(document).ready(function() {
-            let dropdown = $('#degree');
-            let startValue = 25;
-            let endValue = 500;
-            let step = 25;
-
-            for (let i = startValue; i <= endValue; i += step) {
-                dropdown.append($('<option>', {
-                    value: i,
-                    text: i
-                }));
-            }
-        });
-
-        $(document).ready(function() {
-            let dropdown = $('#cylinder');
-            let startValue = 25;
-            let endValue = 500;
-            let step = 25;
-
-            for (let i = startValue; i <= endValue; i += step) {
-                dropdown.append($('<option>', {
-                    value: i,
-                    text: i
-                }));
-            }
-        });
-
-        $(document).ready(function() {
-            let dropdown = $('#near_and_far_degree');
-            let startValue = 25;
-            let endValue = 500;
-            let step = 25;
-
-            for (let i = startValue; i <= endValue; i += step) {
-                dropdown.append($('<option>', {
-                    value: i,
-                    text: i
-                }));
-            }
-        });
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('input[name="radio_category"]').change(function() {
-                if ($('input[name="radio_category"]:checked').val() == 'Lenses') {
-
-                    $('#madeInDropdown').hide();
-                    $('#lensDropdown').show();
-                    $('#near_and_far_dropdown').show();
-                    $('#cylinder_dropdown').show();
-                } else if ($('input[name="radio_category"]:checked').val() === 'Frame') {
-                    $('#madeInDropdown').show();
-                    $('#lensDropdown').hide();
-                    $('#near_and_far_dropdown').show();
-                    $('#cylinder_dropdown').hide();
-                } else {
-                    $('#madeInDropdown').hide();
-                    $('#lensDropdown').hide();
-                    $('#near_and_far_dropdown').hide();
-                    $('#cylinder_dropdown').hide();
-                }
-            });
-        });
-
-        $(document).ready(function() {
-            $('#near_and_far_degree_dropdown').hide();
-            $('#near_and_far').on('change', function() {
-                var selectedValue = $(this).val();
-                if (selectedValue === 'near_and_far') {
-                    $('#near_and_far_degree_dropdown').show();
-                } else {
-                    $('#near_and_far_degree_dropdown').hide();
-                }
-            });
-        });
-    </script>
+  
+  
     <script>
         $(document).ready(function() {
             $('.option-checkbox').on('change', function() {

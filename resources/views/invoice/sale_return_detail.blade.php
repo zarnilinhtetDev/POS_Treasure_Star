@@ -109,6 +109,7 @@
                                             <tr class="text-white">
                                                 <th>{{ trans('No') }}</th>
                                                 <th>{{ trans('Item Name') }}</th>
+                                                <th>{{ trans('Description') }}</th>
                                                 <th>{{ trans('Qty') }}</th>
                                                 <th>{{ trans('Unit') }}</th>
                                                 <th>{{ trans('Price') }}</th>
@@ -127,6 +128,7 @@
                                                 <tr>
                                                     <td>{{ $no }}</td>
                                                     <td>{{ $sell->part_number }}</td>
+                                                    <td>{{ $sell->description }}</td>
                                                     <td>{{ $sell->product_qty }}</td>
                                                     <td>{{ $sell->unit }}</td>
                                                     <td>{{ number_format($sell->product_price) }}</td>
