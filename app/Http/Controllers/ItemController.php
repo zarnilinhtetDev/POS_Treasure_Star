@@ -33,10 +33,10 @@ class ItemController extends Controller
 
         if (auth()->user()->is_admin == '1') {
             $warehouses = Warehouse::all();
-            $items = Item::with('warehouse')->latest()->paginate(100);
+            $items = Item::with('warehouse')->latest()->paginate(200);
         } else {
             $warehouses = Warehouse::all();
-            $items = Item::whereIn('warehouse_id', $warehousePermission)->with('warehouse')->latest()->paginate(100);
+            $items = Item::whereIn('warehouse_id', $warehousePermission)->with('warehouse')->latest()->paginate(200);
         }
 
         return view('item.item', compact('items', 'warehouses'));
@@ -62,7 +62,7 @@ class ItemController extends Controller
                         ->orWhere('expired_date', 'LIKE', '%' . $searchTerm . '%');
                 })
                 ->latest()
-                ->paginate(100);
+                ->paginate(200);
         } else {
             $items = Item::whereIn('warehouse_id', $warehousePermission)
                 ->where(function ($query) use ($searchTerm) {
@@ -78,7 +78,7 @@ class ItemController extends Controller
                 })
                 ->with('warehouse')
                 ->latest()
-                ->paginate(100);
+                ->paginate(200);
         }
 
         $choosePermission = auth()->user()->permissions ?? [];
