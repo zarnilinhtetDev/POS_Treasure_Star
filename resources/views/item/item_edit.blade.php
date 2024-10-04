@@ -248,7 +248,9 @@
                                             Quantity
                                         </label>
                                         <input type="number" class="form-control" name="quantity" id="quantity"
-                                            value="{{ $items->quantity }}" placeholder="Enter Quantity">
+                                            value="{{ $items->item_type == 'Service' ? 0 : $items->quantity }}"
+                                            placeholder="Enter Quantity">
+
                                     </div>
 
                                     <div class="form-group col-md-4">

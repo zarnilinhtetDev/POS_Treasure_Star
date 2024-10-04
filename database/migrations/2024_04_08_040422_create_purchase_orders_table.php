@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('purchase_orders', function (Blueprint $table) {
             $table->id();
             $table->string('supplier_id')->nullable();
+            $table->string('transaction_id')->nullable();
             $table->string('branch', 191)->nullable();
             $table->string('invoice_no', 191)->nullable();
             $table->string('invoice_category', 191)->nullable();

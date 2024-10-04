@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UnitController;
@@ -15,7 +16,11 @@ use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\ExpenseCategoryController;
+use App\Http\Controllers\FinanceController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfitController;
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserTypeController;
 
 /*
@@ -208,6 +213,7 @@ Route::middleware('auth')->group(function () {
     Route::get('report_pos_receipt/{invoice}', [ReportController::class, 'pos_receipt']);
     Route::get('report_invoice_details/{invoice}', [ReportController::class, 'report_invoice_detail']);
 
+
     //Profit
     Route::get('profit', [ProfitController::class, 'index']);
     Route::get('/index', [ProfitController::class, 'index'])->name('profit_report');
@@ -250,6 +256,59 @@ Route::middleware('auth')->group(function () {
     Route::get('config_delete/{id}', [UserProfileController::class, 'delete']);
     Route::post('config_update/{id}', [UserProfileController::class, 'config_edit']);
     Route::get('config_details/{id}', [UserProfileController::class, 'details']);
+
+    //Account
+    Route::get('/accountManagement', [AccountController::class, 'accountManagement'])->name('finance#accountManagement');
+    Route::post('account_register', [AccountController::class, 'account_register']);
+    Route::get('account_edit/{id}', [AccountController::class, 'account_edit'])->name('account_edit');
+    Route::post('account_update/{id}', [AccountController::class, 'account_update']);
+    Route::get('account_delete/{id}', [AccountController::class, 'account_delete']);
+
+    //Transaction
+    Route::get('/transactionManagement', [TransactionController::class, 'transactionManagement'])->name('finance#transactionManagement');
+    Route::post('transaction_register', [
+        TransactionController::class,
+        'transaction_register'
+    ]);
+    Route::get('/transactionManagementEdit/{id}', [TransactionController::class, 'transactionManagementEdit'])->name('finance#transactionManagementEdit');
+    Route::post('/transaction_update/{id}', [TransactionController::class, 'transactionUpdate']);
+    Route::get('/transaction_delete/{id}', [TransactionController::class, 'transactionDelete']);
+
+    //Payment
+    Route::get('/payment/{id}', [PaymentController::class, 'payment']);
+    Route::post('/transaction_payment_register/{id}', [PaymentController::class, 'payment_register']);
+    Route::get('/transaction_delete_payment/{id}', [PaymentController::class, 'paymentDelete']);
+    Route::get('/transaction_payment_edit/{id}', [PaymentController::class, 'makePaymentEdit']);
+    Route::put('/transaction_payment_update/{id}', [PaymentController::class, 'paymentUpdate']);
+    Route::get('account_invoice_search/{id}', [PaymentController::class, 'account_invoice_search'])->name('account_invoice_search');
+    Route::get('account_po_search/{id}', [PaymentController::class, 'account_po_search']);
+    Route::get('account_pos_search/{id}', [PaymentController::class, 'account_pos_search'])->name('account_pos_search');
+    Route::get('purchase_return_invoice_search/{id}', [PaymentController::class, 'purchase_return_invoice_search']);
+    Route::get('sale_return_invoice_search/{id}', [PaymentController::class, 'sale_return_invoice_search']);
+    Route::get('sale_return_pos_search/{id}', [PaymentController::class, 'sale_return_pos_search']);
+
+
+
+
+    //setting
+    Route::get('setting', [SettingController::class, 'index'])->name('setting');
+    Route::post('invoice_setting', [SettingController::class, 'invoice'])->name('invoice_setting');
+    Route::post('invoice_setting/edit', [SettingController::class, 'invoice_setting_edit'])->name('invoice_setting_edit');
+
+    Route::post('purchase_order_setting', [SettingController::class, 'purchase_order'])->name('purchase_order_setting');
+    Route::post('purchase_order_setting/edit', [SettingController::class, 'purchase_order_setting_edit'])->name('purchase_order_setting_edit');
+
+    Route::post('pos_setting', [SettingController::class, 'pos'])->name('pos_setting');
+    Route::post('pos_setting/edit', [SettingController::class, 'pos_setting_edit'])->name('pos_setting_edit');
+
+    Route::post('purchase_return_setting', [SettingController::class, 'purchase_return'])->name('purchase_return_setting');
+    Route::post('purchase_return_setting/edit', [SettingController::class, 'purchase_return_setting_edit'])->name('purchase_return_setting_edit');
+
+    Route::post('sale_return_invoice_setting', [SettingController::class, 'sale_return_invoice'])->name('sale_return_invoice_setting');
+    Route::post('sale_return_invoice_setting/edit', [SettingController::class, 'sale_return_invoice_setting_edit'])->name('sale_return_invoice_setting_edit');
+
+    Route::post('sale_return_pos_setting', [SettingController::class, 'sale_return_pos'])->name('sale_return_pos_setting');
+    Route::post('sale_return_pos_setting/edit', [SettingController::class, 'sale_return_pos_setting_edit'])->name('sale_return_pos_setting_edit');
 });
 Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

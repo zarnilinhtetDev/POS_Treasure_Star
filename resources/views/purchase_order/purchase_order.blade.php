@@ -42,7 +42,7 @@
             opacity: 1;
         } */
     </style>
-   
+
 </head>
 
 <body>
@@ -243,7 +243,7 @@
                                                             class="mb-4 form-control balance_due" required>
 
                                                             <option value="PO">PO</option>
-                                                            <option value="Sale Return">Sale Return</option>
+                                                            <option value="Sale Return Invoice">Sale Return</option>
 
                                                         </select>
 
@@ -525,18 +525,23 @@
                                                         required>
                                                 </td>
                                                 <td align="left" colspan="1" class="col-md-2 payment_method">
-                                                    <select name="payment_method[]" id="payment_method"
-                                                        class="form-control" required>
-                                                        <option value="Cash">Cash</option>
-                                                        <option value="K Pay">K Pay</option>
-                                                        <option value="Wave">Wave</option>
-                                                        <option value="Others">Others</option>
-                                                    </select>
+                                                    <div class="input-group">
+                                                        <select name="payment_method[]" id="payment_method"
+                                                            class="form-control" required>
+                                                            <option value="Cash">Cash</option>
+                                                            <option value="K Pay">K Pay</option>
+                                                            <option value="Wave">Wave</option>
+                                                            <option value="Others">Others</option>
+                                                        </select>
+                                                        <div class="input-group-append">
+                                                            <button type="button" id="addRow"
+                                                                class="btn btn-primary">
+                                                                <i class="fa-solid fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
                                                 </td>
-                                                <td align="left" colspan="1" class="col-md-1">
-                                                    <button type="button" id="addRow" class="btn btn-primary"><i
-                                                            class="fa-solid fa-plus"></i></button>
-                                                </td>
+
                                             </tr>
                                         </tbody>
 
@@ -823,16 +828,21 @@
                     <input type="text" name="payment_amount[]" class="form-control payment_amount">
                 </td>
                 <td align="left" colspan="1" class="col-md-2">
-                    <select name="payment_method[]" class="form-control">
-                        <option value="Cash">Cash</option>
-                        <option value="K Pay">K Pay</option>
-                        <option value="Wave">Wave</option>
-                        <option value="Others">Others</option>
-                    </select>
+                    <div class="input-group">
+            <select name="payment_method[]" class="form-control" required>
+                <option value="Cash">Cash</option>
+                <option value="K Pay">K Pay</option>
+                <option value="Wave">Wave</option>
+                <option value="Others">Others</option>
+            </select>
+            <div class="input-group-append">
+                <button type="button" class="removeRow btn btn-danger">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
+            </div>
+        </div>
                 </td>
-                <td align="left" colspan="1" class="col-md-1">
-                    <button class="removeRow btn btn-danger"><i class="fa-solid fa-minus"></i></button>
-                </td>
+               
             </tr>`;
 
                         $('#trContainer').append(newRow);

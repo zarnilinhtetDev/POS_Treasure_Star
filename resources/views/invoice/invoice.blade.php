@@ -10,37 +10,7 @@
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    {{-- <style>
-        input {
-            position: relative;
-            width: 150px;
-            height: 40px;
-            color: white;
-        }
 
-        input:before {
-            position: absolute;
-            top: 6px;
-            left: 6px;
-            content: attr(data-date);
-            display: inline-block;
-            color: black;
-        }
-
-        input::-webkit-datetime-edit,
-        input::-webkit-inner-spin-button,
-        input::-webkit-clear-button {
-            display: none;
-        }
-
-        input::-webkit-calendar-picker-indicator {
-            position: absolute;
-            top: 6px;
-            right: 0;
-            color: black;
-            opacity: 1;
-        }
-    </style> --}}
     <style>
         .item_table {
             width: 1630px;
@@ -222,16 +192,17 @@
                             autocomplete="off" min="<?= date('Y-m-d') ?>" value="{{ date('Y-m-d') }}">
                     </div>
 
-                    {{-- <div class="col-md-3 ">
-                        <label for="payment_method" style="font-weight:bolder">{{ trans('Payment Methods') }}</label>
-                        <select class="mb-4 form-control round" aria-label="Default select example"
-                            name="payment_method" required>
-                            <option value="Cash">Cash</option>
-                            <option value="K Pay">K Pay</option>
-                            <option value="Wave">Wave</option>
-                            <option value="Others">Others</option>
+
+                    <div class="col-md-3">
+                        <label for="cst" class="caption">Register
+                            Mode</label>
+                        <select name="balance_due" id="balance_due" class="mb-4 form-control balance_due" required>
+
+                            <option value="Invoice">Invoice</option>
+                            <option value="Po Return">Po Return</option>
+
                         </select>
-                    </div> --}}
+                    </div>
 
                     <input type="hidden" name="quote_category" id="quote_category" value="Invoice">
                 </div>
@@ -284,30 +255,7 @@
                                                             Register</button>
                                                     </div>
 
-                                                    <div class="frmSearch col-sm-3">
-                                                        <div class="frmSearch col-sm-12">
-                                                            <div class="frmSearch col-sm-12">
-                                                                <span style="font-weight:bolder">
-                                                                    <label for="cst" class="caption">Register
-                                                                        Mode</label>
-                                                                </span>
-                                                                <select name="balance_due" id="balance_due"
-                                                                    class="mb-4 form-control balance_due" required>
 
-                                                                    <option value="Invoice">Invoice</option>
-                                                                    <option value="Po Return">Po Return</option>
-
-                                                                </select>
-
-                                                                <div id="customer-box-result"></div>
-                                                            </div>
-
-
-                                                        </div>
-
-
-
-                                                    </div>
                                                     <input type="hidden" id="service_id" name="service_id"
                                                         value="0">
 
@@ -486,7 +434,8 @@
                                                         <th width="9%" class="text-center">
                                                             {{ trans('Discounts') }}
                                                         </th>
-                                                        <th width="9%" class="text-center">
+                                                        <th width="9%" class="text-center"
+                                                            style="display: none;">
                                                             {{ trans('Expiry') }}
                                                         </th>
                                                         <th width="14%" class="text-center">
@@ -554,15 +503,16 @@
                                                                 name="discount[]" id="vat-0" value="0"
                                                                 autocomplete="off" value="{{ old('discount') }}">
                                                         </td>
-                                                        <td><input type="text" class="form-control exp_date "
-                                                                name="exp_date[]" id="exp_date-0" autocomplete="off">
+                                                        <td style="display: none;"><input type="text"
+                                                                class="form-control exp_date " name="exp_date[]"
+                                                                id="exp_date-0" autocomplete="off">
                                                         </td>
 
                                                         <td style="display: none;"><input type="text"
                                                                 class="form-control warehouse " name="warehouse[]"
                                                                 id="warehouse-0" autocomplete="off">
                                                         </td>
-                                                      
+
                                                         <td style="text-align:center">
                                                             <span class='ttlText' id="foc-0"></span>
                                                             <span
@@ -636,31 +586,8 @@
                                                     </tr>
 
 
-                                                    <tr class="sub_c" style="display: table-row;">
-                                                        <td colspan="2">
-                                                            @if (isset($employees[0]))
-                                                                {{ trans('general.employee') }}
-                                                                <select name="user_id"
-                                                                    class="selectpicker form-control">
-                                                                    <option value="{{ $logged_in_user->id }}">
-                                                                        {{ $logged_in_user->first_name }}
-                                                                    </option>
-                                                                    @foreach ($employees as $employee)
-                                                                        <option value="{{ $employee->id }}">
-                                                                            {{ $employee->first_name }}
-                                                                            {{ $employee->last_name }}
-                                                                        </option>
-                                                                    @endforeach
 
-                                                                </select>
-                                                            @endif
-                                                        </td>
-                                                    </tr>
-                                                    <tr class="sub_c" style="display: table-row;">
-                                                        <td>
 
-                                                        </td>
-                                                    </tr>
                                                     <tr class="sub_c" style="display: table-row;">
                                                         <td colspan="2">
 
@@ -733,19 +660,23 @@
                                                         </td>
                                                         <td align="left" colspan="1"
                                                             class="col-md-2 payment_method">
-                                                            <select name="payment_method[]" id="payment_method"
-                                                                class="form-control" required>
-                                                                <option value="Cash">Cash</option>
-                                                                <option value="K Pay">K Pay</option>
-                                                                <option value="Wave">Wave</option>
-                                                                <option value="Others">Others</option>
-                                                            </select>
+                                                            <div class="input-group">
+                                                                <select name="payment_method[]" id="payment_method"
+                                                                    class="form-control" required>
+                                                                    <option value="Cash">Cash</option>
+                                                                    <option value="K Pay">K Pay</option>
+                                                                    <option value="Wave">Wave</option>
+                                                                    <option value="Others">Others</option>
+                                                                </select>
+                                                                <div class="input-group-append">
+                                                                    <button type="button" id="addRow"
+                                                                        class="btn btn-primary">
+                                                                        <i class="fa-solid fa-plus"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
                                                         </td>
-                                                        <td align="left" colspan="1" class="col-md-1">
-                                                            <button type="button" id="addRow"
-                                                                class="btn btn-primary"><i
-                                                                    class="fa-solid fa-plus"></i></button>
-                                                        </td>
+
                                                     </tr>
                                                 </tbody>
 
@@ -912,7 +843,7 @@
                     count + '"   autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control vat" name="discount[]" value="0" id="vat-' +
                     count + '"   autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control exp_date" name="exp_date[]" id="exp_date-' +
+                    '<td style="display : none;"><input type="text" class="form-control exp_date" name="exp_date[]" id="exp_date-' +
                     count + '"   autocomplete="off"></td>' +
                     '<td style="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
                     count +
@@ -925,56 +856,12 @@
                     '</tr>';
                 $("#showitem123").append(newRow);
                 initializeTypeahead(count);
-                updatePriceCategory();
+
             });
 
-            function updatePriceCategory() {
-                var selectedCategory = $('#sale_price_category').val();
-                var cuzName = $('#type').val();
 
 
 
-
-                if (selectedCategory === 'Whole Sale') {
-                    $('.wholesale_td').show();
-                    $('.wholesale_th').show();
-                    $('.retail_td').hide();
-                    $('.retail_th').hide();
-                } else if (selectedCategory === 'Retail') {
-                    $('.wholesale_td').hide();
-                    $('.wholesale_th').hide();
-                    $('.retail_td').show();
-                    $('.retail_th').show();
-                } else {
-                    if (cuzName === 'Whole Sale') {
-                        $('.wholesale_td').show();
-                        $('.wholesale_th').show();
-                        $('.retail_td').hide();
-                        $('.retail_th').hide();
-                    } else if (cuzName === 'Retail') {
-                        $('.wholesale_td').hide();
-                        $('.wholesale_th').hide();
-                        $('.retail_td').show();
-                        $('.retail_th').show();
-                    } else {
-                        $('.wholesale_td').hide();
-                        $('.wholesale_th').hide();
-                        $('.retail_td').show();
-                        $('.retail_th').show();
-                    }
-                }
-            }
-
-            $('#type').val('');
-            updatePriceCategory();
-
-            $('#sale_price_category').on('input', function() {
-                updatePriceCategory();
-            });
-
-            $('#type').on('input', function() {
-                updatePriceCategory();
-            });
 
 
 
@@ -1030,16 +917,23 @@
                     <input type="text" name="payment_amount[]" class="form-control payment_amount">
                 </td>
                 <td align="left" colspan="1" class="col-md-2">
-                    <select name="payment_method[]" class="form-control">
-                        <option value="Cash">Cash</option>
-                        <option value="K Pay">K Pay</option>
-                        <option value="Wave">Wave</option>
-                        <option value="Others">Others</option>
-                    </select>
+                  
+
+                      <div class="input-group">
+            <select name="payment_method[]" class="form-control" required>
+                <option value="Cash">Cash</option>
+                <option value="K Pay">K Pay</option>
+                <option value="Wave">Wave</option>
+                <option value="Others">Others</option>
+            </select>
+            <div class="input-group-append">
+                <button type="button" class="removeRow btn btn-danger">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
+            </div>
+        </div>
                 </td>
-                <td align="left" colspan="1" class="col-md-1">
-                    <button class="removeRow btn btn-danger"><i class="fa-solid fa-minus"></i></button>
-                </td>
+               
             </tr>`;
 
                         $('#trContainer').append(newRow);
@@ -1187,89 +1081,41 @@
 
 
 
-            $(document).ready(function() {
-                function updatePriceCategory() {
-                    var selectedCategory = $('#sale_price_category').val();
-                    var cuzName = $('#type').val();
 
-                    if (selectedCategory === 'Whole Sale') {
-                        $('.wholesale_td').show();
-                        $('.wholesale_th').show();
-                        $('.retail_td').hide();
-                        $('.retail_th').hide();
-                    } else if (selectedCategory === 'Retail') {
-                        $('.wholesale_td').hide();
-                        $('.wholesale_th').hide();
-                        $('.retail_td').show();
-                        $('.retail_th').show();
-                    } else {
-                        if (cuzName === 'Whole Sale') {
-                            $('.wholesale_td').show();
-                            $('.wholesale_th').show();
-                            $('.retail_td').hide();
-                            $('.retail_th').hide();
-                        } else if (cuzName === 'Retail') {
-                            $('.wholesale_td').hide();
-                            $('.wholesale_th').hide();
-                            $('.retail_td').show();
-                            $('.retail_th').show();
+            $(document).on('click', '#customer_search', function(e) {
+                e.preventDefault();
+                let serialNumber = $("#customer").val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('customer_service_search_fill') }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        model: serialNumber,
+                        location: $('#location').val()
+                    },
+                    success: function(data) {
+                        console.log(data);
+
+                        if (data.customer) {
+                            $("#name").val(data.customer.name);
+                            $("#customer_id").val(data.customer.id);
+                            $("#phone_no").val(data.customer.phno);
+                            $("#type").val(data.customer
+                                .type);
+                            $("#address").val(data.customer.address);
+                            $("#customer").val('');
                         } else {
-                            $('.wholesale_td').hide();
-                            $('.wholesale_th').hide();
-                            $('.retail_td').show();
-                            $('.retail_th').show();
+                            console.error("Customer not found");
+                            $("#customer").val('');
                         }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
                     }
-                }
-
-                $('#type').val('');
-                updatePriceCategory();
-
-                $('#sale_price_category').on('input', function() {
-                    updatePriceCategory();
-                });
-
-                $('#type').on('input', function() {
-                    updatePriceCategory();
-                });
-
-                $(document).on('click', '#customer_search', function(e) {
-                    e.preventDefault();
-                    let serialNumber = $("#customer").val();
-
-                    $.ajax({
-                        type: 'POST',
-                        url: "{{ route('customer_service_search_fill') }}",
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            model: serialNumber,
-                            location: $('#location').val()
-                        },
-                        success: function(data) {
-                            console.log(data);
-
-                            if (data.customer) {
-                                $("#name").val(data.customer.name);
-                                $("#customer_id").val(data.customer.id);
-                                $("#phone_no").val(data.customer.phno);
-                                $("#type").val(data.customer
-                                    .type);
-
-                                updatePriceCategory();
-
-                                $("#address").val(data.customer.address);
-                                $("#customer").val('');
-                            } else {
-                                console.error("Customer not found");
-                                $("#customer").val('');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error(xhr.responseText);
-                        }
-                    });
                 });
             });
+
 
         });
     </script>

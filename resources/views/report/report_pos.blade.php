@@ -291,7 +291,7 @@
                                                         @endforeach
                                                     </td>
                                                     <td>{{ $pos->invoice_date }}</td>
-                                                    <td>{{ number_format($pos->discount_total + $pos->total) }}
+                                                    <td>{{ number_format($pos->sub_total) }}
                                                     </td>
 
                                                     <td>{{ $pos->discount_total ?? 0 }}</td>
@@ -300,7 +300,7 @@
                                                 </tr>
                                                 @php
                                                     $no++;
-                                                    $subtotal += $pos->discount_total + $pos->total; // Add subtotal for each $discounttotal += $pos_datas->discount_total;
+                                                    $subtotal += $sub_total; // Add subtotal for each $discounttotal += $pos_datas->discount_total;
                                                     $discounttotal += $pos->discount_total;
                                                     $amounttotal += $pos->total;
 
@@ -321,7 +321,7 @@
                                                         @endforeach
                                                     </td>
                                                     <td>{{ $pos_datas->invoice_date }}</td>
-                                                    <td>{{ number_format($pos_datas->discount_total + $pos_datas->total) }}
+                                                    <td>{{ number_format($pos_datas->sub_total) }}
                                                     </td>
 
                                                     <td>{{ $pos_datas->discount_total ?? 0 }}</td>

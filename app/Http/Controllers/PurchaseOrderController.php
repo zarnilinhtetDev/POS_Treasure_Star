@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Item;
+use App\Models\Payment;
 use App\Models\PurchaseOrderPaymentMethod;
 use App\Models\Unit;
 use App\Models\PO_sells;
@@ -10,6 +11,7 @@ use App\Models\Supplier;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\PurchaseOrder;
+use App\Models\Setting;
 use App\Models\UserProfile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -77,25 +79,76 @@ class PurchaseOrderController extends Controller
 
         $count = count($request->part_number);
         $invoice = new PurchaseOrder();
-        // $invoice->supplier_id = $request->supplier_id;
-        // $invoice->supplier_name = $request->supplier_name;
-        // $invoice->invoice_category = $request->quote_category;
-        // $invoice->phno = $request->phno;
-        // $invoice->status = $request->status;
-        // $invoice->type = $request->type;
-        // $invoice->address = $request->address;
-        // $invoice->invoice_no = $request->invoice_no;
-        // $invoice->overdue_date = $request->overdue_date;
-        // $invoice->po_date = $request->po_date;
-        // $invoice->quote_no = $request->po_number;
-        // $invoice->net_total = $request->total;
-        // $invoice->total = $request->total;
-        // $invoice->balance_due = $request->balance_due;
-        // $invoice->discount_total = $request->discount_total;
-        // $invoice->remain_balance = $request->remain_balance;
-        // $invoice->deposit = $request->paid;
-        // $invoice->remark = $request->remark;
-        // $invoice->payment_method = $request->payment_method;
+
+        if ($request->balance_due == 'PO') {
+            $setting = Setting::where('category', '2')->first();
+
+            if ($setting) {
+                $invoice->transaction_id = $setting->transaction_id ?? null;
+                $transactions = Payment::all();
+
+                foreach ($transactions as $transaction) {
+
+                    if ($transaction->id == $setting->transaction_id) {
+                        $tran = Payment::where('transaction_id', $transaction->id)->get();
+                        $po = $tran->skip(2)->first();
+
+                        if ($po) {
+                            $po->amount += $request->paid;
+                            $po->save();
+                        } else {
+                        }
+                    }
+                }
+            } else {
+            }
+        } else if ($request->balance_due == 'Sale Return Invoice') {
+            $setting = Setting::where('category', '5')->first();
+
+            if ($setting) {
+                $invoice->transaction_id = $setting->transaction_id ?? null;
+                $transactions = Payment::all();
+
+                foreach ($transactions as $transaction) {
+
+                    if ($transaction->id == $setting->transaction_id) {
+                        $tran = Payment::where('transaction_id', $transaction->id)->get();
+                        $po = $tran->skip(4)->first();
+
+                        if ($po) {
+                            $po->amount += $request->paid;
+                            $po->save();
+                        } else {
+                        }
+                    }
+                }
+            } else {
+            }
+        } else if ($request->balance_due == 'Sale Return') {
+            $setting = Setting::where('category', '6')->first();
+
+            if ($setting) {
+                $invoice->transaction_id = $setting->transaction_id ?? null;
+                $transactions = Payment::all();
+
+                foreach ($transactions as $transaction) {
+
+                    if ($transaction->id == $setting->transaction_id) {
+                        $tran = Payment::where('transaction_id', $transaction->id)->get();
+                        $po = $tran->skip(5)->first();
+
+                        if ($po) {
+                            $po->amount += $request->paid;
+                            $po->save();
+                        } else {
+                        }
+                    }
+                }
+            } else {
+            }
+        }
+
+
         $invoice->supplier_id = $request->supplier_id;
         $invoice->supplier_name = $request->supplier_name;
         $invoice->invoice_category = $request->quote_category;
@@ -175,6 +228,61 @@ class PurchaseOrderController extends Controller
     {
         $count = count($request->part_number);
         $invoice = PurchaseOrder::find($id);
+
+        if ($request->balance_due == 'PO') {
+            if ($invoice) {
+                $oldtotal = $invoice->deposit;
+                $currenttotal = $request->paid;
+
+                if ($invoice->transaction_id) {
+                    $payment = Payment::where('transaction_id', $invoice->transaction_id)->skip(2)->first();
+
+                    if ($payment) {
+                        $payment->amount = $payment->amount + ($currenttotal - $oldtotal);
+                        $payment->save();
+                    } else {
+                    }
+                } else {
+                }
+            } else {
+            }
+        } else if ($request->balance_due == 'Sale Return Invoice') {
+            if ($invoice) {
+                $oldtotal = $invoice->deposit;
+                $currenttotal = $request->paid;
+
+                if ($invoice->transaction_id) {
+                    $payment = Payment::where('transaction_id', $invoice->transaction_id)->skip(4)->first();
+
+                    if ($payment) {
+                        $payment->amount = $payment->amount + ($currenttotal - $oldtotal);
+                        $payment->save();
+                    } else {
+                    }
+                } else {
+                }
+            } else {
+            }
+        } else if ($request->balance_due == 'Sale Return') {
+            if ($invoice) {
+                $oldtotal = $invoice->deposit;
+                $currenttotal = $request->paid;
+
+                if ($invoice->transaction_id) {
+                    $payment = Payment::where('transaction_id', $invoice->transaction_id)->skip(5)->first();
+
+                    if ($payment) {
+                        $payment->amount = $payment->amount + ($currenttotal - $oldtotal);
+                        $payment->save();
+                    } else {
+                    }
+                } else {
+                }
+            } else {
+            }
+        }
+
+
         $invoice->supplier_id = $request->supplier_id;
         $invoice->invoice_category = $request->quote_category;
         $invoice->phno  = $request->phno;
@@ -271,7 +379,41 @@ class PurchaseOrderController extends Controller
 
         try {
 
-            PurchaseOrder::findOrFail($id)->delete();
+            $invoice = PurchaseOrder::findOrFail($id);
+            if ($invoice->balance_due == 'PO') {
+                if ($invoice) {
+                    $oldtotal = $invoice->deposit;
+
+                    if ($invoice->transaction_id) {
+                        $payment = Payment::where('transaction_id', $invoice->transaction_id)->skip(2)->first();
+
+                        if ($payment) {
+                            $payment->amount = $payment->amount - $oldtotal;
+                            $payment->save();
+                        } else {
+                        }
+                    } else {
+                    }
+                } else {
+                }
+            } else if ($invoice->balance_due == 'Sale Return Invoice') {
+                if ($invoice) {
+                    $oldtotal = $invoice->deposit;
+
+                    if ($invoice->transaction_id) {
+                        $payment = Payment::where('transaction_id', $invoice->transaction_id)->skip(4)->first();
+
+                        if ($payment) {
+                            $payment->amount = $payment->amount - $oldtotal;
+                            $payment->save();
+                        } else {
+                        }
+                    } else {
+                    }
+                } else {
+                }
+            }
+            $invoice->delete();
             PO_sells::where('invoiceid', $id)->delete();
             PurchaseOrderPaymentMethod::where('invoice_id', $id)->delete();
             DB::commit();

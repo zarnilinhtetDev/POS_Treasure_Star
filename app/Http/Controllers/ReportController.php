@@ -2,13 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Account;
 use App\Models\Expense;
 use App\Models\ExpenseCategory;
 use App\Models\Invoice;
 use App\Models\InvoicePaymentMethod;
 use App\Models\MakePayment;
+use App\Models\Payment;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseOrderPaymentMethod;
+use App\Models\Transaction;
 use App\Models\Warehouse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -181,9 +184,18 @@ class ReportController extends Controller
         }
 
         $query = DB::table('items')
-            ->select('items.item_name', 'warehouses.id as warehouse_id', 'warehouses.name as warehouse_name', DB::raw('SUM(items.quantity) AS total_quantity'), 'items.retail_price', 'items.wholesale_price')
+            ->whereNull('items.deleted_at')
+            ->select(
+                'items.item_name',
+                'items.item_type',
+                'warehouses.id as warehouse_id',
+                'warehouses.name as warehouse_name',
+                DB::raw('SUM(items.quantity) AS total_quantity'),
+                'items.retail_price',
+                'items.wholesale_price'
+            )
             ->join('warehouses', 'items.warehouse_id', '=', 'warehouses.id')
-            ->groupBy('items.item_name', 'warehouses.id', 'items.retail_price', 'items.wholesale_price');
+            ->groupBy('items.item_name', 'items.item_type', 'warehouses.id', 'items.retail_price', 'items.wholesale_price');
 
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
@@ -198,6 +210,7 @@ class ReportController extends Controller
             if (!isset($groupedItems[$itemId])) {
                 $groupedItems[$itemId] = [
                     'item_name' => $item->item_name,
+                    'item_type' => $item->item_type,
                     'total_quantity' => 0,
                     'warehouse_quantities' => [],
                     'retail_price' => $item->retail_price,
@@ -222,9 +235,19 @@ class ReportController extends Controller
         }
 
         $query = DB::table('items')
-            ->select('items.item_name', 'warehouses.id as warehouse_id', 'warehouses.name as warehouse_name', DB::raw('SUM(items.quantity) AS total_quantity'), 'items.retail_price', 'items.wholesale_price')
+            ->whereNull('items.deleted_at')
+            ->select(
+                'items.item_name',
+                'items.item_type',
+                'warehouses.id as warehouse_id',
+                'warehouses.name as warehouse_name',
+                DB::raw('SUM(items.quantity) AS total_quantity'),
+                'items.retail_price',
+                'items.wholesale_price'
+            )
             ->join('warehouses', 'items.warehouse_id', '=', 'warehouses.id')
-            ->groupBy('items.item_name', 'warehouses.id', 'items.retail_price', 'items.wholesale_price');
+            ->groupBy('items.item_name', 'items.item_type', 'warehouses.id', 'items.retail_price', 'items.wholesale_price');
+
 
         // Date filter
         if ($request->has('start_date') && $request->has('end_date')) {
@@ -247,6 +270,7 @@ class ReportController extends Controller
             $itemId = $item->item_name;
             if (!isset($groupedItems[$itemId])) {
                 $groupedItems[$itemId] = [
+                    'item_type' => $item->item_type,
                     'item_name' => $item->item_name,
                     'total_quantity' => 0,
                     'warehouse_quantities' => [],

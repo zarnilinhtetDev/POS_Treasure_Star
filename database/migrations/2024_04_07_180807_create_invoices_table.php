@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->string('customer_id')->nullable();
-
+            $table->string('transaction_id')->nullable();
             $table->string('invoice_no', 191)->nullable();
             $table->string('branch', 191)->nullable();
             $table->string('invoice_category', 191)->nullable();
@@ -34,7 +34,6 @@ return new class extends Migration
             $table->string('type', 191)->nullable();
             $table->string('remark', 191)->nullable();
             $table->string('balance_due', 191)->nullable();
-
             $table->string('sub_total', 191)->nullable();
             $table->string('total_buy_price')->nullable();
             $table->string('deposit', 191)->nullable();

@@ -58,9 +58,10 @@
             </a>
         </div>
         <div class="container">
-            <div class="p-2 text-center" style="margin-top: 13%">
-                <img src="{{ asset('img/navlogo.png') }}" alt="Login Image" width="200px">
+            <div class="p-2 text-center" style="margin-top: 13%;">
+                <img src="{{ asset('img/sse-nav.png') }}" alt="Login Image" width="200px" class="blue-tint">
             </div>
+
             <div class="row justify-content-center">
                 <div class="mx-auto my-auto card col-md-5" style="border-radius: 10px">
 

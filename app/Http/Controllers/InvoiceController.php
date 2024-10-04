@@ -10,6 +10,7 @@ use App\Models\Sell;
 use App\Models\Unit;
 use App\Models\Invoice;
 use App\Models\Customer;
+use App\Models\Payment;
 use App\Models\PO_sells;
 use App\Models\Supplier;
 use App\Models\Warehouse;
@@ -17,6 +18,7 @@ use App\Models\Warehouse;
 use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use App\Models\PurchaseOrder;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
@@ -31,10 +33,10 @@ class InvoiceController extends Controller
 
         if (auth()->user()->is_admin == '1') {
             $invoices = Invoice::where('status', 'invoice')->latest()->get();
-            $branchs = Warehouse::all();
+            $branchs = Warehouse::select('name', 'id')->get();
         } else {
             $invoices = Invoice::whereIn('branch', $warehousePermission)->where('status', 'invoice')->latest()->get();
-            $branchs = Warehouse::all();
+            $branchs = Warehouse::select('name', 'id')->get();
         }
 
         return view('invoice.invoice_manage', compact('invoices', 'branchs'));
@@ -73,8 +75,7 @@ class InvoiceController extends Controller
         $totalInvoices = Invoice::withTrashed()->where('status', 'invoice')->count();
         $invoice_no = "Invoice-" . ($totalInvoices + 1);
         $units = Unit::all();
-        $warehouses = Warehouse::all();
-
+        $warehouses = Warehouse::select('name', 'id')->get();
         return view('invoice.invoice', compact('invoice_no', 'units', 'warehouses'));
     }
 
@@ -84,7 +85,7 @@ class InvoiceController extends Controller
         $suspends = Invoice::where('status', 'suspend')->latest()->get();
         $invoice_no = "POS-" . count($invoices) + 1;
         $units = Unit::all();
-        $warehouses = Warehouse::all();
+        $warehouses = Warehouse::select('name', 'id')->get();
         return view('invoice.pos', compact('invoice_no', 'units', 'warehouses', 'suspends'));
     }
 
@@ -95,10 +96,10 @@ class InvoiceController extends Controller
 
         if (auth()->user()->is_admin == '1') {
             $invoices = Invoice::where('status', 'pos')->latest()->get();
-            $branchs = Warehouse::all();
+            $branchs = Warehouse::select('name', 'id')->get();
         } else {
             $invoices = Invoice::whereIn('branch', $warehousePermission)->where('status', 'pos')->latest()->get();
-            $branchs = Warehouse::all();
+            $branchs = Warehouse::select('name', 'id')->get();
         }
 
         return view('invoice.pos_manage', compact(
@@ -134,6 +135,74 @@ class InvoiceController extends Controller
 
         $count = count($request->part_number);
         $invoice = new Invoice();
+
+        if ($request->balance_due == 'Invoice' || $request->status == 'quotation') {
+
+            $setting = Setting::where('category', '1')->first();
+
+            if ($setting) {
+                $invoice->transaction_id = $setting->transaction_id ?? null;
+
+                if ($request->balance_due == 'Invoice' && $request->status == 'invoice') {
+                    $transactions = Payment::all();
+                    foreach ($transactions as $transaction) {
+                        if ($transaction->id == $setting->transaction_id) {
+                            $tran = Payment::where('transaction_id', $transaction->id)->get();
+                            $payment = $tran->first();
+                            if ($payment) {
+                                $payment->amount += $request->paid;
+                                $payment->save();
+                            } else {
+                            }
+                        }
+                    }
+                }
+            } else {
+            }
+        } else if ($request->status == 'pos') {
+            $setting = Setting::where('category', '3')->first();
+
+            if ($setting) {
+                $invoice->transaction_id = $setting->transaction_id ?? null;
+
+
+                $transactions = Payment::all();
+                foreach ($transactions as $transaction) {
+                    if ($transaction->id == $setting->transaction_id) {
+                        $tran = Payment::where('transaction_id', $transaction->id)->get();
+                        $payment = $tran->skip(1)->first();
+
+                        if ($payment) {
+                            $payment->amount += $request->paid;
+                            $payment->save();
+                        } else {
+                        }
+                    }
+                }
+            } else {
+            }
+        } else if ($request->balance_due == 'Po Return') {
+            $setting = Setting::where('category', '4')->first();
+            if ($setting) {
+                $invoice->transaction_id = $setting->transaction_id ?? null;
+                $transactions = Payment::all();
+                foreach ($transactions as $transaction) {
+                    if ($transaction->id == $setting->transaction_id) {
+                        $tran = Payment::where('transaction_id', $transaction->id)->get();
+                        $payment = $tran->skip(3)->first();
+                        if ($payment) {
+                            $payment->amount += $request->paid;
+                            $payment->save();
+                        } else {
+                        }
+                    }
+                }
+            } else {
+            }
+        }
+
+
+
 
         $invoice->customer_id = $request->customer_id;
         $invoice->customer_name = $request->customer_name;
@@ -303,9 +372,60 @@ class InvoiceController extends Controller
     {
         $invoice = Invoice::find($id);
 
+        if ($invoice->status == 'invoice' && $invoice->balance_due == 'Invoice') {
+
+            if ($invoice) {
+                $oldtotal = $invoice->deposit;
+
+                if ($invoice->transaction_id) {
+                    $payment = Payment::where('transaction_id', $invoice->transaction_id)->first();
+
+                    if ($payment) {
+                        $payment->amount = $payment->amount - $oldtotal;
+                        $payment->save();
+                    } else {
+                    }
+                } else {
+                }
+            } else {
+            }
+        } elseif ($invoice->status == 'pos') {
+
+            $oldtotal = $invoice->deposit;
+
+            if ($invoice->transaction_id) {
+                $tran = Payment::where('transaction_id', $invoice->transaction_id)->get();
+                $payment = $tran->skip(1)->first();
+                if ($payment) {
+                    $payment->amount = $payment->amount - $oldtotal;
+                    $payment->save();
+                } else {
+                }
+            } else {
+            }
+        } elseif ($invoice->balance_due == 'Po Return') {
+            $oldtotal = $invoice->deposit;
+
+            if ($invoice->transaction_id) {
+                $tran = Payment::where('transaction_id', $invoice->transaction_id)->get();
+                $payment = $tran->skip(3)->first();
+                if ($payment) {
+                    $payment->amount = $payment->amount - $oldtotal;
+                    $payment->save();
+                } else {
+                }
+            } else {
+            }
+        }
+
+
+        if (!$invoice) {
+            return redirect()->back()->with('error', 'Invoice not found');
+        }
+
+
         if ($invoice) {
             Sell::where('invoiceid', $id)->delete();
-
             InvoicePaymentMethod::where('invoice_id', $invoice->id)->delete();
             $invoice->delete();
             if ($invoice->status == 'pos') {
@@ -339,7 +459,7 @@ class InvoiceController extends Controller
     {
 
         $invoice = Invoice::find($id);
-        $warehouses = Warehouse::all();
+        $warehouses = Warehouse::select('name', 'id')->get();;
         $payment_method = InvoicePaymentMethod::where('invoice_id', $id)->get();
 
 
@@ -362,6 +482,66 @@ class InvoiceController extends Controller
 
 
         $invoice = Invoice::find($id);
+
+
+        if ($request->status == 'invoice' && $request->balance_due == 'Invoice') {
+
+            if ($invoice) {
+                $oldtotal = $invoice->deposit;
+                $currenttotal = $request->paid;
+
+
+                if ($invoice->transaction_id) {
+                    $payment = Payment::where('transaction_id', $invoice->transaction_id)->first();
+
+                    if ($payment) {
+                        $payment->amount = $payment->amount + ($currenttotal - $oldtotal);
+                        $payment->save();
+                    } else {
+                    }
+                } else {
+                }
+            } else {
+            }
+        } elseif ($request->status == 'pos') {
+            $setting = Setting::where('category', '3')->first();
+
+            if ($setting) {
+                $invoice->transaction_id = $setting->transaction_id ?? null;
+
+
+                $transactions = Payment::all();
+                foreach ($transactions as $transaction) {
+                    if ($transaction->id == $setting->transaction_id) {
+                        $tran = Payment::where('transaction_id', $transaction->id)->get();
+                        $payment = $tran->skip(1)->first();
+
+                        if ($payment) {
+                            $payment->amount += $request->paid;
+                            $payment->save();
+                        } else {
+                        }
+                    }
+                }
+            } else {
+            }
+        } elseif ($request->balance_due == 'Po Return') {
+            $oldtotal = $invoice->deposit;
+            $currenttotal = $request->paid;
+
+
+            if ($invoice->transaction_id) {
+                $tran = Payment::where('transaction_id', $invoice->transaction_id)->get();
+                $payment = $tran->skip(3)->first();
+                if ($payment) {
+                    $payment->amount = $payment->amount + ($currenttotal - $oldtotal);
+                    $payment->save();
+                } else {
+                }
+            } else {
+            }
+        }
+
 
         if (!$invoice) {
             return redirect()->back()->with('error', 'Invoice not found');
@@ -501,6 +681,28 @@ class InvoiceController extends Controller
             }
         }
 
+        $setting = Setting::where('category', '1')->first();
+
+        if ($setting) {
+            $invoice->transaction_id = $setting->transaction_id ?? null;
+
+
+            $transactions = Payment::all();
+
+            foreach ($transactions as $transaction) {
+                if ($transaction->id == $setting->transaction_id) {
+                    $tran = Payment::where('transaction_id', $transaction->id)->get();
+                    $payment = $tran->first();
+
+                    if ($payment) {
+                        $payment->amount += $invoices->paid;
+                        $payment->save();
+                    } else {
+                    }
+                }
+            }
+        } else {
+        }
         $invoice_no =  "Invoice-" . count($invoice) + 1;
         $quotation = Invoice::find($id);
         $quotation->status = 'invoice';
@@ -692,10 +894,10 @@ class InvoiceController extends Controller
 
         if (auth()->user()->is_admin == '1') {
             $daily_pos = Invoice::whereDate('created_at', Carbon::today())->where('status', 'pos')->get();
-            $branchs = Warehouse::all();
+            $branchs = Warehouse::select('name', 'id')->get();
         } else {
             $daily_pos = Invoice::whereDate('created_at', Carbon::today())->whereIn('branch', $warehousePermission)->where('status', 'pos')->get();
-            $branchs = Warehouse::all();
+            $branchs = Warehouse::select('name', 'id')->get();
         }
 
         return view('invoice.daily_sales', compact('daily_pos', 'branchs'));
@@ -868,7 +1070,22 @@ class InvoiceController extends Controller
 
         try {
 
-            PurchaseOrder::findOrFail($id)->delete();
+            $invoice = PurchaseOrder::findOrFail($id);
+            if ($invoice) {
+                $oldtotal = $invoice->deposit;
+                if ($invoice->transaction_id) {
+                    $payment = Payment::where('transaction_id', $invoice->transaction_id)->skip(5)->first();
+
+                    if ($payment) {
+                        $payment->amount = $payment->amount - $oldtotal;
+                        $payment->save();
+                    } else {
+                    }
+                } else {
+                }
+            } else {
+            }
+            $invoice->delete();
 
 
             PO_sells::where('invoiceid', $id)->delete();

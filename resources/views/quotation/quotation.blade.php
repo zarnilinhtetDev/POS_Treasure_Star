@@ -79,7 +79,8 @@
                     </div>
                     <div class="col-md-3">
                         <label for="quote_date" style="font-weight:bolder">Date</label>
-                        <input type="date" name="quote_date" class="form-control" max="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" required>
+                        <input type="date" name="quote_date" class="form-control" max="{{ date('Y-m-d') }}"
+                            value="{{ date('Y-m-d') }}" required>
                     </div>
 
                     <input type="hidden" name="quote_category" id="invoice_category" value="Invoice">
@@ -278,7 +279,8 @@
                                                         <th width="9%" class="text-center">
                                                             {{ trans('Discounts') }}
                                                         </th>
-                                                        <th width="9%" class="text-center">
+                                                        <th style="display: none;" width="9%"
+                                                            class="text-center">
                                                             {{ trans('Expiry') }}
                                                         </th>
                                                         <th width="14%" class="text-center">
@@ -346,8 +348,9 @@
                                                                 name="discount[]" id="vat-0" value="0"
                                                                 autocomplete="off" value="{{ old('discount') }}">
                                                         </td>
-                                                        <td><input type="text" class="form-control exp_date "
-                                                                name="exp_date[]" id="exp_date-0" autocomplete="off">
+                                                        <td style="display: none;"><input type="text"
+                                                                class="form-control exp_date " name="exp_date[]"
+                                                                id="exp_date-0" autocomplete="off">
                                                         </td>
 
                                                         <td style="display: none;"><input type="text"
@@ -664,7 +667,7 @@
                     count + '"   autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control vat" name="discount[]" value="0" id="vat-' +
                     count + '"   autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control exp_date" name="exp_date[]" id="exp_date-' +
+                    '<td style="display: none;"><input type="text" class="form-control exp_date" name="exp_date[]" id="exp_date-' +
                     count + '"   autocomplete="off"></td>' +
                     '<td style="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
                     count +
@@ -677,57 +680,7 @@
                     '</tr>';
                 $("#showitem123").append(newRow);
                 initializeTypeahead(count);
-                updatePriceCategory();
             });
-
-            function updatePriceCategory() {
-                var selectedCategory = $('#sale_price_category').val();
-                var cuzName = $('#type').val();
-
-
-
-
-                if (selectedCategory === 'Whole Sale') {
-                    $('.wholesale_td').show();
-                    $('.wholesale_th').show();
-                    $('.retail_td').hide();
-                    $('.retail_th').hide();
-                } else if (selectedCategory === 'Retail') {
-                    $('.wholesale_td').hide();
-                    $('.wholesale_th').hide();
-                    $('.retail_td').show();
-                    $('.retail_th').show();
-                } else {
-                    if (cuzName === 'Whole Sale') {
-                        $('.wholesale_td').show();
-                        $('.wholesale_th').show();
-                        $('.retail_td').hide();
-                        $('.retail_th').hide();
-                    } else if (cuzName === 'Retail') {
-                        $('.wholesale_td').hide();
-                        $('.wholesale_th').hide();
-                        $('.retail_td').show();
-                        $('.retail_th').show();
-                    } else {
-                        $('.wholesale_td').hide();
-                        $('.wholesale_th').hide();
-                        $('.retail_td').show();
-                        $('.retail_th').show();
-                    }
-                }
-            }
-
-            $('#type').val('');
-            updatePriceCategory();
-
-            $('#sale_price_category').on('input', function() {
-                updatePriceCategory();
-            });
-
-            $('#type').on('input', function() {
-                updatePriceCategory();
-            });
-
 
 
 
@@ -939,87 +892,37 @@
 
 
 
-            $(document).ready(function() {
-                function updatePriceCategory() {
-                    var selectedCategory = $('#sale_price_category').val();
-                    var cuzName = $('#type').val();
+            $(document).on('click', '#customer_search', function(e) {
+                e.preventDefault();
+                let serialNumber = $("#customer").val();
 
-                    if (selectedCategory === 'Whole Sale') {
-                        $('.wholesale_td').show();
-                        $('.wholesale_th').show();
-                        $('.retail_td').hide();
-                        $('.retail_th').hide();
-                    } else if (selectedCategory === 'Retail') {
-                        $('.wholesale_td').hide();
-                        $('.wholesale_th').hide();
-                        $('.retail_td').show();
-                        $('.retail_th').show();
-                    } else {
-                        if (cuzName === 'Whole Sale') {
-                            $('.wholesale_td').show();
-                            $('.wholesale_th').show();
-                            $('.retail_td').hide();
-                            $('.retail_th').hide();
-                        } else if (cuzName === 'Retail') {
-                            $('.wholesale_td').hide();
-                            $('.wholesale_th').hide();
-                            $('.retail_td').show();
-                            $('.retail_th').show();
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('customer_service_search_fill') }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        model: serialNumber,
+                        location: $('#location').val()
+                    },
+                    success: function(data) {
+                        console.log(data);
+
+                        if (data.customer) {
+                            $("#name").val(data.customer.name);
+                            $("#customer_id").val(data.customer.id);
+                            $("#phone_no").val(data.customer.phno);
+                            $("#type").val(data.customer
+                                .type);
+                            $("#address").val(data.customer.address);
+                            $("#customer").val('');
                         } else {
-                            $('.wholesale_td').hide();
-                            $('.wholesale_th').hide();
-                            $('.retail_td').show();
-                            $('.retail_th').show();
+                            console.error("Customer not found");
+                            $("#customer").val('');
                         }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText);
                     }
-                }
-
-                $('#type').val('');
-                updatePriceCategory();
-
-                $('#sale_price_category').on('input', function() {
-                    updatePriceCategory();
-                });
-
-                $('#type').on('input', function() {
-                    updatePriceCategory();
-                });
-
-                $(document).on('click', '#customer_search', function(e) {
-                    e.preventDefault();
-                    let serialNumber = $("#customer").val();
-
-                    $.ajax({
-                        type: 'POST',
-                        url: "{{ route('customer_service_search_fill') }}",
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            model: serialNumber,
-                            location: $('#location').val()
-                        },
-                        success: function(data) {
-                            console.log(data);
-
-                            if (data.customer) {
-                                $("#name").val(data.customer.name);
-                                $("#customer_id").val(data.customer.id);
-                                $("#phone_no").val(data.customer.phno);
-                                $("#type").val(data.customer
-                                    .type);
-
-                                updatePriceCategory();
-
-                                $("#address").val(data.customer.address);
-                                $("#customer").val('');
-                            } else {
-                                console.error("Customer not found");
-                                $("#customer").val('');
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error(xhr.responseText);
-                        }
-                    });
                 });
             });
 

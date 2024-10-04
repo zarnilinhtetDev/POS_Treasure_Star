@@ -210,8 +210,6 @@
                                                         </span>
                                                         <select name="balance_due" id="balance_due"
                                                             class="mb-4 form-control balance_due" required>
-
-
                                                             <option value="Sale Return">Sale Return</option>
 
                                                         </select>
