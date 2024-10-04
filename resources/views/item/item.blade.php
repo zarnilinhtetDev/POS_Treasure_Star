@@ -296,7 +296,8 @@
 
                                                 @foreach ($items as $item)
                                                     <tr>
-                                                        <td>{{ $no }}</td>
+                                                        <td>{{ ($items->currentPage() - 1) * $items->perPage() + $loop->iteration }}
+                                                        </td>
                                                         <td>
                                                             <a href="{{ asset($item->item_image ? 'item_images/' . $item->item_image : 'img/default.png') }}"
                                                                 target="_blank" id="logoLink">
@@ -321,9 +322,19 @@
                                                         </td>
                                                         <td style="background-color: rgb(221, 215, 215)">
                                                             @if ($item->quantity <= $item->reorder_level_stock)
-                                                                <span class="text-danger">{{ $item->quantity }}</span>
+                                                                @if ($item->item_type == 'Service')
+                                                                    <span class="text-danger">0</span>
+                                                                @else
+                                                                    <span
+                                                                        class="text-danger">{{ $item->quantity }}</span>
+                                                                @endif
                                                             @else
-                                                                {{ $item->quantity }}
+                                                                @if ($item->item_type == 'Service')
+                                                                    <span class="text-danger">0</span>
+                                                                @else
+                                                                   {{ $item->quantity }}
+                                                                @endif
+                                                               
                                                             @endif
                                                         </td>
                                                         <td><a href="{{ url('barcode', $item->id) }}"
@@ -440,7 +451,6 @@
                                 '" class="img-thumbnail" style="max-width: 150px; max-height: 100px;" alt="Item Image Preview">' +
                                 '</a></td>';
                             rows += '<td>' + item.item_name + '</td>';
-                            rows += '<td>' + item.radio_category + '</td>';
                             rows += '<td>' + item.category + '</td>';
                             rows += '<td>' + (item.warehouse ? item.warehouse.name :
                                 'N/A') + '</td>';

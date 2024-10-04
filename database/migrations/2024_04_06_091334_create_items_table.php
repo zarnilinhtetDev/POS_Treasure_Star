@@ -24,14 +24,12 @@ return new class extends Migration
             $table->string('quantity', 191)->nullable();
             $table->string('item_unit', 191)->nullable();
             $table->string('reorder_level_stock', 191)->nullable();
-            $table->string('mingalar_market', 191)->nullable();
             $table->string('retail_price', 191)->nullable();
             $table->string('wholesale_price', 191)->nullable();
             $table->string('buy_price', 191)->nullable();
             $table->string('item_image', 191)->nullable();
+            $table->string('item_type', 191)->nullable();
             $table->string('parent_id', 191)->default('0');
-         
-
             $table->softDeletes();
             $table->timestamps();
         });

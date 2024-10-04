@@ -42,7 +42,7 @@
             opacity: 1;
         } */
     </style>
-  
+
 </head>
 
 <body>
@@ -185,7 +185,8 @@
                             <select name="balance_due" id="balance_due" class="mb-4 form-control balance_due">
 
                                 <option value="PO" @if ($purchase_orders->balance_due == 'PO') selected @endif>PO</option>
-                                <option value="Sale Return" @if ($purchase_orders->balance_due == 'Sale Return') selected @endif>Sale
+                                <option value="Sale Return Invoice" @if ($purchase_orders->balance_due == 'Sale Return Invoice') selected @endif>
+                                    Sale
                                     Return</option>
 
                             </select>

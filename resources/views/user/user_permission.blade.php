@@ -472,19 +472,7 @@
                                                                                 Customer Credit
                                                                             </label>
                                                                         </div>
-                                                                        <div
-                                                                            class="form-check form-check-inline d-flex align-items-center ms-4 mt-3">
-                                                                            <input class="form-check-input"
-                                                                                type="checkbox"
-                                                                                id="permission-customer-other-5"
-                                                                                name="permission[]"
-                                                                                value="Customer Invoice"
-                                                                                @if (in_array('Customer Invoice', $permissions)) checked @endif>
-                                                                            <label class="form-check-label ms-2"
-                                                                                for="permission-quotation-other-5">
-                                                                                Customer Invoice
-                                                                            </label>
-                                                                        </div>
+
                                                                     </div>
                                                                 </td>
                                                             </tr>

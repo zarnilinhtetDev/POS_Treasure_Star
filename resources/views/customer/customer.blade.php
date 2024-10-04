@@ -249,7 +249,9 @@
                                         @foreach ($customers as $customer)
                                             <tr>
                                                 <td>{{ $no }}</td>
-                                                <td>{{ $customer->name }}</a></td>
+                                                <td><a
+                                                        href="{{ url('customer_invoice', $customer->id) }}">{{ $customer->name }}</a>
+                                                </td>
                                                 <td>{{ $customer->phno }}</td>
                                                 <td>{{ $customer->type }}</td>
                                                 <td>
@@ -281,11 +283,7 @@
                                                                 Credit</a>
                                                         @endif
 
-                                                        @if (in_array('Customer Invoice', $choosePermission) || auth()->user()->is_admin == '1')
-                                                            <a href="{{ url('customer_invoice', $customer->id) }}"
-                                                                type="button" class="btn btn-info text-white">
-                                                                Invoice</a>
-                                                        @endif
+
                                                     </div>
 
 

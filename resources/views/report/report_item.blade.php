@@ -210,22 +210,61 @@
                                             @php
                                                 $totalRetailPrice += (float) $item['retail_price'];
                                                 $totalWholesalePrice += (float) $item['wholesale_price'];
-                                                $totalRetailAmount +=
-                                                    (float) $item['total_quantity'] * (float) $item['retail_price'];
-                                                $totalWholesaleAmount +=
-                                                    (float) $item['total_quantity'] * (float) $item['wholesale_price'];
+
+                                                if ($item['item_type'] == 'Service') {
+                                                    $totalRetailAmount += (float) 1 * (float) $item['retail_price'];
+                                                } else {
+                                                    $totalRetailAmount +=
+                                                        (float) $item['total_quantity'] * (float) $item['retail_price'];
+                                                }
+
+                                                if ($item['item_type'] == 'Service') {
+                                                    $totalWholesaleAmount +=
+                                                        (float) 1 * (float) $item['wholesale_price'];
+                                                } else {
+                                                    $totalWholesaleAmount +=
+                                                        (float) $item['total_quantity'] *
+                                                        (float) $item['wholesale_price'];
+                                                }
                                             @endphp
                                             <tr>
                                                 <td>{{ $item['item_name'] }}</td>
                                                 @foreach ($warehouses as $warehouse)
-                                                    <td>{{ $item['warehouse_quantities'][$warehouse->id] ?? 0 }}</td>
+                                                    <td>
+                                                        @if ($item['item_type'] == 'Service')
+                                                            0
+                                                        @else
+                                                            {{ $item['warehouse_quantities'][$warehouse->id] ?? 0 }}
+                                                        @endif
+                                                    </td>
                                                 @endforeach
-                                                <td>{{ $item['total_quantity'] }}</td>
+                                                <td>
+                                                    @if ($item['item_type'] == 'Service')
+                                                        0
+                                                    @else
+                                                        {{ $item['total_quantity'] }}
+                                                    @endif
+
+                                                </td>
                                                 <td>{{ number_format((float) $item['retail_price']) }}</td>
                                                 <td>{{ number_format((float) $item['wholesale_price']) }}</td>
-                                                <td>{{ number_format((float) $item['total_quantity'] * (float) $item['retail_price']) }}
+                                                <td>
+                                                    @if ($item['item_type'] == 'Service')
+                                                        {{ number_format((float) 1 * (float) $item['retail_price']) }}
+                                                    @else
+                                                        {{ number_format((float) $item['total_quantity'] * (float) $item['retail_price']) }}
+                                                    @endif
+
                                                 </td>
-                                                <td>{{ number_format((float) $item['total_quantity'] * (float) $item['wholesale_price']) }}
+                                                <td>
+
+                                                    @if ($item['item_type'] == 'Service')
+                                                        {{ number_format((float) 1 * (float) $item['wholesale_price']) }}
+                                                    @else
+                                                        {{ number_format((float) $item['total_quantity'] * (float) $item['wholesale_price']) }}
+                                                    @endif
+
+
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -243,7 +282,6 @@
                                         </tr>
                                     </tfoot>
                                 </table>
-
 
                             </div>
                             <!-- /.card-body -->

@@ -216,7 +216,13 @@
                                                         @endforeach
                                                     </td>
 
-                                                    <td>{{ $po->balance_due }}</td>
+                                                    <td>
+                                                        @if ($po->balance_due == 'Sale Return Invoice')
+                                                            Sale Return
+                                                        @else
+                                                            {{ $po->balance_due }}
+                                                        @endif
+                                                    </td>
                                                     <td>{{ $po->total }}</td>
                                                 </tr>
                                                 @php

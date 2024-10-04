@@ -21,22 +21,17 @@ use Illuminate\Support\Facades\Storage;
 
 class ItemController extends Controller
 {
-    // public function index()
-    // {
-    //     $warehouses = Warehouse::all();
-    //     $items = Item::latest()->get();
-    //     return view('item.item', compact('items', 'warehouses'));
-    // }
+
     public function index()
     {
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
         if (auth()->user()->is_admin == '1') {
-            $warehouses = Warehouse::all();
-            $items = Item::with('warehouse')->latest()->paginate(200);
+            $warehouses = Warehouse::select('name', 'id')->get();
+            $items = Item::with('warehouse')->latest()->paginate(100);
         } else {
-            $warehouses = Warehouse::all();
-            $items = Item::whereIn('warehouse_id', $warehousePermission)->with('warehouse')->latest()->paginate(200);
+            $warehouses = Warehouse::select('name', 'id')->get();
+            $items = Item::whereIn('warehouse_id', $warehousePermission)->with('warehouse')->latest()->paginate(100);
         }
 
         return view('item.item', compact('items', 'warehouses'));
@@ -98,7 +93,7 @@ class ItemController extends Controller
     public function register()
     {
         $units = Unit::all();
-        $branchs = Warehouse::all();
+        $branchs = Warehouse::select('name', 'id')->get();
         return view('item.itemRegister', compact('branchs', 'units'));
     }
     public function generateRandomBarcode()
@@ -172,7 +167,7 @@ class ItemController extends Controller
     {
         $items = Item::find($id);
         $units = Unit::all();
-        $branchs = Warehouse::all();
+        $branchs = Warehouse::select('name', 'id')->get();
         return view('item.item_edit', compact('items', 'branchs', 'units'));
     }
     public function update(Request $request, $id)

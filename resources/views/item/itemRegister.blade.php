@@ -96,7 +96,7 @@
                                     </div>
 
                                 </div>
-                              
+
 
 
                                 <div class="mt-4 row">
@@ -116,8 +116,8 @@
                                                         alt="Item Image Preview">
                                                 </span>
                                             </div>
-                                            <input type="file" class="form-control" id="item_image"
-                                                name="item_image" accept="image/*" onchange="previewImage(event)">
+                                            <input type="file" class="form-control" id="item_image" name="item_image"
+                                                accept="image/*" onchange="previewImage(event)">
                                         </div>
                                         @error('item_image')
                                             <p class="text-danger">{{ $message }}</p>
@@ -152,6 +152,15 @@
                                                 *</span></label>
                                         <input type="text" class="form-control" id="category" name="category"
                                             value="{{ old('category') }}" placeholder="Enter Item Category" required>
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label for="item_type">Item Type<span class="text-danger">
+                                                *</span></label>
+                                        <select name="item_type" class="form-control" id="item_type">
+                                            <option value="Stock" selected>Stock</option>
+                                            <option value="Service">Service</option>
+                                        </select>
                                     </div>
 
                                     @if (auth()->user()->is_admin == '1')
@@ -290,8 +299,8 @@
     <script src="{{ asset('locallink/js/typehead.min.js') }}"></script>
     <script src="{{ asset('locallink/js/moment.min.js') }}"></script>
 
-  
-  
+
+
     <script>
         $(document).ready(function() {
             $('.option-checkbox').on('change', function() {

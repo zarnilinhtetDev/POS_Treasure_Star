@@ -17,11 +17,10 @@ class CustomerController extends Controller
 
         if (auth()->user()->is_admin == '1') {
             $customers = Customer::latest()->get();
-            $branchs = Warehouse::all();
+            $branchs = Warehouse::select('name', 'id')->get();
         } else {
-            $branchs = Warehouse::all();
             $customers = Customer::whereIn('branch', $warehousePermission)->latest()->get();
-            $branchs = Warehouse::all();
+            $branchs = Warehouse::select('name', 'id')->get();
         }
 
 
@@ -77,7 +76,7 @@ class CustomerController extends Controller
     public function edit(Request $request, $id)
     {
         $showCustomer = Customer::find($id);
-        $branchs = Warehouse::all();
+        $branchs = Warehouse::select('name', 'id')->get();
         return view('customer.customer_edit', compact('showCustomer', 'branchs'));
     }
     public function update($id, Request $request)

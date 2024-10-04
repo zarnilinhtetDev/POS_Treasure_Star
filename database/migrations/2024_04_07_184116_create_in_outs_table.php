@@ -15,13 +15,17 @@ return new class extends Migration
             $table->id();
             $table->foreignId('warehouse_id')->nullable();
             $table->integer('items_id')->nullable();
-            $table->string('quantity',191)->nullable();
-            $table->string('total_quantity',191)->nullable();
-            $table->string('company_price',191)->nullable();
-            $table->string('mingalar_market',191)->nullable();
-            $table->string('date',191)->nullable();
-            $table->string('remark',191)->nullable();
-            $table->string('in_out',191)->nullable();
+            $table->string('quantity', 191)->nullable();
+            $table->string('total_quantity', 191)->nullable();
+            $table->string('retail_price', 191)->nullable();
+            $table->string('wholesale_price', 191)->nullable();
+            $table->string('buy_price', 191)->nullable();
+            $table->string('company_price', 191)->nullable();
+            $table->string('mingalar_market', 191)->nullable();
+            $table->string('date', 191)->nullable();
+            $table->string('remark', 191)->nullable();
+            $table->string('in_out', 191)->nullable();
+
             $table->softDeletes();
             $table->timestamps();
         });

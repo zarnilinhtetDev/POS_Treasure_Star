@@ -527,7 +527,8 @@
                                                         <th width="9%" class="text-center">
                                                             {{ trans('Discounts') }}
                                                         </th>
-                                                        <th width="9%" class="text-center">
+                                                        <th style="display: none;" width="9%"
+                                                            class="text-center">
                                                             {{ trans('Expiry') }}
                                                         </th>
                                                         <th width="14%" class="text-center">
@@ -590,8 +591,9 @@
                                                                 autocomplete="off" value="{{ old('discount') }}">
                                                         </td>
 
-                                                        <td><input type="text" class="form-control exp_date "
-                                                                name="exp_date[]" id="exp_date-0" autocomplete="off">
+                                                        <td style="display: none;"><input type="text"
+                                                                class="form-control exp_date " name="exp_date[]"
+                                                                id="exp_date-0" autocomplete="off">
                                                         </td>
 
                                                         <td style="display: none;"><input type="text"
@@ -777,19 +779,25 @@
                                                         </td>
                                                         <td align="left" colspan="1"
                                                             class="col-md-2 payment_method">
-                                                            <select name="payment_method[]" id="payment_method"
-                                                                class="form-control">
-                                                                <option value="Cash">Cash</option>
-                                                                <option value="K Pay">K Pay</option>
-                                                                <option value="Wave">Wave</option>
-                                                                <option value="Others">Others</option>
-                                                            </select>
+                                                            <div class="input-group">
+                                                                <select name="payment_method[]" id="payment_method"
+                                                                    class="form-control" required>
+                                                                    <option value="Cash">Cash</option>
+                                                                    <option value="K Pay">K Pay</option>
+                                                                    <option value="Wave">Wave</option>
+                                                                    <option value="Others">Others</option>
+                                                                </select>
+                                                                <div class="input-group-append">
+                                                                    <button type="button" id="addRow"
+                                                                        class="btn btn-primary">
+                                                                        <i class="fa-solid fa-plus"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
                                                         </td>
-                                                        <td align="left" colspan="1" class="col-md-1">
-                                                            <button type="button" id="addRow"
-                                                                class="btn btn-primary"><i
-                                                                    class="fa-solid fa-plus"></i></button>
-                                                        </td>
+
+
+
                                                     </tr>
                                                 </tbody>
 
@@ -973,7 +981,7 @@
                         var $barcodeInput = $('.barcode-input');
                         var item_barcode = $barcodeInput.val();
 
-                        if (item_barcode.length > 5) {
+                        if (item_barcode.length > 1) {
                             $.ajax({
                                 type: 'POST',
                                 url: "{{ route('get.barcode.data-invoice') }}",
@@ -1012,7 +1020,7 @@
 
                             var $barcodeInput = $('.barcode-input');
                             var item_barcode = $barcodeInput.val();
-                            if (item_barcode.length > 5) {
+                            if (item_barcode.length > 1) {
                                 $.ajax({
                                     type: 'POST',
                                     url: "{{ route('get.barcode.data-invoice') }}",
@@ -1106,7 +1114,7 @@
                             '"></td>' +
                             '<td><input type="text" class="form-control vat" name="discount[]" value="0" id="vat-' +
                             count + '"   autocomplete="off"></td>' +
-                            '<td><input type="text" class="form-control exp_date" name="exp_date[]" id="exp_date-' +
+                            '<td style="display: none;"><input type="text" class="form-control exp_date" name="exp_date[]" id="exp_date-' +
                             count + '" autocomplete="off" value="' + item['expired_date'] + '"></td>' +
                             '<td style="display: none;"><input  type="text" class="form-control warehouse" name="warehouse[]" id="warehouse-' +
                             count + '" autocomplete="off" value="' + item['warehouse_id'] + '"></td>' +
@@ -1115,55 +1123,11 @@
                             '<td style="width: 5%"><button type="submit" class="btn btn-danger remove_item_btn" id="removebutton"><i class="fa-solid fa-minus"></i></button></td>' +
                             '</tr>';
                         $("#showitem123").append(newRow);
-                        updatePriceCategory();
                     }
                 }
 
 
-                function updatePriceCategory() {
-                    var selectedCategory = $('#sale_price_category').val();
-                    var cuzName = $('#type').val();
 
-                    if (selectedCategory === 'Whole Sale') {
-                        $('.wholesale_td').show();
-                        $('.wholesale_th').show();
-                        $('.retail_td').hide();
-                        $('.retail_th').hide();
-                    } else if (selectedCategory === 'Retail') {
-                        $('.wholesale_td').hide();
-                        $('.wholesale_th').hide();
-                        $('.retail_td').show();
-                        $('.retail_th').show();
-                    } else {
-                        if (cuzName === 'Whole Sale') {
-                            $('.wholesale_td').show();
-                            $('.wholesale_th').show();
-                            $('.retail_td').hide();
-                            $('.retail_th').hide();
-                        } else if (cuzName === 'Retail') {
-                            $('.wholesale_td').hide();
-                            $('.wholesale_th').hide();
-                            $('.retail_td').show();
-                            $('.retail_th').show();
-                        } else {
-                            $('.wholesale_td').hide();
-                            $('.wholesale_th').hide();
-                            $('.retail_td').show();
-                            $('.retail_th').show();
-                        }
-                    }
-                }
-
-                $('#type').val('');
-                updatePriceCategory();
-
-                $('#sale_price_category').on('input', function() {
-                    updatePriceCategory();
-                });
-
-                $('#type').on('input', function() {
-                    updatePriceCategory();
-                });
 
 
                 $(document).on('click', '.remove_item_btn', function(e) {
@@ -1218,16 +1182,21 @@
                     <input type="text" name="payment_amount[]" class="form-control payment_amount">
                 </td>
                 <td align="left" colspan="1" class="col-md-2">
-                    <select name="payment_method[]" class="form-control">
-                        <option value="Cash">Cash</option>
-                        <option value="K Pay">K Pay</option>
-                        <option value="Wave">Wave</option>
-                        <option value="Others">Others</option>
-                    </select>
+                   <div class="input-group">
+            <select name="payment_method[]" class="form-control" required>
+                <option value="Cash">Cash</option>
+                <option value="K Pay">K Pay</option>
+                <option value="Wave">Wave</option>
+                <option value="Others">Others</option>
+            </select>
+            <div class="input-group-append">
+                <button type="button" class="removeRow btn btn-danger">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
+            </div>
+        </div>
                 </td>
-                <td align="left" colspan="1" class="col-md-1">
-                    <button class="removeRow btn btn-danger"><i class="fa-solid fa-minus"></i></button>
-                </td>
+               
             </tr>`;
 
                             $('#trContainer').append(newRow);
@@ -1362,87 +1331,37 @@
 
 
 
-                $(document).ready(function() {
-                    function updatePriceCategory() {
-                        var selectedCategory = $('#sale_price_category').val();
-                        var cuzName = $('#type').val();
+                $(document).on('click', '#customer_search', function(e) {
+                    e.preventDefault();
+                    let serialNumber = $("#customer").val();
 
-                        if (selectedCategory === 'Whole Sale') {
-                            $('.wholesale_td').show();
-                            $('.wholesale_th').show();
-                            $('.retail_td').hide();
-                            $('.retail_th').hide();
-                        } else if (selectedCategory === 'Retail') {
-                            $('.wholesale_td').hide();
-                            $('.wholesale_th').hide();
-                            $('.retail_td').show();
-                            $('.retail_th').show();
-                        } else {
-                            if (cuzName === 'Whole Sale') {
-                                $('.wholesale_td').show();
-                                $('.wholesale_th').show();
-                                $('.retail_td').hide();
-                                $('.retail_th').hide();
-                            } else if (cuzName === 'Retail') {
-                                $('.wholesale_td').hide();
-                                $('.wholesale_th').hide();
-                                $('.retail_td').show();
-                                $('.retail_th').show();
+                    $.ajax({
+                        type: 'POST',
+                        url: "{{ route('customer_service_search_fill') }}",
+                        data: {
+                            _token: "{{ csrf_token() }}",
+                            model: serialNumber,
+                            location: $('#location').val()
+                        },
+                        success: function(data) {
+                            console.log(data);
+
+                            if (data.customer) {
+                                $("#name").val(data.customer.name);
+                                $("#customer_id").val(data.customer.id);
+                                $("#phone_no").val(data.customer.phno);
+                                $("#type").val(data.customer
+                                    .type);
+                                $("#address").val(data.customer.address);
+                                $("#customer").val('');
                             } else {
-                                $('.wholesale_td').hide();
-                                $('.wholesale_th').hide();
-                                $('.retail_td').show();
-                                $('.retail_th').show();
+                                console.error("Customer not found");
+                                $("#customer").val('');
                             }
+                        },
+                        error: function(xhr, status, error) {
+                            console.error(xhr.responseText);
                         }
-                    }
-
-                    $('#type').val('');
-                    updatePriceCategory();
-
-                    $('#sale_price_category').on('input', function() {
-                        updatePriceCategory();
-                    });
-
-                    $('#type').on('input', function() {
-                        updatePriceCategory();
-                    });
-
-                    $(document).on('click', '#customer_search', function(e) {
-                        e.preventDefault();
-                        let serialNumber = $("#customer").val();
-
-                        $.ajax({
-                            type: 'POST',
-                            url: "{{ route('customer_service_search_fill') }}",
-                            data: {
-                                _token: "{{ csrf_token() }}",
-                                model: serialNumber,
-                                location: $('#location').val()
-                            },
-                            success: function(data) {
-                                console.log(data);
-
-                                if (data.customer) {
-                                    $("#name").val(data.customer.name);
-                                    $("#customer_id").val(data.customer.id);
-                                    $("#phone_no").val(data.customer.phno);
-                                    $("#type").val(data.customer
-                                        .type);
-
-                                    updatePriceCategory();
-
-                                    $("#address").val(data.customer.address);
-                                    $("#customer").val('');
-                                } else {
-                                    console.error("Customer not found");
-                                    $("#customer").val('');
-                                }
-                            },
-                            error: function(xhr, status, error) {
-                                console.error(xhr.responseText);
-                            }
-                        });
                     });
                 });
             });

@@ -9,77 +9,39 @@
                 <li class="nav-item">
                     <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i
                             class="fas fa-bars"></i></a>
-                    <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i
-                            class="fas fa-bars"></i></a>
                 </li>
 
-                <li class="nav-item">
+                <li class="nav-item text-white">
                     <a class="nav-link text-white" href="#">Date -
                         <?= $currentDate = date('d-m-y') ?></a>
                 </li>
 
-                @if (Auth::user()->type === '1')
-                    <li class="nav-item ml-auto">
-                        <a class="nav-link" href="#">
-                            @if (Auth::user()->branch_id)
-                                {{ Auth::user()->branch->branch_name }}
-                            @else
-                                Admin
-                            @endif
-                    <li class="nav-item ml-auto">
-                        <a class="nav-link" href="#">
-                            @if (Auth::user()->branch_id)
-                                {{ Auth::user()->branch->branch_name }}
-                            @else
-                                Admin
-                            @endif
 
-                        </a>
-                    </li>
-                    </a>
-                    </li>
-                @else
-                    <li class="nav-item ml-auto">
-                        <a class="nav-link" href="#">
-                            @if (Auth::user()->branch_id)
-                                {{ Auth::user()->branch->branch_name }}
-                            @else
-                                N/A
-                            @endif
-                        </a>
-                    </li>
-                    <li class="nav-item ml-auto">
-                        <a class="nav-link" href="#">
-                            @if (Auth::user()->branch_id)
-                                {{ Auth::user()->branch->branch_name }}
-                            @else
-                                N/A
-                            @endif
-                        </a>
-                    </li>
-                @endif
             </ul>
 
             <!-- Right navbar links -->
-            <ul class="navbar-nav ml-auto">
+            <ul class="ml-auto navbar-nav">
+
+
                 <div class="btn-group">
-                    <button type="button" class=" text-white btn dropdown-toggle" data-toggle="dropdown"
+                    <button type="button" class="btn dropdown-toggle text-white" data-toggle="dropdown"
                         aria-haspopup="true" aria-expanded="false">
-                        <button type="button" class=" text-white btn dropdown-toggle" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            {{ auth()->user()->name }}
-                        </button>
-                        <div class="dropdown-menu ">
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button type="submit" class="p-1 btn changelogout " style="width: 157px">
-                                    <i class="fa-solid fa-right-from-bracket "></i> Logout</button>
+                        {{ auth()->user()->name }}
+                    </button>
+                    <div class="dropdown-menu ">
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button type="submit" class="p-1 btn changelogout " style="width: 157px">
+                                <i class="fa-solid fa-right-from-bracket "></i> Logout</button>
 
-                            </form>
+                        </form>
 
 
-                        </div>
+                    </div>
                 </div>
+
+
+
             </ul>
         </nav>
         @include('layouts.sidebar')
@@ -139,8 +101,6 @@
 
                                             <div class="form-group">
                                                 <label for="crc">Customer Type </label>
-                                                <!-- <input type="text" class="form-control"
-                                                    placeholder="Enter Customer Type" name="type"> -->
                                                 <select name="type" id="type" class="form-control">
                                                     <option value="{{ $showCustomer->type }}">
                                                         {{ $showCustomer->type }}
@@ -154,19 +114,11 @@
                                                 <div class="form-group">
                                                     <label for="branch">Location<span
                                                             class="text-danger">*</span></label>
-
-                                                    <select name="branch" id="branch" class="form-control"
-                                                        required>
-
+                                                    <select name="branch" id="branch" class="form-control" required>
                                                         @foreach ($branchs as $branch)
-                                                            @if ($branch->id == $showCustomer->branch)
-                                                                <option value="{{ $branch->id }}" selected>
-                                                                    {{ $branch->name }}
-                                                                </option>
-                                                            @endif
-                                                        @endforeach
-                                                        @foreach ($branchs as $branch)
-                                                            <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                            <option value="{{ $branch->id }}"
+                                                                {{ $branch->id == $showCustomer->branch ? 'selected' : '' }}>
+                                                                {{ $branch->name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
@@ -175,24 +127,16 @@
                                                 <div class="form-group">
                                                     <label for="branch">Location<span
                                                             class="text-danger">*</span></label>
-
-                                                    <select name="branch" id="branch" class="form-control"
-                                                        required>
+                                                    <select name="branch" id="branch" class="form-control" required>
                                                         @php
                                                             $userPermissions = auth()->user()->level
                                                                 ? json_decode(auth()->user()->level)
                                                                 : [];
                                                         @endphp
                                                         @foreach ($branchs as $branch)
-                                                            @if ($branch->id == $showCustomer->branch)
-                                                                <option value="{{ $branch->id }}" selected>
-                                                                    {{ $branch->name }}
-                                                                </option>
-                                                            @endif
-                                                        @endforeach
-                                                        @foreach ($branchs as $branch)
                                                             @if (in_array($branch->id, $userPermissions))
-                                                                <option value="{{ $branch->id }}">
+                                                                <option value="{{ $branch->id }}"
+                                                                    {{ $branch->id == $showCustomer->branch ? 'selected' : '' }}>
                                                                     {{ $branch->name }}
                                                                 </option>
                                                             @endif
@@ -200,6 +144,7 @@
                                                     </select>
                                                 </div>
                                             @endif
+
 
                                             <div class="form-group">
                                                 <label for="address">Address</label>

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('user_profiles', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('branch', 191)->nullable();
             $table->string('logos')->nullable();
             $table->string('address')->nullable();
             $table->string('phno1')->nullable();
