@@ -23,6 +23,6 @@ class Account extends Model
 
     public function payment()
     {
-        return $this->hasMany(Payment::class);
+        return $this->hasMany(Payment::class, 'account_id');
     }
 }

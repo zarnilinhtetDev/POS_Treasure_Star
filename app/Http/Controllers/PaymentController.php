@@ -49,14 +49,14 @@ class PaymentController extends Controller
             ->get();
 
         $sale_return_invoices = PurchaseOrder::where('transaction_id', $transaction->id)
-            ->whereMonth('po_date', Carbon::now()->month)
-            ->whereYear('po_date', Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
             ->where('balance_due', 'Sale Return Invoice')
             ->get();
 
         $sale_return_pos = PurchaseOrder::where('transaction_id', $transaction->id)
-            ->whereMonth('po_date', Carbon::now()->month)
-            ->whereYear('po_date', operator: Carbon::now()->year)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', operator: Carbon::now()->year)
             ->where('balance_due', 'Sale Return')
             ->get();
 

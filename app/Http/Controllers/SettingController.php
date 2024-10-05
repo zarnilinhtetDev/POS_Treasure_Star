@@ -38,6 +38,13 @@ class SettingController extends Controller
         return redirect()->route('setting')->with('success', 'Invoice setting updated successfully.');
     }
 
+    public function invoice_setting_delete()
+    {
+        $invoice_setting = Setting::where('category', '1')->first();
+        $invoice_setting->delete();
+        return redirect()->route('setting')->with('success', 'Invoice setting deleted successfully.');
+    }
+
 
     public function pos(Request $request)
     {
@@ -54,6 +61,13 @@ class SettingController extends Controller
         $pos_setting->transaction_id = $request->transaction_id;
         $pos_setting->update();
         return redirect()->route('setting')->with('success', 'POS setting updated successfully.');
+    }
+
+    public function pos_setting_delete()
+    {
+        $pos_setting = Setting::where('category', '3')->first();
+        $pos_setting->delete();
+        return redirect()->route('setting')->with('success', 'POS setting deleted successfully.');
     }
 
 
@@ -74,6 +88,13 @@ class SettingController extends Controller
         return redirect()->route('setting')->with('success', 'Purchase Order setting updated successfully.');
     }
 
+    public function purchase_order_setting_delete()
+    {
+        $po_setting = Setting::where('category', '2')->first();
+        $po_setting->delete();
+        return redirect()->route('setting')->with('success', 'Purchase Order setting deleted successfully.');
+    }
+
     public function purchase_return(Request $request)
     {
         $pr_setting = new Setting();
@@ -89,6 +110,13 @@ class SettingController extends Controller
         $pr_setting->transaction_id = $request->transaction_id;
         $pr_setting->update();
         return redirect()->route('setting')->with('success', 'Purchase Return setting updated successfully.');
+    }
+
+    public function purchase_return_setting_delete()
+    {
+        $pr_setting = Setting::where('category', '4')->first();
+        $pr_setting->delete();
+        return redirect()->route('setting')->with('success', 'Purchase Return setting deleted successfully.');
     }
 
     public function sale_return_invoice(Request $request)
@@ -108,6 +136,13 @@ class SettingController extends Controller
         return redirect()->route('setting')->with('success', 'Sale Return setting updated successfully.');
     }
 
+    public function sale_return_invoice_setting_delete()
+    {
+        $pr_setting = Setting::where('category', '5')->first();
+        $pr_setting->delete();
+        return redirect()->route('setting')->with('success', 'Sale Return setting deleted successfully.');
+    }
+
 
     public function sale_return_pos(Request $request)
     {
@@ -124,5 +159,12 @@ class SettingController extends Controller
         $pr_setting->transaction_id = $request->transaction_id;
         $pr_setting->update();
         return redirect()->route('setting')->with('success', 'Sale Return setting updated successfully.');
+    }
+
+    public function sale_return_pos_setting_delete()
+    {
+        $pr_setting = Setting::where('category', '6')->first();
+        $pr_setting->delete();
+        return redirect()->route('setting')->with('success', 'Sale Return setting deleted successfully.');
     }
 }

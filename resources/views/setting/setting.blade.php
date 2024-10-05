@@ -83,8 +83,25 @@
                                                 <h5 class="col-md-5">
                                                     {{ $invoice->transaction->transaction_name ?? null }}
                                                 </h5>
-                                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                    data-target="#modal-expense">Edit</button>
+
+
+                                                <div class="col-md-2 d-flex justify-content-end">
+
+                                                    <button type="button" class="btn btn-primary mr-2"
+                                                        data-toggle="modal" data-target="#modal-expense">
+                                                        Edit
+                                                    </button>
+
+
+                                                    <form action="{{ route('invoice_setting_delete') }}" method="POST"
+                                                        style="display: inline;">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-danger">Remove</button>
+                                                    </form>
+
+                                                </div>
+
+
                                                 <div class="modal fade" id="modal-expense">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
@@ -135,7 +152,6 @@
                                                                         {{ $transaction->transaction_name }}</option>
                                                                 @endforeach
                                                             </select>
-
                                                         </div>
                                                         <div class="col-md-3">
                                                             <button type="submit" class="btn btn-success">Save</button>
@@ -147,6 +163,8 @@
                                     </div>
                                 </div>
 
+
+
                                 <div class="card text-white" style="background-color: #1560BD">
                                     <div class="card-body">
                                         <div class="row col-md-12 mt-3">
@@ -155,8 +173,20 @@
                                                 <h5 class="col-md-5">
                                                     {{ $point_of_sales->transaction->transaction_name ?? null }}
                                                 </h5>
-                                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                    data-target="#modal-pos">Edit</button>
+                                                <div class="col-md-2 d-flex justify-content-end">
+
+                                                    <button type="button" class="btn btn-primary mr-2"
+                                                        data-toggle="modal" data-target="#modal-pos">
+                                                        Edit
+                                                    </button>
+
+                                                    <form action="{{ route('pos_setting_delete') }}" method="POST"
+                                                        style="display: inline;">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-danger">Remove</button>
+                                                    </form>
+                                                </div>
+
                                                 <div class="modal fade" id="modal-pos">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
@@ -229,8 +259,22 @@
                                                 <h5 class="col-md-5">
                                                     {{ $purchase_orders->transaction->transaction_name ?? null }}
                                                 </h5>
-                                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                    data-target="#modal-po">Edit</button>
+
+                                                <div class="col-md-2 d-flex justify-content-end">
+
+                                                    <button type="button" class="btn btn-primary mr-2"
+                                                        data-toggle="modal" data-target="#modal-po">
+                                                        Edit
+                                                    </button>
+
+                                                    <form action="{{ route('purchase_order_setting_delete') }}"
+                                                        method="POST" style="display: inline;">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-danger">Remove</button>
+                                                    </form>
+                                                </div>
+
+
                                                 <div class="modal fade" id="modal-po">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
@@ -305,8 +349,20 @@
                                                 <h5 class="col-md-5">
                                                     {{ $purchase_returns->transaction->transaction_name ?? null }}
                                                 </h5>
-                                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                    data-target="#modal-pr">Edit</button>
+
+                                                <div class="col-md-2 d-flex justify-content-end">
+
+                                                    <button type="button" class="btn btn-primary mr-2"
+                                                        data-toggle="modal" data-target="#modal-pr">
+                                                        Edit
+                                                    </button>
+
+                                                    <form action="{{ route('purchase_return_setting_delete') }}"
+                                                        method="POST" style="display: inline;">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-danger">Remove</button>
+                                                    </form>
+                                                </div>
                                                 <div class="modal fade" id="modal-pr">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
@@ -380,8 +436,21 @@
                                                 <h5 class="col-md-5">
                                                     {{ $sale_return_invoices->transaction->transaction_name ?? null }}
                                                 </h5>
-                                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                    data-target="#modal-sr_inv">Edit</button>
+
+                                                <div class="col-md-2 d-flex justify-content-end">
+
+                                                    <button type="button" class="btn btn-primary mr-2"
+                                                        data-toggle="modal" data-target="#modal-sr_inv">
+                                                        Edit
+                                                    </button>
+
+                                                    <form action="{{ route('sale_return_invoice_setting_delete') }}"
+                                                        method="POST" style="display: inline;">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-danger">Remove</button>
+                                                    </form>
+                                                </div>
+
                                                 <div class="modal fade" id="modal-sr_inv">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">
@@ -455,8 +524,21 @@
                                                 <h5 class="col-md-5">
                                                     {{ $sale_return_pos->transaction->transaction_name ?? null }}
                                                 </h5>
-                                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                                    data-target="#modal-sr_pos">Edit</button>
+
+                                                <div class="col-md-2 d-flex justify-content-end">
+
+                                                    <button type="button" class="btn btn-primary mr-2"
+                                                        data-toggle="modal" data-target="#modal-sr_pos">
+                                                        Edit
+                                                    </button>
+
+                                                    <form action="{{ route('sale_return_pos_setting_delete') }}"
+                                                        method="POST" style="display: inline;">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-danger">Remove</button>
+                                                    </form>
+                                                </div>
+
                                                 <div class="modal fade" id="modal-sr_pos">
                                                     <div class="modal-dialog">
                                                         <div class="modal-content">

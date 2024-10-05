@@ -282,12 +282,94 @@
 
                 @if (in_array('Report', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
-                        <a href="{{ url('/report') }}" class="nav-link">
+                        <a href="{{ url('report') }}" class="nav-link">
                             <i class="text-white fa-solid fa-list-ul nav-icon"></i>
                             <p class="pl-3 text-white">
-                                Report
-                            </p>
+                                Report </p><i class="text-white right fas fa-angle-left"></i>
                         </a>
+                        <ul class="nav nav-treeview">
+
+                            @if (auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('general_ledger') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">General Ledger</p>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Invoice Report', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('report') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Invoices</p>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Quotation Report', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('report_quotation') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Quotations</p>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if (in_array('POS Report', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('report_pos') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">POS</p>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Purchase Order Report', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('report_po') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Purchase Orders</p>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Purchase Return', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('report_purchase_return') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Purchase Return</p>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Sale Return (Invoice)', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('report_sale_return') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Sale Return (Invoice)</p>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Item Report', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('report_item') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Items</p>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if (in_array('Sale Return (POS)', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('sale_return') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Sale Return (POS)</p>
+                                    </a>
+                                </li>
+                            @endif
+                        </ul>
                     </li>
                 @endif
 

@@ -1,6 +1,5 @@
 @include('layouts.header')
 
-
 <style>
     .nav-tabs .nav-link {
         color: #007FFF;
@@ -66,7 +65,6 @@
         @include('layouts.sidebar') <div class="content-wrapper">
             <!-- Main content -->
             <section class="content">
-
                 {{-- Permission Php --}}
                 @php
                     $choosePermission = [];
@@ -83,12 +81,12 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1>Purchase Return Report</h1>
+                                <h1>General Ledger</h1>
                             </div>
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
                                     <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a></li>
-                                    <li class="breadcrumb-item active">Purchase Return Report</li>
+                                    <li class="breadcrumb-item active">General Ledger</li>
                                 </ol>
                             </div>
                         </div>
@@ -96,135 +94,95 @@
                 </section>
 
 
-
-
-
                 <div class="ml-2 container-fluid">
-
-                    <!-- left column -->
-
-                    <!-- general form elements -->
-
-                    <!-- /.modal -->
 
                     <div class="my-5 container-fluid">
                         <div class="row">
-                            <div class="col-md-6">
-                                <form action="{{ url('monthly_purchase_return') }}" method="get">
+                            <div class="col-md-10">
+                                <form action="{{ url('general_ledger_search') }}" method="get">
                                     <div class="row">
-                                        <div class="col-md-5 form-group">
-                                            <label for="">Date From :</label>
+                                        <div class="col-md-3 form-group">
+                                            <label for="start_date">Date From:</label>
                                             <input type="date" name="start_date" class="form-control" required>
                                         </div>
-                                        <div class="col-md-5 form-group">
-                                            <label for="">Date To :</label>
+                                        <div class="col-md-3 form-group">
+                                            <label for="end_date">Date To:</label>
                                             <input type="date" name="end_date" class="form-control" required>
                                         </div>
-                                        <div class="mt-3 col-md-3 form-group">
+
+
+                                        <div class="col-md-2 form-group">
+                                            <label for="">&nbsp;</label>
                                             <input type="submit" class="btn btn-primary form-control" value="Search"
                                                 style="background-color: #218838">
                                         </div>
-
                                     </div>
                                 </form>
                             </div>
                         </div>
                     </div>
+
+
                     <div class="mt-3 col-md-12">
                         <div class="card ">
-                            <div class="card-header">
-                                <h3 class="card-title">Purchase Return Report</h3>
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h3 class="card-title">General Ledger</h3>
+
                             </div>
 
                             <!-- /.card-header -->
                             <div class="card-body">
-
-                                <table id="example1" class="table table-bordered table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>No.</th>
-                                            <th>Invoice No.</th>
-                                            <th>Location</th>
-                                            <th>Customer Name</th>
-                                            <th>Phone Number</th>
-                                            <th>Customer Type</th>
-                                            <th>Address</th>
-                                            <th>Sale Return</th>
-                                            <th>Total Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @php
-                                            $no = '1';
-                                        @endphp
-                                        @if (!empty($search_invoices))
-                                            @foreach ($search_invoices as $invoice)
+                                <div class="table-responsive">
+                                    <table id="example1" class="table table-bordered table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>No.</th>
+                                                <th>Account Number</th>
+                                                <th>Account Name</th>
+                                                <th>Type</th>
+                                                <th>BL/PL</th>
+                                                <th style="background-color: #C5F0C7">IN</th>
+                                                <th style="background-color: #FBCCCC">OUT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($accounts as $key => $account)
                                                 <tr>
-                                                    <td>{{ $no }}</td>
-                                                    <td><a
-                                                            href="{{ url('invoice_detail', $invoice->id) }}">{{ $invoice->invoice_no }}</a>
-                                                    </td>
+                                                    <td>{{ $key + 1 }}</td>
                                                     <td>
-                                                        @foreach ($branchs as $branch)
-                                                            @if ($branch->id == $invoice->branch)
-                                                                {{ $branch->name }}
-                                                            @endif
-                                                        @endforeach
+                                                        @if (request('start_date') && request('end_date'))
+                                                            <a
+                                                                href="{{ url('/report_account_transaction_payment_search/' . $account->id . '?start_date=' . request('start_date') . '&end_date=' . request('end_date')) }}">
+                                                                {{ $account->account_number }}
+                                                            </a>
+                                                        @else
+                                                            <a
+                                                                href="{{ url('/report_account_transaction_payment', $account->id) }}">
+                                                                {{ $account->account_number }}
+                                                            </a>
+                                                        @endif
                                                     </td>
-                                                    <td>{{ $invoice->customer_name }}</td>
-                                                    <td>{{ $invoice->phno }}</td>
-                                                    <td>{{ $invoice->type }}</td>
-                                                    <td>{{ $invoice->address }}</td>
-                                                    <td>{{ $invoice->balance_due }}</td>
-                                                    <td>{{ $invoice->total }}</td>
+                                                    <td>{{ $account->account_name }}</td>
+                                                    <td>{{ $account->account_type }}</td>
+                                                    <td>{{ $account->account_bl_pl }}</td>
+                                                    <td style="background-color: #C5F0C7">
+                                                        {{ number_format($accountDepositSums[$account->id]['depositInvoiceSum']) }}
+                                                    </td>
+                                                    <td style="background-color: #FBCCCC">
+                                                        {{ number_format($accountDepositSums[$account->id]['depositPurchaseOrderSum'] + $accountDepositSums[$account->id]['depositSaleReturnSum']) }}
+                                                    </td>
                                                 </tr>
                                             @endforeach
-                                        @else
-                                            @foreach ($invoices as $invoice)
-                                                <tr>
-                                                    <td>{{ $no }}</td>
-                                                    <td><a
-                                                            href="{{ url('invoice_detail', $invoice->id) }}">{{ $invoice->invoice_no }}</a>
-                                                    </td>
-                                                    <td>
-                                                        @foreach ($branchs as $branch)
-                                                            @if ($branch->id == $invoice->branch)
-                                                                {{ $branch->name }}
-                                                            @endif
-                                                        @endforeach
-                                                    </td>
-                                                    <td>{{ $invoice->customer_name }}</td>
-                                                    <td>{{ $invoice->phno }}</td>
-                                                    <td>{{ $invoice->type }}</td>
-                                                    <td>{{ $invoice->address }}</td>
-                                                    <td>{{ $invoice->balance_due }}</td>
-                                                    <td>{{ $invoice->total }}</td>
-                                                </tr>
-                                            @endforeach
-                                        @endif
 
 
-                                        @php
-                                            $no++;
-                                        @endphp
+                                        </tbody>
 
-                                    <tfoot>
-                                        <tr>
-                                            <td></td>
-                                            <td colspan="7" style="text-align:right">Total</td>
-                                            <td colspan="">
-                                                @if (!empty($search_invoices))
-                                                    {{ $search_total }}@else{{ $total }}
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    </tfoot>
-                                    </tbody>
-
-                                </table>
+                                    </table>
+                                </div>
                             </div>
                             <!-- /.card-body -->
                         </div>
+
                     </div>
                 </div>
         </div>
@@ -260,10 +218,20 @@
     <script>
         $(function() {
             $("#example1").DataTable({
-                "responsive": true,
+                "responsive": false,
                 "lengthChange": false,
                 "autoWidth": false,
                 "pageLength": 30,
+                "buttons": [{
+                        extend: 'excelHtml5',
+                        text: 'Excel',
+                        filename: 'report_invoices', // Set filename here
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: ' PDF'
+                    }
+                ]
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         });
     </script>
