@@ -167,7 +167,7 @@
                                                             {{ $po->balance_due }}
                                                         @endif
                                                     </td>
-                                                    <td>{{ $po->total }}</td>
+                                                    <td>{{ number_format($po->total) }}</td>
                                                 </tr>
                                                 @php
                                                     $no++;
