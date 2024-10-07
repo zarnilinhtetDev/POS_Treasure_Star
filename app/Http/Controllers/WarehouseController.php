@@ -41,7 +41,7 @@ class WarehouseController extends Controller
 
             return back()->with('success', 'Register Warehouse Successful');
         } catch (\Exception $e) {
-            return back()->with('error', 'Error: ' . $e->getMessage());
+            return back()->with('error', 'Error: ' . 'Something Wrong!');
         }
     }
     public function warehouse_delete($id)

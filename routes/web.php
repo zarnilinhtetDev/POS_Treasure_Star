@@ -212,6 +212,10 @@ Route::middleware('auth')->group(function () {
     Route::get('sale_return_search', [InvoiceController::class, 'sale_return_search']);
     Route::get('report_pos_receipt/{invoice}', [ReportController::class, 'pos_receipt']);
     Route::get('report_invoice_details/{invoice}', [ReportController::class, 'report_invoice_detail']);
+    Route::get('general_ledger', [ReportController::class, 'general_ledger']);
+    Route::get('general_ledger_search', [ReportController::class, 'general_ledger_search']);
+    Route::get('report_account_transaction_payment/{id}', [ReportController::class, 'report_account_transaction_payment']);
+    Route::get('report_account_transaction_payment_search/{id}', [ReportController::class, 'report_account_transaction_payment_search']);
 
 
     //Profit
@@ -294,21 +298,30 @@ Route::middleware('auth')->group(function () {
     Route::get('setting', [SettingController::class, 'index'])->name('setting');
     Route::post('invoice_setting', [SettingController::class, 'invoice'])->name('invoice_setting');
     Route::post('invoice_setting/edit', [SettingController::class, 'invoice_setting_edit'])->name('invoice_setting_edit');
+    Route::post('invoice_setting_delete', [SettingController::class, 'invoice_setting_delete'])->name('invoice_setting_delete');
+
 
     Route::post('purchase_order_setting', [SettingController::class, 'purchase_order'])->name('purchase_order_setting');
     Route::post('purchase_order_setting/edit', [SettingController::class, 'purchase_order_setting_edit'])->name('purchase_order_setting_edit');
+    Route::post('purchase_order_setting_delete', [SettingController::class, 'purchase_order_setting_delete'])->name('purchase_order_setting_delete');
 
     Route::post('pos_setting', [SettingController::class, 'pos'])->name('pos_setting');
     Route::post('pos_setting/edit', [SettingController::class, 'pos_setting_edit'])->name('pos_setting_edit');
+    Route::post('pos_setting_delete', [SettingController::class, 'pos_setting_delete'])->name('pos_setting_delete');
+
 
     Route::post('purchase_return_setting', [SettingController::class, 'purchase_return'])->name('purchase_return_setting');
     Route::post('purchase_return_setting/edit', [SettingController::class, 'purchase_return_setting_edit'])->name('purchase_return_setting_edit');
+    Route::post('purchase_return_setting_delete', [SettingController::class, 'purchase_return_setting_delete'])->name('purchase_return_setting_delete');
 
     Route::post('sale_return_invoice_setting', [SettingController::class, 'sale_return_invoice'])->name('sale_return_invoice_setting');
     Route::post('sale_return_invoice_setting/edit', [SettingController::class, 'sale_return_invoice_setting_edit'])->name('sale_return_invoice_setting_edit');
+    Route::post('sale_return_invoice_setting_delete', [SettingController::class, 'sale_return_invoice_setting_delete'])->name('sale_return_invoice_setting_delete');
+
 
     Route::post('sale_return_pos_setting', [SettingController::class, 'sale_return_pos'])->name('sale_return_pos_setting');
     Route::post('sale_return_pos_setting/edit', [SettingController::class, 'sale_return_pos_setting_edit'])->name('sale_return_pos_setting_edit');
+    Route::post('sale_return_pos_setting_delete', [SettingController::class, 'sale_return_pos_setting_delete'])->name('sale_return_pos_setting_delete');
 });
 Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
 Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

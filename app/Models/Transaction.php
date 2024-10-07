@@ -13,11 +13,11 @@ class Transaction extends Model
     protected $guarded = [];
     public function account()
     {
-        return $this->belongsTo(Account::class);
+        return $this->belongsTo(Account::class, 'account_id');
     }
 
     public function invoices()
     {
-        return $this->hasMany(Invoice::class);
+        return $this->hasMany(Invoice::class, 'transaction_id');
     }
 }

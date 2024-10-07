@@ -668,4 +668,271 @@ class ReportController extends Controller
 
         return view('report.report_expense', compact('search_expenses', 'search_total', 'branchs', 'categorys'));
     }
+
+    public function general_ledger()
+    {
+        $accounts = Account::with(['payment', 'transaction'])->latest()->get();
+
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+
+        $accountDepositSums = [];
+
+        foreach ($accounts as $account) {
+            $depositInvoiceSum = 0;
+            $depositPurchaseOrderSum = 0;
+            $depositSaleReturnSum = 0;
+
+            foreach ($account->transaction as $tran) {
+                $depositInvoiceSum += Invoice::where('transaction_id', $tran->id)
+                    ->whereMonth('created_at', $currentMonth)
+                    ->whereYear('created_at', $currentYear)
+                    ->where(function ($query) {
+                        $query->where('status', 'invoice')
+                            ->orWhere('status', 'pos');
+                    })
+                    ->sum('deposit');
+
+                $depositPurchaseOrderSum += PurchaseOrder::where('transaction_id', $tran->id)
+                    ->whereMonth('created_at', $currentMonth)
+                    ->whereYear('created_at', $currentYear)
+                    ->where(function ($query) {
+                        $query->where('balance_due', 'PO')
+                            ->orWhere('balance_due', 'Po Return');
+                    })
+                    ->sum('deposit');
+
+                $depositSaleReturnSum += PurchaseOrder::where('transaction_id', $tran->id)
+                    ->whereMonth('created_at', $currentMonth)
+                    ->whereYear('created_at', $currentYear)
+                    ->where(function ($query) {
+                        $query->where('balance_due', 'Sale Return Invoice')
+                            ->orWhere('balance_due', 'Sale Return');
+                    })
+                    ->sum('deposit');
+            }
+
+            $accountDepositSums[$account->id] = [
+                'depositInvoiceSum' => $depositInvoiceSum,
+                'depositPurchaseOrderSum' => $depositPurchaseOrderSum,
+                'depositSaleReturnSum' => $depositSaleReturnSum,
+            ];
+        }
+
+        // Pass the data to the view
+        return view('report.general_ledger', compact(
+            'accounts',
+            'accountDepositSums'
+        ));
+    }
+
+
+
+
+
+    public function general_ledger_search(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $accountId = $request->input('account_id');
+
+        $accountsQuery = Account::with(['payment', 'transaction'])->latest();
+        if ($accountId) {
+            $accountsQuery->where('id', $accountId);
+        }
+        $accounts = $accountsQuery->get();
+
+        $accountDepositSums = [];
+
+        foreach ($accounts as $account) {
+            $depositInvoiceSum = 0;
+            $depositPurchaseOrderSum = 0;
+            $depositSaleReturnSum = 0;
+
+            foreach ($account->transaction as $tran) {
+                $depositInvoiceSum += Invoice::where('transaction_id', $tran->id)
+                    ->whereDate('created_at', '>=', $startDate)
+                    ->whereDate('created_at', '<=', $endDate)
+                    ->where(function ($query) {
+                        $query->where('status', 'invoice')
+                            ->orWhere('status', 'pos');
+                    })
+                    ->sum('deposit');
+
+                $depositPurchaseOrderSum += PurchaseOrder::where('transaction_id', $tran->id)
+                    ->whereDate('created_at', '>=', $startDate)
+                    ->whereDate('created_at', '<=', $endDate)
+                    ->where(function ($query) {
+                        $query->where('balance_due', 'PO')
+                            ->orWhere('balance_due', 'Po Return');
+                    })
+                    ->sum('deposit');
+
+                $depositSaleReturnSum += PurchaseOrder::where('transaction_id', $tran->id)
+                    ->whereDate('created_at', '>=', $startDate)
+                    ->whereDate('created_at', '<=', $endDate)
+                    ->where(function ($query) {
+                        $query->where('balance_due', 'Sale Return Invoice')
+                            ->orWhere('balance_due', 'Sale Return');
+                    })
+                    ->sum('deposit');
+            }
+
+            $accountDepositSums[$account->id] = [
+                'depositInvoiceSum' => $depositInvoiceSum,
+                'depositPurchaseOrderSum' => $depositPurchaseOrderSum,
+                'depositSaleReturnSum' => $depositSaleReturnSum,
+            ];
+        }
+
+        return view('report.general_ledger', compact(
+            'accounts',
+            'accountDepositSums'
+        ));
+    }
+
+
+    public function report_account_transaction_payment($id)
+    {
+
+        $accounts = Account::where('id', $id)->get();
+        $transaction = Transaction::find($id);
+        $transactions = Transaction::with('account')->latest()->get();
+
+
+        $invoices = Invoice::where('transaction_id', $transaction->id)
+            ->where('status', 'invoice')
+            ->where('balance_due', 'Invoice')
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->get();
+
+        $po_returns = Invoice::where('transaction_id', $transaction->id)
+            ->where('status', 'invoice')
+            ->where('balance_due', 'Po Return')
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->get();
+
+        $purchase_orders = PurchaseOrder::where('transaction_id', $transaction->id)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->where('balance_due', 'PO')
+            ->get();
+
+        $point_of_sales = Invoice::where('transaction_id', $transaction->id)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->where('status', 'pos')
+            ->get();
+
+        $sale_return_invoices = PurchaseOrder::where('transaction_id', $transaction->id)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->where('balance_due', 'Sale Return Invoice')
+            ->get();
+
+        $sale_return_pos = PurchaseOrder::where('transaction_id', $transaction->id)
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->where('balance_due', 'Sale Return')
+            ->get();
+
+        $total_deposit_invoices = $invoices->sum('deposit');
+        $total_deposit_po_returns = $po_returns->sum('deposit');
+        $total_deposit_purchase_orders = $purchase_orders->sum('deposit');
+        $total_deposit_point_of_sales = $point_of_sales->sum('deposit');
+        $total_deposit_sale_return_invoices = $sale_return_invoices->sum('deposit');
+        $total_deposit_sale_return_pos = $sale_return_pos->sum('deposit');
+
+
+
+        $warehouses = Warehouse::all();
+        $payment = Payment::where('transaction_id', $id)->get();
+        return view('report.report_account_transaction_payment', compact('accounts', 'transaction', 'payment', 'invoices', 'warehouses', 'transactions', 'purchase_orders', 'point_of_sales', 'po_returns', 'sale_return_invoices', 'sale_return_pos', 'total_deposit_invoices', 'total_deposit_po_returns', 'total_deposit_purchase_orders', 'total_deposit_point_of_sales', 'total_deposit_sale_return_invoices', 'total_deposit_sale_return_pos', 'id'));
+    }
+
+    public function report_account_transaction_payment_search($id, Request $request)
+    {
+        $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date' => 'nullable|date|after_or_equal:start_date',
+        ]);
+
+        $accounts = Account::where('id', $id)->get();
+        $transaction = Transaction::find($id);
+        $transactions = Transaction::with('account')->latest()->get();
+
+        $startDate = $request->input('start_date', Carbon::now()->startOfDay());
+        $endDate = $request->input('end_date', Carbon::now()->endOfDay());
+
+        $invoices = Invoice::where('transaction_id', $transaction->id)
+            ->where('status', 'invoice')
+            ->where('balance_due', 'Invoice')
+            ->whereDate('invoice_date', '>=', $startDate)
+            ->whereDate('invoice_date', '<=', $endDate)
+            ->get();
+
+        $po_returns = Invoice::where('transaction_id', $transaction->id)
+            ->where('status', 'invoice')
+            ->where('balance_due', 'Po Return')
+            ->whereDate('invoice_date', '>=', $startDate)
+            ->whereDate('invoice_date', '<=', $endDate)
+            ->get();
+
+        $purchase_orders = PurchaseOrder::where('transaction_id', $transaction->id)
+            ->whereDate('po_date', '>=', $startDate)
+            ->whereDate('po_date', '<=', $endDate)
+            ->where('balance_due', 'PO')
+            ->get();
+
+        $point_of_sales = Invoice::where('transaction_id', $transaction->id)
+            ->whereDate('invoice_date', '>=', $startDate)
+            ->whereDate('invoice_date', '<=', $endDate)
+            ->where('status', 'pos')
+            ->get();
+
+        $sale_return_invoices = PurchaseOrder::where('transaction_id', $transaction->id)
+            ->whereDate('po_date', '>=', $startDate)
+            ->whereDate('po_date', '<=', $endDate)
+            ->where('balance_due', 'Sale Return Invoice')
+            ->get();
+
+        $sale_return_pos = PurchaseOrder::where('transaction_id', $transaction->id)
+            ->whereDate('po_date', '>=', $startDate)
+            ->whereDate('po_date', '<=', $endDate)
+            ->where('balance_due', 'Sale Return')
+            ->get();
+
+        $total_deposit_invoices = $invoices->sum('deposit');
+        $total_deposit_po_returns = $po_returns->sum('deposit');
+        $total_deposit_purchase_orders = $purchase_orders->sum('deposit');
+        $total_deposit_point_of_sales = $point_of_sales->sum('deposit');
+        $total_deposit_sale_return_invoices = $sale_return_invoices->sum('deposit');
+        $total_deposit_sale_return_pos = $sale_return_pos->sum('deposit');
+
+        $warehouses = Warehouse::all();
+        $payment = Payment::where('transaction_id', $id)->get();
+
+        return view('report.report_account_transaction_payment', compact(
+            'id',
+            'accounts',
+            'transaction',
+            'payment',
+            'invoices',
+            'warehouses',
+            'transactions',
+            'purchase_orders',
+            'point_of_sales',
+            'po_returns',
+            'sale_return_invoices',
+            'sale_return_pos',
+            'total_deposit_invoices',
+            'total_deposit_po_returns',
+            'total_deposit_purchase_orders',
+            'total_deposit_point_of_sales',
+            'total_deposit_sale_return_invoices',
+            'total_deposit_sale_return_pos'
+        ));
+    }
 }

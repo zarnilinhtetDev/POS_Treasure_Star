@@ -521,35 +521,39 @@
                                                     </td>
                                                     <td align="left" colspan="1"
                                                         class="col-md-2 payment_method">
-                                                        <select name="payment_method[]" id="payment_method"
-                                                            class="form-control" required>
-                                                            <option value="Cash"
-                                                                {{ $payment->payment_method === 'Cash' ? 'selected' : '' }}>
-                                                                Cash</option>
-                                                            <option value="K Pay"
-                                                                {{ $payment->payment_method === 'K Pay' ? 'selected' : '' }}>
-                                                                K Pay</option>
-                                                            <option value="Wave"
-                                                                {{ $payment->payment_method === 'Wave' ? 'selected' : '' }}>
-                                                                Wave</option>
-                                                            <option value="Others"
-                                                                {{ $payment->payment_method === 'Others' ? 'selected' : '' }}>
-                                                                Others</option>
-                                                        </select>
-                                                    </td>
-                                                    <td align="left" colspan="1" class="col-md-1">
-                                                        @if ($index === 0)
-                                                            <button type="button" id="addRow"
-                                                                class="btn btn-primary">
-                                                                <i class="fa-solid fa-plus"></i>
-                                                            </button>
-                                                        @endif
+                                                        <div class="input-group">
+                                                            <select name="payment_method[]" id="payment_method"
+                                                                class="form-control" required>
+                                                                <option value="Cash"
+                                                                    {{ $payment->payment_method === 'Cash' ? 'selected' : '' }}>
+                                                                    Cash</option>
+                                                                <option value="K Pay"
+                                                                    {{ $payment->payment_method === 'K Pay' ? 'selected' : '' }}>
+                                                                    K Pay</option>
+                                                                <option value="Wave"
+                                                                    {{ $payment->payment_method === 'Wave' ? 'selected' : '' }}>
+                                                                    Wave</option>
+                                                                <option value="Others"
+                                                                    {{ $payment->payment_method === 'Others' ? 'selected' : '' }}>
+                                                                    Others</option>
+                                                            </select>
+                                                            <div class="input-group-append">
+                                                                @if ($index === 0)
+                                                                    <button type="button" id="addRow"
+                                                                        class="btn btn-primary">
+                                                                        <i class="fa-solid fa-plus"></i>
+                                                                    </button>
+                                                                @else
+                                                                    <button class="removeRow btn btn-danger"><i
+                                                                            class="fa-solid fa-minus"></i></button>
+                                                                @endif
 
-                                                        @if ($index === 1)
-                                                            <button class="removeRow btn btn-danger"><i
-                                                                    class="fa-solid fa-minus"></i></button>
-                                                        @endif
+
+                                                            </div>
+                                                        </div>
+
                                                     </td>
+
                                                 </tr>
                                             @endforeach
 
@@ -790,16 +794,21 @@
                     <input type="text" name="payment_amount[]" class="form-control payment_amount">
                 </td>
                 <td align="left" colspan="1" class="col-md-2">
-                    <select name="payment_method[]" class="form-control">
-                        <option value="Cash">Cash</option>
-                        <option value="K Pay">K Pay</option>
-                        <option value="Wave">Wave</option>
-                        <option value="Others">Others</option>
-                    </select>
+                   <div class="input-group">
+            <select name="payment_method[]" class="form-control" required>
+                <option value="Cash">Cash</option>
+                <option value="K Pay">K Pay</option>
+                <option value="Wave">Wave</option>
+                <option value="Others">Others</option>
+            </select>
+            <div class="input-group-append">
+                <button type="button" class="removeRow btn btn-danger">
+                    <i class="fa-solid fa-minus"></i>
+                </button>
+            </div>
+        </div>
                 </td>
-                <td align="left" colspan="1" class="col-md-1">
-                    <button class="removeRow btn btn-danger"><i class="fa-solid fa-minus"></i></button>
-                </td>
+             
             </tr>`;
 
                         $('#trContainer').append(newRow);

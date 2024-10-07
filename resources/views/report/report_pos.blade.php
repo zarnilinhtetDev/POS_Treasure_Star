@@ -80,74 +80,19 @@
                 {{-- End Php --}}
 
                 <section class="content-header">
-                    <div class="container mt-3">
-                        <ul class="nav nav-tabs">
-
-                            @if (in_array('Invoice Report', $choosePermission) || auth()->user()->is_admin == '1')
-                                <li class="nav-item">
-                                    <a class="nav-link {{ request()->is('report') ? 'active' : '' }}"
-                                        href="{{ url('report') }}">Invoices</a>
-                                </li>
-                            @endif
-
-                            @if (in_array('Quotation Report', $choosePermission) || auth()->user()->is_admin == '1')
-                                <li class="nav-item">
-                                    <a class="nav-link {{ request()->is('report_quotation') ? 'active' : '' }}"
-                                        href="{{ url('report_quotation') }}">Quotations</a>
-                                </li>
-                            @endif
-
-                            @if (in_array('POS Report', $choosePermission) || auth()->user()->is_admin == '1')
-                                <li class="nav-item">
-                                    <a class="nav-link {{ request()->is('report_pos') ? 'active' : '' }}"
-                                        href="{{ url('report_pos') }}">POS</a>
-                                </li>
-                            @endif
-
-                            @if (in_array('Purchase Order Report', $choosePermission) || auth()->user()->is_admin == '1')
-                                <li class="nav-item">
-                                    <a class="nav-link {{ request()->is('report_po') ? 'active' : '' }}"
-                                        href="{{ url('report_po') }}">Purchase Orders</a>
-                                </li>
-                            @endif
-
-                            @if (in_array('Purchase Return', $choosePermission) || auth()->user()->is_admin == '1')
-                                <li class="nav-item">
-                                    <a class="nav-link {{ request()->is('report_purchase_return') ? 'active' : '' }}"
-                                        href="{{ url('report_purchase_return') }}">Purchase Return</a>
-                                </li>
-                            @endif
-
-                            @if (in_array('Sale Return (Invoice)', $choosePermission) || auth()->user()->is_admin == '1')
-                                <li class="nav-item">
-                                    <a class="nav-link {{ request()->is('report_sale_return') ? 'active' : '' }}"
-                                        href="{{ url('report_sale_return') }}">Sale Return (Invoice)</a>
-                                </li>
-                            @endif
-
-                            @if (in_array('Item Report', $choosePermission) || auth()->user()->is_admin == '1')
-                                <li class="nav-item">
-                                    <a class="nav-link {{ request()->is('report_item') ? 'active' : '' }}"
-                                        href="{{ url('report_item') }}">Items</a>
-                                </li>
-                            @endif
-
-                            @if (in_array('Sale Return (POS)', $choosePermission) || auth()->user()->is_admin == '1')
-                                <li class="nav-item">
-                                    <a class="nav-link {{ request()->is('sale_return') ? 'active' : '' }}"
-                                        href="{{ url('sale_return') }}">Sale Return (POS)</a>
-                                </li>
-                            @endif
-
-                            @if (in_array('Expenses Report', $choosePermission) || auth()->user()->is_admin == '1')
-                                <li class="nav-item">
-                                    <a class="nav-link {{ request()->is('report_expense') ? 'active' : '' }}"
-                                        href="{{ url('report_expense') }}">Expenses</a>
-                                </li>
-                            @endif
-
-                        </ul>
-                    </div><!-- /.container-fluid -->
+                    <div class="container-fluid">
+                        <div class="row mb-2">
+                            <div class="col-sm-6">
+                                <h1>POS Report</h1>
+                            </div>
+                            <div class="col-sm-6">
+                                <ol class="breadcrumb float-sm-right">
+                                    <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a></li>
+                                    <li class="breadcrumb-item active">POS Report</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
 

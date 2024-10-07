@@ -22,4 +22,9 @@ class Invoice extends Model
     {
         return $this->hasMany(PO_sells::class, 'invoiceid');
     }
+
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class, 'transaction_id');
+    }
 }
