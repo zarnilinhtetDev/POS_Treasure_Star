@@ -387,7 +387,7 @@
                                                     <span style="font-weight:bolder">
                                                         <label for="cst" class="caption">{{ trans('ChooseLocation') }}&nbsp;</label>
                                                     </span> <select name="location" id="location" class="mb-4 form-control location" required>
-    
+
                                                         @foreach ($warehouses as $warehouse)
                                                         @if (auth()->user()->level == $warehouse->id)
                                                         <option value="{{ $warehouse->id }}" selected>
@@ -396,10 +396,10 @@
                                                         @endif
                                                         @endforeach
                                                     </select>
-    
+
                                                 </div>
-    
-    
+
+
                                             </div>
                                             @endif --}}
 
@@ -917,7 +917,7 @@
                     <input type="text" name="payment_amount[]" class="form-control payment_amount">
                 </td>
                 <td align="left" colspan="1" class="col-md-2">
-                  
+
 
                       <div class="input-group">
             <select name="payment_method[]" class="form-control" required>
@@ -933,7 +933,7 @@
             </div>
         </div>
                 </td>
-               
+
             </tr>`;
 
                         $('#trContainer').append(newRow);

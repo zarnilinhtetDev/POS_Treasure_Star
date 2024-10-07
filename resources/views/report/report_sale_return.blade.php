@@ -190,7 +190,7 @@
 
                                                     <td>{{ $po->balance_due }}</td>
 
-                                                    <td>{{ $po->total }}</td>
+                                                    <td>{{ number_format($po->total) }}</td>
                                                 </tr>
                                                 @php
                                                     $no++;
@@ -205,9 +205,9 @@
                                             <td colspan="3" style="text-align:right">Total</td>
                                             <td colspan="">
                                                 @if (!empty($search_pos))
-                                                    {{ $search_total }}
+                                                    {{ number_format($search_total) }}
                                                 @else
-                                                    {{ $total }}
+                                                    {{ number_format($total) }}
                                                 @endif
                                             </td>
                                         </tr>
