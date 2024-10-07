@@ -27,7 +27,7 @@
 
 </head>
 <style>
-    /* body {
+    body {
         background-image: linear-gradient(#0047AA, #A8F0FD);
         background-size: cover;
         background-repeat: no-repeat;
@@ -36,9 +36,9 @@
 
         height: 70vh;
 
-    } */
+    }
 
-    body {
+    /* body {
         background-image: url('{{ asset('img/sse.png') }}');
         background-size: cover;
         background-repeat: no-repeat;
@@ -47,7 +47,7 @@
 
         height: 70vh;
 
-    }
+    } */
 </style>
 
 <body class="">
@@ -59,7 +59,7 @@
         </div>
         <div class="container">
             <div class="p-2 text-center" style="margin-top: 13%;">
-                <img src="{{ asset('img/sse-nav.png') }}" alt="Login Image" width="200px" class="blue-tint">
+                <img src="{{ asset('img/navlogo.png') }}" alt="Login Image" width="200px" class="blue-tint">
             </div>
 
             <div class="row justify-content-center">
