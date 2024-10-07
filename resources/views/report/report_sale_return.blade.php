@@ -136,7 +136,7 @@
                                             <th>No.</th>
                                             <th>Purchase Order No.</th>
                                             <th>Location</th>
-                                            <th>Purchase Return</th>
+                                            <th>Receiving Mode</th>
                                             <th>Total Amount</th>
                                         </tr>
                                     </thead>

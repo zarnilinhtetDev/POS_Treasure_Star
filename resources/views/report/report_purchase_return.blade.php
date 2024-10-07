@@ -149,7 +149,7 @@
                                             <th>Phone Number</th>
                                             <th>Customer Type</th>
                                             <th>Address</th>
-                                            <th>Sale Return</th>
+                                            <th>Register Mode</th>
                                             <th>Total Amount</th>
                                         </tr>
                                     </thead>
