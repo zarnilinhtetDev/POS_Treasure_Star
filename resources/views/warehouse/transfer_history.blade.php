@@ -7,7 +7,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars text-white"></i></a>
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars text-white"></i></a>
                 </li>
 
                 <li class="nav-item text-white">
@@ -23,7 +24,8 @@
 
 
                 <div class="btn-group">
-                    <button type="button" class="btn dropdown-toggle text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn dropdown-toggle text-white" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         {{ auth()->user()->name }}
                     </button>
                     <div class="dropdown-menu ">
@@ -65,22 +67,29 @@
                     </div><!-- /.container-fluid -->
                 </section>
                 @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>{{ session('success') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>{{ session('success') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @endif
                 @if (session('delete'))
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>{{ session('delete') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>{{ session('delete') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @endif
-
+                @if (session('warning'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>{{ session('warning') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
                 <div class="ml-2 container-fluid">
 
 
@@ -105,22 +114,22 @@
                                     </thead>
                                     <tbody>
                                         @php
-                                        $no = '1';
+                                            $no = '1';
                                         @endphp
                                         @foreach ($histories as $history)
-                                        <tr>
-                                            <td>{{ $no }}</td>
-                                            <td>{{$location_names[$history->id]['from']}}</td>
-                                            <td>{{$location_names[$history->id]['to']}}</td>
+                                            <tr>
+                                                <td>{{ $no }}</td>
+                                                <td>{{ $location_names[$history->id]['from'] }}</td>
+                                                <td>{{ $location_names[$history->id]['to'] }}</td>
 
-                                            <td>{{ $history->item_name }}</td>
-                                            <td>{{ $history->quantity }}</td>
-                                            <td>{{ $history->date }}</td>
+                                                <td>{{ $history->item_name }}</td>
+                                                <td>{{ $history->quantity }}</td>
+                                                <td>{{ $history->date }}</td>
 
-                                        </tr>
-                                        @php
-                                        $no++;
-                                        @endphp
+                                            </tr>
+                                            @php
+                                                $no++;
+                                            @endphp
                                         @endforeach
 
                                     </tbody>
