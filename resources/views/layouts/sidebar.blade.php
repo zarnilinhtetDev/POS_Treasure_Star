@@ -374,8 +374,8 @@
                 @endif
 
 
-
-                <li class="nav-item">
+                {{-- Accounting Start --}}
+                {{-- <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="text-white fa-solid fa-calculator nav-icon"></i>
                         <p class="pl-3 text-white">
@@ -402,7 +402,8 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
+                {{-- Accounting End --}}
 
                 @if (in_array('User', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
