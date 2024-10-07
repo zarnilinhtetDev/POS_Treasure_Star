@@ -289,15 +289,16 @@
                         </a>
                         <ul class="nav nav-treeview">
 
-                            @if (auth()->user()->is_admin == '1')
+                            {{-- General Ledger start --}}
+                            {{-- @if (auth()->user()->is_admin == '1')
                                 <li class="nav-item">
                                     <a href="{{ url('general_ledger') }}" class="nav-link">
                                         <i class="text-white far fa-circle nav-icon"></i>
                                         <p class="text-white">General Ledger</p>
                                     </a>
                                 </li>
-                            @endif
-
+                            @endif --}}
+                            {{-- General Ledger End --}}
                             @if (in_array('Invoice Report', $userPermissions) || auth()->user()->is_admin == '1')
                                 <li class="nav-item">
                                     <a href="{{ url('report') }}" class="nav-link">
