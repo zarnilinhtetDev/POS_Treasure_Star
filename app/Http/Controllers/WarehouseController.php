@@ -83,80 +83,91 @@ class WarehouseController extends Controller
         return view('warehouse.transfer_item', compact('warehouses'));
     }
 
+
     public function store_transfer_item(Request $request)
     {
-        $from = Warehouse::find($request->from_location);
-        $to = Warehouse::find($request->to_location);
-        $lastItem = Item::latest()->first();
+        try {
+            $from = Warehouse::find($request->from_location);
+            $to = Warehouse::find($request->to_location);
+            $lastItem = Item::latest()->first();
 
+            $count = count($request->part_number);
+            info($count);
+            for ($i = 0; $i < $count; $i++) {
 
-        $count = count($request->part_number);
-        info($count);
-        for ($i = 0; $i < $count; $i++) {
+                $item_to = Item::where('item_name', $request->part_number[$i])
+                    ->where('warehouse_id', $request->to_location)
+                    ->first();
+                $item_from = Item::where('item_name', $request->part_number[$i])
+                    ->where('warehouse_id', $request->from_location)
+                    ->first();
 
+                if ($item_to) {
+                    // Update quantity to location item
+                    $item_to->quantity += $request->product_qty[$i];
+                    $item_to->update();
 
-            $item_to = Item::where('item_name', $request->part_number[$i])->where('warehouse_id', $request->to_location)->first();
-            $item_from = Item::where('item_name', $request->part_number[$i])->where('warehouse_id', $request->from_location)->first();
+                    // Update quantity from location item
+                    $item_from->quantity -= $request->product_qty[$i];
+                    $item_from->update();
 
-            if ($item_to) {
-                //update quantity to location item
-                $item_to->quantity += $request->product_qty[$i];
-                $item_to->update();
-                //update quantity from location item
-                $item_from->quantity = $item_from->quantity - $request->product_qty[$i];
-                $item_from->update();
+                    // Store record history
+                    $transfer_history = new TransferHistory();
+                    $transfer_history->from_location = $request->from_location;
+                    $transfer_history->to_location = $request->to_location;
+                    $transfer_history->item_name = $request->part_number[$i];
+                    $transfer_history->quantity = $request->product_qty[$i];
+                    $transfer_history->date = $request->date;
+                    $transfer_history->save();
+                } else {
+                    // Insert new item to location
+                    $item = new Item();
+                    $item->item_name = $request->part_number[$i];
+                    $item->descriptions = $item_from->descriptions;
+                    $item->barcode = $item_from->barcode;
+                    $item->expired_date = $item_from->expired_date;
+                    $item->category = $item_from->category;
+                    $item->price = $item_from->price;
+                    $item->company_price = $item_from->company_price;
+                    $item->mingalar_market = $item_from->mingalar_market;
+                    $item->reorder_level_stock = $item_from->reorder_level_stock;
+                    $item->retail_price = $item_from->retail_price;
+                    $item->wholesale_price = $item_from->wholesale_price;
+                    $item->buy_price = $item_from->buy_price;
+                    $item->radio_category = $item_from->radio_category;
+                    $item->madeIn = $item_from->madeIn;
+                    $item->lense = $item_from->lense;
+                    $item->degree = $item_from->degree;
+                    $item->item_unit = $item_from->item_unit;
+                    $item->parent_id = $lastItem->id + 1;
+                    $item->quantity = $request->product_qty[$i];
+                    $item->warehouse_id = $request->to_location;
+                    $item->save();
 
-                // store record history
-                $transfer_history = new TransferHistory();
-                $transfer_history->from_location = $request->from_location;
-                $transfer_history->to_location = $request->to_location;
-                $transfer_history->item_name = $request->part_number[$i];
-                $transfer_history->quantity = $request->product_qty[$i];
-                $transfer_history->date = $request->date;
-                $transfer_history->save();
-            } else {
-                //insert new item to location
-                $item = new Item();
-                $item->item_name = $request->part_number[$i];
-                $item->descriptions = $item_from->descriptions;
-                $item->barcode = $item_from->barcode;
-                $item->expired_date = $item_from->expired_date;
-                $item->category = $item_from->category;
-                $item->price = $item_from->price;
-                $item->company_price = $item_from->company_price;
-                $item->mingalar_market = $item_from->mingalar_market;
-                $item->reorder_level_stock = $item_from->reorder_level_stock;
-                $item->retail_price = $item_from->retail_price;
-                $item->wholesale_price = $item_from->wholesale_price;
-                $item->buy_price = $item_from->buy_price;
-                $item->radio_category = $item_from->radio_category;
-                $item->madeIn = $item_from->madeIn;
-                $item->lense = $item_from->lense;
-                $item->degree = $item_from->degree;
-                $item->item_unit = $item_from->item_unit;
-                $item->parent_id
-                    = $lastItem->id + 1;
-                $item->quantity = $request->product_qty[$i];
-                $item->warehouse_id = $request->to_location;
-                $item->save();
+                    // Update quantity from location item
+                    $item_from->quantity -= $request->product_qty[$i];
+                    $item_from->update();
 
-                //update quantity form location item
-                $item_from->quantity = $item_from->quantity - $request->product_qty[$i];
-                $item_from->update();
-
-
-                // store record history
-                $transfer_history = new TransferHistory();
-                $transfer_history->from_location = $request->from_location;
-                $transfer_history->to_location = $request->to_location;
-                $transfer_history->item_name = $request->part_number[$i];
-                $transfer_history->quantity = $request->product_qty[$i];
-                $transfer_history->date = $request->date;
-                $transfer_history->save();
+                    // Store record history
+                    $transfer_history = new TransferHistory();
+                    $transfer_history->from_location = $request->from_location;
+                    $transfer_history->to_location = $request->to_location;
+                    $transfer_history->item_name = $request->part_number[$i];
+                    $transfer_history->quantity = $request->product_qty[$i];
+                    $transfer_history->date = $request->date;
+                    $transfer_history->save();
+                }
             }
+
+            return redirect('show_transfer_history')
+                ->with('success', 'Successfully transferred items from ' . $from->name . ' to ' . $to->name);
+        } catch (\Exception $e) {
+
+            return redirect('show_transfer_history')
+                ->with('warning', 'An error occurred while transferring items');
         }
-        return redirect('show_transfer_history')->with('success', 'Successfully Transfer Item from ' . $from->name . ' to ' . $to->name . ' ');
     }
+
     public function autocompletePartCode(Request $request)
     {
         $query = $request->get('query');
