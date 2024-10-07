@@ -55,7 +55,8 @@ class ItemsImport implements ToModel
             'retail_price' => $row[9],
             'wholesale_price' => $row[10],
             'buy_price' => $row[11],
-            'parent_id' => $row[12],
+            'item_type' => $row[12],
+            'parent_id' => $row[13],
         ]);
     }
 

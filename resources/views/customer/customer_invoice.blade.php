@@ -125,7 +125,7 @@
                                             <th>No.</th>
                                             <th>Invoice Number</th>
                                             <th>Invoice Date</th>
-                                            <th>Remark</th>
+                                            <th>Total</th>
 
 
 
@@ -143,7 +143,7 @@
                                                     {{ $invoice->invoice_date }}
                                                 </td>
                                                 <td>
-                                                    {{ $invoice->remark }}
+                                                    {{ number_format($invoice->total) }}
                                                 </td>
 
 

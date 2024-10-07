@@ -36,6 +36,7 @@ class ItemsImportTemplate implements WithHeadings
             'လက်လီစျေး',
             'လက်ကားစျေး',
             'ဝယ်စျေး',
+            'Item Type',
             'Parent ID',
         ];
     }

@@ -66,7 +66,7 @@ class ReportController extends Controller
         if (auth()->user()->is_admin == '1') {
             $pos = PurchaseOrder::whereDate('created_at', today())
                 ->where('quote_no', 'like', 'PO%')
-                ->where('balance_due', 'Sale Return')
+                ->where('balance_due', 'Sale Return Invoice')
                 ->get();
 
             $total = $pos->sum('total');
@@ -75,7 +75,7 @@ class ReportController extends Controller
             $pos = PurchaseOrder::whereDate('created_at', today())
                 ->whereIn('branch', $warehousePermission)
                 ->where('quote_no', 'like', 'PO%')
-                ->where('balance_due', 'Sale Return')
+                ->where('balance_due', 'Sale Return Invoice')
                 ->get();
 
             $total = $pos->sum('total');
@@ -380,7 +380,7 @@ class ReportController extends Controller
             $search_pos = PurchaseOrder::whereDate('po_date', '>=', $start_date)
                 ->whereDate('po_date', '<=', $end_date)
                 ->where('quote_no', 'like', 'PO%')
-                ->where('balance_due', 'Sale Return')
+                ->where('balance_due', 'Sale Return Invoice')
                 ->get();
             $search_total = $search_pos->sum('total');
             $branchs = Warehouse::all();
@@ -391,7 +391,7 @@ class ReportController extends Controller
                 ->whereDate('po_date', '<=', $end_date)
                 ->whereIn('branch', $warehousePermission)
                 ->where('quote_no', 'like', 'PO%')
-                ->where('balance_due', 'Sale Return')
+                ->where('balance_due', 'Sale Return Invoice')
                 ->get();
             $search_total = $search_pos->sum('total');
             $branchs = Warehouse::all();

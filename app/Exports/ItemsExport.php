@@ -46,6 +46,7 @@ class ItemsExport implements FromCollection, FromQuery, WithMapping, WithHeading
             'လက်လီစျေး',
             'လက်ကားစျေး',
             'ဝယ်စျေး',
+            'Item Type',
             'Parent ID',
         ];
     }
@@ -66,6 +67,7 @@ class ItemsExport implements FromCollection, FromQuery, WithMapping, WithHeading
             'လက်လီစျေး' => $item->retail_price,
             'လက်ကားစျေး' => $item->wholesale_price,
             'ဝယ်စျေး' => $item->buy_price,
+            'Item Type' => $item->item_type,
             'Parent ID' => $item->parent_id,
         ];
     }

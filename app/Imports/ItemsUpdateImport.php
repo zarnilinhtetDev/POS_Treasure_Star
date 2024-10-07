@@ -36,19 +36,19 @@ class ItemsUpdateImport implements ToModel
         }
 
         $item = Item::where('warehouse_id', $this->warehouseId)
-            ->where('item_name', $row[2])
+            ->where('item_name', $row[3])
             ->first();
 
         if ($item) {
             $item->update([
-                'retail_price' => $row[5] ?? $item->retail_price,
-                'wholesale_price' => $row[6] ?? $item->wholesale_price,
+                'retail_price' => $row[6] ?? $item->retail_price,
+                'wholesale_price' => $row[7] ?? $item->wholesale_price,
                 // 'buy_price' => $row[6] ?? $item->buy_price,
             ]);
         } else {
             Log::error('Item not found:', [
                 'warehouse_id' => $this->warehouseId,
-                'item_name' => $row[2],
+                'item_name' => $row[3],
             ]);
         }
 
