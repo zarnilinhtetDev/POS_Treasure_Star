@@ -109,7 +109,7 @@
                                                 <div class="frmSearch col-sm-12">
                                                     <div class="row">
                                                         {{-- @if (Auth::user()->is_admin == '1' || Auth::user()->type == 'Admin') --}}
-                                                        <div class="frmSearch col-sm-3">
+                                                        <div class="frmSearch col-sm-4">
                                                             <label for="from" style="font-weight:bolder">From
                                                                 Location</label>
                                                             <select name="from_location" id="from_location"
@@ -141,7 +141,7 @@
                                                                 </select>
                                                             </div>
                                                         @endif --}}
-                                                        <div class="frmSearch col-sm-3">
+                                                        <div class="frmSearch col-sm-4">
                                                             <label for="to" style="font-weight:bolder">To
                                                                 Location</label>
                                                             <select name="to_location" id="to_location"
@@ -155,7 +155,7 @@
                                                                 @endforeach
                                                             </select>
                                                         </div>
-                                                        <div class="frmSearch col-sm-3">
+                                                        <div class="frmSearch col-sm-4">
                                                             <label for="invoice_date"
                                                                 style="font-weight:bolder">{{ trans(' Date') }}</label>
 
