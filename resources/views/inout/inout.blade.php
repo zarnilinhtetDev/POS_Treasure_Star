@@ -123,8 +123,8 @@
                                 <th style="width: 50%">
                                     <a href="{{ url('item_details', $items->id) }}">
                                         <div class="text-center text-white " style="font-weight: bold;color :black">
-                                            Quantity
-                                            - {{ $items->quantity }}
+                                            Quantity -
+                                            ( {{ $items->quantity }} )
                                         </div>
                                     </a>
                                 </th>
