@@ -332,9 +332,8 @@
                                                                 @if ($item->item_type == 'Service')
                                                                     <span class="text-danger">0</span>
                                                                 @else
-                                                                   {{ $item->quantity }}
+                                                                    {{ $item->quantity }}
                                                                 @endif
-                                                               
                                                             @endif
                                                         </td>
                                                         <td><a href="{{ url('barcode', $item->id) }}"
@@ -357,10 +356,10 @@
                                                                     onclick="return confirm('Are you sure you want to delete this Item ?')"><i
                                                                         class="fa-solid fa-trash"></i></a>
                                                             @endif
-                                                            {{-- @if (in_array('Inout History', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            @if (in_array('Inout History', $choosePermission) || auth()->user()->is_admin == '1')
                                                                 <a href="{{ url('in_out', $item->id) }}"
                                                                     class="mt-1 btn btn-info btn-sm">In/Out History</a>
-                                                            @endif --}}
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                     @php

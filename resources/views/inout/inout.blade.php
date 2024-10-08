@@ -13,7 +13,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
 
                 <li class="nav-item">
@@ -29,7 +30,8 @@
 
 
                 <div class="btn-group">
-                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         {{ auth()->user()->name }}
                     </button>
                     <div class="dropdown-menu ">
@@ -71,51 +73,43 @@
             </section>
             <div class="container-fluid">
                 @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>{{ session('success') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>{{ session('success') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @endif
                 @if (session('out-success'))
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong>{{ session('out-success') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>{{ session('out-success') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @endif
-
-
-
-
-
-
-
-
-
-
-
 
                 <div class="row justify-content-center">
 
                     <div class="mb-0 col-md-11">
 
                         <div class="row col-md-11" style="width: 80%">
-                            <div class="mb-3 "> <a href="{{ url('invoice_record', $items->id) }}" type="button" class="btn btn-primary">
+                            <div class="mb-3 "> <a href="{{ url('invoice_record', $items->id) }}" type="button"
+                                    class="btn btn-primary">
                                     Invoice Record</a>
                             </div>
 
-                            <div class="mx-2 mb-3"> <a href="{{ url('purchase_record', $items->id) }}" type="button" class="btn btn-primary">
+                            <div class="mx-2 mb-3"> <a href="{{ url('purchase_record', $items->id) }}" type="button"
+                                    class="btn btn-primary">
                                     Purchase Order Record</a>
                             </div>
-                            <div class="mb-3"> <a href="{{ url('pos_record', $items->id) }}" type="button" class="btn btn-primary">
+                            <div class="mb-3"> <a href="{{ url('pos_record', $items->id) }}" type="button"
+                                    class="btn btn-primary">
                                     POS Record</a>
                             </div>
                         </div>
 
-                        <!-- <table class="table table-bordered" style="background-color: #0B5ED7">
+                        <table class="table table-bordered" style="background-color: #0B5ED7">
                             <tr>
                                 <th style="width: 50%">
                                     <a href="{{ url('item_details', $items->id) }}">
@@ -129,80 +123,93 @@
                                 <th style="width: 50%">
                                     <a href="{{ url('item_details', $items->id) }}">
                                         <div class="text-center text-white " style="font-weight: bold;color :black">
-                                            BarCode
-                                            - {{ $items->barcode }}
+                                            Quantity
+                                            - {{ $items->quantity }}
                                         </div>
                                     </a>
                                 </th>
                             </tr>
-                        </table> -->
+                        </table>
 
                     </div>
 
                     <!-- inout close-->
-                    <!-- <div class="mt-3 card col-md-5" style="margin: 3%">
+                    <div class="mt-3 card col-md-5" style="margin: 3%">
                         <div class="col-md-12">
                             <form action="{{ url('in', $id) }}" method="POST">
                                 @csrf
                                 <div class="card-body">
                                     <div class="row">
-                                        <input type="text" class="mt-3 form-control" id="items_id" value="{{ $id }}" name="items_id" style="display: none">
-                                        <input type="text" class="mt-3 form-control" id="in_out" value="in" name="in_out" style="display: none">
+                                        <input type="text" class="mt-3 form-control" id="items_id"
+                                            value="{{ $id }}" name="items_id" style="display: none">
+                                        <input type="text" class="mt-3 form-control" id="in_out" value="in"
+                                            name="in_out" style="display: none">
 
 
                                         <div class="form-group col-md-6" style="display: none">
-                                            <label for="warehouse_id">Location<span class="text-danger">*</span></label>
-                                            <input type="text" name="warehouse_id" id="warehouse_id" class="form-control" value="{{ $items->warehouse_id }} " readonly>
+                                            <label for="warehouse_id">Location<span
+                                                    class="text-danger">*</span></label>
+                                            <input type="text" name="warehouse_id" id="warehouse_id"
+                                                class="form-control" value="{{ $items->warehouse_id }} " readonly>
                                         </div>
 
 
                                         <div class="form-group col-md-6">
                                             <label for="quantity1">Quantity</label>
-                                            <input type="number" class="form-control" id="quantity1" name="quantity" required min="1">
+                                            <input type="number" class="form-control" id="quantity1"
+                                                name="quantity" required min="1">
                                         </div>
 
 
                                         <div class="form-group" style="display: none">
                                             <label for="total_quantity1">Total Quantity</label>
-                                            <input type="text" class="form-control" id="total_quantity1" name="total_quantity">
+                                            <input type="text" class="form-control" id="total_quantity1"
+                                                name="total_quantity">
                                         </div>
 
                                         <div class="form-group col-md-6">
                                             <label for="retail_price">လက်လီစျေး</label>
-                                            <input type="number" class="form-control" id="retail_price" name="retail_price" required>
+                                            <input type="number" class="form-control" id="retail_price"
+                                                name="retail_price" required>
                                         </div>
 
                                         <div class="form-group col-md-6">
                                             <label for="wholesale_price">လက်ကားစျေး</label>
-                                            <input type="number" class="form-control" id="wholesale_price" name="wholesale_price" required>
+                                            <input type="number" class="form-control" id="wholesale_price"
+                                                name="wholesale_price" required>
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="buy_price">ဝယ်စျေး</label>
-                                            <input type="number" class="form-control" id="buy_price" name="buy_price" required>
+                                            <input type="number" class="form-control" id="buy_price"
+                                                name="buy_price" required>
                                         </div>
 
-                                        <div class="mt-3 form-group col-md-4">
+                                        {{-- <div class="mt-3 form-group col-md-4">
                                             <label for="mingalar_market">Mingalar Market</label>
-                                            <input type="checkbox" id="mingalar_market" name="mingalar_market" value="Mingalar Market" class="option-checkbox">
+                                            <input type="checkbox" id="mingalar_market" name="mingalar_market"
+                                                value="Mingalar Market" class="option-checkbox">
                                         </div>
 
                                         <div class="mt-3 form-group col-md-4">
                                             <label for="mingalar_market">Company Price</label>
-                                            <input type="checkbox" class="option-checkbox" id="company_price" name="mingalar_market" value="Company">
+                                            <input type="checkbox" class="option-checkbox" id="company_price"
+                                                name="mingalar_market" value="Company">
                                         </div>
 
 
                                         <div class="mt-3 form-group col-md-2">
                                             <label for="mingalar_market">Other</label>
-                                            <input type="checkbox" class="option-checkbox" id="other" name="mingalar_market" value="Other">
-                                        </div>
+                                            <input type="checkbox" class="option-checkbox" id="other"
+                                                name="mingalar_market" value="Other">
+                                        </div> --}}
 
 
 
 
                                         <div class="form-group col-md-12">
                                             <label for="date">Date</label>
-                                            <input type="date" class="form-control" id="date" name="date" max="{{ date('Y-m-d') }}" required>
+                                            <input type="date" class="form-control" id="date" name="date"
+                                                max="{{ date('Y-m-d') }}" required value="{{ date('Y-m-d') }}">
                                         </div>
 
                                         <div class="form-group col-md-12">
@@ -211,7 +218,8 @@
                                         </div>
 
                                         <div class="form-group col-md-12">
-                                            <button type="submit" class="mb-3 btn btn-success btn-sm " style="width: 20%">IN</button>
+                                            <button type="submit" class="mb-3 btn btn-success btn-sm "
+                                                style="width: 20%">IN</button>
                                         </div>
                                     </div>
                                 </div>
@@ -219,38 +227,44 @@
 
                         </div>
 
-                    </div> -->
+                    </div>
 
-                    <!-- <div class="mt-3 card card-primary col-md-5" style="margin: 3%;">
+                    <div class="mt-3 card card-primary col-md-5" style="margin: 3%;">
 
                         <form action="{{ url('out', $id) }}" method="POST">
                             @csrf
                             <div class="card-body">
                                 <div class="row">
-                                    <input type="text" class="mt-3 form-control" id="items_id" value="{{ $id }}" name="items_id" style="display: none">
-                                    <input type="text" class="mt-3 form-control" id="in_out" value="out" name="in_out" style="display: none">
+                                    <input type="text" class="mt-3 form-control" id="items_id"
+                                        value="{{ $id }}" name="items_id" style="display: none">
+                                    <input type="text" class="mt-3 form-control" id="in_out" value="out"
+                                        name="in_out" style="display: none">
 
 
 
                                     <div class="form-group col-md-6" style="display: none">
                                         <label for="warehouse_id">Location<span class="text-danger">*</span></label>
-                                        <input type="text" name="warehouse_id" id="warehouse_id" class="form-control" value="{{ $items->warehouse_id }}" readonly>
+                                        <input type="text" name="warehouse_id" id="warehouse_id"
+                                            class="form-control" value="{{ $items->warehouse_id }}" readonly>
                                     </div>
 
 
                                     <div class="form-group col-md-6">
                                         <label for="quantity">Quantity</label>
-                                        <input type="number" class="form-control" id="quantity" name="quantity" required min="1">
+                                        <input type="number" class="form-control" id="quantity" name="quantity"
+                                            required min="1">
                                     </div>
 
                                     <div class="form-group col-md-6">
                                         <label for="date">Date</label>
-                                        <input type="date" class="form-control" id="date" name="date" max="{{ date('Y-m-d') }}" required>
+                                        <input type="date" class="form-control" id="date" name="date"
+                                            max="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}" required>
                                     </div>
 
                                     <div class="form-group" style="display: none">
                                         <label for="c">Total Quantity</label>
-                                        <input type="text" class="form-control" id="total_quantity" name="total_quantity">
+                                        <input type="text" class="form-control" id="total_quantity"
+                                            name="total_quantity">
                                     </div>
 
                                     <div class="form-group col-md-12">
@@ -259,17 +273,18 @@
                                     </div>
 
                                     <div class="form-group col-md-12">
-                                        <button type="submit" class="mb-3 btn btn-danger btn-sm " style="width: 20%">OUT</button>
+                                        <button type="submit" class="mb-3 btn btn-danger btn-sm "
+                                            style="width: 20%">OUT</button>
                                     </div>
                                 </div>
                             </div>
 
 
                         </form>
-                    </div> -->
+                    </div>
 
 
-                    <!-- <div class="card col-md-11">
+                    <div class="card col-md-11">
                         <div class="card-body">
 
                             <table id="example1" class="table table-bordered table-striped table-responsive-lg">
@@ -277,9 +292,9 @@
                                     <tr>
                                         <th>No</th>
                                         <th>Branch</th>
-                                        <th>Quantity</th>
                                         <th>Total Quantity</th>
-                                        <th>Market</th>
+                                        <th>In/Out Quantity</th>
+                                        {{-- <th>Market</th> --}}
                                         <th style="width: 80px">လက်လီစျေး</th>
                                         <th style="width: 100px">လက်ကားစျေး</th>
                                         <th style="width: 80px"> ဝယ်စျေး</th>
@@ -292,62 +307,62 @@
                                 <tbody>
 
 
-
-
                                     @php
-                                    $no = '1';
+                                        $no = '1';
                                     @endphp
 
                                     @foreach ($inouts as $inout)
-                                    <tr>
-                                        <td>{{ $no }}</td>
-                                        <td>
-                                            @if ($inout->warehouse)
-                                            {{ $inout->warehouse->name }}
-                                            @else
-                                            N/A
+                                        <tr>
+                                            <td>{{ $no }}</td>
+                                            <td>
+                                                @if ($inout->warehouse)
+                                                    {{ $inout->warehouse->name }}
+                                                @else
+                                                    N/A
+                                                @endif
+                                            </td>
+                                            <td>
+                                                {{ $inout->total_quantity }}
+                                            </td>
+                                            <td>
+                                                {{ $inout->quantity }}
+                                            </td>
+
+                                            {{-- <td>
+                                                {{ $inout->mingalar_market }}
+                                            </td> --}}
+                                            <td>{{ $inout->retail_price }}</td>
+                                            <td>{{ $inout->wholesale_price }}</td>
+                                            <td>{{ $inout->buy_price }}</td>
+                                            <td>
+                                                {{ $inout->date }}
+                                            </td>
+                                            <td>
+                                                {{ $inout->remark }}
+                                            </td>
+                                            @if ($inout->in_out === 'in')
+                                                <td class="text-center text-white" style="background-color: #51cf86;">
+                                                    {{ $inout->in_out }}
+                                                </td>
                                             @endif
-                                        </td>
-                                        <td>
-                                            {{ $inout->quantity }}
-                                        </td>
-                                        <td>
-                                            {{ $inout->total_quantity }}
-                                        </td>
-                                        <td>
-                                            {{ $inout->mingalar_market }}
-                                        </td>
-                                        <td>{{ $inout->retail_price }}</td>
-                                        <td>{{ $inout->wholesale_price }}</td>
-                                        <td>{{ $inout->buy_price }}</td>
-                                        <td>
-                                            {{ $inout->date }}
-                                        </td>
-                                        <td>
-                                            {{ $inout->remark }}
-                                        </td>
-                                        @if ($inout->in_out === 'in')
-                                        <td class="text-center" style="background-color: #D9ECFA;">
-                                            {{ $inout->in_out }}
-                                        </td>
-                                        @endif
-                                        @if ($inout->in_out === 'out')
-                                        <td class="text-center" style="background-color: #FAE6E7">
-                                            {{ $inout->in_out }}
-                                        </td>
-                                        @endif
-                                        <td><a href="{{ url('display_print/' . $inout->id, $inout->items_id) }}" class="btn btn-primary">Print</a></td>
-                                    </tr>
-                                    @php
-                                    $no++;
-                                    @endphp
+                                            @if ($inout->in_out === 'out')
+                                                <td class="text-center text-white" style="background-color: #c4555b;">
+                                                    {{ $inout->in_out }}
+                                                </td>
+                                            @endif
+                                            <td><a href="{{ url('display_print/' . $inout->id, $inout->items_id) }}"
+                                                    class="btn btn-primary">Print</a></td>
+                                        </tr>
+                                        @php
+                                            $no++;
+                                        @endphp
                                     @endforeach
                                 </tbody>
                             </table>
 
                         </div>
 
-                    </div> -->
+                    </div>
 
 
 
