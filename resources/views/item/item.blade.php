@@ -356,7 +356,7 @@
                                                                     onclick="return confirm('Are you sure you want to delete this Item ?')"><i
                                                                         class="fa-solid fa-trash"></i></a>
                                                             @endif
-                                                            @if (in_array('Inout History', $choosePermission) || auth()->user()->is_admin == '1')
+                                                            @if (in_array('Item In/Out', $choosePermission) || auth()->user()->is_admin == '1')
                                                                 <a href="{{ url('in_out', $item->id) }}"
                                                                     class="mt-1 btn btn-info btn-sm">In/Out History</a>
                                                             @endif
@@ -492,6 +492,11 @@
                                 rows += '<a href="{{ url('item_delete') }}/' + item
                                     .id +
                                     '" class="btn btn-danger btn-sm" onclick="return confirm(\'Are you sure you want to delete this Item ?\')"><i class="fa-solid fa-trash"></i></a> ';
+                            }
+                            if (item.can_in_out) {
+                                rows += '<a href="{{ url('in_out') }}/' + item
+                                    .id +
+                                    '" class="mt-1 btn btn-info btn-sm">In/Out History</a> ';
                             }
 
                             rows += '</td>';

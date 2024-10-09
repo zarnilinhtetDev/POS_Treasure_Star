@@ -345,39 +345,39 @@
                                                                     </div>
                                                                 </td>
                                                                 <td>
+
+
                                                                     <div class="form-group">
-                                                                        <div class="form-check">
+                                                                        <div
+                                                                            class="form-check form-check-inline d-flex align-items-center">
                                                                             <input class="form-check-input"
                                                                                 type="checkbox"
                                                                                 id="permission-item-other-4"
                                                                                 name="permission[]"
                                                                                 value="Item Details"
                                                                                 @if (in_array('Item Details', $permissions)) checked @endif>
-                                                                            <label class="form-check-label"
-                                                                                for="permission-item">
+                                                                            <label class="form-check-label ms-2"
+                                                                                for="permission-item-other-4">
                                                                                 Item Details
+                                                                            </label>
+                                                                        </div>
+                                                                        <div
+                                                                            class="form-check form-check-inline d-flex align-items-center ms-4 mt-3">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                id="permission-item-other-5"
+                                                                                name="permission[]"
+                                                                                value="Item In/Out"
+                                                                                @if (in_array('Item In/Out', $permissions)) checked @endif>
+                                                                            <label class="form-check-label ms-2"
+                                                                                for="permission-item-other-5">
+                                                                                Item In/Out
                                                                             </label>
                                                                         </div>
                                                                     </div>
                                                                 </td>
                                                             </tr>
-                                                            <tr>
-                                                                <td>
 
-                                                                </td>
-                                                                <td>
-
-                                                                </td>
-                                                                <td>
-
-                                                                </td>
-                                                                <td>
-
-                                                                </td>
-                                                                <td>
-
-                                                                </td>
-                                                            </tr>
                                                             <tr>
                                                                 <td>
                                                                     <div class="form-group">
@@ -1688,11 +1688,13 @@
                     $('#permission-item-other-2').prop('checked', true);
                     $('#permission-item-other-3').prop('checked', true);
                     $('#permission-item-other-4').prop('checked', true);
+                    $('#permission-item-other-5').prop('checked', true);
                 } else {
                     $('#permission-item-other-1').prop('checked', false);
                     $('#permission-item-other-2').prop('checked', false);
                     $('#permission-item-other-3').prop('checked', false);
                     $('#permission-item-other-4').prop('checked', false);
+                    $('#permission-item-other-5').prop('checked', false);
                 }
             });
         });

@@ -82,6 +82,7 @@ class ItemController extends Controller
             $item->can_view = in_array('Item Details', $choosePermission) || auth()->user()->is_admin == '1';
             $item->can_edit = in_array('Item Edit', $choosePermission) || auth()->user()->is_admin == '1';
             $item->can_delete = in_array('Item Delete', $choosePermission) || auth()->user()->is_admin == '1';
+            $item->can_in_out = in_array('Item In/Out', $choosePermission) || auth()->user()->is_admin == '1';
             return $item;
         });
 

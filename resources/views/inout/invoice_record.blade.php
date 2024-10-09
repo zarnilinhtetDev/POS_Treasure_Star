@@ -7,7 +7,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="text-white nav-link" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
 
                 <li class="text-white nav-item">
@@ -23,7 +24,8 @@
 
 
                 <div class="btn-group">
-                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="text-white btn dropdown-toggle" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         {{ auth()->user()->name }}
                     </button>
                     <div class="dropdown-menu ">
@@ -65,29 +67,29 @@
                     </div><!-- /.container-fluid -->
                 </section>
                 @if (session('success'))
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <strong>{{ session('success') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>{{ session('success') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @endif
                 @if (session('error'))
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong>{{ session('error') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>{{ session('error') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @endif
 
                 @if ($errors->has('phno'))
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong> {{ $errors->first('phno') }}</strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong> {{ $errors->first('phno') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
                 @endif
 
 
@@ -112,44 +114,45 @@
                                     <tbody>
 
                                         @php
-                                        $no = '1';
+                                            $no = '1';
                                         @endphp
 
                                         @foreach ($invoices as $invoice)
-                                        @foreach ($invoice->sells as $sell)
-                                        @if ($invoice->status == 'invoice')
-                                        @if ($items->item_name === $sell->part_number)
-                                        @if ($items->warehouse_id == $sell->warehouse)
-                                        <tr>
+                                            @foreach ($invoice->sells as $sell)
+                                                @if ($invoice->status == 'invoice')
+                                                    @if ($items->item_name == $sell->part_number)
+                                                        @if ($items->warehouse_id == $sell->warehouse)
+                                                            <tr>
 
-                                            <td>{{ $sell->part_number }}</td>
-                                            @if (!$invoice->customer_name)
-                                            <td class="text-danger">
-                                                {{ $invoice->invoice_no }}
-                                            </td>
-                                            @else
-                                            <td>
-                                                {{ $invoice->invoice_no }}
-                                            </td>
-                                            @endif
-                                            <td>{{ $invoice->invoice_category }}</td>
+                                                                <td>{{ $sell->part_number }}</td>
+                                                                @if (!$invoice->customer_name)
+                                                                    <td class="text-danger">
+                                                                        {{ $invoice->invoice_no }}
+                                                                    </td>
+                                                                @else
+                                                                    <td>
+                                                                        {{ $invoice->invoice_no }}
+                                                                    </td>
+                                                                @endif
+                                                                <td>{{ $invoice->invoice_category }}</td>
 
-                                            <td>{{ $invoice->customer_name }}</td>
-                                            <td>{{ $sell->product_qty }}</td>
-                                            <td>{{ $invoice->invoice_date ? \Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') : '' }}</td>
-
-
-                                            </td>
+                                                                <td>{{ $invoice->customer_name }}</td>
+                                                                <td>{{ $sell->product_qty }}</td>
+                                                                <td>{{ $invoice->invoice_date ? \Carbon\Carbon::parse($invoice->invoice_date)->format('d/m/Y') : '' }}
+                                                                </td>
 
 
-                                        </tr>
-                                        @endif
-                                        @endif
-                                        @endif
-                                        @endforeach
-                                        @php
-                                        $no++;
-                                        @endphp
+                                                                </td>
+
+
+                                                            </tr>
+                                                        @endif
+                                                    @endif
+                                                @endif
+                                            @endforeach
+                                            @php
+                                                $no++;
+                                            @endphp
                                         @endforeach
 
 
