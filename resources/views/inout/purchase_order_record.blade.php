@@ -117,26 +117,30 @@
                                     <tbody>
                                         @foreach ($invoices as $invoice)
                                             @foreach ($invoice->po_sells as $sell)
-                                                @if ($invoice->status == 'invoice')
-                                                    <tr>
-                                                        <td>{{ $sell->part_number }}</td>
-                                                        <td>{{ $invoice->quote_no }}</td>
-                                                        <td>
-                                                            @if ($invoice->supplier)
-                                                                {{ $invoice->supplier->name }}
-                                                            @else
-                                                                No Supplier
-                                                            @endif
-                                                        </td>
-                                                        <td>{{ $sell->product_qty }}</td>
-                                                        <td>{{ number_format($sell->product_price) }}
-                                                        </td>
+                                                @if ($invoice->balance_due == 'PO')
+                                                    @if ($items->item_name == $sell->part_number)
+                                                        @if ($items->warehouse_id == $sell->warehouse)
+                                                            <tr>
+                                                                <td>{{ $sell->part_number }}</td>
+                                                                <td>{{ $invoice->quote_no }}</td>
+                                                                <td>
+                                                                    @if ($invoice->supplier)
+                                                                        {{ $invoice->supplier->name }}
+                                                                    @else
+                                                                        No Supplier
+                                                                    @endif
+                                                                </td>
+                                                                <td>{{ $sell->product_qty }}</td>
+                                                                <td>{{ number_format($sell->product_price) }}
+                                                                </td>
 
 
 
-                                                        <td>{{ \Carbon\Carbon::parse($invoice->po_date)->format('d/m/Y') ?? 'N/A' }}
-                                                        </td>
-                                                    </tr>
+                                                                <td>{{ \Carbon\Carbon::parse($invoice->po_date)->format('d/m/Y') ?? 'N/A' }}
+                                                                </td>
+                                                            </tr>
+                                                        @endif
+                                                    @endif
                                                 @endif
                                             @endforeach
                                         @endforeach
