@@ -190,7 +190,7 @@
                                                 <label for="amount">Amount<span class="text-danger">*</span></label>
                                                 <input type="number" class="form-control" id="amount"
                                                     placeholder="Enter amount" required autofocus name="amount"
-                                                    value="{{ $expense->amount }}">
+                                                    value="{{ $expense->amount }}" step="0.01">
                                             </div>
 
                                             <div class="form-group">

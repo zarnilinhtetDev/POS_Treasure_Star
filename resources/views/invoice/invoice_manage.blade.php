@@ -140,7 +140,7 @@
                                                 <td>{{ $invoice->phno }}</td>
                                                 <td>{{ $invoice->balance_due }}</td>
 
-                                                <td>{{ number_format($invoice->total) }}</td>
+                                                <td>{{ number_format($invoice->total ?? 0, 2) }}</td>
                                                 @if ($invoice->total == $invoice->deposit)
                                                     <td>Paid</td>
                                                 @elseif($invoice->total > $invoice->deposit && $invoice->deposit > 0)

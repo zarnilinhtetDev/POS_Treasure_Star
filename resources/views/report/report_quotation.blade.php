@@ -169,8 +169,7 @@
                                             {{ $currentBranchName }}
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a href="{{ route('report_quotation_branch') }}"
-                                                class="dropdown-item">All
+                                            <a href="{{ route('report_quotation_branch') }}" class="dropdown-item">All
                                                 Quotations</a>
                                             @if (auth()->user()->is_admin == '1')
                                                 @foreach ($branchs as $drop)
@@ -234,7 +233,7 @@
                                                     <td>{{ $quotation->phno }}</td>
                                                     <td>{{ $quotation->type }}</td>
                                                     <td>{{ $quotation->address }}</td>
-                                                    <td>{{ number_format($quotation->total) }}</td>
+                                                    <td>{{ number_format($quotation->total ?? 0, 2) }}</td>
                                                 </tr>
                                             @endforeach
                                         @else
@@ -257,7 +256,7 @@
                                                     <td>{{ $quotation->phno }}</td>
                                                     <td>{{ $quotation->type }}</td>
                                                     <td>{{ $quotation->address }}</td>
-                                                    <td>{{ number_format($quotation->total) }}</td>
+                                                    <td>{{ number_format($quotation->total ?? 0, 2) }}</td>
                                                 </tr>
                                             @endforeach
                                         @endif
@@ -272,7 +271,7 @@
                                             <td colspan="6" style="text-align:right">Total</td>
                                             <td colspan="">
                                                 @if (!empty($search_quotations))
-                                                    {{ number_format($search_total) }}@else{{ number_format($total) }}
+                                                    {{ number_format($search_total ?? 0, 2) }}@else{{ number_format($total ?? 0, 2) }}
                                                 @endif
                                             </td>
                                         </tr>

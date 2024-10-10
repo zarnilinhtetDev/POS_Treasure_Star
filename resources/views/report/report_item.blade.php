@@ -191,22 +191,22 @@
                                                     @endif
 
                                                 </td>
-                                                <td>{{ number_format((float) $item['retail_price']) }}</td>
-                                                <td>{{ number_format((float) $item['wholesale_price']) }}</td>
+                                                <td>{{ number_format((float) $item['retail_price'] ?? 0, 2) }}</td>
+                                                <td>{{ number_format((float) $item['wholesale_price'] ?? 0, 2) }}</td>
                                                 <td>
                                                     @if ($item['item_type'] == 'Service')
-                                                        {{ number_format((float) 1 * (float) $item['retail_price']) }}
+                                                        {{ number_format((float) 1 * (float) $item['retail_price'] ?? 0, 2) }}
                                                     @else
-                                                        {{ number_format((float) $item['total_quantity'] * (float) $item['retail_price']) }}
+                                                        {{ number_format((float) $item['total_quantity'] * (float) $item['retail_price'] ?? 0, 2) }}
                                                     @endif
 
                                                 </td>
                                                 <td>
 
                                                     @if ($item['item_type'] == 'Service')
-                                                        {{ number_format((float) 1 * (float) $item['wholesale_price']) }}
+                                                        {{ number_format((float) 1 * (float) $item['wholesale_price'] ?? 0, 2) }}
                                                     @else
-                                                        {{ number_format((float) $item['total_quantity'] * (float) $item['wholesale_price']) }}
+                                                        {{ number_format((float) $item['total_quantity'] * (float) $item['wholesale_price'] ?? 0, 2) }}
                                                     @endif
 
 
@@ -220,10 +220,10 @@
                                             <td colspan="{{ count($warehouses) + 2 }}" class="text-right">
                                                 Total</td>
 
-                                            <td>{{ number_format($totalRetailPrice) }}</td>
-                                            <td>{{ number_format($totalWholesalePrice) }}</td>
-                                            <td>{{ number_format($totalRetailAmount) }}</td>
-                                            <td>{{ number_format($totalWholesaleAmount) }}</td>
+                                            <td>{{ number_format($totalRetailPrice ?? 0, 2) }}</td>
+                                            <td>{{ number_format($totalWholesalePrice ?? 0, 2) }}</td>
+                                            <td>{{ number_format($totalRetailAmount ?? 0, 2) }}</td>
+                                            <td>{{ number_format($totalWholesaleAmount ?? 0, 2) }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>

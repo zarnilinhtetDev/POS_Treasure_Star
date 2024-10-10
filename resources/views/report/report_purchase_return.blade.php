@@ -176,7 +176,7 @@
                                                     <td>{{ $invoice->type }}</td>
                                                     <td>{{ $invoice->address }}</td>
                                                     <td>{{ $invoice->balance_due }}</td>
-                                                    <td>{{ $invoice->total }}</td>
+                                                    <td>{{ number_format($invoice->total ?? 0, 2) }}</td>
                                                 </tr>
                                             @endforeach
                                         @else
@@ -198,7 +198,7 @@
                                                     <td>{{ $invoice->type }}</td>
                                                     <td>{{ $invoice->address }}</td>
                                                     <td>{{ $invoice->balance_due }}</td>
-                                                    <td>{{ $invoice->total }}</td>
+                                                    <td>{{ number_format($invoice->total ?? 0, 2) }}</td>
                                                 </tr>
                                             @endforeach
                                         @endif
@@ -214,7 +214,7 @@
                                             <td colspan="7" style="text-align:right">Total</td>
                                             <td colspan="">
                                                 @if (!empty($search_invoices))
-                                                    {{ $search_total }}@else{{ $total }}
+                                                    {{ number_format($search_total ?? 0, 2) }}@else{{ number_format($total ?? 0, 2) }}
                                                 @endif
                                             </td>
                                         </tr>

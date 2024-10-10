@@ -549,7 +549,7 @@
                                             </tr>
 
                                         <tbody id="trContainer">
-                                            @foreach ($payment_method as $index => $payment)
+                                            @forelse ($payment_method as $index => $payment)
                                                 <tr class="sub_c">
                                                     <td colspan="2"></td>
                                                     <td colspan="3" align="right">
@@ -597,7 +597,37 @@
                                                     </td>
 
                                                 </tr>
-                                            @endforeach
+                                            @empty
+                                                <tr class="sub_c">
+                                                    <td colspan="2"></td>
+                                                    <td colspan="3" align="right"><strong>Payment
+                                                            Method</strong></td>
+                                                    <td align="left" colspan="1" class="col-md-2">
+                                                        <input type="text" name="payment_amount[]"
+                                                            class="form-control payment_amount" id="payment_amount"
+                                                            required>
+                                                    </td>
+                                                    <td align="left" colspan="1"
+                                                        class="col-md-2 payment_method">
+                                                        <div class="input-group">
+                                                            <select name="payment_method[]" id="payment_method"
+                                                                class="form-control" required>
+                                                                <option value="Cash">Cash</option>
+                                                                <option value="K Pay">K Pay</option>
+                                                                <option value="Wave">Wave</option>
+                                                                <option value="Others">Others</option>
+                                                            </select>
+                                                            <div class="input-group-append">
+                                                                <button type="button" id="addRow"
+                                                                    class="btn btn-primary">
+                                                                    <i class="fa-solid fa-plus"></i>
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+
+                                                </tr>
+                                            @endforelse
 
 
                                         </tbody>
@@ -804,8 +834,7 @@
                         let value = parseFloat($(this).val()) || 0;
                         total += value;
                     });
-                    total = Math.round(total);
-                    $('#paid').val(total);
+                    $('#paid').val(total.toFixed(2));
                     paidFunction();
                 }
 
@@ -813,9 +842,9 @@
                     let paid = parseFloat($('#paid').val()) || 0;
                     let total_p = parseFloat($('#total_total').val()) || 0;
                     let balance = total_p - paid;
-                    balance = Math.round(balance);
-                    $('#balance').val(balance);
+                    $('#balance').val(balance.toFixed(2));
                 }
+
 
                 $(document).on('input', '.payment_amount', function() {
                     calculatePayment();

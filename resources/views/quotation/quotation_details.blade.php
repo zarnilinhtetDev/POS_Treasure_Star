@@ -133,19 +133,19 @@
                                                     <td>
                                                         @if ($quotation->sale_price_category == 'Default')
                                                             @if ($quotation->type == 'Whole Sale')
-                                                                {{ number_format($sell->product_price) }}
+                                                                {{ number_format($sell->product_price ?? 0, 2) }}
                                                             @else
-                                                                {{ number_format($sell->retail_price) }}
+                                                                {{ number_format($sell->retail_price ?? 0, 2) }}
                                                             @endif
                                                         @elseif ($quotation->sale_price_category == 'Whole Sale')
-                                                            {{ number_format($sell->product_price) }}
+                                                            {{ number_format($sell->product_price ?? 0, 2) }}
                                                         @elseif ($quotation->sale_price_category == 'Retail')
-                                                            {{ number_format($sell->retail_price) }}
+                                                            {{ number_format($sell->retail_price ?? 0, 2) }}
                                                         @else
-                                                            {{ number_format($sell->retail_price) }}
+                                                            {{ number_format($sell->retail_price ?? 0, 2) }}
                                                         @endif
                                                     </td>
-                                                    <td>{{ number_format($sell->discount) }}</td>
+                                                    <td>{{ number_format($sell->discount ?? 0, 2) }}</td>
 
                                                     <td>
                                                         <span class="currenty"></span>
@@ -153,16 +153,16 @@
 
                                                             @if ($quotation->sale_price_category == 'Default')
                                                                 @if ($quotation->type == 'Whole Sale')
-                                                                    {{ number_format($sell->product_price * $sell->product_qty - $sell->discount) }}
+                                                                    {{ number_format($sell->product_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
                                                                 @else
-                                                                    {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
+                                                                    {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
                                                                 @endif
                                                             @elseif ($quotation->sale_price_category == 'Whole Sale')
-                                                                {{ number_format($sell->product_price * $sell->product_qty - $sell->discount) }}
+                                                                {{ number_format($sell->product_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
                                                             @elseif ($quotation->sale_price_category == 'Retail')
-                                                                {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
+                                                                {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
                                                             @else
-                                                                {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
+                                                                {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
                                                             @endif
                                                         </span>
                                                     </td>
@@ -179,7 +179,7 @@
                                                 <td style="font-weight: bolder;">Sub Total
                                                 </td>
                                                 <td style="font-weight: bolder; ">
-                                                    {{ number_format($quotation->sub_total) }}
+                                                    {{ number_format($quotation->sub_total ?? 0, 2) }}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -187,7 +187,7 @@
                                                 <td style="font-weight: bolder; ">Overall Discount
                                                 </td>
                                                 <td style="font-weight: bolder;">
-                                                    {{ number_format($quotation->discount_total) }}
+                                                    {{ number_format($quotation->discount_total ?? 0, 2) }}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -195,7 +195,7 @@
                                                 <td style="font-weight: bolder; ">Item Discount
                                                 </td>
                                                 <td style="font-weight: bolder;">
-                                                    {{ number_format($sells->sum('discount')) }}
+                                                    {{ number_format($sells->sum('discount') ?? 0, 2) }}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -203,7 +203,7 @@
                                                 <td style="font-weight: bolder;">Total
                                                 </td>
                                                 <td style="font-weight: bolder; ">
-                                                    {{ number_format($quotation->total) }}
+                                                    {{ number_format($quotation->total ?? 0, 2) }}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -211,7 +211,7 @@
                                                 <td style="font-weight: bolder;">Deposit
                                                 </td>
                                                 <td style="font-weight: bolder;">
-                                                    {{ number_format($quotation->deposit) }}
+                                                    {{ number_format($quotation->deposit ?? 0, 2) }}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -219,7 +219,7 @@
                                                 <td style="font-weight: bolder;">Remaining Balance
                                                 </td>
                                                 <td style="font-weight: bolder;">
-                                                    {{ number_format($quotation->remain_balance) }}
+                                                    {{ number_format($quotation->remain_balance ?? 0, 2) }}
                                                 </td>
                                             </tr>
                                         </tfoot>

@@ -886,8 +886,7 @@
                         let value = parseFloat($(this).val()) || 0;
                         total += value;
                     });
-                    total = Math.round(total);
-                    $('#paid').val(total);
+                    $('#paid').val(total.toFixed(2));
                     paidFunction();
                 }
 
@@ -895,9 +894,9 @@
                     let paid = parseFloat($('#paid').val()) || 0;
                     let total_p = parseFloat($('#total_total').val()) || 0;
                     let balance = total_p - paid;
-                    balance = Math.round(balance);
-                    $('#balance').val(balance);
+                    $('#balance').val(balance.toFixed(2));
                 }
+
 
                 $(document).on('input', '.payment_amount', function() {
                     calculatePayment();
@@ -996,9 +995,10 @@
 
                     if (!isNaN(taxRate) && taxRate > 0) {
                         discount = taxRate;
-                        $("#result-" + i).text((price * qty) - discount);
+                        $("#result-" + i).text(((price * qty) - discount).toFixed(
+                            2));
                     } else {
-                        $("#result-" + i).text(price * qty);
+                        $("#result-" + i).text((price * qty).toFixed(2));
                     }
 
                     total += price * qty;
@@ -1007,18 +1007,19 @@
                     totalTax += discount;
                 }
 
-                let taxt = total
+                let taxt = total;
                 taxt = Math.ceil(taxt);
-                let total_total = total - total_discount;
+                let total_total = (total - total_discount).toFixed(2);
 
-                $("#invoiceyoghtml").val(total);
+                $("#invoiceyoghtml").val(total.toFixed(2));
                 $("#item_discount").val(totalTax);
-                $("#total_buy_price").val(total_purchase);
-                $("#commercial_text").val(taxt);
+                $("#total_buy_price").val(total_purchase.toFixed(2));
+                $("#commercial_text").val(taxt.toFixed(2));
                 $("#total").val(total_total);
                 $('#total_total').val(total_total);
                 $('#total_discount').val('');
             });
+
 
 
 
@@ -1040,11 +1041,10 @@
         });
 
         function paidFunction() {
-
-            let paid = document.getElementById("paid").value;
-            let total_p = document.getElementById("total_total").value;
+            let paid = parseFloat(document.getElementById("paid").value) || 0;
+            let total_p = parseFloat(document.getElementById("total_total").value) || 0;
             let balance = total_p - paid;
-            $("#balance").val(balance); //update balance
+            $("#balance").val(balance.toFixed(2));
         }
     </script>
 
@@ -1146,11 +1146,14 @@
             let subtotal = parseFloat($("#invoiceyoghtml").val()) || 0;
             let totalDiscount = parseFloat($("#total_discount").val()) || 0;
             let totalVAT = 0;
+
             $(".vat").each(function() {
                 totalVAT += parseFloat($(this).val()) || 0;
             });
+
             let total = subtotal - totalDiscount - totalVAT;
-            $("#total_total").val(total);
+
+            $("#total_total").val(total.toFixed(2));
         });
     </script>
 

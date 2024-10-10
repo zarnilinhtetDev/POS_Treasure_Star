@@ -158,12 +158,12 @@
                                             <tr>
                                                 <td>{{ $no }}</td>
                                                 <td>
-                                                    <a href="{{ url('sale_return_detail', $pos->id) }} }}">
+                                                    <a href="{{ url('sale_return_detail', $pos->id) }}">
                                                         {{ $pos->quote_no }}
                                                     </a>
                                                 </td>
                                                 <td>{{ $pos->balance_due }}</td>
-                                                <td>{{ number_format($pos->total) }}</td>
+                                                <td>{{ number_format($pos->total ?? 0,2) }}</td>
                                                 <td>
                                                     <a href="{{ url('sale_return_detail', $pos->id) }}"
                                                         class="btn btn-primary btn-sm"><i
@@ -188,7 +188,7 @@
                                     <tfoot>
                                         <tr>
                                             <td colspan="3">Total</td>
-                                            <td>{{ number_format($po_total) }}</td>
+                                            <td>{{ number_format($po_total ?? 0,2) }}</td>
                                             <td></td>
                                         </tr>
                                     </tfoot>

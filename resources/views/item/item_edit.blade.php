@@ -293,20 +293,21 @@
                                     <div class="form-group col-md-6">
                                         <label for="retail_price">လက်လီ‌စျေး</label>
                                         <input type="number" class="form-control" id="retail_price"
-                                            name="retail_price" value="{{ $items->retail_price }}">
+                                            name="retail_price" value="{{ $items->retail_price }}" step="0.01">
                                     </div>
 
                                     <div class="form-group col-md-6">
                                         <label for="wholesale_price">လက်ကားစျေး</label>
                                         <input type="number" class="form-control" id="wholesale_price"
                                             name="wholesale_price" placeholder="Enter Wholesale_Price"
-                                            value="{{ $items->wholesale_price }}">
+                                            value="{{ $items->wholesale_price }}" step="0.01">
                                     </div>
 
                                     <div class="form-group col-md-6">
                                         <label for="buy_price">ဝယ်စျေး</label>
                                         <input type="number" class="form-control" id="buy_price" name="buy_price"
-                                            placeholder="Enter Buy Price" value="{{ $items->buy_price }}">
+                                            placeholder="Enter Buy Price" value="{{ $items->buy_price }}"
+                                            step="0.01">
                                     </div>
                                 </div>
                             </div>

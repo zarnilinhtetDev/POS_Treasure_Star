@@ -241,7 +241,7 @@
                                                 <td>{{ $po->supplier->phno ?? 'N/A' }}</td>
                                                 <td>{{ $po->supplier->address ?? 'N/A' }}</td>
                                                 <td>{{ $po->balance_due }}</td>
-                                                <td>{{ number_format($po->total) }}</td>
+                                                <td>{{ number_format($po->total ?? 0, 2) }}</td>
                                             </tr>
                                             @php
                                                 $no++;
@@ -257,7 +257,7 @@
                                             <td colspan="6" style="text-align:right">Total</td>
                                             <td colspan="">
 
-                                                {{ number_format($search_total) }}
+                                                {{ number_format($search_total ?? 0, 2) }}
 
                                             </td>
                                         </tr>
@@ -282,26 +282,26 @@
                                         <tr>
                                             <td>1.</td>
                                             <td>Cash</td>
-                                            <td>{{ number_format($totalCash) }}</td>
+                                            <td>{{ number_format($totalCash ?? 0, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td>2.</td>
                                             <td>K Pay</td>
-                                            <td>{{ number_format($totalKbz) }}</td>
+                                            <td>{{ number_format($totalKbz ?? 0, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td>3.</td>
                                             <td>Wave</td>
-                                            <td>{{ number_format($totalCB) }}</td>
+                                            <td>{{ number_format($totalCB ?? 0, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td>4.</td>
                                             <td>Other</td>
-                                            <td>{{ number_format($totalOther) }}</td>
+                                            <td>{{ number_format($totalOther ?? 0, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="2" style="text-align:right">Total</td>
-                                            <td>{{ number_format($totalCash + $totalKbz + $totalCB + $totalOther) }}
+                                            <td>{{ number_format($totalCash + $totalKbz + $totalCB + $totalOther ?? 0, 2) }}
                                             </td>
                                         </tr>
                                     </tbody>

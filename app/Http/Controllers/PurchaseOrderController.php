@@ -348,7 +348,7 @@ class PurchaseOrderController extends Controller
             $po_sell = $invoice->po_sells[$key] ?? null;
 
             $item = Item::where('item_name', $partNumber)
-                ->where('warehouse_id', $request->warehouse)
+                ->where('warehouse_id', $request->warehouse[$key])
                 ->first();
             // info($item);
             if (!$item) {

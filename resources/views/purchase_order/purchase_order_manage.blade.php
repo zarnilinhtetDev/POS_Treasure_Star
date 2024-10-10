@@ -136,7 +136,7 @@
                                                 <td>{{ \Carbon\Carbon::parse($pos->po_date)->format('d / m / Y') }}</td>
 
 
-                                                <td>{{ number_format($pos->total) }}</td>
+                                                <td>{{ number_format($pos->total ?? 0, 2) }}</td>
                                                 <td>
 
                                                     @if (in_array('Purchase Order Details', $choosePermission) || auth()->user()->is_admin == '1')

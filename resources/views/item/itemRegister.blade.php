@@ -253,19 +253,19 @@
                                         <label for="retail_price">လက်လီ‌စျေး</label>
                                         <input type="number" class="form-control" id="retail_price"
                                             name="retail_price" placeholder="Enter Retail Price"
-                                            value="{{ old('retail_price') }}">
+                                            value="{{ old('retail_price') }}" step="0.01">
                                     </div>
 
                                     <div class="form-group col-md-6">
                                         <label for="wholesale_price">လက်ကားစျေး</label>
                                         <input type="number" class="form-control" id="wholesale_price"
                                             name="wholesale_price" placeholder="Enter WholeSale Price"
-                                            value="{{ old('wholesale_price') }}">
+                                            value="{{ old('wholesale_price') }}" step="0.01">
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="buy_price">ဝယ်စျေး</label>
                                         <input type="number" class="form-control" id="buy_price" name="buy_price"
-                                            placeholder="Enter Buy Price" value="{{ old('buy_price') }}">
+                                            placeholder="Enter Buy Price" value="{{ old('buy_price') }}" step="0.01">
                                     </div>
 
 

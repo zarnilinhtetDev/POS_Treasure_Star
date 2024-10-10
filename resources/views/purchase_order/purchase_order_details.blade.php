@@ -142,13 +142,13 @@
                                                     <td>{{ $sell->description }}</td>
                                                     <td>{{ $sell->product_qty }}</td>
                                                     <td>{{ $sell->unit }}</td>
-                                                    <td>{{ number_format($sell->product_price) }}</td>
-                                                    <td>{{ number_format($sell->discount) }}</td>
+                                                    <td>{{ number_format($sell->product_price ?? 0, 2) }}</td>
+                                                    <td>{{ number_format($sell->discount ?? 0, 2) }}</td>
 
                                                     <td>
                                                         <span class="currenty"></span>
                                                         <span
-                                                            class='ttlText'>{{ number_format($sell->product_qty * $sell->product_price - $sell->discount) }}</span>
+                                                            class='ttlText'>{{ number_format($sell->product_qty * $sell->product_price - $sell->discount ?? 0, 2) }}</span>
                                                     </td>
                                                 </tr>
                                                 @php
@@ -162,7 +162,7 @@
                                                 <td style="font-weight: bolder; ">Sub Total
                                                 </td>
                                                 <td style="font-weight: bolder; ">
-                                                    {{ number_format($purchase_order->sub_total) }}
+                                                    {{ number_format($purchase_order->sub_total ?? 0, 2) }}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -170,7 +170,7 @@
                                                 <td style="font-weight: bolder; ">Overall Discount
                                                 </td>
                                                 <td style="font-weight: bolder; ">
-                                                    {{ number_format($purchase_order->discount_total) }}
+                                                    {{ number_format($purchase_order->discount_total ?? 0, 2) }}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -178,7 +178,7 @@
                                                 <td style="font-weight: bolder; ">Item Discount
                                                 </td>
                                                 <td style="font-weight: bolder; ">
-                                                    {{ number_format($purchase_sells->sum('discount')) }}
+                                                    {{ number_format($purchase_sells->sum('discount') ?? 0, 2) }}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -186,7 +186,7 @@
                                                 <td style="font-weight: bolder; ">Total
                                                 </td>
                                                 <td style="font-weight: bolder; ">
-                                                    {{ number_format($purchase_order->total) }}
+                                                    {{ number_format($purchase_order->total ?? 0, 2) }}
                                                 </td>
                                             </tr>
                                             @foreach ($payment_methods as $index => $payment_method)
@@ -204,7 +204,7 @@
                                                     @endif
 
                                                     <td style="font-weight: bolder;">
-                                                        {{ number_format($payment_method->payment_amount) }}
+                                                        {{ number_format($payment_method->payment_amount ?? 0, 2) }}
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -213,7 +213,7 @@
                                                 <td style="font-weight: bolder;">Deposit
                                                 </td>
                                                 <td style="font-weight: bolder;">
-                                                    {{ number_format($purchase_order->deposit) }}
+                                                    {{ number_format($purchase_order->deposit ?? 0, 2) }}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -221,7 +221,7 @@
                                                 <td style="font-weight: bolder;">Remaning Balance
                                                 </td>
                                                 <td style="font-weight: bolder;">
-                                                    {{ number_format($purchase_order->remain_balance) }}
+                                                    {{ number_format($purchase_order->remain_balance ?? 0, 2) }}
                                                 </td>
                                             </tr>
                                         </tfoot>

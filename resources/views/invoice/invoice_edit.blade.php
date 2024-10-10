@@ -824,7 +824,7 @@
                         let value = parseFloat($(this).val()) || 0;
                         total += value;
                     });
-                    total = Math.round(total);
+                    total = total.toFixed(2);
                     $('#paid').val(total);
                     paidFunction();
                 }
@@ -833,9 +833,10 @@
                     let paid = parseFloat($('#paid').val()) || 0;
                     let total_p = parseFloat($('#total_total').val()) || 0;
                     let balance = total_p - paid;
-                    balance = Math.round(balance);
+                    balance = balance.toFixed(2);
                     $('#balance').val(balance);
                 }
+
 
                 $(document).on('input', '.payment_amount', function() {
                     calculatePayment();
@@ -930,7 +931,6 @@
                         let itemTotal = qty * price;
                         totalTotal += itemTotal;
 
-
                         if (!isNaN(discount) && discount >= 0) {
                             let itemTax = itemTotal - discount;
                             totalTax += itemTax;
@@ -941,40 +941,35 @@
                             itemTotal = discountAmount;
                         }
 
-                        total += itemTotal;
+                        itemTotal = itemTotal.toFixed(2);
+                        total += parseFloat(itemTotal);
                         itemDiscount += discount;
 
-
                         row.find('.ttlText1').text(itemTotal);
-
                     });
 
+                    let paid = parseFloat(document.getElementById("paid").value) || 0;
+                    let total_p = parseFloat(document.getElementById("total_total").value) || 0;
+                    let total_discount = parseFloat(document.getElementById("total_discount").value) || 0;
 
-                    let paid = parseFloat(document.getElementById("paid").value) ||
-                        0;
-                    let total_p = parseFloat(document.getElementById("total_total").value) ||
-                        0;
-                    let total_discount = parseFloat(document.getElementById("total_discount").value) ||
-                        0;
-
-
-                    let totalDiscount = total - total_discount;
-                    let balance = total - paid - total_discount;
-
+                    let totalDiscount = (total - total_discount).toFixed(
+                        2);
+                    let balance = (total - paid - total_discount).toFixed(
+                        2);
 
                     $("#balance").val(balance);
                     $("#item_discount").val(itemDiscount);
-                    $('#invoiceyoghtml').val(totalTotal);
+                    $('#invoiceyoghtml').val(totalTotal.toFixed(
+                        2));
                     $('#total_total').val(totalDiscount);
                 }
 
-                // Bind function to button click
+
                 $(document).on("click", '#calculate', function(e) {
                     e.preventDefault();
                     calculateTotals();
                 });
 
-                // Automatically run on page load
                 calculateTotals();
 
 
@@ -987,9 +982,9 @@
 
 
         function paidFunction() {
-            let paid = document.getElementById("paid").value;
-            let total_p = document.getElementById("invoiceyoghtml").value;
-            let balance = total_p - paid;
+            let paid = parseFloat(document.getElementById("paid").value) || 0;
+            let total_p = parseFloat(document.getElementById("invoiceyoghtml").value) || 0;
+            let balance = (total_p - paid).toFixed(2);
             $("#balance").val(balance);
         }
     </script>
@@ -1113,10 +1108,12 @@
             let subtotal = parseFloat($("#invoiceyoghtml").val()) || 0;
             let totalDiscount = parseFloat($("#total_discount").val()) || 0;
             let totalVAT = 0;
+
             $(".vat").each(function() {
                 totalVAT += parseFloat($(this).val()) || 0;
             });
-            let total = subtotal - totalDiscount - totalVAT;
+
+            let total = (subtotal - totalDiscount - totalVAT).toFixed(2);
             $("#total_total").val(total);
         });
     </script>
