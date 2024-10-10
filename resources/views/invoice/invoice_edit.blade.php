@@ -539,7 +539,7 @@
 
 
                                                 <tbody id="trContainer">
-                                                    @foreach ($payment_method as $index => $payment)
+                                                    @forelse ($payment_method as $index => $payment)
                                                         <tr class="sub_c">
                                                             <td colspan="2"></td>
                                                             <td colspan="3" align="right">
@@ -555,7 +555,6 @@
                                                             </td>
                                                             <td align="left" colspan="1"
                                                                 class="col-md-2 payment_method">
-
                                                                 <div class="input-group">
                                                                     <select name="payment_method[]"
                                                                         id="payment_method" class="form-control"
@@ -580,19 +579,45 @@
                                                                                 <i class="fa-solid fa-plus"></i>
                                                                             </button>
                                                                         @else
-                                                                            <button class="removeRow btn btn-danger"><i
-                                                                                    class="fa-solid fa-minus"></i></button>
+                                                                            <button class="removeRow btn btn-danger">
+                                                                                <i class="fa-solid fa-minus"></i>
+                                                                            </button>
                                                                         @endif
-
-
                                                                     </div>
                                                                 </div>
-
                                                             </td>
-
                                                         </tr>
-                                                    @endforeach
-
+                                                    @empty
+                                                        <tr class="sub_c">
+                                                            <td colspan="2"></td>
+                                                            <td colspan="3" align="right"><strong>Payment
+                                                                    Method</strong></td>
+                                                            <td align="left" colspan="1" class="col-md-2">
+                                                                <input type="text" name="payment_amount[]"
+                                                                    class="form-control payment_amount"
+                                                                    id="payment_amount" required>
+                                                            </td>
+                                                            <td align="left" colspan="1"
+                                                                class="col-md-2 payment_method">
+                                                                <div class="input-group">
+                                                                    <select name="payment_method[]"
+                                                                        id="payment_method" class="form-control"
+                                                                        required>
+                                                                        <option value="Cash">Cash</option>
+                                                                        <option value="K Pay">K Pay</option>
+                                                                        <option value="Wave">Wave</option>
+                                                                        <option value="Others">Others</option>
+                                                                    </select>
+                                                                    <div class="input-group-append">
+                                                                        <button type="button" id="addRow"
+                                                                            class="btn btn-primary">
+                                                                            <i class="fa-solid fa-plus"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    @endforelse
 
                                                 </tbody>
 
