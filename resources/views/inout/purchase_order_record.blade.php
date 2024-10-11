@@ -131,7 +131,7 @@
                                                                     @endif
                                                                 </td>
                                                                 <td>{{ $sell->product_qty }}</td>
-                                                                <td>{{ number_format($sell->product_price) }}
+                                                                <td>{{ number_format($sell->product_price ?? 0, 2) }}
                                                                 </td>
 
 

@@ -697,68 +697,6 @@
                 initializeTypeaheads();
             });
 
-            $(document).ready(function() {
-                function calculatePayment() {
-                    let total = 0;
-                    $('.payment_amount').each(function() {
-                        let value = parseFloat($(this).val()) || 0;
-                        total += value;
-                    });
-                    total = Math.round(total);
-                    $('#paid').val(total);
-                    paidFunction();
-                }
-
-                function paidFunction() {
-                    let paid = parseFloat($('#paid').val()) || 0;
-                    let total_p = parseFloat($('#total_total').val()) || 0;
-                    let balance = total_p - paid;
-                    balance = Math.round(balance);
-                    $('#balance').val(balance);
-                }
-
-                $(document).on('input', '.payment_amount', function() {
-                    calculatePayment();
-                });
-
-                $('#paid').on('input', function() {
-                    paidFunction();
-                });
-
-                // Function to add a new row
-                $('#addRow').click(function() {
-                    if ($('#trContainer tr.sub_c').length < 4) {
-                        var newRow = `<tr class="sub_c">
-                <td colspan="2"></td>
-                <td colspan="3" align="right"><strong></strong></td>
-                <td align="left" colspan="1" class="col-md-2">
-                    <input type="text" name="payment_amount[]" class="form-control payment_amount">
-                </td>
-                <td align="left" colspan="1" class="col-md-2">
-                    <select name="payment_method[]" class="form-control">
-                        <option value="Cash">Cash</option>
-                        <option value="K Pay">K Pay</option>
-                        <option value="Wave">Wave</option>
-                        <option value="Others">Others</option>
-                    </select>
-                </td>
-                <td align="left" colspan="1" class="col-md-1">
-                    <button class="removeRow btn btn-danger"><i class="fa-solid fa-minus"></i></button>
-                </td>
-            </tr>`;
-
-                        $('#trContainer').append(newRow);
-                    } else {
-                        alert('You can only add a maximum of 4 payment rows.');
-                    }
-                });
-                $(document).on('click', '.removeRow', function() {
-                    $(this).closest('tr').remove();
-                    calculatePayment();
-                });
-
-                calculatePayment();
-            });
 
             $(document).on('click', '.typeahead .dropdown-item', function(e) {
                 e.preventDefault();
@@ -807,29 +745,31 @@
 
                     if (!isNaN(taxRate) && taxRate > 0) {
                         discount = taxRate;
-                        $("#result-" + i).text((price * qty) - discount);
+                        $("#result-" + i).text(((price * qty) - discount).toFixed(
+                            2));
                     } else {
-                        $("#result-" + i).text(price * qty);
+                        $("#result-" + i).text((price * qty).toFixed(2));
                     }
 
                     total += price * qty;
                     total_purchase += buy_price * qty;
                     total_discount += discount;
-                    totalTax += discount;
+                    totalTax = discount;
                 }
 
-                let taxt = total
+                let taxt = total;
                 taxt = Math.ceil(taxt);
-                let total_total = total - total_discount;
+                let total_total = (total - total_discount).toFixed(2);
 
-                $("#invoiceyoghtml").val(total);
+                $("#invoiceyoghtml").val(total.toFixed(2));
                 $("#item_discount").val(totalTax);
-                $("#total_buy_price").val(total_purchase);
-                $("#commercial_text").val(taxt);
+                $("#total_buy_price").val(total_purchase.toFixed(2));
+                $("#commercial_text").val(taxt.toFixed(2));
                 $("#total").val(total_total);
                 $('#total_total').val(total_total);
                 $('#total_discount').val('');
             });
+
 
 
 
@@ -851,11 +791,10 @@
         });
 
         function paidFunction() {
-
-            let paid = document.getElementById("paid").value;
-            let total_p = document.getElementById("total_total").value;
+            let paid = parseFloat(document.getElementById("paid").value) || 0;
+            let total_p = parseFloat(document.getElementById("total_total").value) || 0;
             let balance = total_p - paid;
-            $("#balance").val(balance); //update balance
+            $("#balance").val(balance.toFixed(2));
         }
     </script>
 
@@ -959,7 +898,7 @@
                 totalVAT += parseFloat($(this).val()) || 0;
             });
             let total = subtotal - totalDiscount - totalVAT;
-            $("#total_total").val(total);
+            $("#total_total").val(total.toFixed(2));
         });
     </script>
 

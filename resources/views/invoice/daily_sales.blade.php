@@ -104,10 +104,10 @@
                                                 <td>{{ $pos->invoice_no }}</td>
 
                                                 <td>{{ $pos->created_at->format('m-d-y') }}</td>
-                                                <td>{{ number_format($pos->discount_total + $pos->total) }}</td>
-                                                <td>{{ number_format($pos->discount_total ?? 0) }}</td>
+                                                <td>{{ number_format($pos->discount_total + $pos->total ?? 0, 2) }}</td>
+                                                <td>{{ number_format($pos->discount_total ?? 0, 2) }}</td>
 
-                                                <td>{{ number_format($pos->total) }}</td>
+                                                <td>{{ number_format($pos->total ?? 0, 2) }}</td>
                                                 <td>{{ $pos->sale_by }}</td>
 
                                                 <td> <a href="{{ url('/invoice_detail', $pos->id) }}"
@@ -128,9 +128,9 @@
                                     <tfoot>
                                         <tr>
                                             <td colspan="3" style="text-align:right">Total</td>
-                                            <td colspan="">{{ number_format($subtotal) }}</td>
-                                            <td colspan="">{{ number_format($discounttotal) }}</td>
-                                            <td colspan="">{{ number_format($amounttotal) }}</td>
+                                            <td colspan="">{{ number_format($subtotal ?? 0, 2) }}</td>
+                                            <td colspan="">{{ number_format($discounttotal ?? 0, 2) }}</td>
+                                            <td colspan="">{{ number_format($amounttotal ?? 0, 2) }}</td>
                                             <td></td>
                                             <td></td>
                                         </tr>

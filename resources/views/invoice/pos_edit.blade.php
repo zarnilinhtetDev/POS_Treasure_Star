@@ -589,7 +589,7 @@
                                                     </tr>
 
                                                 <tbody id="trContainer">
-                                                    @foreach ($payment_method as $index => $payment)
+                                                    @forelse ($payment_method as $index => $payment)
                                                         <tr class="sub_c">
                                                             <td colspan="2"></td>
                                                             <td colspan="3" align="right">
@@ -640,7 +640,40 @@
                                                             </td>
 
                                                         </tr>
-                                                    @endforeach
+                                                    @empty
+                                                        <tr class="sub_c">
+                                                            <td colspan="2"></td>
+                                                            <td colspan="3" align="right"><strong>Payment
+                                                                    Method</strong></td>
+                                                            <td align="left" colspan="1" class="col-md-2">
+                                                                <input type="text" name="payment_amount[]"
+                                                                    class="form-control payment_amount"
+                                                                    id="payment_amount">
+                                                            </td>
+                                                            <td align="left" colspan="1"
+                                                                class="col-md-2 payment_method">
+                                                                <div class="input-group">
+                                                                    <select name="payment_method[]"
+                                                                        id="payment_method" class="form-control"
+                                                                        required>
+                                                                        <option value="Cash">Cash</option>
+                                                                        <option value="K Pay">K Pay</option>
+                                                                        <option value="Wave">Wave</option>
+                                                                        <option value="Others">Others</option>
+                                                                    </select>
+                                                                    <div class="input-group-append">
+                                                                        <button type="button" id="addRow"
+                                                                            class="btn btn-primary">
+                                                                            <i class="fa-solid fa-plus"></i>
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+
+
+
+                                                        </tr>
+                                                    @endforelse
 
 
                                                 </tbody>
@@ -985,12 +1018,12 @@
                 $(document).ready(function() {
                     function calculatePayment() {
                         let total = 0;
+
                         $('.payment_amount').each(function() {
                             let value = parseFloat($(this).val()) || 0;
                             total += value;
                         });
-                        total = Math.round(total);
-                        $('#paid').val(total);
+                        $('#paid').val(total.toFixed(2));
                         paidFunction();
                     }
 
@@ -998,9 +1031,10 @@
                         let paid = parseFloat($('#paid').val()) || 0;
                         let total_p = parseFloat($('#total_total').val()) || 0;
                         let balance = total_p - paid;
-                        balance = Math.round(balance);
-                        $('#balance').val(balance);
+                        $('#balance').val(balance.toFixed(2));
                     }
+
+
 
                     $(document).on('input', '.payment_amount', function() {
                         calculatePayment();
@@ -1079,9 +1113,6 @@
                 $(document).ready(function() {
                     function calculateTotals() {
                         let salePriceCategory = $('#sale_price_category').val();
-
-
-
                         let total = 0;
                         let totalTax = 0;
                         let totalTotal = 0;
@@ -1093,9 +1124,10 @@
                             let price;
 
                             if (salePriceCategory === 'Default') {
-                                let cuz_name = $("#type").val();
-                                price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
-                                    .val()) || 0 : parseFloat(row.find('.retail_price').val()) || 0;
+                                let customerType = $("#type").val();
+                                price = (customerType === "Whole Sale") ?
+                                    parseFloat(row.find('.price').val()) || 0 :
+                                    parseFloat(row.find('.retail_price').val()) || 0;
                             } else if (salePriceCategory === 'Whole Sale') {
                                 price = parseFloat(row.find('.price').val()) || 0;
                             } else if (salePriceCategory === 'Retail') {
@@ -1106,52 +1138,35 @@
                             let itemTotal = qty * price;
                             totalTotal += itemTotal;
 
-
-                            if (!isNaN(discount) && discount >= 0) {
-                                let itemTax = itemTotal - discount;
-                                totalTax += itemTax;
-                            }
-
                             if (!isNaN(discount) && discount > 0) {
-                                let discountAmount = itemTotal - discount;
-                                itemTotal = discountAmount;
+                                itemTotal -= discount;
+                                totalTax += discount;
                             }
 
                             total += itemTotal;
                             itemDiscount += discount;
 
-
-
-                            row.find('.ttlText1').text(itemTotal);
-
+                            row.find('.ttlText1').text(itemTotal.toFixed(2));
                         });
 
-
-                        let paid = parseFloat(document.getElementById("paid").value) ||
-                            0;
-                        let total_p = parseFloat(document.getElementById("total_total").value) ||
-                            0;
-                        let total_discount = parseFloat(document.getElementById("total_discount").value) ||
-                            0;
-
+                        let paid = parseFloat($('#paid').val()) || 0;
+                        let total_discount = parseFloat($('#total_discount').val()) || 0;
 
                         let totalDiscount = total - total_discount;
-                        let balance = total - paid - total_discount;
+                        let balance = totalDiscount - paid;
 
-
-                        $("#balance").val(balance);
+                        $("#balance").val(balance.toFixed(2));
                         $("#item_discount").val(itemDiscount);
-                        $('#invoiceyoghtml').val(totalTotal);
-                        $('#total_total').val(totalDiscount);
+                        $('#invoiceyoghtml').val(totalTotal.toFixed(2));
+                        $('#total_total').val(totalDiscount.toFixed(2));
                     }
 
-                    // Bind function to button click
+
                     $(document).on("click", '#calculate', function(e) {
                         e.preventDefault();
                         calculateTotals();
                     });
 
-                    // Automatically run on page load
                     calculateTotals();
 
 
@@ -1159,13 +1174,12 @@
 
 
                 function paidFunction() {
-                    let paid = document.getElementById("paid").value;
-                    let total_p = document.getElementById("total_total").value;
+                    let paid = parseFloat(document.getElementById("paid").value) || 0;
+                    let total_p = parseFloat(document.getElementById("total_total").value) || 0;
                     let balance = total_p - paid;
-                    $("#balance").val(balance);
-
-
+                    $("#balance").val(balance.toFixed(2));
                 }
+
             });
         </script>
         <script>
@@ -1177,11 +1191,10 @@
 
 
             function paidFunction() {
-
-                let paid = document.getElementById("paid").value;
-                let total_p = document.getElementById("total_total").value;
+                let paid = parseFloat(document.getElementById("paid").value) || 0;
+                let total_p = parseFloat(document.getElementById("total_total").value) || 0;
                 let balance = total_p - paid;
-                $("#balance").val(balance);
+                $("#balance").val(balance.toFixed(2));
             }
         </script>
 
@@ -1301,7 +1314,8 @@
                 $(".vat").each(function() {
                     totalVAT += parseFloat($(this).val()) || 0;
                 });
-                let total = subtotal - totalDiscount - totalVAT;
+                let total = subtotal - totalDiscount + totalVAT;
+                total = total.toFixed(2);
                 $("#total_total").val(total);
             });
         </script>

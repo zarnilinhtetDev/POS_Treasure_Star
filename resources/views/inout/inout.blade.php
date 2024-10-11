@@ -170,18 +170,18 @@
                                         <div class="form-group col-md-6">
                                             <label for="retail_price">လက်လီစျေး</label>
                                             <input type="number" class="form-control" id="retail_price"
-                                                name="retail_price" required>
+                                                name="retail_price" step="0.01" required>
                                         </div>
 
                                         <div class="form-group col-md-6">
                                             <label for="wholesale_price">လက်ကားစျေး</label>
                                             <input type="number" class="form-control" id="wholesale_price"
-                                                name="wholesale_price" required>
+                                                name="wholesale_price" step="0.01" required>
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="buy_price">ဝယ်စျေး</label>
                                             <input type="number" class="form-control" id="buy_price"
-                                                name="buy_price" required>
+                                                name="buy_price" step="0.01" required>
                                         </div>
 
                                         {{-- <div class="mt-3 form-group col-md-4">
@@ -331,9 +331,9 @@
                                             {{-- <td>
                                                 {{ $inout->mingalar_market }}
                                             </td> --}}
-                                            <td>{{ $inout->retail_price }}</td>
-                                            <td>{{ $inout->wholesale_price }}</td>
-                                            <td>{{ $inout->buy_price }}</td>
+                                            <td>{{ number_format($inout->retail_price ?? 0, 2) }}</td>
+                                            <td>{{ number_format($inout->wholesale_price ?? 0, 2) }}</td>
+                                            <td>{{ number_format($inout->buy_price ?? 0, 2) }}</td>
                                             <td>
                                                 {{ $inout->date }}
                                             </td>

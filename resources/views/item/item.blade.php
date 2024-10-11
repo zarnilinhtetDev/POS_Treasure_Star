@@ -310,8 +310,9 @@
                                                         <td>{{ $item->item_name }}</td>
                                                         <td>{{ $item->category }}</td>
                                                         <td>{{ $item->warehouse->name ?? 'N/A' }}</td>
-                                                        <td>{{ $item->retail_price ?? '0' }}</td>
-                                                        <td>{{ $item->wholesale_price ?? '0' }}</td>
+                                                        <td>{{ number_format($item->retail_price ?? 0, 2) }}
+                                                        </td>
+                                                        <td>{{ number_format($item->wholesale_price ?? 0, 2) }}</td>
                                                         <td>{{ $item->barcode }}</td>
                                                         <td>
                                                             @if ($item->expired_date)

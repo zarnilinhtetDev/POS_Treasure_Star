@@ -104,8 +104,11 @@
                                             <div class="row">
                                                 <div class="form-group col-md-6">
                                                     <label for="name">Company Name</label>
-                                                    <input type="text" class="form-control" id="name" 
-                                                        autofocus name="name" value="">
+                                                    <input type="text" class="form-control" id="name" autofocus
+                                                        name="name" value="">
+                                                    @error('name')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
 
                                                 @if (auth()->user()->is_admin == '1')
@@ -122,6 +125,9 @@
                                                                 </option>
                                                             @endforeach
                                                         </select>
+                                                        @error('branch')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
                                                     </div>
                                                 @else
                                                     <div class="form-group col-md-6">
@@ -144,6 +150,9 @@
                                                                 @endif
                                                             @endforeach
                                                         </select>
+                                                        @error('branch')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
                                                     </div>
                                                 @endif
                                             </div>
@@ -151,25 +160,37 @@
                                                 <label for="name">Company Logo</label>
                                                 <input type="file" class="form-control" id="name" autofocus
                                                     name="logos" value="">
+                                                @error('logos')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
+
+
 
                                             <div class="form-group">
                                                 <label for="name">Address</label>
                                                 <textarea name="address" id="" cols="30" rows="5" class="form-control"></textarea>
+                                                @error('address')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
                                             </div>
-                                
-                                <div class="form-group">
-                                    <label for="name">Description</label>
-                                    <textarea name="description" id="" cols="30" rows="2" class="form-control"></textarea>
+
+                                            <div class="form-group">
+                                                <label for="name">Description</label>
+                                                <textarea name="description" id="" cols="30" rows="2" class="form-control"></textarea>
                                             </div>
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="phno1">Phone Number</label>
                                                         <input type="tel" class="form-control" id="phone_number1"
-                                                            name="phno1" value="" >
+                                                            name="phno1" value="">
+                                                        @error('phno1')
+                                                            <span class="text-danger">{{ $message }}</span>
+                                                        @enderror
                                                     </div>
                                                 </div>
+
                                                 <div class="col-md-4">
                                                     <div class="form-group">
                                                         <label for="phno2">Phone Number</label>

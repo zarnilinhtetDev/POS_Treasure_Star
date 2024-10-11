@@ -252,22 +252,20 @@
                         <tr>
                             <td class="fw-light" style="width:200px">လက်လီ‌စျေး</td>
                             <td class="fw-normal" style="width: 200px;">
-                                {{ $items->retail_price }}
-
+                                {{ number_format($items->retail_price ?? 0, 2) }}
                             </td>
                         </tr>
                         <tr>
                             <td class="fw-light" style="width:200px">လက်ကားစျေး</td>
                             <td class="fw-normal" style="width: 200px;">
-                                {{ $items->wholesale_price }}
-
+                                {{ number_format($items->wholesale_price ?? 0, 2) }}
                             </td>
                         </tr>
 
                         <tr>
                             <td class="fw-light" style="width:200px">ဝယ်စျေး</td>
                             <td class="fw-normal" style="width: 200px;">
-                                {{ $items->buy_price }}
+                                {{ number_format($items->buy_price ?? 0, 2) }}
 
                             </td>
                         </tr>

@@ -168,19 +168,19 @@
                                                 </td>
                                                 <td>
                                                     @if ($invoice->deposit !== null)
-                                                        {{ $invoice->deposit }}
+                                                        {{ number_format($invoice->deposit ?? 0, 2) }}
                                                     @else
                                                         0
                                                     @endif
                                                 </td>
                                                 <td>
                                                     @if ($invoice->remain_balance)
-                                                        {{ $invoice->remain_balance }}
+                                                        {{ number_format($invoice->remain_balance ?? 0, 2) }}
                                                     @else
                                                         0
                                                     @endif
                                                 </td>
-                                                <td>{{ $invoice->total }}</td>
+                                                <td>{{ number_format($invoice->total ?? 0, 2) }}</td>
 
                                             </tr>
                                         @endforeach
@@ -190,9 +190,9 @@
                                     <tfoot>
                                         <tr>
                                             <td colspan="3" class="text-right">Total</td>
-                                            <td>{{ $deposit }}</td>
-                                            <td>{{ $balance }}</td>
-                                            <td> {{ $total_amount }}</td>
+                                            <td>{{ number_format($deposit ?? 0, 2) }}</td>
+                                            <td>{{ number_format($balance ?? 0, 2) }}</td>
+                                            <td> {{ number_format($total_amount ?? 0, 2) }}</td>
                                         </tr>
                                     </tfoot>
 

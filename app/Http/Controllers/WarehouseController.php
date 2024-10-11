@@ -129,20 +129,17 @@ class WarehouseController extends Controller
                     $item->category = $item_from->category;
                     $item->price = $item_from->price;
                     $item->company_price = $item_from->company_price;
-                    $item->mingalar_market = $item_from->mingalar_market;
                     $item->reorder_level_stock = $item_from->reorder_level_stock;
                     $item->retail_price = $item_from->retail_price;
                     $item->wholesale_price = $item_from->wholesale_price;
                     $item->buy_price = $item_from->buy_price;
-                    $item->radio_category = $item_from->radio_category;
-                    $item->madeIn = $item_from->madeIn;
-                    $item->lense = $item_from->lense;
-                    $item->degree = $item_from->degree;
+                    $item->item_type = $item_from->item_type;
                     $item->item_unit = $item_from->item_unit;
                     $item->parent_id = $lastItem->id + 1;
                     $item->quantity = $request->product_qty[$i];
                     $item->warehouse_id = $request->to_location;
                     $item->save();
+
 
                     // Update quantity from location item
                     $item_from->quantity -= $request->product_qty[$i];

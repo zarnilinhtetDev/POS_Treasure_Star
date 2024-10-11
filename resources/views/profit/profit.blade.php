@@ -206,11 +206,11 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td>{{ $date }}</td>
-                                                <td>{{ number_format($stock) }}</td>
-                                                <td>{{ number_format($totalSale) }}</td>
-                                                <td>{{ number_format($purchase) }}</td>
-                                                <td>{{ number_format($expense) }}</td>
-                                                <td>{{ number_format($profit) }}</td>
+                                                <td>{{ number_format($stock ?? 0, 2) }}</td>
+                                                <td>{{ number_format($totalSale ?? 0, 2) }}</td>
+                                                <td>{{ number_format($purchase ?? 0, 2) }}</td>
+                                                <td>{{ number_format($expense ?? 0, 2) }}</td>
+                                                <td>{{ number_format($profit ?? 0, 2) }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -218,11 +218,11 @@
                                     <tfoot style="background-color: #d7f0d9">
                                         <tr>
                                             <td colspan="2"><strong>Total</strong></td>
-                                            <td>{{ number_format($filteredStockSellsByDay->sum()) }}</td>
-                                            <td>{{ number_format($invoicesByDay->sum()) }}</td>
-                                            <td>{{ number_format($purchasesByDay->sum()) }}</td>
-                                            <td>{{ number_format($expensesByDay->sum()) }}</td>
-                                            <td>{{ number_format($invoicesByDay->sum() - ($purchasesByDay->sum() + $expensesByDay->sum())) }}
+                                            <td>{{ number_format($filteredStockSellsByDay->sum() ?? 0, 2) }}</td>
+                                            <td>{{ number_format($invoicesByDay->sum() ?? 0, 2) }}</td>
+                                            <td>{{ number_format($purchasesByDay->sum() ?? 0, 2) }}</td>
+                                            <td>{{ number_format($expensesByDay->sum() ?? 0, 2) }}</td>
+                                            <td>{{ number_format($invoicesByDay->sum() - ($purchasesByDay->sum() + $expensesByDay->sum()) ?? 0, 2) }}
                                             </td>
                                         </tr>
                                     </tfoot>
@@ -258,11 +258,11 @@
                                                 ? Carbon::parse($invoices->first()->date)->format('F / Y')
                                                 : 'No Invoices' }}
                                             </td>
-                                            <td>{{ number_format($totalStockDeposit) }}</td>
-                                            <td>{{ number_format($totalSum) }}</td>
-                                            <td>{{ number_format($totalPurchase) }}</td>
-                                            <td>{{ number_format($totalExpense) }}</td>
-                                            <td>{{ number_format($totalSum - ($totalPurchase + $totalExpense)) }}
+                                            <td>{{ number_format($totalStockDeposit ?? 0, 2) }}</td>
+                                            <td>{{ number_format($totalSum ?? 0, 2) }}</td>
+                                            <td>{{ number_format($totalPurchase ?? 0, 2) }}</td>
+                                            <td>{{ number_format($totalExpense ?? 0, 2) }}</td>
+                                            <td>{{ number_format($totalSum - ($totalPurchase + $totalExpense) ?? 0, 2) }}
 
                                             </td>
 

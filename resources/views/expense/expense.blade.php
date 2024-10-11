@@ -213,7 +213,8 @@
                                             <div class="form-group">
                                                 <label for="amount">Amount<span class="text-danger">*</span></label>
                                                 <input type="number" class="form-control" id="amount"
-                                                    placeholder="Enter amount" required autofocus name="amount">
+                                                    placeholder="Enter amount" required autofocus name="amount"
+                                                    step="0.01">
                                             </div>
 
                                             <div class="form-group">
@@ -226,8 +227,8 @@
                                             <div class="form-group">
                                                 <label for="amount">Description<span
                                                         class="text-danger">*</span></label>
-                                                <textarea class="form-control" id="description" placeholder="Enter description" autofocus
-                                                    name="description" rows="5"></textarea>
+                                                <textarea class="form-control" id="description" placeholder="Enter description" autofocus name="description"
+                                                    rows="5"></textarea>
                                             </div>
 
                                             <button type="button" class="btn btn-default"
@@ -288,7 +289,7 @@
                                             <td>{{ $expense->description }}</td>
                                             <td>{{ $date->format('d M Y') }}
                                             </td>
-                                            <td>{{ number_format($expense->amount) }}</td>
+                                            <td>{{ number_format($expense->amount ?? 0, 2) }}</td>
                                             <td>
 
                                                 @if (in_array('Expenses Edit', $choosePermission) || auth()->user()->is_admin == '1')

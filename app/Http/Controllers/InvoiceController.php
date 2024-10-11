@@ -578,10 +578,10 @@ class InvoiceController extends Controller
         $sellsData = [];
         $now = Carbon::now();
         if ($request->input('part_number')) {
-            foreach ($request->input('part_number') as $key => $partDescription) {
+            foreach ($request->input('part_number') as $key => $partNumber) {
                 $sellsData[] = [
-                    'description' => $partDescription,
-                    'part_number' => $request->input('part_number')[$key],
+                    'description' => $request->input('part_description')[$key],
+                    'part_number' => $partNumber,
                     'product_qty' => $request->input('product_qty')[$key],
                     'product_price' => $request->input('product_price')[$key],
                     'discount' => $request->input('discount')[$key],
@@ -621,7 +621,7 @@ class InvoiceController extends Controller
             foreach ($request->input('part_number') as $key => $partNumber) {
 
                 $item = Item::where('item_name', $partNumber)
-                    ->where('warehouse_id', $request->warehouse)
+                    ->where('warehouse_id', $request->warehouse[$key])
                     ->first();
 
                 if (!$item) {
@@ -638,7 +638,7 @@ class InvoiceController extends Controller
             foreach ($request->input('part_number') as $key => $partNumber) {
 
                 $item = Item::where('item_name', $partNumber)
-                    ->where('warehouse_id', $request->warehouse)
+                    ->where('warehouse_id', $request->warehouse[$key])
                     ->first();
 
                 if (!$item) {

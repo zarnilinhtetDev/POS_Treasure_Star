@@ -236,11 +236,11 @@
                                                         @endforeach
                                                     </td>
                                                     <td>{{ $pos->invoice_date }}</td>
-                                                    <td>{{ number_format($pos->sub_total) }}
+                                                    <td>{{ number_format($pos->sub_total ?? 0, 2) }}
                                                     </td>
 
-                                                    <td>{{ $pos->discount_total ?? 0 }}</td>
-                                                    <td>{{ number_format($pos->total) }}</td>
+                                                    <td>{{ number_format($pos->discount_total ?? 0, 2) }}</td>
+                                                    <td>{{ number_format($pos->total ?? 0, 2) }}</td>
                                                     <td>{{ $pos->sale_by }}</td>
                                                 </tr>
                                                 @php
@@ -266,11 +266,11 @@
                                                         @endforeach
                                                     </td>
                                                     <td>{{ $pos_datas->invoice_date }}</td>
-                                                    <td>{{ number_format($pos_datas->sub_total) }}
+                                                    <td>{{ number_format($pos_datas->sub_total ?? 0, 2) }}
                                                     </td>
 
-                                                    <td>{{ $pos_datas->discount_total ?? 0 }}</td>
-                                                    <td>{{ number_format($pos_datas->total) }}</td>
+                                                    <td>{{ number_format($pos_datas->discount_total ?? 0, 2) }}</td>
+                                                    <td>{{ number_format($pos_datas->total ?? 0, 2) }}</td>
                                                     <td>{{ $pos_datas->sale_by }}</td>
                                                 </tr>
                                                 @php
@@ -286,9 +286,9 @@
                                         <tr>
                                             <td></td>
                                             <td colspan="3" style="text-align:right">Total</td>
-                                            <td colspan="">{{ number_format($subtotal) }}</td>
-                                            <td colspan="">{{ number_format($discounttotal) }}</td>
-                                            <td colspan="">{{ number_format($amounttotal) }}</td>
+                                            <td colspan="">{{ number_format($subtotal ?? 0, 2) }}</td>
+                                            <td colspan="">{{ number_format($discounttotal ?? 0, 2) }}</td>
+                                            <td colspan="">{{ number_format($amounttotal ?? 0, 2) }}</td>
                                             <td></td>
                                         </tr>
 
@@ -313,7 +313,7 @@
                                         <tr>
                                             <td>{{ $no }}</td>
                                             <td colspan="">{{ $sale_total->sale_by }}</td>
-                                            <td>{{ number_format($sale_total->sale_total) }}</td>
+                                            <td>{{ number_format($sale_total->sale_total ?? 0, 2) }}</td>
 
 
                                             <!-- Display the subtotal here -->
@@ -341,26 +341,26 @@
                                         <tr>
                                             <td>1.</td>
                                             <td>Cash</td>
-                                            <td>{{ number_format($totalCash) }}</td>
+                                            <td>{{ number_format($totalCash ?? 0, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td>2.</td>
                                             <td>K Pay</td>
-                                            <td>{{ number_format($totalKbz) }}</td>
+                                            <td>{{ number_format($totalKbz ?? 0, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td>3.</td>
                                             <td>Wave</td>
-                                            <td>{{ number_format($totalCB) }}</td>
+                                            <td>{{ number_format($totalCB ?? 0, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td>4.</td>
                                             <td>Other</td>
-                                            <td>{{ number_format($totalOther) }}</td>
+                                            <td>{{ number_format($totalOther ?? 0, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="2" style="text-align:right">Total</td>
-                                            <td>{{ number_format($totalCash + $totalKbz + $totalCB + $totalOther) }}
+                                            <td>{{ number_format($totalCash + $totalKbz + $totalCB + $totalOther ?? 0, 2) }}
                                             </td>
                                         </tr>
                                     </tbody>

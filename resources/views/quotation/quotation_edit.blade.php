@@ -279,7 +279,7 @@
                                                     <th width="9%" class="text-center">
                                                         {{ trans('Discounts') }}
                                                     </th>
-                                                    <th width="9%" class="text-center">
+                                                    <th style="display: none;" width="9%" class="text-center">
                                                         {{ trans('Expiry') }}
                                                     </th>
                                                     <th width="14%" class="text-center">
@@ -308,8 +308,7 @@
                                                             {{-- <div class="col"> --}}
                                                             <input type="text"
                                                                 class="form-control productname typeahead"
-                                                                name="part_number[]"
-                                                                value="{{ $sell->part_number }}"
+                                                                name="part_number[]" value="{{ $sell->part_number }}"
                                                                 placeholder="{{ trans('Enter Part Number') }}"
                                                                 id='productname-0' autocomplete="off">
                                                             {{-- </div> --}}
@@ -337,15 +336,16 @@
                                                         <td class="retail_td"><input type="text"
                                                                 class="form-control retail_price"
                                                                 name="retail_price[]" id="retail_price-0"
-                                                                autocomplete="off"
-                                                                value="{{ $sell->retail_price }}"></td>
-                                                        <td><input type="text" class="form-control vat"
-                                                                name="discount[]" id="vat-0"
-                                                                autocomplete="off" value="{{ $sell->discount }}">
+                                                                autocomplete="off" value="{{ $sell->retail_price }}">
                                                         </td>
-                                                        <td><input type="text" class="form-control exp_date"
-                                                                name="exp_date[]" id="vat-0"
-                                                                autocomplete="off" value="{{ $sell->exp_date }}">
+                                                        <td><input type="text" class="form-control vat"
+                                                                name="discount[]" id="vat-0" autocomplete="off"
+                                                                value="{{ $sell->discount }}">
+                                                        </td>
+                                                        <td style="display: none;"><input type="text"
+                                                                class="form-control exp_date" name="exp_date[]"
+                                                                id="vat-0" autocomplete="off"
+                                                                value="{{ $sell->exp_date }}">
                                                         </td>
                                                         <td style="display: none;"><input type="text"
                                                                 class="form-control warehouse" name="warehouse[]"
@@ -353,8 +353,7 @@
                                                                 value="{{ $sell->warehouse }}"></td>
 
 
-                                                        <td style="text-align:center"><strong><span
-                                                                    class='ttlText1'
+                                                        <td style="text-align:center"><strong><span class='ttlText1'
                                                                     id="foc-0"></span></strong></td>
                                                         <td style="width: 3%;"><button type="button"
                                                                 class="btn btn-danger remove_item_btn"
@@ -664,7 +663,7 @@
                     count + '"   autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control vat" name="discount[]" value="0" id="vat-' +
                     count + '"   autocomplete="off"></td>' +
-                    '<td><input type="text" class="form-control exp_date" name="exp_date[]" id="exp_date-' +
+                    '<td style="display: none;"><input type="text" class="form-control exp_date" name="exp_date[]" id="exp_date-' +
                     count + '"   autocomplete="off"></td>' +
                     '<td style="display : none;"><input type="text" class="form-control warehouse " name="warehouse[]" id="warehouse-' +
                     count +
@@ -680,49 +679,7 @@
                 updatePriceCategory();
             });
 
-            function updatePriceCategory() {
-                var selectedCategory = $('#sale_price_category').val();
-                var cuzName = $('#type').val();
 
-                if (selectedCategory === 'Whole Sale') {
-                    $('.wholesale_td').show();
-                    $('.wholesale_th').show();
-                    $('.retail_td').hide();
-                    $('.retail_th').hide();
-                } else if (selectedCategory === 'Retail') {
-                    $('.wholesale_td').hide();
-                    $('.wholesale_th').hide();
-                    $('.retail_td').show();
-                    $('.retail_th').show();
-                } else {
-                    if ($('#type').val() == 'Whole Sale') {
-                        $('.wholesale_td').show();
-                        $('.wholesale_th').show();
-                        $('.retail_td').hide();
-                        $('.retail_th').hide();
-                    } else if ($('#type').val() == 'Retail') {
-                        $('.wholesale_td').hide();
-                        $('.wholesale_th').hide();
-                        $('.retail_td').show();
-                        $('.retail_th').show();
-                    } else {
-                        $('.wholesale_td').hide();
-                        $('.wholesale_th').hide();
-                        $('.retail_td').show();
-                        $('.retail_th').show();
-                    }
-                }
-            }
-
-            $('#type').val('{{ $quotation->type }}');
-            updatePriceCategory();
-            $('#sale_price_category').on('input', function() {
-                updatePriceCategory();
-            });
-
-            $('#type').on('input', function() {
-                updatePriceCategory();
-            });
 
             $(document).on('click', '.remove_item_btn', function(e) {
                 e.preventDefault();
@@ -735,71 +692,6 @@
                 });
 
                 initializeTypeaheads();
-            });
-
-
-            $(document).ready(function() {
-                function calculatePayment() {
-                    let total = 0;
-                    $('.payment_amount').each(function() {
-                        let value = parseFloat($(this).val()) || 0;
-                        total += value;
-                    });
-                    total = Math.round(total);
-                    $('#paid').val(total);
-                    paidFunction();
-                }
-
-                function paidFunction() {
-                    let paid = parseFloat($('#paid').val()) || 0;
-                    let total_p = parseFloat($('#total_total').val()) || 0;
-                    let balance = total_p - paid;
-                    balance = Math.round(balance);
-                    $('#balance').val(balance);
-                }
-
-                $(document).on('input', '.payment_amount', function() {
-                    calculatePayment();
-                });
-
-                $('#paid').on('input', function() {
-                    paidFunction();
-                });
-
-                $('#addRow').click(function() {
-                    // Check the number of rows
-                    if ($('#trContainer tr.sub_c').length < 4) {
-                        var newRow = `<tr class="sub_c">
-                <td colspan="2"></td>
-                <td colspan="3" align="right"><strong></strong></td>
-                <td align="left" colspan="1" class="col-md-2">
-                    <input type="text" name="payment_amount[]" class="form-control payment_amount">
-                </td>
-                <td align="left" colspan="1" class="col-md-2">
-                    <select name="payment_method[]" class="form-control">
-                        <option value="Cash">Cash</option>
-                        <option value="K Pay">K Pay</option>
-                        <option value="Wave">Wave</option>
-                        <option value="Others">Others</option>
-                    </select>
-                </td>
-                <td align="left" colspan="1" class="col-md-1">
-                    <button class="removeRow btn btn-danger"><i class="fa-solid fa-minus"></i></button>
-                </td>
-            </tr>`;
-
-                        $('#trContainer').append(newRow);
-                    } else {
-                        alert('You can only add a maximum of 4 payment rows.');
-                    }
-                });
-
-                $(document).on('click', '.removeRow', function() {
-                    $(this).closest('tr').remove();
-                    calculatePayment();
-                });
-
-                calculatePayment();
             });
 
 
@@ -830,11 +722,11 @@
                         let row = $(this);
                         let qty = parseInt(row.find('.req.amnt').val()) || 0;
                         let price;
-
                         if (salePriceCategory === 'Default') {
-                            let cuz_name = $("#type").val();
-                            price = cuz_name === "Whole Sale" ? parseFloat(row.find('.price')
-                                .val()) || 0 : parseFloat(row.find('.retail_price').val()) || 0;
+                            let customerType = $("#type").val();
+                            price = customerType === "Whole Sale" ?
+                                parseFloat(row.find('.price').val()) || 0 :
+                                parseFloat(row.find('.retail_price').val()) || 0;
                         } else if (salePriceCategory === 'Whole Sale') {
                             price = parseFloat(row.find('.price').val()) || 0;
                         } else if (salePriceCategory === 'Retail') {
@@ -843,53 +735,35 @@
 
                         let discount = parseFloat(row.find('.vat').val()) || 0;
                         let itemTotal = qty * price;
-                        totalTotal += itemTotal;
-
-
-                        if (!isNaN(discount) && discount >= 0) {
-                            let itemTax = itemTotal - discount;
-                            totalTax += itemTax;
-                        }
-
                         if (!isNaN(discount) && discount > 0) {
-                            let discountAmount = itemTotal - discount;
-                            itemTotal = discountAmount;
+                            itemTotal -= discount;
+                            totalTax += discount;
                         }
 
-                        total += itemTotal;
+                        totalTotal += itemTotal;
                         itemDiscount += discount;
 
-
-                        row.find('.ttlText1').text(itemTotal);
-
+                        row.find('.ttlText1').text(itemTotal.toFixed(2));
                     });
 
+                    let paid = parseFloat(document.getElementById("paid").value) || 0;
+                    let total_p = parseFloat(document.getElementById("total_total").value) || 0;
+                    let total_discount = parseFloat(document.getElementById("total_discount").value) || 0;
 
-                    let paid = parseFloat(document.getElementById("paid").value) ||
-                        0;
-                    let total_p = parseFloat(document.getElementById("total_total").value) ||
-                        0;
-                    let total_discount = parseFloat(document.getElementById("total_discount").value) ||
-                        0;
-
-
-                    let totalDiscount = total - total_discount;
-                    let balance = total - paid - total_discount;
-
-
-                    $("#balance").val(balance);
+                    let totalDiscount = totalTotal - total_discount;
+                    let balance = totalDiscount - paid;
+                    $("#balance").val(balance.toFixed(2));
                     $("#item_discount").val(itemDiscount);
-                    $('#invoiceyoghtml').val(totalTotal);
-                    $('#total_total').val(totalDiscount);
+                    $('#invoiceyoghtml').val(totalTotal.toFixed(2));
+                    $('#total_total').val(totalDiscount.toFixed(2));
                 }
 
-                // Bind function to button click
+
                 $(document).on("click", '#calculate', function(e) {
                     e.preventDefault();
                     calculateTotals();
                 });
 
-                // Automatically run on page load
                 calculateTotals();
 
 
@@ -902,9 +776,10 @@
 
 
         function paidFunction() {
-            let paid = document.getElementById("paid").value;
-            let total_p = document.getElementById("invoiceyoghtml").value;
+            let paid = parseFloat(document.getElementById("paid").value) || 0;
+            let total_p = parseFloat(document.getElementById("invoiceyoghtml").value) || 0;
             let balance = total_p - paid;
+            balance = balance.toFixed(2);
             $("#balance").val(balance);
         }
     </script>
@@ -957,89 +832,42 @@
 
 
 
-            $(document).ready(function() {
-                function updatePriceCategory() {
-                    var selectedCategory = $('#sale_price_category').val();
-                    var cuzName = $('#type').val();
+            $(document).on('click', '#customer_search', function(e) {
+                e.preventDefault();
+                let serialNumber = $("#customer").val();
 
-                    if (selectedCategory === 'Whole Sale') {
-                        $('.wholesale_td').show();
-                        $('.wholesale_th').show();
-                        $('.retail_td').hide();
-                        $('.retail_th').hide();
-                    } else if (selectedCategory === 'Retail') {
-                        $('.wholesale_td').hide();
-                        $('.wholesale_th').hide();
-                        $('.retail_td').show();
-                        $('.retail_th').show();
-                    } else {
-                        if ($('#type').val() == 'Whole Sale') {
-                            $('.wholesale_td').show();
-                            $('.wholesale_th').show();
-                            $('.retail_td').hide();
-                            $('.retail_th').hide();
-                        } else if ($('#type').val() == 'Retail') {
-                            $('.wholesale_td').hide();
-                            $('.wholesale_th').hide();
-                            $('.retail_td').show();
-                            $('.retail_th').show();
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ route('customer_service_search_fill') }}",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        model: serialNumber,
+                        location: $('#location').val()
+                    },
+                    success: function(data) {
+                        console.log(data);
+
+                        if (data.customer) {
+                            // Populate fields with customer data
+                            $("#name").val(data.customer.name);
+                            $("#customer_id").val(data.customer.id);
+                            $("#phone_no").val(data.customer.phno);
+                            $("#type").val(data.customer
+                                .type); // Set type from AJAX
+
+
+
+                            $("#address").val(data.customer.address);
+                            $("#customer").val(
+                                ''); // Clear the customer search input
                         } else {
-                            $('.wholesale_td').hide();
-                            $('.wholesale_th').hide();
-                            $('.retail_td').show();
-                            $('.retail_th').show();
+                            console.error("Customer not found");
+                            $("#customer").val(''); // Clear the input if not found
                         }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error(xhr.responseText); // Log error for debugging
                     }
-                }
-
-                $('#type').val('{{ $quotation->type }}');
-                updatePriceCategory();
-                $('#sale_price_category').on('input', function() {
-                    updatePriceCategory();
-                });
-
-                $('#type').on('input', function() {
-                    updatePriceCategory();
-                });
-
-                $(document).on('click', '#customer_search', function(e) {
-                    e.preventDefault();
-                    let serialNumber = $("#customer").val();
-
-                    $.ajax({
-                        type: 'POST',
-                        url: "{{ route('customer_service_search_fill') }}",
-                        data: {
-                            _token: "{{ csrf_token() }}",
-                            model: serialNumber,
-                            location: $('#location').val()
-                        },
-                        success: function(data) {
-                            console.log(data);
-
-                            if (data.customer) {
-                                // Populate fields with customer data
-                                $("#name").val(data.customer.name);
-                                $("#customer_id").val(data.customer.id);
-                                $("#phone_no").val(data.customer.phno);
-                                $("#type").val(data.customer
-                                    .type); // Set type from AJAX
-
-                                // Call to update price category based on new type
-                                updatePriceCategory();
-
-                                $("#address").val(data.customer.address);
-                                $("#customer").val(
-                                    ''); // Clear the customer search input
-                            } else {
-                                console.error("Customer not found");
-                                $("#customer").val(''); // Clear the input if not found
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error(xhr.responseText); // Log error for debugging
-                        }
-                    });
                 });
             });
 
@@ -1082,7 +910,8 @@
                 totalVAT += parseFloat($(this).val()) || 0;
             });
             let total = subtotal - totalDiscount - totalVAT;
-            $("#total_total").val(total);
+            total = Math.max(total, 0);
+            $("#total_total").val(total.toFixed(2));
         });
     </script>
     <script>

@@ -156,33 +156,33 @@
                                     <td style="font-size: 12px;">
                                         @if ($invoice->sale_price_category == 'Default')
                                             @if ($invoice->type == 'Whole Sale')
-                                                {{ number_format($sell->product_price) }}
+                                                {{ number_format($sell->product_price ?? 0, 2) }}
                                             @else
-                                                {{ number_format($sell->retail_price) }}
+                                                {{ number_format($sell->retail_price ?? 0, 2) }}
                                             @endif
                                         @elseif ($invoice->sale_price_category == 'Whole Sale')
-                                            {{ number_format($sell->product_price) }}
+                                            {{ number_format($sell->product_price ?? 0, 2) }}
                                         @elseif ($invoice->sale_price_category == 'Retail')
-                                            {{ number_format($sell->retail_price) }}
+                                            {{ number_format($sell->retail_price ?? 0, 2) }}
                                         @else
-                                            {{ number_format($sell->retail_price) }}
+                                            {{ number_format($sell->retail_price ?? 0, 2) }}
                                         @endif
                                     </td>
-                                    <td style="font-size: 12px;">{{ number_format($sell->discount) }}</td>
+                                    <td style="font-size: 12px;">{{ number_format($sell->discount ?? 0, 2) }}</td>
 
                                     <td class="text-end" style="font-size: 12px;">
                                         @if ($invoice->sale_price_category == 'Default')
                                             @if ($invoice->type == 'Whole Sale')
-                                                {{ number_format($sell->product_price * $sell->product_qty - $sell->discount) }}
+                                                {{ number_format($sell->product_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
                                             @else
-                                                {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
+                                                {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
                                             @endif
                                         @elseif ($invoice->sale_price_category == 'Whole Sale')
-                                            {{ number_format($sell->product_price * $sell->product_qty - $sell->discount) }}
+                                            {{ number_format($sell->product_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
                                         @elseif ($invoice->sale_price_category == 'Retail')
-                                            {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
+                                            {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
                                         @else
-                                            {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
+                                            {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
                                         @endif
                                     </td>
                                 </tr>
@@ -193,15 +193,15 @@
 
                         <tr style="line-height: 20px;">
                             <td colspan="4" class="text-end fw-bold">Total</td>
-                            <td class="text-end fw-bold">{{ number_format($invoice->total ?? 0) }}</td>
+                            <td class="text-end fw-bold">{{ number_format($invoice->total ?? 0, 2) }}</td>
                         </tr>
                         <tr style="line-height: 20px;">
                             <td colspan="4" class="text-end fw-bold">Overall Discount</td>
-                            <td class="text-end fw-bold">{{ number_format($invoice->discount_total ?? 0) }}</td>
+                            <td class="text-end fw-bold">{{ number_format($invoice->discount_total ?? 0, 2) }}</td>
                         </tr>
                         <tr style="line-height: 20px;">
                             <td colspan="4" class="text-end fw-bold">Item Discount</td>
-                            <td class="text-end fw-bold">{{ number_format($sells->sum('discount')) }}</td>
+                            <td class="text-end fw-bold">{{ number_format($sells->sum('discount') ?? 0, 2) }}</td>
                         </tr>
                         @foreach ($payment_methods as $index => $payment_method)
                             <tr style="line-height: 20px;">
@@ -214,7 +214,7 @@
                                 </td>
 
                                 <td class="text-end fw-bold">
-                                    {{ number_format($payment_method->payment_amount ?? 0) }}
+                                    {{ number_format($payment_method->payment_amount ?? 0, 2) }}
 
                                 </td>
                             </tr>
@@ -222,7 +222,7 @@
 
                         <tr style="line-height: 20px;">
                             <td colspan="4" class="text-end fw-bold">Change Due</td>
-                            <td class="text-end fw-bold">{{ number_format($invoice->remain_balance ?? 0) }}</td>
+                            <td class="text-end fw-bold">{{ number_format($invoice->remain_balance ?? 0, 2) }}</td>
                         </tr>
 
                     </tfoot>
