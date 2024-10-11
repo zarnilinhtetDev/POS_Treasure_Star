@@ -47,14 +47,21 @@ class WarehouseController extends Controller
     public function warehouse_delete($id)
     {
         $itemsCount = Item::where('warehouse_id', $id)->count();
+        $transferCount = TransferHistory::where(function ($query) use ($id) {
+            $query->where('from_location', $id)
+                ->orWhere('to_location', $id);
+        })->count();
 
         if ($itemsCount > 0) {
             return back()->with('error', 'Cannot delete warehouse because items are associated with it.');
+        } elseif ($transferCount > 0) {
+            return back()->with('error', 'Cannot delete warehouse because transfer histories are associated with it.');
         } else {
             Warehouse::destroy($id);
             return back()->with('delete', 'Warehouse deleted successfully.');
         }
     }
+
 
     public function warehouse_edit($id)
     {

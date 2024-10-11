@@ -119,18 +119,21 @@
                                         @foreach ($histories as $history)
                                             <tr>
                                                 <td>{{ $no }}</td>
-                                                <td>{{ $location_names[$history->id]['from'] }}</td>
-                                                <td>{{ $location_names[$history->id]['to'] }}</td>
-
+                                                <td>
+                                                    {{ isset($location_names[$history->id]['from']) ? $location_names[$history->id]['from'] : 'N/A' }}
+                                                </td>
+                                                <td>
+                                                    {{ isset($location_names[$history->id]['to']) ? $location_names[$history->id]['to'] : 'N/A' }}
+                                                </td>
                                                 <td>{{ $history->item_name }}</td>
                                                 <td>{{ $history->quantity }}</td>
                                                 <td>{{ $history->date }}</td>
-
                                             </tr>
                                             @php
                                                 $no++;
                                             @endphp
                                         @endforeach
+
 
                                     </tbody>
 
