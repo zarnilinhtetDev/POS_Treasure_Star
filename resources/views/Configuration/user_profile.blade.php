@@ -103,7 +103,8 @@
 
                                             <div class="row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="name">Company Name</label>
+                                                    <label for="name">Company Name<span
+                                                            class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="name" autofocus
                                                         name="name" value="">
                                                     @error('name')
@@ -157,7 +158,8 @@
                                                 @endif
                                             </div>
                                             <div class="form-group">
-                                                <label for="name">Company Logo</label>
+                                                <label for="name">Company Logo<span
+                                                        class="text-danger">*</span></label>
                                                 <input type="file" class="form-control" id="name" autofocus
                                                     name="logos" value="">
                                                 @error('logos')
@@ -168,7 +170,7 @@
 
 
                                             <div class="form-group">
-                                                <label for="name">Address</label>
+                                                <label for="name">Address<span class="text-danger">*</span></label>
                                                 <textarea name="address" id="" cols="30" rows="5" class="form-control"></textarea>
                                                 @error('address')
                                                     <span class="text-danger">{{ $message }}</span>
@@ -182,7 +184,8 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label for="phno1">Phone Number</label>
+                                                        <label for="phno1">Phone Number<span
+                                                                class="text-danger">*</span></label>
                                                         <input type="tel" class="form-control" id="phone_number1"
                                                             name="phno1" value="">
                                                         @error('phno1')
