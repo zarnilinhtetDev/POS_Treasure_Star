@@ -102,9 +102,10 @@
 
                                             <div class="row">
                                                 <div class="form-group col-md-6">
-                                                    <label for="name">Company Name</label>
+                                                    <label for="name">Company Name<span
+                                                            class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" id="name" autofocus
-                                                        name="name" value="{{ $user_profile->name }}">
+                                                        name="name" value="{{ $user_profile->name }}" required>
                                                 </div>
 
                                                 @if (auth()->user()->is_admin == '1')
@@ -146,7 +147,8 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="name">Company Logo</label>
+                                                <label for="name">Company Logo<span
+                                                        class="text-danger">*</span></label>
                                                 <div id="logoPreviewContainer" class="mt-3">
                                                     <a href="{{ asset('logos/' . $user_profile->logos) }}"
                                                         target="_blank" id="logoLink">
@@ -162,8 +164,8 @@
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="name">Address</label>
-                                                <textarea name="address" id="" cols="30" rows="5" class="form-control">{{ $user_profile->address }}</textarea>
+                                                <label for="name">Address<span class="text-danger">*</span></label>
+                                                <textarea name="address" id="" cols="30" rows="5" class="form-control" required>{{ $user_profile->address }}</textarea>
                                             </div>
                                             <div class="form-group">
                                                 <label for="name">Description</label>
@@ -172,9 +174,11 @@
                                             <div class="row">
                                                 <div class="col-md-4">
                                                     <div class="form-group">
-                                                        <label for="phno1">Phone Number</label>
+                                                        <label for="phno1">Phone Number<span
+                                                                class="text-danger">*</span></label>
                                                         <input type="tel" class="form-control" id="phone_number1"
-                                                            name="phno1" value="{{ $user_profile->phno1 }}">
+                                                            name="phno1" value="{{ $user_profile->phno1 }}"
+                                                            required>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-4">
