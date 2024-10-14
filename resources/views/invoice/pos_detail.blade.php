@@ -103,36 +103,37 @@
         </div>
         @foreach ($profile as $pic)
             @if ($invoice->branch == $pic->branch)
-                <div class="mt-5 text-center">
+                <!-- <div class="mt-5 text-center">
                     <img src="{{ asset('logos/' . ($pic->logos ?? 'null')) }}" width="180" height="120">
 
-                </div>
+                </div> -->
                 <div class="row" style="margin-top: 30px;">
                     <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
 
                     <p class="text-center fw-bold" style="font-size: 14px;">
                         {{ $pic->address }}
                         <br>
-                        {{ $pic->phno1 }}, {{ $pic->phno2 }}
+                        {{ $pic->phno1 ? $pic->phno1 : $pic->phno2 }}
+
                     </p>
                 </div>
             @endif
         @endforeach
-        <div class="mt-3 row">
+        <!-- <div class="mt-3 row">
             <h6 class="text-center">Sales Receipt<br>
                 <?= $currentDate = date('d-m-Y') ?></h6>
-        </div>
+        </div> -->
 
         <div class="mt-3 row">
-            <p class="fw-bold" style="font-size: 12px;">Sale ID: {{ $invoice->invoice_no }}
-                <br>Employee :
-                {{ auth()->user()->name }}
-                <br>Customer :
-                {{ $invoice->customer_name }}
-                <br>Phone :
-                {{ $invoice->phno }}
-                <br>Address :
-                {{ $invoice->address }}
+            <div style="display: flex; justify-content: space-between; font-size: 12px;" class="fw-bold">
+                <span>Sale ID: {{ $invoice->invoice_no }}</span>
+                <span><?= date('d-m-Y') ?></span>
+            </div>
+            <p style="font-size: 12px;" class="fw-bold">
+                Employee: {{ auth()->user()->name }}
+                <br>Customer: {{ $invoice->customer_name }}
+                <br>Phone: {{ $invoice->phno }}
+                <br>Address: {{ $invoice->address }}
             </p>
 
             <div class="mt-1 table-responsive">
@@ -156,33 +157,33 @@
                                     <td style="font-size: 12px;">
                                         @if ($invoice->sale_price_category == 'Default')
                                             @if ($invoice->type == 'Whole Sale')
-                                                {{ number_format($sell->product_price ?? 0, 2) }}
+                                                {{ number_format($sell->product_price) }}
                                             @else
-                                                {{ number_format($sell->retail_price ?? 0, 2) }}
+                                                {{ number_format($sell->retail_price) }}
                                             @endif
                                         @elseif ($invoice->sale_price_category == 'Whole Sale')
-                                            {{ number_format($sell->product_price ?? 0, 2) }}
+                                            {{ number_format($sell->product_price) }}
                                         @elseif ($invoice->sale_price_category == 'Retail')
-                                            {{ number_format($sell->retail_price ?? 0, 2) }}
+                                            {{ number_format($sell->retail_price) }}
                                         @else
-                                            {{ number_format($sell->retail_price ?? 0, 2) }}
+                                            {{ number_format($sell->retail_price) }}
                                         @endif
                                     </td>
-                                    <td style="font-size: 12px;">{{ number_format($sell->discount ?? 0, 2) }}</td>
+                                    <td style="font-size: 12px;">{{ number_format($sell->discount) }}</td>
 
                                     <td class="text-end" style="font-size: 12px;">
                                         @if ($invoice->sale_price_category == 'Default')
                                             @if ($invoice->type == 'Whole Sale')
-                                                {{ number_format($sell->product_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
+                                                {{ number_format($sell->product_price * $sell->product_qty - $sell->discount) }}
                                             @else
-                                                {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
+                                                {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
                                             @endif
                                         @elseif ($invoice->sale_price_category == 'Whole Sale')
-                                            {{ number_format($sell->product_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
+                                            {{ number_format($sell->product_price * $sell->product_qty - $sell->discount) }}
                                         @elseif ($invoice->sale_price_category == 'Retail')
-                                            {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
+                                            {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
                                         @else
-                                            {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
+                                            {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount) }}
                                         @endif
                                     </td>
                                 </tr>
@@ -193,16 +194,16 @@
 
                         <tr style="line-height: 20px;">
                             <td colspan="4" class="text-end fw-bold">Total</td>
-                            <td class="text-end fw-bold">{{ number_format($invoice->total ?? 0, 2) }}</td>
+                            <td class="text-end fw-bold">{{ number_format($invoice->total ?? 0) }}</td>
                         </tr>
-                        <tr style="line-height: 20px;">
+                        <!-- <tr style="line-height: 20px;">
                             <td colspan="4" class="text-end fw-bold">Overall Discount</td>
-                            <td class="text-end fw-bold">{{ number_format($invoice->discount_total ?? 0, 2) }}</td>
+                            <td class="text-end fw-bold">{{ number_format($invoice->discount_total ?? 0) }}</td>
                         </tr>
                         <tr style="line-height: 20px;">
                             <td colspan="4" class="text-end fw-bold">Item Discount</td>
-                            <td class="text-end fw-bold">{{ number_format($sells->sum('discount') ?? 0, 2) }}</td>
-                        </tr>
+                            <td class="text-end fw-bold">{{ number_format($sells->sum('discount')) }}</td>
+                        </tr> -->
                         @foreach ($payment_methods as $index => $payment_method)
                             <tr style="line-height: 20px;">
 
@@ -214,7 +215,7 @@
                                 </td>
 
                                 <td class="text-end fw-bold">
-                                    {{ number_format($payment_method->payment_amount ?? 0, 2) }}
+                                    {{ number_format($payment_method->payment_amount ?? 0) }}
 
                                 </td>
                             </tr>
@@ -222,7 +223,7 @@
 
                         <tr style="line-height: 20px;">
                             <td colspan="4" class="text-end fw-bold">Change Due</td>
-                            <td class="text-end fw-bold">{{ number_format($invoice->remain_balance ?? 0, 2) }}</td>
+                            <td class="text-end fw-bold">{{ number_format($invoice->remain_balance ?? 0) }}</td>
                         </tr>
 
                     </tfoot>

@@ -97,17 +97,14 @@
         </div>
         @foreach ($profile as $pic)
             @if ($invoice->branch == $pic->branch)
-                {{-- <div class="mt-5 text-center">
-                    <img src="{{ asset('logos/' . ($pic->logos ?? 'null')) }}" width="180" height="120">
-
-                </div> --}}
                 <div class="row" style="margin-top: 30px;">
                     <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
 
                     <p class="text-center fw-bold" style="font-size: 14px;">
                         {{ $pic->address }}
                         <br>
-                        {{ $pic->phno1 }}, {{ $pic->phno2 }}
+                        {{ $pic->phno1 ? $pic->phno1 : $pic->phno2 }}
+
                     </p>
                 </div>
             @endif
@@ -121,19 +118,19 @@
 
 
         <div class="row">
-            <div class="col-md-6">
-                <div style="display: flex; justify-content: space-between; font-size: 12px;" class="fw-bold">
-                    <span>Sale ID: {{ $invoice->invoice_no }}</span>
-                    <span><?= date('d-m-Y') ?></span>
-                </div>
-                <p style="font-size: 12px;" class="fw-bold">
-                    Employee: {{ auth()->user()->name }}
-                    <br>Customer: {{ $invoice->customer_name }}
-                    <br>Phone: {{ $invoice->phno }}
-                    <br>Address: {{ $invoice->address }}
-                </p>
 
+            <div style="display: flex; justify-content: space-between; font-size: 12px;" class="fw-bold">
+                <span>Sale ID: {{ $invoice->invoice_no }}</span>
+                <span><?= date('d-m-Y') ?></span>
             </div>
+            <p style="font-size: 12px;" class="fw-bold">
+                Employee: {{ auth()->user()->name }}
+                <br>Customer: {{ $invoice->customer_name }}
+                <br>Phone: {{ $invoice->phno }}
+                <br>Address: {{ $invoice->address }}
+            </p>
+
+
 
         </div>
         <div class="mt-1 table-responsive">
