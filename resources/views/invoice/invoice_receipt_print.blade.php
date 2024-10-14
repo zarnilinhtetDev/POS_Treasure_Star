@@ -97,10 +97,10 @@
         </div>
         @foreach ($profile as $pic)
             @if ($invoice->branch == $pic->branch)
-                <div class="mt-5 text-center">
+                {{-- <div class="mt-5 text-center">
                     <img src="{{ asset('logos/' . ($pic->logos ?? 'null')) }}" width="180" height="120">
 
-                </div>
+                </div> --}}
                 <div class="row" style="margin-top: 30px;">
                     <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
 
@@ -112,130 +112,137 @@
                 </div>
             @endif
         @endforeach
-        <div class="mt-3 row">
-            <h6 class="text-center">Sales Receipt<br>
+        {{-- <div class="mt-3 row">
+            <h6 class="text-center">
                 <?= $currentDate = date('d-m-Y') ?></h6>
-        </div>
-
-        <div class="mt-3 row">
-            <p class="fw-bold" style="font-size: 12px;">Sale ID: {{ $invoice->invoice_no }}
-                <br>Employee :
-                {{ auth()->user()->name }}
-                <br>Customer :
-                {{ $invoice->customer_name }}
-                <br>Phone :
-                {{ $invoice->phno }}
-                <br>Address :
-                {{ $invoice->address }}
-            </p>
-
-            <div class="mt-1 table-responsive">
-                <table class="mt-1" style="font-size: 14px;width:100%">
-                    <thead>
-                        <tr class="text-left">
-                            <th style="width: 40%;font-size: 10px;">Item Name.</th>
-                            <th style="width: 10%;font-size: 10px;">Qty</th>
-                            <th style="width: 20%;font-size: 10px;">Price</th>
-                            <th style="width: 20%;font-size: 10px;">Discounts</th>
-                            <th class="text-end" style="width: 10%;font-size: 10px;">Total</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-center" style="height:30px">
-
-                        @foreach ($invoices as $invoice)
-                            @php
-                                $groupedSells = $invoice->sells->groupBy('exp_date');
-                                $totalAmount = 0;
-                                $totalDiscount = 0;
-                            @endphp
+        </div> --}}
 
 
-                            @foreach ($invoice->sells as $sell)
-                                <tr class="text-start">
-                                    <td style="font-size: 10px;">{{ $sell->part_number }}</td>
-                                    <td style="font-size: 10px;">{{ $sell->product_qty }}</td>
-                                    <td style="font-size: 10px;">
-                                        @if ($invoice->sale_price_category == 'Default')
-                                            @if ($invoice->type == 'Whole Sale')
-                                                {{ number_format($sell->product_price ?? 0, 2) }}
-                                            @else
-                                                {{ number_format($sell->retail_price ?? 0, 2) }}
-                                            @endif
-                                        @elseif ($invoice->sale_price_category == 'Whole Sale')
-                                            {{ number_format($sell->product_price ?? 0, 2) }}
-                                        @elseif ($invoice->sale_price_category == 'Retail')
-                                            {{ number_format($sell->retail_price ?? 0, 2) }}
-                                        @else
-                                            {{ number_format($sell->retail_price ?? 0, 2) }}
-                                        @endif
-                                    </td>
-                                    <td style="font-size: 10px;">{{ number_format($sell->discount ?? 0, 2) }}
 
-                                        @php
-                                            $totalDiscount += $sell->discount;
-                                        @endphp
-                                    </td>
-                                    <td class="text-end" style="font-size: 10px;">
-                                        @if ($invoice->sale_price_category == 'Default')
-                                            @if ($invoice->type == 'Whole Sale')
-                                                {{ number_format($sell->product_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
-                                            @else
-                                                {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
-                                            @endif
-                                        @elseif ($invoice->sale_price_category == 'Whole Sale')
-                                            {{ number_format($sell->product_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
-                                        @elseif ($invoice->sale_price_category == 'Retail')
-                                            {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
-                                        @else
-                                            {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @endforeach
 
-                    </tbody>
-                    <tfoot style="border-top: 2px solid black !important;font-size: 10px;">
+        <div class="row">
+            <div class="col-md-6">
+                <div style="display: flex; justify-content: space-between; font-size: 12px;" class="fw-bold">
+                    <span>Sale ID: {{ $invoice->invoice_no }}</span>
+                    <span><?= date('d-m-Y') ?></span>
+                </div>
+                <p style="font-size: 12px;" class="fw-bold">
+                    Employee: {{ auth()->user()->name }}
+                    <br>Customer: {{ $invoice->customer_name }}
+                    <br>Phone: {{ $invoice->phno }}
+                    <br>Address: {{ $invoice->address }}
+                </p>
 
-                        <tr style="line-height: 20px;">
-                            <td colspan="4" class="text-end fw-bold">Total</td>
-                            <td class="text-end fw-bold">{{ number_format($invoice->total ?? 0, 2) }}</td>
-                        </tr>
-                        <tr style="line-height: 20px;">
-                            <td colspan="4" class="text-end fw-bold">Overall Discount</td>
-                            <td class="text-end fw-bold">{{ number_format($invoice->discount_total ?? 0, 2) }}</td>
-                        </tr>
-                        <tr style="line-height: 20px;">
-                            <td colspan="4" class="text-end fw-bold">Item Discount</td>
-                            <td class="text-end fw-bold">{{ number_format($totalDiscount ?? 0, 2) }}</td>
-                        </tr>
-                        @foreach ($payment_methods as $index => $payment_method)
-                            <tr style="line-height: 20px;">
-
-                                <td colspan="4" class="text-end fw-bold">
-                                    @if ($index == 0)
-                                        Payment -
-                                    @endif
-                                    {{ $payment_method->payment_method }}
-                                </td>
-
-                                <td class="text-end fw-bold">
-                                    {{ number_format($payment_method->payment_amount ?? 0, 2) }}
-
-                                </td>
-                            </tr>
-                        @endforeach
-
-                        <tr style="line-height: 20px;">
-                            <td colspan="4" class="text-end fw-bold">Remaining Balance</td>
-                            <td class="text-end fw-bold">{{ number_format($invoice->remain_balance ?? 0, 2) }}</td>
-                        </tr>
-
-                    </tfoot>
-                </table>
             </div>
 
         </div>
+        <div class="mt-1 table-responsive">
+            <table class="mt-1" style="font-size: 14px;width:100%">
+                <thead>
+                    <tr class="text-left">
+                        <th style="width: 40%;font-size: 10px;">Item Name.</th>
+                        <th style="width: 10%;font-size: 10px;">Qty</th>
+                        <th style="width: 20%;font-size: 10px;">Price</th>
+                        <th style="width: 20%;font-size: 10px;">Discounts</th>
+                        <th class="text-end" style="width: 10%;font-size: 10px;">Total</th>
+                    </tr>
+                </thead>
+                <tbody class="text-center" style="height:30px">
+
+                    @foreach ($invoices as $invoice)
+                        @php
+                            $groupedSells = $invoice->sells->groupBy('exp_date');
+                            $totalAmount = 0;
+                            $totalDiscount = 0;
+                        @endphp
+
+
+                        @foreach ($invoice->sells as $sell)
+                            <tr class="text-start">
+                                <td style="font-size: 10px;">{{ $sell->part_number }}</td>
+                                <td style="font-size: 10px;">{{ $sell->product_qty }}</td>
+                                <td style="font-size: 10px;">
+                                    @if ($invoice->sale_price_category == 'Default')
+                                        @if ($invoice->type == 'Whole Sale')
+                                            {{ number_format($sell->product_price ?? 0, 2) }}
+                                        @else
+                                            {{ number_format($sell->retail_price ?? 0, 2) }}
+                                        @endif
+                                    @elseif ($invoice->sale_price_category == 'Whole Sale')
+                                        {{ number_format($sell->product_price ?? 0, 2) }}
+                                    @elseif ($invoice->sale_price_category == 'Retail')
+                                        {{ number_format($sell->retail_price ?? 0, 2) }}
+                                    @else
+                                        {{ number_format($sell->retail_price ?? 0, 2) }}
+                                    @endif
+                                </td>
+                                <td style="font-size: 10px;">{{ number_format($sell->discount ?? 0, 2) }}
+
+                                    @php
+                                        $totalDiscount += $sell->discount;
+                                    @endphp
+                                </td>
+                                <td class="text-end" style="font-size: 10px;">
+                                    @if ($invoice->sale_price_category == 'Default')
+                                        @if ($invoice->type == 'Whole Sale')
+                                            {{ number_format($sell->product_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
+                                        @else
+                                            {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
+                                        @endif
+                                    @elseif ($invoice->sale_price_category == 'Whole Sale')
+                                        {{ number_format($sell->product_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
+                                    @elseif ($invoice->sale_price_category == 'Retail')
+                                        {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
+                                    @else
+                                        {{ number_format($sell->retail_price * $sell->product_qty - $sell->discount ?? 0, 2) }}
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    @endforeach
+
+                </tbody>
+                <tfoot style="border-top: 2px solid black !important;font-size: 10px;">
+
+                    <tr style="line-height: 20px;">
+                        <td colspan="4" class="text-end fw-bold">Total</td>
+                        <td class="text-end fw-bold">{{ number_format($invoice->total ?? 0, 2) }}</td>
+                    </tr>
+                    {{-- <tr style="line-height: 20px;">
+                        <td colspan="4" class="text-end fw-bold">Overall Discount</td>
+                        <td class="text-end fw-bold">{{ number_format($invoice->discount_total ?? 0, 2) }}</td>
+                    </tr>
+                    <tr style="line-height: 20px;">
+                        <td colspan="4" class="text-end fw-bold">Item Discount</td>
+                        <td class="text-end fw-bold">{{ number_format($totalDiscount ?? 0, 2) }}</td>
+                    </tr> --}}
+                    @foreach ($payment_methods as $index => $payment_method)
+                        <tr style="line-height: 20px;">
+
+                            <td colspan="4" class="text-end fw-bold">
+                                @if ($index == 0)
+                                    Payment -
+                                @endif
+                                {{ $payment_method->payment_method }}
+                            </td>
+
+                            <td class="text-end fw-bold">
+                                {{ number_format($payment_method->payment_amount ?? 0, 2) }}
+
+                            </td>
+                        </tr>
+                    @endforeach
+
+                    <tr style="line-height: 20px;">
+                        <td colspan="4" class="text-end fw-bold">Remaining Balance</td>
+                        <td class="text-end fw-bold">{{ number_format($invoice->remain_balance ?? 0, 2) }}</td>
+                    </tr>
+
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
     </div>
 
     <script>
