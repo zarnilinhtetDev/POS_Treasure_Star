@@ -91,7 +91,14 @@
                         </button>
                     </div>
                 @endif
-
+                @if (session('trycache'))
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>{{ session('trycache') }}</strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
 
                 <div class="ml-2 container-fluid">
 
