@@ -245,7 +245,7 @@
                                                 </tr>
                                                 @php
                                                     $no++;
-                                                    $subtotal += $sub_total; // Add subtotal for each $discounttotal += $pos_datas->discount_total;
+                                                    $subtotal += $pos->sub_total; // Add subtotal for each $discounttotal += $pos_datas->discount_total;
                                                     $discounttotal += $pos->discount_total;
                                                     $amounttotal += $pos->total;
 
