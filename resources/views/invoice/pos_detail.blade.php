@@ -120,7 +120,7 @@
             @endif
         @endforeach
         <!-- <div class="mt-3 row">
-            <h6 class="text-center">Sales Receipt<br>
+            <h6 class="text-center">Sales Rec eipt<br>
                 <?= $currentDate = date('d-m-Y') ?></h6>
         </div> -->
 
