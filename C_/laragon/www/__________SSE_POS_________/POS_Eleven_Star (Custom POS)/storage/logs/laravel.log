@@ -1,0 +1,16 @@
+[2024-11-18 07:47:38] local.ERROR: Command "optimize:celar" is not defined.
+
+Did you mean one of these?
+    optimize
+    optimize:clear {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"optimize:celar\" is not defined.
+
+Did you mean one of these?
+    optimize
+    optimize:clear at /Users/winmin/Desktop/POS_Eleven_Star (Custom POS)/vendor/symfony/console/Application.php:737)
+[stacktrace]
+#0 /Users/winmin/Desktop/POS_Eleven_Star (Custom POS)/vendor/symfony/console/Application.php(266): Symfony\\Component\\Console\\Application->find('optimize:celar')
+#1 /Users/winmin/Desktop/POS_Eleven_Star (Custom POS)/vendor/symfony/console/Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#2 /Users/winmin/Desktop/POS_Eleven_Star (Custom POS)/vendor/laravel/framework/src/Illuminate/Foundation/Console/Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#3 /Users/winmin/Desktop/POS_Eleven_Star (Custom POS)/artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#4 {main}
+"} 
