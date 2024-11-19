@@ -138,7 +138,7 @@ class InvoiceController extends Controller
 
         if ($request->balance_due == 'Invoice' || $request->status == 'quotation') {
 
-            $setting = Setting::where('category', '1')->first();
+            $setting = Setting::where('category', 'Invoice')->first();
 
             if ($setting) {
                 $invoice->transaction_id = $setting->transaction_id ?? null;
@@ -160,7 +160,7 @@ class InvoiceController extends Controller
             } else {
             }
         } else if ($request->status == 'pos') {
-            $setting = Setting::where('category', '3')->first();
+            $setting = Setting::where('category', 'POS')->first();
 
             if ($setting) {
                 $invoice->transaction_id = $setting->transaction_id ?? null;
@@ -182,7 +182,7 @@ class InvoiceController extends Controller
             } else {
             }
         } else if ($request->balance_due == 'Po Return') {
-            $setting = Setting::where('category', '4')->first();
+            $setting = Setting::where('category', 'Purchase Order Return')->first();
             if ($setting) {
                 $invoice->transaction_id = $setting->transaction_id ?? null;
                 $transactions = Payment::all();
@@ -371,6 +371,13 @@ class InvoiceController extends Controller
     public function invoice_delete($id)
     {
         $invoice = Invoice::find($id);
+        foreach ($invoice->sells as $sell) {
+            $item = Item::where('item_name', $sell->part_number)->where('warehouse_id', $invoice->branch)->first();
+            if ($item) {
+                $item->quantity += $sell->product_qty;
+                $item->save();
+            }
+        }
 
         if ($invoice->status == 'invoice' && $invoice->balance_due == 'Invoice') {
 
@@ -504,7 +511,7 @@ class InvoiceController extends Controller
             } else {
             }
         } elseif ($request->status == 'pos') {
-            $setting = Setting::where('category', '3')->first();
+            $setting = Setting::where('category', 'pos')->first();
 
             if ($setting) {
                 $invoice->transaction_id = $setting->transaction_id ?? null;
@@ -681,7 +688,7 @@ class InvoiceController extends Controller
             }
         }
 
-        $setting = Setting::where('category', '1')->first();
+        $setting = Setting::where('category', 'Invoice')->first();
 
         if ($setting) {
             $invoice->transaction_id = $setting->transaction_id ?? null;
@@ -695,7 +702,7 @@ class InvoiceController extends Controller
                     $payment = $tran->first();
 
                     if ($payment) {
-                        $payment->amount += $invoices->paid;
+                        $payment->amount += $invoices->deposit;
                         $payment->save();
                     } else {
                     }
@@ -1072,6 +1079,16 @@ class InvoiceController extends Controller
 
             $invoice = PurchaseOrder::findOrFail($id);
             if ($invoice) {
+
+
+                foreach ($invoice->po_sells as $sell) {
+                    $item = Item::where('item_name', $sell->part_number)->where('warehouse_id', $invoice->branch)->first();
+                    if ($item) {
+                        $item->quantity -= $sell->product_qty;
+                        $item->save();
+                    }
+                }
+
                 $oldtotal = $invoice->deposit;
                 if ($invoice->transaction_id) {
                     $payment = Payment::where('transaction_id', $invoice->transaction_id)->skip(5)->first();

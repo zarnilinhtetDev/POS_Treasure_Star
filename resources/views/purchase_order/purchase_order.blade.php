@@ -243,7 +243,8 @@
                                                             class="mb-4 form-control balance_due" required>
 
                                                             <option value="PO">PO</option>
-                                                            <option value="Sale Return Invoice">Sale Return</option>
+                                                            <option value="Sale Return Invoice">Sale Return (Invoice)
+                                                            </option>
 
                                                         </select>
 
@@ -835,7 +836,7 @@
             </div>
         </div>
                 </td>
-               
+
             </tr>`;
 
                         $('#trContainer').append(newRow);

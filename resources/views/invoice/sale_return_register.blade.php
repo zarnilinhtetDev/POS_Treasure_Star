@@ -210,7 +210,7 @@
                                                         </span>
                                                         <select name="balance_due" id="balance_due"
                                                             class="mb-4 form-control balance_due" required>
-                                                            <option value="Sale Return">Sale Return</option>
+                                                            <option value="Sale Return">Sale Return (POS)</option>
 
                                                         </select>
 
@@ -286,7 +286,7 @@
                                                     {{-- <div class="col-auto">
                                                                 <input type="checkbox" id="sell_status-0" value="1"
                                                                     class="form-check-input sell_status" />
-    
+
                                                                 <input type="hidden" name="sell_status[]"
                                                                     id="sell_status_input-0"
                                                                     class="form-control sell_status_input"
@@ -805,7 +805,7 @@
             </div>
         </div>
                 </td>
-               
+
             </tr>`;
 
                         $('#trContainer').append(newRow);

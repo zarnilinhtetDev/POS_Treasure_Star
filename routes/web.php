@@ -213,7 +213,11 @@ Route::middleware('auth')->group(function () {
     Route::get('report_pos_receipt/{invoice}', [ReportController::class, 'pos_receipt']);
     Route::get('report_invoice_details/{invoice}', [ReportController::class, 'report_invoice_detail']);
     Route::get('general_ledger', [ReportController::class, 'general_ledger']);
+    Route::get('balance_sheet', [ReportController::class, 'balancesheet']);
+    Route::get('profit_loss', [ReportController::class, 'profitloss']);
     Route::get('general_ledger_search', [ReportController::class, 'general_ledger_search']);
+    Route::get('balance_sheet_search', [ReportController::class, 'balancesheet_search']);
+    Route::get('profit_loss_search', [ReportController::class, 'profitloss_search']);
     Route::get('report_account_transaction_payment/{id}', [ReportController::class, 'report_account_transaction_payment']);
     Route::get('report_account_transaction_payment_search/{id}', [ReportController::class, 'report_account_transaction_payment_search']);
 
@@ -296,6 +300,10 @@ Route::middleware('auth')->group(function () {
 
     //setting
     Route::get('setting', [SettingController::class, 'index'])->name('setting');
+    Route::post('setting_store', [SettingController::class, 'store']);
+    Route::get('setting_edit/{id}', [SettingController::class, 'edit']);
+    Route::post('setting_update/{id}', [SettingController::class, 'update']);
+    Route::get('setting_delete/{id}', [SettingController::class, 'delete']);
     Route::post('invoice_setting', [SettingController::class, 'invoice'])->name('invoice_setting');
     Route::post('invoice_setting/edit', [SettingController::class, 'invoice_setting_edit'])->name('invoice_setting_edit');
     Route::post('invoice_setting_delete', [SettingController::class, 'invoice_setting_delete'])->name('invoice_setting_delete');

@@ -170,7 +170,7 @@
                                                     @endif --}}
 
                                                     @if (in_array('POS Delete', $choosePermission) || auth()->user()->is_admin == '1')
-                                                        <a href="{{ url('pos_delete', $invoice->id) }}"
+                                                        <a href="{{ url('invoice_delete', $invoice->id) }}"
                                                             class="btn btn-danger btn-sm"
                                                             onclick="return confirm('Are you sure you want to delete this pos ?')"><i
                                                                 class="fa-solid fa-trash"></i></a>

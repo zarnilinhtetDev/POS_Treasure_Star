@@ -14,7 +14,7 @@ class PurchaseOrder extends Model
 
     public function po_sells()
     {
-        return $this->hasMany(PO_sells::class, 'invoiceid');
+        return $this->hasMany(PO_sells::class, 'invoiceid', 'id');
     }
     public function supplier()
     {

@@ -70,6 +70,13 @@ class TransactionController extends Controller
         $payment = new Payment();
         $payment->account_id = $account->id;
         $payment->transaction_id = $trasaction->id;
+        $payment->payment_status = 'IN';
+        $payment->amount = 0;
+        $payment->save();
+
+        $payment = new Payment();
+        $payment->account_id = $account->id;
+        $payment->transaction_id = $trasaction->id;
         $payment->payment_status = 'OUT';
         $payment->amount = 0;
         $payment->save();
@@ -77,14 +84,7 @@ class TransactionController extends Controller
         $payment = new Payment();
         $payment->account_id = $account->id;
         $payment->transaction_id = $trasaction->id;
-        $payment->payment_status = 'IN';
-        $payment->amount = 0;
-        $payment->save();
-
-        $payment = new Payment();
-        $payment->account_id = $account->id;
-        $payment->transaction_id = $trasaction->id;
-        $payment->payment_status = 'IN';
+        $payment->payment_status = 'OUT';
         $payment->amount = 0;
         $payment->save();
 

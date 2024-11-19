@@ -81,12 +81,12 @@
                     <div class="container-fluid">
                         <div class="row mb-2">
                             <div class="col-sm-6">
-                                <h1>General Ledger</h1>
+                                <h1>Profit & Loss</h1>
                             </div>
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
                                     <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a></li>
-                                    <li class="breadcrumb-item active">General Ledger</li>
+                                    <li class="breadcrumb-item active">Profit & Loss</li>
                                 </ol>
                             </div>
                         </div>
@@ -99,7 +99,7 @@
                     <div class="my-5 container-fluid">
                         <div class="row">
                             <div class="col-md-10">
-                                <form action="{{ url('general_ledger_search') }}" method="get">
+                                <form action="{{ url('profit_loss_search') }}" method="get">
                                     <div class="row">
                                         <div class="col-md-3 form-group">
                                             <label for="start_date">Date From:</label>
@@ -126,7 +126,7 @@
                     <div class="mt-3 col-md-12">
                         <div class="card ">
                             <div class="card-header d-flex justify-content-between align-items-center">
-                                <h3 class="card-title">General Ledger</h3>
+                                <h3 class="card-title">Profit & Loss</h3>
 
                             </div>
 

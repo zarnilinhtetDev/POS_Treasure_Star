@@ -89,6 +89,14 @@
                                 </button>
                             </div>
                         @endif
+                        @if (session('error'))
+                            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                <strong>{{ session('error') }}</strong>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
                         <div class="card ">
                             <div class="card-header">
                                 <h3 class="card-title">Purchase Order</h3>
@@ -133,7 +141,8 @@
 
                                                 <td>{{ $pos->supplier->name ?? 'N/A' }}</td>
                                                 <td>{{ $pos->balance_due }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($pos->po_date)->format('d / m / Y') }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($pos->po_date)->format('d / m / Y') }}
+                                                </td>
 
 
                                                 <td>{{ number_format($pos->total ?? 0, 2) }}</td>

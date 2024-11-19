@@ -725,8 +725,118 @@ class ReportController extends Controller
             'accountDepositSums'
         ));
     }
+    public function balancesheet()
+    {
+        $accounts = Account::with(['payment', 'transaction'])->where('account_bl_pl', 'BL')->get();
 
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
 
+        $accountDepositSums = [];
+
+        foreach ($accounts as $account) {
+            $depositInvoiceSum = 0;
+            $depositPurchaseOrderSum = 0;
+            $depositSaleReturnSum = 0;
+
+            foreach ($account->transaction as $tran) {
+                $depositInvoiceSum += Invoice::where('transaction_id', $tran->id)
+                    ->whereMonth('created_at', $currentMonth)
+                    ->whereYear('created_at', $currentYear)
+                    ->where(function ($query) {
+                        $query->where('status', 'invoice')
+                            ->orWhere('status', 'pos');
+                    })
+                    ->sum('deposit');
+
+                $depositPurchaseOrderSum += PurchaseOrder::where('transaction_id', $tran->id)
+                    ->whereMonth('created_at', $currentMonth)
+                    ->whereYear('created_at', $currentYear)
+                    ->where(function ($query) {
+                        $query->where('balance_due', 'PO')
+                            ->orWhere('balance_due', 'Po Return');
+                    })
+                    ->sum('deposit');
+
+                $depositSaleReturnSum += PurchaseOrder::where('transaction_id', $tran->id)
+                    ->whereMonth('created_at', $currentMonth)
+                    ->whereYear('created_at', $currentYear)
+                    ->where(function ($query) {
+                        $query->where('balance_due', 'Sale Return Invoice')
+                            ->orWhere('balance_due', 'Sale Return');
+                    })
+                    ->sum('deposit');
+            }
+
+            $accountDepositSums[$account->id] = [
+                'depositInvoiceSum' => $depositInvoiceSum,
+                'depositPurchaseOrderSum' => $depositPurchaseOrderSum,
+                'depositSaleReturnSum' => $depositSaleReturnSum,
+            ];
+        }
+
+        // Pass the data to the view
+        return view('report.balance_sheet', compact(
+            'accounts',
+            'accountDepositSums'
+        ));
+    }
+    public function profitloss()
+    {
+        $accounts = Account::with(['payment', 'transaction'])->where('account_bl_pl', 'PL')->get();
+
+        $currentMonth = now()->month;
+        $currentYear = now()->year;
+
+        $accountDepositSums = [];
+
+        foreach ($accounts as $account) {
+            $depositInvoiceSum = 0;
+            $depositPurchaseOrderSum = 0;
+            $depositSaleReturnSum = 0;
+
+            foreach ($account->transaction as $tran) {
+                $depositInvoiceSum += Invoice::where('transaction_id', $tran->id)
+                    ->whereMonth('created_at', $currentMonth)
+                    ->whereYear('created_at', $currentYear)
+                    ->where(function ($query) {
+                        $query->where('status', 'invoice')
+                            ->orWhere('status', 'pos');
+                    })
+                    ->sum('deposit');
+
+                $depositPurchaseOrderSum += PurchaseOrder::where('transaction_id', $tran->id)
+                    ->whereMonth('created_at', $currentMonth)
+                    ->whereYear('created_at', $currentYear)
+                    ->where(function ($query) {
+                        $query->where('balance_due', 'PO')
+                            ->orWhere('balance_due', 'Po Return');
+                    })
+                    ->sum('deposit');
+
+                $depositSaleReturnSum += PurchaseOrder::where('transaction_id', $tran->id)
+                    ->whereMonth('created_at', $currentMonth)
+                    ->whereYear('created_at', $currentYear)
+                    ->where(function ($query) {
+                        $query->where('balance_due', 'Sale Return Invoice')
+                            ->orWhere('balance_due', 'Sale Return');
+                    })
+                    ->sum('deposit');
+            }
+
+            $accountDepositSums[$account->id] = [
+                'depositInvoiceSum' => $depositInvoiceSum,
+                'depositPurchaseOrderSum' => $depositPurchaseOrderSum,
+                'depositSaleReturnSum' => $depositSaleReturnSum,
+            ];
+        }
+
+        // Pass the data to the view
+        return view('report.profit_loss', compact(
+            'accounts',
+            'accountDepositSums'
+        ));
+    }
 
 
 
@@ -791,7 +901,126 @@ class ReportController extends Controller
         ));
     }
 
+    public function balancesheet_search(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $accountId = $request->input('account_id');
 
+        $accountsQuery = Account::with(['payment', 'transaction'])->where('account_bl_pl', 'BL');
+        if ($accountId) {
+            $accountsQuery->where('id', $accountId);
+        }
+        $accounts = $accountsQuery->get();
+
+        $accountDepositSums = [];
+
+        foreach ($accounts as $account) {
+            $depositInvoiceSum = 0;
+            $depositPurchaseOrderSum = 0;
+            $depositSaleReturnSum = 0;
+
+            foreach ($account->transaction as $tran) {
+                $depositInvoiceSum += Invoice::where('transaction_id', $tran->id)
+                    ->whereDate('created_at', '>=', $startDate)
+                    ->whereDate('created_at', '<=', $endDate)
+                    ->where(function ($query) {
+                        $query->where('status', 'invoice')
+                            ->orWhere('status', 'pos');
+                    })
+                    ->sum('deposit');
+
+                $depositPurchaseOrderSum += PurchaseOrder::where('transaction_id', $tran->id)
+                    ->whereDate('created_at', '>=', $startDate)
+                    ->whereDate('created_at', '<=', $endDate)
+                    ->where(function ($query) {
+                        $query->where('balance_due', 'PO')
+                            ->orWhere('balance_due', 'Po Return');
+                    })
+                    ->sum('deposit');
+
+                $depositSaleReturnSum += PurchaseOrder::where('transaction_id', $tran->id)
+                    ->whereDate('created_at', '>=', $startDate)
+                    ->whereDate('created_at', '<=', $endDate)
+                    ->where(function ($query) {
+                        $query->where('balance_due', 'Sale Return Invoice')
+                            ->orWhere('balance_due', 'Sale Return');
+                    })
+                    ->sum('deposit');
+            }
+
+            $accountDepositSums[$account->id] = [
+                'depositInvoiceSum' => $depositInvoiceSum,
+                'depositPurchaseOrderSum' => $depositPurchaseOrderSum,
+                'depositSaleReturnSum' => $depositSaleReturnSum,
+            ];
+        }
+
+        return view('report.balance_sheet', compact(
+            'accounts',
+            'accountDepositSums'
+        ));
+    }
+    public function profitloss_search(Request $request)
+    {
+        $startDate = $request->input('start_date');
+        $endDate = $request->input('end_date');
+        $accountId = $request->input('account_id');
+
+        $accountsQuery = Account::with(['payment', 'transaction'])->where('account_bl_pl', 'PL');
+        if ($accountId) {
+            $accountsQuery->where('id', $accountId);
+        }
+        $accounts = $accountsQuery->get();
+
+        $accountDepositSums = [];
+
+        foreach ($accounts as $account) {
+            $depositInvoiceSum = 0;
+            $depositPurchaseOrderSum = 0;
+            $depositSaleReturnSum = 0;
+
+            foreach ($account->transaction as $tran) {
+                $depositInvoiceSum += Invoice::where('transaction_id', $tran->id)
+                    ->whereDate('created_at', '>=', $startDate)
+                    ->whereDate('created_at', '<=', $endDate)
+                    ->where(function ($query) {
+                        $query->where('status', 'invoice')
+                            ->orWhere('status', 'pos');
+                    })
+                    ->sum('deposit');
+
+                $depositPurchaseOrderSum += PurchaseOrder::where('transaction_id', $tran->id)
+                    ->whereDate('created_at', '>=', $startDate)
+                    ->whereDate('created_at', '<=', $endDate)
+                    ->where(function ($query) {
+                        $query->where('balance_due', 'PO')
+                            ->orWhere('balance_due', 'Po Return');
+                    })
+                    ->sum('deposit');
+
+                $depositSaleReturnSum += PurchaseOrder::where('transaction_id', $tran->id)
+                    ->whereDate('created_at', '>=', $startDate)
+                    ->whereDate('created_at', '<=', $endDate)
+                    ->where(function ($query) {
+                        $query->where('balance_due', 'Sale Return Invoice')
+                            ->orWhere('balance_due', 'Sale Return');
+                    })
+                    ->sum('deposit');
+            }
+
+            $accountDepositSums[$account->id] = [
+                'depositInvoiceSum' => $depositInvoiceSum,
+                'depositPurchaseOrderSum' => $depositPurchaseOrderSum,
+                'depositSaleReturnSum' => $depositSaleReturnSum,
+            ];
+        }
+
+        return view('report.profit_loss', compact(
+            'accounts',
+            'accountDepositSums'
+        ));
+    }
     public function report_account_transaction_payment($id)
     {
 

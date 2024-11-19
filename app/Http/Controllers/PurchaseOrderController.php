@@ -81,7 +81,7 @@ class PurchaseOrderController extends Controller
         $invoice = new PurchaseOrder();
 
         if ($request->balance_due == 'PO') {
-            $setting = Setting::where('category', '2')->first();
+            $setting = Setting::where('category', 'Purchase Order')->first();
 
             if ($setting) {
                 $invoice->transaction_id = $setting->transaction_id ?? null;
@@ -103,7 +103,7 @@ class PurchaseOrderController extends Controller
             } else {
             }
         } else if ($request->balance_due == 'Sale Return Invoice') {
-            $setting = Setting::where('category', '5')->first();
+            $setting = Setting::where('category', 'Sale Return (Invoice)')->first();
 
             if ($setting) {
                 $invoice->transaction_id = $setting->transaction_id ?? null;
@@ -125,7 +125,7 @@ class PurchaseOrderController extends Controller
             } else {
             }
         } else if ($request->balance_due == 'Sale Return') {
-            $setting = Setting::where('category', '6')->first();
+            $setting = Setting::where('category', 'Sale Return (POS)')->first();
 
             if ($setting) {
                 $invoice->transaction_id = $setting->transaction_id ?? null;
@@ -380,6 +380,17 @@ class PurchaseOrderController extends Controller
         try {
 
             $invoice = PurchaseOrder::findOrFail($id);
+
+            if ($invoice) {
+
+                foreach ($invoice->po_sells as $sell) {
+                    $item = Item::where('item_name', $sell->part_number)->where('warehouse_id', $invoice->branch)->first();
+                    if ($item) {
+                        $item->quantity -= $sell->product_qty;
+                        $item->save();
+                    }
+                }
+            }
             if ($invoice->balance_due == 'PO') {
                 if ($invoice) {
                     $oldtotal = $invoice->deposit;
@@ -415,12 +426,12 @@ class PurchaseOrderController extends Controller
             }
             $invoice->delete();
             PO_sells::where('invoiceid', $id)->delete();
-            PurchaseOrderPaymentMethod::where('invoice_id', $id)->delete();
+            PurchaseOrderPaymentMethod::where('po_id', $id)->delete();
             DB::commit();
             return redirect('/purchase_order_manage')->with('success', 'Purchase Order Deleted Successfully!');
         } catch (\Exception $e) {
             DB::rollback();
-            return redirect('/purchase_order_manage')->with('error', 'Failed to delete purchase order.');
+            return redirect('/purchase_order_manage')->with('error', 'Failed to delete purchase order.' . $e);
         }
 
         // return redirect('/quotation')->with('success', 'Quotation Deleted Successful!');

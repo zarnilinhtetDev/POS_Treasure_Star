@@ -16,4 +16,8 @@ class Setting extends Model
     {
         return $this->belongsTo(Transaction::class);
     }
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class, 'branch_id', 'id');
+    }
 }

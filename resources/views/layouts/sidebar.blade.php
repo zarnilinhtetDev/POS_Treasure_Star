@@ -279,7 +279,37 @@
                         </a>
                     </li>
                 @endif
+                @if (in_array('Accounting Report', $userPermissions) || auth()->user()->is_admin == '1')
+                    <li class="nav-item">
+                        <a href="{{ url('report') }}" class="nav-link">
+                            <i class="text-white fa-solid fa-file-invoice nav-icon"></i>
+                            <p class="pl-3 text-white">
+                                Accounting Report </p><i class="text-white right fas fa-angle-left"></i>
+                        </a>
+                        <ul class="nav nav-treeview">
 
+                            <li class="nav-item">
+                                <a href="{{ url('general_ledger') }}" class="nav-link">
+                                    <i class="text-white far fa-circle nav-icon"></i>
+                                    <p class="text-white">General Ledger</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ url('balance_sheet') }}" class="nav-link">
+                                    <i class="text-white far fa-circle nav-icon"></i>
+                                    <p class="text-white">Balance Sheet</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ url('profit_loss') }}" class="nav-link">
+                                    <i class="text-white far fa-circle nav-icon"></i>
+                                    <p class="text-white">Profit & Loss</p>
+                                </a>
+                            </li>
+
+                        </ul>
+                    </li>
+                @endif
                 @if (in_array('Report', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
                         <a href="{{ url('report') }}" class="nav-link">
@@ -290,14 +320,7 @@
                         <ul class="nav nav-treeview">
 
                             {{-- General Ledger start --}}
-                            {{-- @if (auth()->user()->is_admin == '1')
-                                <li class="nav-item">
-                                    <a href="{{ url('general_ledger') }}" class="nav-link">
-                                        <i class="text-white far fa-circle nav-icon"></i>
-                                        <p class="text-white">General Ledger</p>
-                                    </a>
-                                </li>
-                            @endif --}}
+
                             {{-- General Ledger End --}}
                             @if (in_array('Invoice Report', $userPermissions) || auth()->user()->is_admin == '1')
                                 <li class="nav-item">
@@ -376,7 +399,7 @@
 
 
                 {{-- Accounting Start --}}
-                {{-- <li class="nav-item">
+                <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="text-white fa-solid fa-calculator nav-icon"></i>
                         <p class="pl-3 text-white">
@@ -403,7 +426,7 @@
                             </a>
                         </li>
                     </ul>
-                </li> --}}
+                </li>
                 {{-- Accounting End --}}
 
                 @if (in_array('User', $userPermissions) || auth()->user()->is_admin == '1')
