@@ -103,24 +103,18 @@
                     </div><!-- /.container-fluid -->
                 </section>
 
-                <div class="ml-2 container-fluid">
 
-
-
-
-
-                </div>
                 <!-- /.modal -->
-                <div class="mt-3  mx-auto ">
+                <div class="mt-5 d-flex justify-content-center">
                     <div class="">
 
-                        <div class="card-body">
+                        <div class="card-body justify-content-ceneter">
 
 
                             <div
                                 class=" row d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
 
-                                <div class="col-md-3 col-sm-3 mx-3 my-2">
+                                <div class="col-md-5 mx-3 my-2">
                                     <a href="{{ url('accounting_report/All') }}">
                                         <div class="class-card p-3 shadow-sm">
                                             <div class="class-title text-center">
@@ -130,7 +124,7 @@
                                     </a>
                                 </div>
                                 @foreach ($branches as $branch)
-                                    <div class="col-md-3 col-sm-3 mx-3 my-2">
+                                    <div class="col-md-5 mx-3 my-2">
                                         <a href="{{ url('accounting_report/' . $branch->id) }}">
                                             <div class="class-card p-3 shadow-sm">
                                                 <div class="class-title text-center">
