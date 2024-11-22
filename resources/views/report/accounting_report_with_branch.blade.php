@@ -11,7 +11,7 @@
 
     .class-card:hover {
         transform: scale(1.1);
-        color: rgb(4, 110, 11);
+        color: black;
         background: linear-gradient(to left, #83ade8, #2270c9);
     }
 
@@ -109,7 +109,7 @@
                     <!-- /.modal -->
 
                     <div class="mt-3 col-md-10 mx-auto">
-                        <h5 class="class-title mx-auto mt-3 mb-5">Location : {{ $branch->name }}</h5>
+                        <h5 class="class-title mx-auto mt-3 mb-5">Location : {{ $branch->name ?? 'All' }}</h5>
                         <div class="row d-flex justify-content-between">
                             {{-- <div class="class-card col-md-3"style="background-color: #cedce9">
 
@@ -123,7 +123,7 @@
                                 <!-- /.card-body -->
                             </div> --}}
                             <div class="col-6 col-sm-4 col-md-4 col-lg-3">
-                                <a href="{{ url('general_ledger', $branch->id) }}">
+                                <a href="{{ url('general_ledger', $branch->id ?? 'All') }}">
                                     <div class="class-card p-3 shadow-sm">
                                         <div class="class-title text-center">
                                             General Ledger
@@ -132,7 +132,7 @@
                                 </a>
                             </div>
                             <div class="col-6 col-sm-4 col-md-4 col-lg-3">
-                                <a href="{{ url('profit_loss', $branch->id) }}">
+                                <a href="{{ url('profit_loss', $branch->id ?? 'All') }}">
                                     <div class="class-card p-3 shadow-sm">
                                         <div class="class-title text-center">
                                             Profit & Loss
@@ -141,7 +141,7 @@
                                 </a>
                             </div>
                             <div class="col-6 col-sm-4 col-md-4 col-lg-3">
-                                <a href="{{ url('balance_sheet', $branch->id) }}">
+                                <a href="{{ url('balance_sheet', $branch->id ?? 'All') }}">
                                     <div class="class-card p-3 shadow-sm">
                                         <div class="class-title text-center">
                                             Balance Sheet

@@ -15,7 +15,7 @@
 
     .class-card:hover {
         transform: scale(1.1);
-        color: rgb(4, 110, 11);
+        color: black;
         background: linear-gradient(to left, #83ade8, #2270c9);
     }
 
@@ -120,7 +120,15 @@
                             <div
                                 class=" row d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
 
-
+                                <div class="col-md-3 col-sm-3 mx-3 my-2">
+                                    <a href="{{ url('accounting_report/All') }}">
+                                        <div class="class-card p-3 shadow-sm">
+                                            <div class="class-title text-center">
+                                                All
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
                                 @foreach ($branches as $branch)
                                     <div class="col-md-3 col-sm-3 mx-3 my-2">
                                         <a href="{{ url('accounting_report/' . $branch->id) }}">

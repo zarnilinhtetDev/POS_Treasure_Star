@@ -682,7 +682,12 @@ class ReportController extends Controller
 
     public function general_ledger($id)
     {
-        $accounts = Account::with(['payment', 'transaction'])->where('location', $id)->get();
+        if ($id == "All") {
+            $accounts = Account::with(['payment', 'transaction'])->get();
+        } else {
+            $accounts = Account::with(['payment', 'transaction'])->where('location', $id)->get();
+        }
+
 
         $currentMonth = now()->month;
         $currentYear = now()->year;
@@ -739,7 +744,11 @@ class ReportController extends Controller
     }
     public function balancesheet($id)
     {
-        $accounts = Account::with(['payment', 'transaction'])->where('location', $id)->where('account_bl_pl', 'BL')->get();
+        if ($id == "All") {
+            $accounts = Account::with(['payment', 'transaction'])->where('account_bl_pl', 'BL')->get();
+        } else {
+            $accounts = Account::with(['payment', 'transaction'])->where('location', $id)->where('account_bl_pl', 'BL')->get();
+        }
 
         $currentMonth = now()->month;
         $currentYear = now()->year;
@@ -796,7 +805,11 @@ class ReportController extends Controller
     }
     public function profitloss($id)
     {
-        $accounts = Account::with(['payment', 'transaction'])->where('location', $id)->where('account_bl_pl', 'PL')->get();
+        if ($id == "All") {
+            $accounts = Account::with(['payment', 'transaction'])->where('account_bl_pl', 'PL')->get();
+        } else {
+            $accounts = Account::with(['payment', 'transaction'])->where('location', $id)->where('account_bl_pl', 'PL')->get();
+        }
 
         $currentMonth = now()->month;
         $currentYear = now()->year;

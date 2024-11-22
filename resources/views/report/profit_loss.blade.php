@@ -138,6 +138,7 @@
                                             <tr>
                                                 <th>No.</th>
                                                 <th>Account Number</th>
+                                                <th>Location</th>
                                                 <th>Account Name</th>
                                                 <th>Type</th>
                                                 <th>BL/PL</th>
@@ -162,6 +163,7 @@
                                                             </a>
                                                         @endif
                                                     </td>
+                                                    <td>{{ $account->warehouse->name }}</td>
                                                     <td>{{ $account->account_name }}</td>
                                                     <td>{{ $account->account_type }}</td>
                                                     <td>{{ $account->account_bl_pl }}</td>
