@@ -138,7 +138,7 @@ class InvoiceController extends Controller
 
         if ($request->balance_due == 'Invoice' || $request->status == 'quotation') {
 
-            $setting = Setting::where('category', 'Invoice')->first();
+            $setting = Setting::where('category', 'Invoice')->where('location', $request->branch)->first();
 
             if ($setting) {
                 $invoice->transaction_id = $setting->transaction_id ?? null;
@@ -160,7 +160,7 @@ class InvoiceController extends Controller
             } else {
             }
         } else if ($request->status == 'pos') {
-            $setting = Setting::where('category', 'POS')->first();
+            $setting = Setting::where('category', 'POS')->where('location', $request->branch)->first();
 
             if ($setting) {
                 $invoice->transaction_id = $setting->transaction_id ?? null;
@@ -182,7 +182,7 @@ class InvoiceController extends Controller
             } else {
             }
         } else if ($request->balance_due == 'Po Return') {
-            $setting = Setting::where('category', 'Purchase Order Return')->first();
+            $setting = Setting::where('category', 'Purchase Order Return')->where('location', $request->branch)->first();
             if ($setting) {
                 $invoice->transaction_id = $setting->transaction_id ?? null;
                 $transactions = Payment::all();
@@ -511,7 +511,7 @@ class InvoiceController extends Controller
             } else {
             }
         } elseif ($request->status == 'pos') {
-            $setting = Setting::where('category', 'pos')->first();
+            $setting = Setting::where('category', 'POS')->where('location', $request->branch)->first();
 
             if ($setting) {
                 $invoice->transaction_id = $setting->transaction_id ?? null;
@@ -688,7 +688,7 @@ class InvoiceController extends Controller
             }
         }
 
-        $setting = Setting::where('category', 'Invoice')->first();
+        $setting = Setting::where('category', 'Invoice')->where('location', $invoice->location)->first();
 
         if ($setting) {
             $invoice->transaction_id = $setting->transaction_id ?? null;

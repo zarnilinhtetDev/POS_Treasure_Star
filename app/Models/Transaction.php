@@ -20,4 +20,8 @@ class Transaction extends Model
     {
         return $this->hasMany(Invoice::class, 'transaction_id');
     }
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class, 'location', 'id');
+    }
 }

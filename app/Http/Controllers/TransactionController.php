@@ -4,17 +4,27 @@ namespace App\Http\Controllers;
 
 use App\Models\Account;
 use App\Models\Payment;
+use App\Models\Warehouse;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
 {
 
-    public function transactionManagement()
+    public function transactionManagement($branch = null)
     {
 
         $account = Account::all();
-        $transaction = Transaction::with('account')->latest()->get();
+        if (auth()->user()->is_admin == '1' || auth()->user()->level == 'Admin') {
+            if ($branch) {
+                $transaction = Transaction::with('account')->where('location', $branch)->get();
+            } else {
+                $transaction = Transaction::with('account')->latest()->get();
+            }
+        } else {
+            $transaction = Transaction::with('account')->where('location', auth()->user()->level)->get();
+        }
+        // $transaction = Transaction::with('account')->latest()->get();
         $sumByIn = Payment::where('payment_status', 'IN')
             ->groupBy('transaction_id')
             ->selectRaw('transaction_id, SUM(amount) as total')
@@ -28,10 +38,13 @@ class TransactionController extends Controller
 
             return $totalIn - $totalOut;
         });
+        $branches = Warehouse::all();
 
+        $branch_drop = Warehouse::all();
+        $branchNames = $branch_drop->pluck('name', 'id');
 
-
-        return view('finance.transaction.transactionManagement', compact('account', 'transaction', 'diff'));
+        $currentBranchName = $branch ? $branchNames[$branch] : 'All Accounts';
+        return view('finance.transaction.transactionManagement', compact('account', 'transaction', 'diff', 'branches', 'branch_drop', 'currentBranchName'));
     }
 
 
@@ -43,6 +56,7 @@ class TransactionController extends Controller
         $trasaction->transaction_code = $request->transaction_code;
         $trasaction->transaction_name = $request->transaction_name;
         $trasaction->description = $request->description;
+        $trasaction->location = $request->location;
         $account = Account::find($request->input('account_id'));
         $account->transaction()->save($trasaction);
 
@@ -95,7 +109,8 @@ class TransactionController extends Controller
     {
         $transaction = Transaction::with('account')->find($id);
         $accounts = Account::latest()->get();
-        return view('finance.transaction.transactionManagementEdit', compact('transaction', 'accounts'));
+        $branches = Warehouse::all();
+        return view('finance.transaction.transactionManagementEdit', compact('transaction', 'accounts', 'branches'));
     }
     public function transactionUpdate(Request $request, $id)
     {

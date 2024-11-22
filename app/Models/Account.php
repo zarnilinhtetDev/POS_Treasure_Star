@@ -25,4 +25,8 @@ class Account extends Model
     {
         return $this->hasMany(Payment::class, 'account_id');
     }
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class,  'location', 'id');
+    }
 }

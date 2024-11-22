@@ -29,15 +29,18 @@ class WarehouseController extends Controller
         try {
             $validated = $request->validate([
                 'name' => 'required',
-                'phone_number' => 'required',
-                'address' => 'required',
+
             ], [
-                'phone_number.required' => 'Phone Number is required',
+
                 'name.required' => 'Name is required',
-                'address.required' => 'Address is required',
+
             ]);
 
-            $warehouse->create($validated);
+            $warehouse->name = $request->name;
+            $warehouse->address = $request->address ?? '';
+            $warehouse->phone_number = $request->phone_number ?? '';
+
+            $warehouse->save();
 
             return back()->with('success', 'Register Warehouse Successful');
         } catch (\Exception $e) {
@@ -73,15 +76,17 @@ class WarehouseController extends Controller
 
         $validated = $request->validate([
             'name' => 'required',
-            'phone_number' => 'required',
-            'address' => 'required',
+
         ], [
-            'phone_number.required' => 'Phone Number is required',
+
             'name.required' => 'Name is required',
-            'address.required' => 'Address is required',
+
         ]);
         $warehouse = Warehouse::find($id);
-        $warehouse->update($validated);
+        $warehouse->name = $request->name;
+        $warehouse->address = $request->address ?? '';
+        $warehouse->phone_number = $request->phone_number ?? '';
+        $warehouse->save();
         return redirect(url('warehouse'))->with('success', 'Warehouse Updated Successful');
     }
     public function transfer_item()

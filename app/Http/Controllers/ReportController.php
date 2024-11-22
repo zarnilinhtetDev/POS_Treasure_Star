@@ -19,6 +19,17 @@ use Illuminate\Support\Facades\DB;
 
 class ReportController extends Controller
 {
+    public function accounting_report()
+    {
+
+        $branches = Warehouse::all();
+        return view('report.accounting_report', compact('branches'));
+    }
+    public function accounting_report_with_branch(Request $request, $id)
+    {
+        $branch = Warehouse::find($id);
+        return view('report.accounting_report_with_branch', compact('branch'));
+    }
     public function report_invoice($branch = null)
     {
         $today = Carbon::today();
@@ -669,9 +680,9 @@ class ReportController extends Controller
         return view('report.report_expense', compact('search_expenses', 'search_total', 'branchs', 'categorys'));
     }
 
-    public function general_ledger()
+    public function general_ledger($id)
     {
-        $accounts = Account::with(['payment', 'transaction'])->latest()->get();
+        $accounts = Account::with(['payment', 'transaction'])->where('location', $id)->get();
 
         $currentMonth = now()->month;
         $currentYear = now()->year;
@@ -722,12 +733,13 @@ class ReportController extends Controller
         // Pass the data to the view
         return view('report.general_ledger', compact(
             'accounts',
-            'accountDepositSums'
+            'accountDepositSums',
+            'id'
         ));
     }
-    public function balancesheet()
+    public function balancesheet($id)
     {
-        $accounts = Account::with(['payment', 'transaction'])->where('account_bl_pl', 'BL')->get();
+        $accounts = Account::with(['payment', 'transaction'])->where('location', $id)->where('account_bl_pl', 'BL')->get();
 
         $currentMonth = now()->month;
         $currentYear = now()->year;
@@ -778,12 +790,13 @@ class ReportController extends Controller
         // Pass the data to the view
         return view('report.balance_sheet', compact(
             'accounts',
-            'accountDepositSums'
+            'accountDepositSums',
+            'id'
         ));
     }
-    public function profitloss()
+    public function profitloss($id)
     {
-        $accounts = Account::with(['payment', 'transaction'])->where('account_bl_pl', 'PL')->get();
+        $accounts = Account::with(['payment', 'transaction'])->where('location', $id)->where('account_bl_pl', 'PL')->get();
 
         $currentMonth = now()->month;
         $currentYear = now()->year;
@@ -834,19 +847,20 @@ class ReportController extends Controller
         // Pass the data to the view
         return view('report.profit_loss', compact(
             'accounts',
-            'accountDepositSums'
+            'accountDepositSums',
+            'id'
         ));
     }
 
 
 
-    public function general_ledger_search(Request $request)
+    public function general_ledger_search(Request $request, $id)
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $accountId = $request->input('account_id');
 
-        $accountsQuery = Account::with(['payment', 'transaction'])->latest();
+        $accountsQuery = Account::with(['payment', 'transaction'])->where('location', $id)->latest();
         if ($accountId) {
             $accountsQuery->where('id', $accountId);
         }
@@ -897,17 +911,18 @@ class ReportController extends Controller
 
         return view('report.general_ledger', compact(
             'accounts',
-            'accountDepositSums'
+            'accountDepositSums',
+            'id'
         ));
     }
 
-    public function balancesheet_search(Request $request)
+    public function balancesheet_search(Request $request, $id)
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $accountId = $request->input('account_id');
 
-        $accountsQuery = Account::with(['payment', 'transaction'])->where('account_bl_pl', 'BL');
+        $accountsQuery = Account::with(['payment', 'transaction'])->where('account_bl_pl', 'BL')->where('location', $id);
         if ($accountId) {
             $accountsQuery->where('id', $accountId);
         }
@@ -961,13 +976,13 @@ class ReportController extends Controller
             'accountDepositSums'
         ));
     }
-    public function profitloss_search(Request $request)
+    public function profitloss_search(Request $request, $id)
     {
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
         $accountId = $request->input('account_id');
 
-        $accountsQuery = Account::with(['payment', 'transaction'])->where('account_bl_pl', 'PL');
+        $accountsQuery = Account::with(['payment', 'transaction'])->where('account_bl_pl', 'PL')->where('location', $id);
         if ($accountId) {
             $accountsQuery->where('id', $accountId);
         }

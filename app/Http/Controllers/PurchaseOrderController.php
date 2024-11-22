@@ -81,7 +81,7 @@ class PurchaseOrderController extends Controller
         $invoice = new PurchaseOrder();
 
         if ($request->balance_due == 'PO') {
-            $setting = Setting::where('category', 'Purchase Order')->first();
+            $setting = Setting::where('category', 'Purchase Order')->where('location', $request->location)->first();
 
             if ($setting) {
                 $invoice->transaction_id = $setting->transaction_id ?? null;
@@ -103,7 +103,7 @@ class PurchaseOrderController extends Controller
             } else {
             }
         } else if ($request->balance_due == 'Sale Return Invoice') {
-            $setting = Setting::where('category', 'Sale Return (Invoice)')->first();
+            $setting = Setting::where('category', 'Sale Return (Invoice)')->where('location', $request->location)->first();
 
             if ($setting) {
                 $invoice->transaction_id = $setting->transaction_id ?? null;
@@ -125,7 +125,7 @@ class PurchaseOrderController extends Controller
             } else {
             }
         } else if ($request->balance_due == 'Sale Return') {
-            $setting = Setting::where('category', 'Sale Return (POS)')->first();
+            $setting = Setting::where('category', 'Sale Return (POS)')->where('location', $request->location)->first();
 
             if ($setting) {
                 $invoice->transaction_id = $setting->transaction_id ?? null;

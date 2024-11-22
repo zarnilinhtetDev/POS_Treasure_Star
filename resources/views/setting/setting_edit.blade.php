@@ -136,45 +136,84 @@
                                                             Receivable</option>
                                                     </select>
                                                 </div>
-
                                                 <div class="form-group">
-                                                    <label for="phno">Transaction Name <span
+                                                    <label for="phno">Location <span
                                                             class="text-danger">*</span></label>
-                                                    <select class="form-control" name="transaction_id">
-                                                        <option value="" selected disabled>Choose Choose
+                                                    <select class="form-control" name="location" id="location">
+                                                        <option value="" selected disabled>Choose Location
                                                         </option>
-                                                        @foreach ($transactions as $transaction)
-                                                            <option value="{{ $transaction->id }}"
-                                                                @if ($setting->transaction_id == $transaction->id) selected @endif>
-                                                                {{ $transaction->transaction_name }}
+                                                        @foreach ($branches as $branch)
+                                                            <option value="{{ $branch->id }}"
+                                                                @if ($setting->location == $branch->id) selected @endif>
+                                                                {{ $branch->name }}
                                                             </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
 
-
-
+                                                <div class="form-group">
+                                                    <label for="phno">Transaction Name <span
+                                                            class="text-danger">*</span></label>
+                                                    <select class="form-control" name="transaction_id" id="transaction">
+                                                        <option value="" selected disabled>Choose Choose
+                                                        </option>
+                                                        @foreach ($transactions as $transaction)
+                                                            @if ($setting->transaction_id == $transaction->id && $transaction->location == $setting->location)
+                                                                <option value="{{ $transaction->id }}" selected>
+                                                                    {{ $transaction->transaction_name }}
+                                                                </option>
+                                                            @endif
+                                                        @break;
+                                                    @endforeach
+                                                </select>
                                             </div>
-                                            <div class="modal-footer justify-content-end">
 
-                                                <button type="submit" class="btn btn-primary">Update </button>
-                                            </div>
-                                    </form>
-                                </div>
+
+
+                                        </div>
+                                        <div class="modal-footer justify-content-end">
+
+                                            <button type="submit" class="btn btn-primary">Update </button>
+                                        </div>
+                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
-        </div>
-
-
-        </section>
-
+            </div>
     </div>
 
 
+    </section>
 
-    </div>
+</div>
 
 
-    @include('layouts.footer')
+
+</div>
+<script src="{{ asset('plugins/jquery/jquery.min.js ') }}"></script>
+<script>
+    $(document).ready(function() {
+        $('#location').on('change', function() {
+
+
+            const selectedBranch = $(this).val();
+            const account = document.getElementById('transaction');
+            // Clear the doctor select options
+            account.innerHTML = '<option value="">Select Transaction</option>';
+
+            // Filter and add the doctors based on the selected branch
+            @foreach ($transactions as $tran)
+                if (selectedBranch === '{{ $tran->location }}') {
+                    const option = document.createElement('option');
+                    option.value = '{{ $tran->id }}';
+                    option.textContent = '{{ $tran->transaction_name }}';
+                    account.appendChild(option);
+                }
+            @endforeach
+        });
+
+    });
+</script>
+
+@include('layouts.footer')

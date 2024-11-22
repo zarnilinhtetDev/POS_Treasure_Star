@@ -99,7 +99,7 @@
                     <div class="my-5 container-fluid">
                         <div class="row">
                             <div class="col-md-10">
-                                <form action="{{ url('general_ledger_search') }}" method="get">
+                                <form action="{{ url('general_ledger_search', $id) }}" method="get">
                                     <div class="row">
                                         <div class="col-md-3 form-group">
                                             <label for="start_date">Date From:</label>
