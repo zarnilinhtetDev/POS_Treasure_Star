@@ -222,6 +222,10 @@
                                                                         (Sale Return Invoice)
                                                                     @elseif ($index == 5)
                                                                         (Sale Return POS)
+                                                                    @elseif($index == 6)
+                                                                        (Receivable Invoice)
+                                                                    @elseif($index == 7)
+                                                                        (Payable Purchase Order)
                                                                     @endif
                                                                 </td>
                                                                 <td>{{ number_format($payments->amount) }}</td>
@@ -230,7 +234,15 @@
                                                                     <a href="{{ url('transaction_payment_edit', $payments->id) }}"
                                                                         class="btn btn-success"><i
                                                                             class="fa-solid fa-pen-to-square"></i></a>
-                                                                    @if ($index == 0 || $index == 1 || $index == 2 || $index == 3 || $index == 4 || $index == 5)
+                                                                    @if (
+                                                                        $index == 0 ||
+                                                                            $index == 1 ||
+                                                                            $index == 2 ||
+                                                                            $index == 3 ||
+                                                                            $index == 4 ||
+                                                                            $index == 5 ||
+                                                                            $index == 6 ||
+                                                                            $index == 7)
                                                                     @else
                                                                         <a href="{{ url('transaction_delete_payment', $payments->id) }}"
                                                                             class="btn btn-danger"

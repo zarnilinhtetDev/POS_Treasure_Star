@@ -138,26 +138,64 @@ class InvoiceController extends Controller
 
         if ($request->balance_due == 'Invoice' || $request->status == 'quotation') {
 
-            $setting = Setting::where('category', 'Invoice')->where('location', $request->branch)->first();
+            // $setting = Setting::where('category', 'Invoice')->where('location', $request->branch)->first();
+            // dd($request->paid);
 
-            if ($setting) {
-                $invoice->transaction_id = $setting->transaction_id ?? null;
+            if ($request->paid > 0 && $request->balance > 0) {
+                $setting = Setting::where('category', 'Invoice')->where('location', $request->branch)->first();
+                $receiable_setting = Setting::where('category', 'Receivable (Invoice)')->where('location', $request->branch)->first();
 
-                if ($request->balance_due == 'Invoice' && $request->status == 'invoice') {
-                    $transactions = Payment::all();
-                    foreach ($transactions as $transaction) {
-                        if ($transaction->id == $setting->transaction_id) {
-                            $tran = Payment::where('transaction_id', $transaction->id)->get();
-                            $payment = $tran->first();
-                            if ($payment) {
-                                $payment->amount += $request->paid;
-                                $payment->save();
-                            } else {
+
+                if ($setting && $receiable_setting) {
+                    $invoice->transaction_id = $setting->transaction_id ?? null;
+                    $invoice->receviable_id = $receiable_setting->transaction_id ?? null;
+
+                    if ($request->balance_due == 'Invoice' && $request->status == 'invoice') {
+                        $transactions = Payment::all();
+                        foreach ($transactions as $transaction) {
+                            if ($transaction->id == $receiable_setting->transaction_id) {
+                                $tran = Payment::where('transaction_id', $transaction->id)->get();
+                                $payment = $tran->skip(6)->first();
+
+                                if ($payment) {
+                                    $payment->amount += $request->balance;
+                                    $payment->save();
+                                } else {
+                                }
+                            }
+                            if ($transaction->id == $setting->transaction_id) {
+                                $tran = Payment::where('transaction_id', $transaction->id)->get();
+                                $payment = $tran->first();
+                                if ($payment) {
+                                    $payment->amount += $request->paid;
+                                    $payment->save();
+                                } else {
+                                }
                             }
                         }
                     }
                 }
             } else {
+
+                $setting = Setting::where('category', 'Invoice')->where('location', $request->branch)->first();
+                if ($setting) {
+                    $invoice->transaction_id = $setting->transaction_id ?? null;
+
+                    if ($request->balance_due == 'Invoice' && $request->status == 'invoice') {
+                        $transactions = Payment::all();
+                        foreach ($transactions as $transaction) {
+                            if ($transaction->id == $setting->transaction_id) {
+                                $tran = Payment::where('transaction_id', $transaction->id)->get();
+                                $payment = $tran->first();
+                                if ($payment) {
+                                    $payment->amount += $request->paid;
+                                    $payment->save();
+                                } else {
+                                }
+                            }
+                        }
+                    }
+                }
             }
         } else if ($request->status == 'pos') {
             $setting = Setting::where('category', 'POS')->where('location', $request->branch)->first();

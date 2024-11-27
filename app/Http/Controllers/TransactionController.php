@@ -102,6 +102,20 @@ class TransactionController extends Controller
         $payment->amount = 0;
         $payment->save();
 
+        $payment = new Payment();
+        $payment->account_id = $account->id;
+        $payment->transaction_id = $trasaction->id;
+        $payment->payment_status = 'IN';
+        $payment->amount = 0;
+        $payment->save();
+
+        $payment = new Payment();
+        $payment->account_id = $account->id;
+        $payment->transaction_id = $trasaction->id;
+        $payment->payment_status = 'OUT';
+        $payment->amount = 0;
+        $payment->save();
+
         return redirect()->back()->with('success', 'Transaction Created Successful!');
     }
 

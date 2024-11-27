@@ -115,6 +115,10 @@
                                                             <option value="Purchase Order">Purchase Order</option>
                                                             <option value="Purchase Order Return">Purchase Order Return
                                                             </option>
+                                                            <option value="Payable (Purchase Order)">Payable (Purchase
+                                                                Order)</option>
+                                                            <option value="Receivable (Invoice)">Receivable (Invoice)
+                                                            </option>
                                                             {{-- <option value="Account Receivable">Account Receivable
                                                             </option> --}}
                                                         </select>

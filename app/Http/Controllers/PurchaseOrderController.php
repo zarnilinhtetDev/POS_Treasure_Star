@@ -81,26 +81,59 @@ class PurchaseOrderController extends Controller
         $invoice = new PurchaseOrder();
 
         if ($request->balance_due == 'PO') {
-            $setting = Setting::where('category', 'Purchase Order')->where('location', $request->location)->first();
+            if ($request->paid > 0 && $request->balance > 0) {
+                $setting = Setting::where('category', 'Purchase Order')->where('location', $request->location)->first();
+                $payable_setting = Setting::where('category', 'Payable (Purchase Order)')->where('location', $request->location)->first();
 
-            if ($setting) {
-                $invoice->transaction_id = $setting->transaction_id ?? null;
-                $transactions = Payment::all();
+                if ($setting && $payable_setting) {
+                    $invoice->transaction_id = $setting->transaction_id ?? null;
+                    $transactions = Payment::all();
 
-                foreach ($transactions as $transaction) {
+                    foreach ($transactions as $transaction) {
 
-                    if ($transaction->id == $setting->transaction_id) {
-                        $tran = Payment::where('transaction_id', $transaction->id)->get();
-                        $po = $tran->skip(2)->first();
+                        if ($transaction->id == $setting->transaction_id) {
+                            $tran = Payment::where('transaction_id', $transaction->id)->get();
+                            $po = $tran->skip(2)->first();
 
-                        if ($po) {
-                            $po->amount += $request->paid;
-                            $po->save();
-                        } else {
+                            if ($po) {
+                                $po->amount += $request->paid;
+                                $po->save();
+                            } else {
+                            }
+                        }
+                        if ($transaction->id == $payable_setting->transaction_id) {
+                            $tran = Payment::where('transaction_id', $transaction->id)->get();
+                            $po = $tran->skip(7)->first();
+
+                            if ($po) {
+                                $po->amount += $request->balance;
+                                $po->save();
+                            } else {
+                            }
                         }
                     }
                 }
             } else {
+                $setting = Setting::where('category', 'Purchase Order')->where('location', $request->location)->first();
+
+                if ($setting) {
+                    $invoice->transaction_id = $setting->transaction_id ?? null;
+                    $transactions = Payment::all();
+
+                    foreach ($transactions as $transaction) {
+
+                        if ($transaction->id == $setting->transaction_id) {
+                            $tran = Payment::where('transaction_id', $transaction->id)->get();
+                            $po = $tran->skip(2)->first();
+
+                            if ($po) {
+                                $po->amount += $request->paid;
+                                $po->save();
+                            } else {
+                            }
+                        }
+                    }
+                }
             }
         } else if ($request->balance_due == 'Sale Return Invoice') {
             $setting = Setting::where('category', 'Sale Return (Invoice)')->where('location', $request->location)->first();
