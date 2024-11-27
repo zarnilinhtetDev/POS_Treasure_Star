@@ -171,7 +171,7 @@
                                                         {{ number_format($accountDepositSums[$account->id]['depositInvoiceSum']) }}
                                                     </td>
                                                     <td style="background-color: #FBCCCC">
-                                                        {{ number_format($accountDepositSums[$account->id]['depositPurchaseOrderSum'] + $accountDepositSums[$account->id]['depositSaleReturnSum']) }}
+                                                        {{ number_format($accountDepositSums[$account->id]['depositPurchaseOrderSum'] + $accountDepositSums[$account->id]['depositSaleReturnSum'] + $accountDepositSums[$account->id]['expense']) }}
                                                     </td>
                                                 </tr>
                                             @endforeach

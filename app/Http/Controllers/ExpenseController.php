@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Expense;
+use App\Models\Payment;
+use App\Models\Setting;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use App\Models\ExpenseCategory;
-use App\Models\Warehouse;
 
 class ExpenseController extends Controller
 {
@@ -41,7 +43,30 @@ class ExpenseController extends Controller
     public function expenseStore(Request $request)
     {
 
-        Expense::create($request->all());
+        $expense = new Expense();
+        $expense->fill($request->all());
+        $setting = Setting::where('category', 'Expense')->where('location', $request->branch)->first();
+        if ($setting) {
+            $expense->transaction_id = $setting->transaction_id ?? null;
+
+
+            $transactions = Payment::all();
+            foreach ($transactions as $transaction) {
+                if ($transaction->id == $setting->transaction_id) {
+                    $tran = Payment::where('transaction_id', $transaction->id)->get();
+                    // dd($tran);
+                    $payment = $tran->skip(8)->first();
+
+                    if ($payment) {
+                        $payment->amount += $request->amount;
+                        $payment->save();
+                    } else {
+                    }
+                }
+            }
+        }
+
+        $expense->save();
         return redirect(url('expense'))->with('success', 'Expense Created Successfully!');
     }
 
@@ -55,6 +80,23 @@ class ExpenseController extends Controller
     public function update(Request $request, Expense $expense)
     {
 
+
+        if ($expense && $expense->transaction_id) {
+            $oldtotal = $expense->amount;
+            $currenttotal = $request->amount;
+
+
+            if ($expense->transaction_id) {
+                $payment = Payment::where('transaction_id', $expense->transaction_id)->skip(8)->first();
+
+                if ($payment) {
+                    $payment->amount = $payment->amount + ($currenttotal - $oldtotal);
+                    $payment->save();
+                } else {
+                }
+            } else {
+            }
+        }
         $expense->update($request->all());
         return redirect(url('expense'))->with('success', 'Expense Updated Successfully!');
     }
@@ -62,6 +104,21 @@ class ExpenseController extends Controller
     public function delete(Expense $expense)
     {
         // $unit = Expense::find($id);
+        if ($expense) {
+            $oldtotal = $expense->amount;
+
+            if ($expense->transaction_id) {
+                $payment = Payment::where('transaction_id', $expense->transaction_id)->skip(8)->first();
+
+                if ($payment) {
+                    $payment->amount = $payment->amount - $oldtotal;
+                    $payment->save();
+                } else {
+                }
+            } else {
+            }
+        } else {
+        }
         $expense->delete();
         return redirect()->back()->with('delete', 'Expense Deleted Successfully!');
     }

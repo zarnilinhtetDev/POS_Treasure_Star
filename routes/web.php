@@ -160,7 +160,7 @@ Route::middleware('auth')->group(function () {
     Route::post('expense_store', [ExpenseController::class, 'expenseStore']);
     Route::get('expense_edit/{expense}', [ExpenseController::class, 'edit']);
     Route::post('expense_update/{expense}', [ExpenseController::class, 'update']);
-    Route::get('expense_delete/{expense}', [ExpenseController::class, 'delete'])->middleware('isBranchManager');
+    Route::get('expense_delete/{expense}', [ExpenseController::class, 'delete']);
     Route::get('get_part_data-unit', [ExpenseController::class, 'get_part_data_unit'])->name('get.part.data-unit');
 
     Route::get('expense_category', [ExpenseCategoryController::class, 'index']);

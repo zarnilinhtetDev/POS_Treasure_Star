@@ -226,6 +226,8 @@
                                                                         (Receivable Invoice)
                                                                     @elseif($index == 7)
                                                                         (Payable Purchase Order)
+                                                                    @elseif($index == 8)
+                                                                        (Expense)
                                                                     @endif
                                                                 </td>
                                                                 <td>{{ number_format($payments->amount) }}</td>
@@ -242,7 +244,8 @@
                                                                             $index == 4 ||
                                                                             $index == 5 ||
                                                                             $index == 6 ||
-                                                                            $index == 7)
+                                                                            $index == 7 ||
+                                                                            $index == 8)
                                                                     @else
                                                                         <a href="{{ url('transaction_delete_payment', $payments->id) }}"
                                                                             class="btn btn-danger"

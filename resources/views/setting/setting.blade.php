@@ -119,6 +119,8 @@
                                                                 Order)</option>
                                                             <option value="Receivable (Invoice)">Receivable (Invoice)
                                                             </option>
+                                                            <option value="Expense">Expense
+                                                            </option>
                                                             {{-- <option value="Account Receivable">Account Receivable
                                                             </option> --}}
                                                         </select>
