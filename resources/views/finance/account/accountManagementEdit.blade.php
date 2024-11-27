@@ -152,11 +152,11 @@
                 account.innerHTML = '<option value="">Select Account</option>';
 
                 // Filter and add the doctors based on the selected branch
-                @foreach ($account as $accounts)
-                    if (selectedBranch === '{{ $accounts->location }}') {
+                @foreach ($accounts as $account)
+                    if (selectedBranch === '{{ $account->location }}') {
                         const option = document.createElement('option');
-                        option.value = '{{ $accounts->id }}';
-                        option.textContent = '{{ $accounts->account_name }}';
+                        option.value = '{{ $account->id }}';
+                        option.textContent = '{{ $account->account_name }}';
                         account.appendChild(option);
                     }
                 @endforeach
