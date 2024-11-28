@@ -743,7 +743,7 @@
                         totalTotal += itemTotal;
                         itemDiscount += discount;
 
-                        row.find('.ttlText1').text(itemTotal.toFixed(2));
+                        row.find('.ttlText1').text(itemTotal);
                     });
 
                     let paid = parseFloat(document.getElementById("paid").value) || 0;
@@ -752,10 +752,10 @@
 
                     let totalDiscount = totalTotal - total_discount;
                     let balance = totalDiscount - paid;
-                    $("#balance").val(balance.toFixed(2));
+                    $("#balance").val(balance);
                     $("#item_discount").val(itemDiscount);
-                    $('#invoiceyoghtml').val(totalTotal.toFixed(2));
-                    $('#total_total').val(totalDiscount.toFixed(2));
+                    $('#invoiceyoghtml').val(totalTotal);
+                    $('#total_total').val(totalDiscount);
                 }
 
 
@@ -779,7 +779,7 @@
             let paid = parseFloat(document.getElementById("paid").value) || 0;
             let total_p = parseFloat(document.getElementById("invoiceyoghtml").value) || 0;
             let balance = total_p - paid;
-            balance = balance.toFixed(2);
+            balance = balance;
             $("#balance").val(balance);
         }
     </script>
@@ -911,7 +911,7 @@
             });
             let total = subtotal - totalDiscount - totalVAT;
             total = Math.max(total, 0);
-            $("#total_total").val(total.toFixed(2));
+            $("#total_total").val(total);
         });
     </script>
     <script>

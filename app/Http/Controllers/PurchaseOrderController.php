@@ -87,6 +87,7 @@ class PurchaseOrderController extends Controller
 
                 if ($setting && $payable_setting) {
                     $invoice->transaction_id = $setting->transaction_id ?? null;
+                    $invoice->payable_id = $payable_setting->transaction_id ?? null;
                     $transactions = Payment::all();
 
                     foreach ($transactions as $transaction) {
@@ -266,7 +267,18 @@ class PurchaseOrderController extends Controller
             if ($invoice) {
                 $oldtotal = $invoice->deposit;
                 $currenttotal = $request->paid;
+                if ($invoice->payable_id) {
+                    $payment = Payment::where('transaction_id', $invoice->payable_id)->skip(7)->first();
 
+                    if ($payment) {
+                        $payment->amount = $payment->amount - ($currenttotal - $oldtotal);
+                        $payment->save();
+                        if ($payment->amount == 0) {
+                            $invoice->payable_id = null;
+                        }
+                    } else {
+                    }
+                }
                 if ($invoice->transaction_id) {
                     $payment = Payment::where('transaction_id', $invoice->transaction_id)->skip(2)->first();
 
@@ -428,6 +440,16 @@ class PurchaseOrderController extends Controller
                 if ($invoice) {
                     $oldtotal = $invoice->deposit;
 
+                    // dd($invoice->payable_id);
+                    if ($invoice->payable_id) {
+                        $payment = Payment::where('transaction_id', $invoice->payable_id)->skip(7)->first();
+                        // dd($payment);
+                        if ($payment) {
+                            $payment->amount = $payment->amount - $invoice->remain_balance;
+                            $payment->save();
+                        } else {
+                        }
+                    }
                     if ($invoice->transaction_id) {
                         $payment = Payment::where('transaction_id', $invoice->transaction_id)->skip(2)->first();
 

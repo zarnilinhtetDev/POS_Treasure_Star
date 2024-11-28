@@ -237,8 +237,8 @@
                                                     <td>{{ $transactions->warehouse->name ?? '' }}</td>
                                                     <td>
 
-                                                        <!-- {{ isset($diff[$transactions->id]) ? $diff[$transactions->id] : 0 }} -->
-                                                        {{ isset($diff[$transactions->id]) ? $diff[$transactions->id] : 0 }}
+
+                                                        {{ isset($diff[$transactions->id]) ? number_format(abs($diff[$transactions->id])) : 0 }}
                                                     </td>
                                                     </td>
 

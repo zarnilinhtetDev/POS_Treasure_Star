@@ -421,7 +421,15 @@ class InvoiceController extends Controller
 
             if ($invoice) {
                 $oldtotal = $invoice->deposit;
+                if ($invoice->receviable_id) {
+                    $payment = Payment::where('transaction_id', $invoice->receviable_id)->skip(6)->first();
 
+                    if ($payment) {
+                        $payment->amount = $payment->amount - $invoice->remain_balance;
+                        $payment->save();
+                    } else {
+                    }
+                }
                 if ($invoice->transaction_id) {
                     $payment = Payment::where('transaction_id', $invoice->transaction_id)->first();
 
@@ -534,7 +542,17 @@ class InvoiceController extends Controller
             if ($invoice) {
                 $oldtotal = $invoice->deposit;
                 $currenttotal = $request->paid;
+                if ($invoice->receviable_id) {
+                    $payment = Payment::where('transaction_id', $invoice->receviable_id)->skip(6)->first();
 
+                    if ($payment) {
+                        $payment->amount = $payment->amount - ($currenttotal - $oldtotal);
+                        $payment->save();
+                    }
+                    if ($payment->amount == 0) {
+                        $invoice->receviable_id = null;
+                    }
+                }
 
                 if ($invoice->transaction_id) {
                     $payment = Payment::where('transaction_id', $invoice->transaction_id)->first();
@@ -591,8 +609,9 @@ class InvoiceController extends Controller
         if (!$invoice) {
             return redirect()->back()->with('error', 'Invoice not found');
         }
+        if ($request->paid)
 
-        $invoice->customer_id = $request->customer_id;
+            $invoice->customer_id = $request->customer_id;
         $invoice->customer_name = $request->customer_name;
         $invoice->invoice_category = $request->quote_category;
         $invoice->sale_price_category = $request->sale_price_category;

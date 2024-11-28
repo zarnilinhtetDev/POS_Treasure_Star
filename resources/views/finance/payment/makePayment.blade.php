@@ -324,7 +324,9 @@
                                                         @foreach ($invoices as $invoice)
                                                             <tr>
                                                                 <td>{{ $no }}</td>
-                                                                <td>{{ $invoice->invoice_no }}</td>
+                                                                <td><a
+                                                                        href="{{ url('invoice_detail', $invoice->id) }}">{{ $invoice->invoice_no }}</a>
+                                                                </td>
                                                                 <td>
                                                                     @foreach ($warehouses as $warehouse)
                                                                         @if ($warehouse->id == $invoice->branch)
@@ -498,7 +500,9 @@
                                                         @foreach ($purchase_orders as $po)
                                                             <tr>
                                                                 <td>{{ $no }}</td>
-                                                                <td>{{ $po->quote_no }}</td>
+                                                                <td><a
+                                                                        href="{{ url('purchase_order_details', $po->id) }}">{{ $po->quote_no }}</a>
+                                                                </td>
                                                                 <td>
                                                                     @foreach ($warehouses as $warehouse)
                                                                         @if ($warehouse->id == $po->branch)

@@ -140,13 +140,13 @@
                                                 <td>{{ $invoice->phno }}</td>
                                                 <td>{{ $invoice->balance_due }}</td>
 
-                                                <td>{{ number_format($invoice->total ?? 0, 2) }}</td>
+                                                <td>{{ number_format($invoice->total ?? 0) }}</td>
                                                 @if ($invoice->total == $invoice->deposit)
-                                                    <td>Paid</td>
+                                                    <td><span class="badge badge-success">Paid</span></td>
                                                 @elseif($invoice->total > $invoice->deposit && $invoice->deposit > 0)
-                                                    <td>Partial Paid</td>
+                                                    <td><span class="badge badge-warning">Partial Paid</span></td>
                                                 @else
-                                                    <td>Unpaid</td>
+                                                    <td><span class="badge badge-danger">Unpaid</span></td>
                                                 @endif
                                                 <td>{{ $invoice->invoice_date }}</td>
                                                 <td>
