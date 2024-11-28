@@ -698,6 +698,7 @@ class ReportController extends Controller
             $depositInvoiceSum = 0;
             $depositPurchaseOrderSum = 0;
             $depositSaleReturnSum = 0;
+            $expense = 0;
 
             foreach ($account->transaction as $tran) {
                 $depositInvoiceSum += Invoice::where('transaction_id', $tran->id)
@@ -726,12 +727,17 @@ class ReportController extends Controller
                             ->orWhere('balance_due', 'Sale Return');
                     })
                     ->sum('deposit');
+                $expense += Expense::where('transaction_id', $tran->id)
+                    ->whereMonth('date', $currentMonth)
+                    ->whereYear('date', $currentYear)
+                    ->sum('amount');
             }
 
             $accountDepositSums[$account->id] = [
                 'depositInvoiceSum' => $depositInvoiceSum,
                 'depositPurchaseOrderSum' => $depositPurchaseOrderSum,
                 'depositSaleReturnSum' => $depositSaleReturnSum,
+                'expense' => $expense
             ];
         }
 
@@ -759,6 +765,7 @@ class ReportController extends Controller
             $depositInvoiceSum = 0;
             $depositPurchaseOrderSum = 0;
             $depositSaleReturnSum = 0;
+            $expense = 0;
 
             foreach ($account->transaction as $tran) {
                 $depositInvoiceSum += Invoice::where('transaction_id', $tran->id)
@@ -787,12 +794,17 @@ class ReportController extends Controller
                             ->orWhere('balance_due', 'Sale Return');
                     })
                     ->sum('deposit');
+                $expense += Expense::where('transaction_id', $tran->id)
+                    ->whereMonth('date', $currentMonth)
+                    ->whereYear('date', $currentYear)
+                    ->sum('amount');
             }
 
             $accountDepositSums[$account->id] = [
                 'depositInvoiceSum' => $depositInvoiceSum,
                 'depositPurchaseOrderSum' => $depositPurchaseOrderSum,
                 'depositSaleReturnSum' => $depositSaleReturnSum,
+                'expense' => $expense
             ];
         }
 
@@ -820,6 +832,7 @@ class ReportController extends Controller
             $depositInvoiceSum = 0;
             $depositPurchaseOrderSum = 0;
             $depositSaleReturnSum = 0;
+            $expense = 0;
 
             foreach ($account->transaction as $tran) {
                 $depositInvoiceSum += Invoice::where('transaction_id', $tran->id)
@@ -848,12 +861,17 @@ class ReportController extends Controller
                             ->orWhere('balance_due', 'Sale Return');
                     })
                     ->sum('deposit');
+                $expense += Expense::where('transaction_id', $tran->id)
+                    ->whereMonth('date', $currentMonth)
+                    ->whereYear('date', $currentYear)
+                    ->sum('amount');
             }
 
             $accountDepositSums[$account->id] = [
                 'depositInvoiceSum' => $depositInvoiceSum,
                 'depositPurchaseOrderSum' => $depositPurchaseOrderSum,
                 'depositSaleReturnSum' => $depositSaleReturnSum,
+                'expense' => $expense
             ];
         }
 
@@ -873,7 +891,11 @@ class ReportController extends Controller
         $endDate = $request->input('end_date');
         $accountId = $request->input('account_id');
 
-        $accountsQuery = Account::with(['payment', 'transaction'])->where('location', $id)->latest();
+        if ($id == "All") {
+            $accountsQuery = Account::with(['payment', 'transaction']);
+        } else {
+            $accountsQuery = Account::with(['payment', 'transaction'])->where('location', $id)->latest();
+        }
         if ($accountId) {
             $accountsQuery->where('id', $accountId);
         }
@@ -885,6 +907,7 @@ class ReportController extends Controller
             $depositInvoiceSum = 0;
             $depositPurchaseOrderSum = 0;
             $depositSaleReturnSum = 0;
+            $expense = 0;
 
             foreach ($account->transaction as $tran) {
                 $depositInvoiceSum += Invoice::where('transaction_id', $tran->id)
@@ -913,12 +936,17 @@ class ReportController extends Controller
                             ->orWhere('balance_due', 'Sale Return');
                     })
                     ->sum('deposit');
+                $expense += Expense::where('transaction_id', $tran->id)
+                    ->whereDate('date', '>=', $startDate)
+                    ->whereDate('date', '<=', $endDate)
+                    ->sum('amount');
             }
 
             $accountDepositSums[$account->id] = [
                 'depositInvoiceSum' => $depositInvoiceSum,
                 'depositPurchaseOrderSum' => $depositPurchaseOrderSum,
                 'depositSaleReturnSum' => $depositSaleReturnSum,
+                'expense' => $expense
             ];
         }
 
@@ -935,18 +963,23 @@ class ReportController extends Controller
         $endDate = $request->input('end_date');
         $accountId = $request->input('account_id');
 
-        $accountsQuery = Account::with(['payment', 'transaction'])->where('account_bl_pl', 'BL')->where('location', $id);
+        if ($id == "All") {
+            $accountsQuery = Account::with(['payment', 'transaction']);
+        } else {
+            $accountsQuery = Account::with(['payment', 'transaction'])->where('location', $id)->latest();
+        }
         if ($accountId) {
             $accountsQuery->where('id', $accountId);
         }
         $accounts = $accountsQuery->get();
 
         $accountDepositSums = [];
-
+        // dd($id);
         foreach ($accounts as $account) {
             $depositInvoiceSum = 0;
             $depositPurchaseOrderSum = 0;
             $depositSaleReturnSum = 0;
+            $expense = 0;
 
             foreach ($account->transaction as $tran) {
                 $depositInvoiceSum += Invoice::where('transaction_id', $tran->id)
@@ -975,18 +1008,24 @@ class ReportController extends Controller
                             ->orWhere('balance_due', 'Sale Return');
                     })
                     ->sum('deposit');
+                $expense += Expense::where('transaction_id', $tran->id)
+                    ->whereDate('date', '>=', $startDate)
+                    ->whereDate('date', '<=', $endDate)
+                    ->sum('amount');
             }
-
+            // dd($expense);
             $accountDepositSums[$account->id] = [
                 'depositInvoiceSum' => $depositInvoiceSum,
                 'depositPurchaseOrderSum' => $depositPurchaseOrderSum,
                 'depositSaleReturnSum' => $depositSaleReturnSum,
+                'expense' => $expense
             ];
         }
 
         return view('report.balance_sheet', compact(
             'accounts',
-            'accountDepositSums'
+            'accountDepositSums',
+            'id'
         ));
     }
     public function profitloss_search(Request $request, $id)
@@ -995,7 +1034,11 @@ class ReportController extends Controller
         $endDate = $request->input('end_date');
         $accountId = $request->input('account_id');
 
-        $accountsQuery = Account::with(['payment', 'transaction'])->where('account_bl_pl', 'PL')->where('location', $id);
+        if ($id == "All") {
+            $accountsQuery = Account::with(['payment', 'transaction']);
+        } else {
+            $accountsQuery = Account::with(['payment', 'transaction'])->where('location', $id)->latest();
+        }
         if ($accountId) {
             $accountsQuery->where('id', $accountId);
         }
@@ -1007,6 +1050,7 @@ class ReportController extends Controller
             $depositInvoiceSum = 0;
             $depositPurchaseOrderSum = 0;
             $depositSaleReturnSum = 0;
+            $expense = 0;
 
             foreach ($account->transaction as $tran) {
                 $depositInvoiceSum += Invoice::where('transaction_id', $tran->id)
@@ -1035,18 +1079,24 @@ class ReportController extends Controller
                             ->orWhere('balance_due', 'Sale Return');
                     })
                     ->sum('deposit');
+                $expense += Expense::where('transaction_id', $tran->id)
+                    ->whereDate('created_at', '>=', $startDate)
+                    ->whereDate('created_at', '<=', $endDate)
+                    ->sum('amount');
             }
 
             $accountDepositSums[$account->id] = [
                 'depositInvoiceSum' => $depositInvoiceSum,
                 'depositPurchaseOrderSum' => $depositPurchaseOrderSum,
                 'depositSaleReturnSum' => $depositSaleReturnSum,
+                'expense' => $expense
             ];
         }
 
         return view('report.profit_loss', compact(
             'accounts',
-            'accountDepositSums'
+            'accountDepositSums',
+            'id'
         ));
     }
     public function report_account_transaction_payment($id)

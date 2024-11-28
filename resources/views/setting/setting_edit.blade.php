@@ -136,10 +136,13 @@
                                                             Receivable</option>
                                                         <option value="Payable (Purchase Order)"
                                                             @if ($setting->category == 'Payable (Purchase Order)') selected @endif>Payable
-                                                            (Purchase Order></option>
+                                                            (Purchase Order)></option>
                                                         <option value="Receivable (Invoice)"
                                                             @if ($setting->category == 'Receivable (Invoice)') selected @endif>
                                                             Receivable (Invoice)</option>
+                                                        <option value="Expense"
+                                                            @if ($setting->category == 'Expense') selected @endif>Expense
+                                                        </option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group">

@@ -43,7 +43,8 @@ class AccountController extends Controller
     {
         $account = Account::find($id);
         $branches = Warehouse::all();
-        return view('finance.account.accountManagementEdit', compact('account', 'branches'));
+        $accounts = Account::all();
+        return view('finance.account.accountManagementEdit', compact('account', 'branches', 'accounts'));
     }
     public function account_update(Request $request, $id)
     {
