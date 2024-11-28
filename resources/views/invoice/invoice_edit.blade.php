@@ -824,7 +824,7 @@
                         let value = parseFloat($(this).val()) || 0;
                         total += value;
                     });
-                    total = total.toFixed(2);
+                    total = total;
                     $('#paid').val(total);
                     paidFunction();
                 }
@@ -833,7 +833,7 @@
                     let paid = parseFloat($('#paid').val()) || 0;
                     let total_p = parseFloat($('#total_total').val()) || 0;
                     let balance = total_p - paid;
-                    balance = balance.toFixed(2);
+                    balance = balance;
                     $('#balance').val(balance);
                 }
 
@@ -941,7 +941,7 @@
                             itemTotal = discountAmount;
                         }
 
-                        itemTotal = itemTotal.toFixed(2);
+                        itemTotal = itemTotal;
                         total += parseFloat(itemTotal);
                         itemDiscount += discount;
 
@@ -952,15 +952,12 @@
                     let total_p = parseFloat(document.getElementById("total_total").value) || 0;
                     let total_discount = parseFloat(document.getElementById("total_discount").value) || 0;
 
-                    let totalDiscount = (total - total_discount).toFixed(
-                        2);
-                    let balance = (total - paid - total_discount).toFixed(
-                        2);
+                    let totalDiscount = (total - total_discount);
+                    let balance = (total - paid - total_discount);
 
                     $("#balance").val(balance);
                     $("#item_discount").val(itemDiscount);
-                    $('#invoiceyoghtml').val(totalTotal.toFixed(
-                        2));
+                    $('#invoiceyoghtml').val(totalTotal);
                     $('#total_total').val(totalDiscount);
                 }
 
@@ -984,7 +981,7 @@
         function paidFunction() {
             let paid = parseFloat(document.getElementById("paid").value) || 0;
             let total_p = parseFloat(document.getElementById("invoiceyoghtml").value) || 0;
-            let balance = (total_p - paid).toFixed(2);
+            let balance = (total_p - paid);
             $("#balance").val(balance);
         }
     </script>
@@ -1113,7 +1110,7 @@
                 totalVAT += parseFloat($(this).val()) || 0;
             });
 
-            let total = (subtotal - totalDiscount - totalVAT).toFixed(2);
+            let total = (subtotal - totalDiscount - totalVAT);
             $("#total_total").val(total);
         });
     </script>

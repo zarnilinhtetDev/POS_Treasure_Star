@@ -637,7 +637,7 @@
             let paid = parseFloat(document.getElementById("paid").value) || 0;
             let total_p = parseFloat(document.getElementById("total_total").value) || 0;
             let balance = total_p - paid;
-            $("#balance").val(balance.toFixed(2));
+            $("#balance").val(balance);
         }
     </script>
 
@@ -790,7 +790,7 @@
                         let value = parseFloat($(this).val()) || 0;
                         total += value;
                     });
-                    $('#paid').val(total.toFixed(2));
+                    $('#paid').val(total);
                     paidFunction();
                 }
 
@@ -798,7 +798,7 @@
                     let paid = parseFloat($('#paid').val()) || 0;
                     let total_p = parseFloat($('#total_total').val()) || 0;
                     let balance = total_p - paid;
-                    $('#balance').val(balance.toFixed(2));
+                    $('#balance').val(balance);
                 }
 
 
@@ -877,7 +877,7 @@
                     let discount = (taxRate > 0) ? taxRate : 0;
 
                     let itemTotal = (price * qty) - discount;
-                    $("#result-" + i).text(itemTotal.toFixed(2));
+                    $("#result-" + i).text(itemTotal);
 
                     total += price * qty;
                     total_purchase += buy_price * qty;
@@ -888,12 +888,12 @@
                 let taxt = Math.ceil(total);
                 let total_total = total - total_discount;
 
-                $("#invoiceyoghtml").val(total.toFixed(2));
+                $("#invoiceyoghtml").val(total);
                 $("#item_discount").val(totalTax);
-                $("#total_buy_price").val(total_purchase.toFixed(2));
+                $("#total_buy_price").val(total_purchase);
                 $("#commercial_text").val(taxt);
-                $("#total").val(total_total.toFixed(2));
-                $('#total_total').val(total_total.toFixed(2));
+                $("#total").val(total_total);
+                $('#total_total').val(total_total);
                 $('#total_discount').val('');
             });
 
@@ -904,7 +904,7 @@
                 let total_p = parseFloat(document.getElementById("invoiceyoghtml").value) || 0;
                 let balance = total_p - paid;
                 balance = (balance * 100) / 100;
-                $("#balance").val(balance.toFixed(2));
+                $("#balance").val(balance);
             }
 
             document.getElementById('submitButton').addEventListener('click', function() {
@@ -931,7 +931,7 @@
 
             let total = subtotal - totalDiscount - totalVAT;
 
-            $("#total_total").val(total.toFixed(2));
+            $("#total_total").val(total);
         });
     </script>
     <script>

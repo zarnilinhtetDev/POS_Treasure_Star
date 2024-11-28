@@ -745,10 +745,9 @@
 
                     if (!isNaN(taxRate) && taxRate > 0) {
                         discount = taxRate;
-                        $("#result-" + i).text(((price * qty) - discount).toFixed(
-                            2));
+                        $("#result-" + i).text(((price * qty) - discount));
                     } else {
-                        $("#result-" + i).text((price * qty).toFixed(2));
+                        $("#result-" + i).text((price * qty));
                     }
 
                     total += price * qty;
@@ -759,12 +758,12 @@
 
                 let taxt = total;
                 taxt = Math.ceil(taxt);
-                let total_total = (total - total_discount).toFixed(2);
+                let total_total = (total - total_discount);
 
-                $("#invoiceyoghtml").val(total.toFixed(2));
+                $("#invoiceyoghtml").val(total);
                 $("#item_discount").val(totalTax);
-                $("#total_buy_price").val(total_purchase.toFixed(2));
-                $("#commercial_text").val(taxt.toFixed(2));
+                $("#total_buy_price").val(total_purchase);
+                $("#commercial_text").val(taxt);
                 $("#total").val(total_total);
                 $('#total_total').val(total_total);
                 $('#total_discount').val('');
@@ -794,7 +793,7 @@
             let paid = parseFloat(document.getElementById("paid").value) || 0;
             let total_p = parseFloat(document.getElementById("total_total").value) || 0;
             let balance = total_p - paid;
-            $("#balance").val(balance.toFixed(2));
+            $("#balance").val(balance);
         }
     </script>
 
@@ -898,7 +897,7 @@
                 totalVAT += parseFloat($(this).val()) || 0;
             });
             let total = subtotal - totalDiscount - totalVAT;
-            $("#total_total").val(total.toFixed(2));
+            $("#total_total").val(total);
         });
     </script>
 

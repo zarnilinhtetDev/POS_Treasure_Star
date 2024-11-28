@@ -136,7 +136,7 @@
                                                             Receivable</option>
                                                         <option value="Payable (Purchase Order)"
                                                             @if ($setting->category == 'Payable (Purchase Order)') selected @endif>Payable
-                                                            (Purchase Order)></option>
+                                                            (Purchase Order)</option>
                                                         <option value="Receivable (Invoice)"
                                                             @if ($setting->category == 'Receivable (Invoice)') selected @endif>
                                                             Receivable (Invoice)</option>
@@ -172,57 +172,56 @@
                                                                     {{ $transaction->transaction_name }}
                                                                 </option>
                                                             @endif
-                                                        @break;
-                                                    @endforeach
-                                                </select>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+
+
                                             </div>
+                                            <div class="modal-footer justify-content-end">
 
-
-
-                                        </div>
-                                        <div class="modal-footer justify-content-end">
-
-                                            <button type="submit" class="btn btn-primary">Update </button>
-                                        </div>
-                                </form>
+                                                <button type="submit" class="btn btn-primary">Update </button>
+                                            </div>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+        </div>
+
+
+        </section>
+
     </div>
 
 
-    </section>
 
-</div>
-
-
-
-</div>
-<script src="{{ asset('plugins/jquery/jquery.min.js ') }}"></script>
-<script>
-    $(document).ready(function() {
-        $('#location').on('change', function() {
+    </div>
+    <script src="{{ asset('plugins/jquery/jquery.min.js ') }}"></script>
+    <script>
+        $(document).ready(function() {
+            $('#location').on('change', function() {
 
 
-            const selectedBranch = $(this).val();
-            const account = document.getElementById('transaction');
-            // Clear the doctor select options
-            account.innerHTML = '<option value="">Select Transaction</option>';
+                const selectedBranch = $(this).val();
+                const account = document.getElementById('transaction');
+                // Clear the doctor select options
+                account.innerHTML = '<option value="">Select Transaction</option>';
 
-            // Filter and add the doctors based on the selected branch
-            @foreach ($transactions as $tran)
-                if (selectedBranch === '{{ $tran->location }}') {
-                    const option = document.createElement('option');
-                    option.value = '{{ $tran->id }}';
-                    option.textContent = '{{ $tran->transaction_name }}';
-                    account.appendChild(option);
-                }
-            @endforeach
+                // Filter and add the doctors based on the selected branch
+                @foreach ($transactions as $tran)
+                    if (selectedBranch === '{{ $tran->location }}') {
+                        const option = document.createElement('option');
+                        option.value = '{{ $tran->id }}';
+                        option.textContent = '{{ $tran->transaction_name }}';
+                        account.appendChild(option);
+                    }
+                @endforeach
+            });
+
         });
+    </script>
 
-    });
-</script>
-
-@include('layouts.footer')
+    @include('layouts.footer')
