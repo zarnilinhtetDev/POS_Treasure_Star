@@ -221,9 +221,9 @@ Route::middleware('auth')->group(function () {
     Route::get('sale_return_search', [InvoiceController::class, 'sale_return_search']);
     Route::get('report_pos_receipt/{invoice}', [ReportController::class, 'pos_receipt']);
     Route::get('report_invoice_details/{invoice}', [ReportController::class, 'report_invoice_detail']);
-
-    Route::get('report_account_transaction_payment/{id}', [ReportController::class, 'report_account_transaction_payment']);
-    Route::get('report_account_transaction_payment_search/{id}', [ReportController::class, 'report_account_transaction_payment_search']);
+    Route::get('report_account_transaction/{id}', [ReportController::class, 'report_account_transactions']);
+    Route::get('report_account_transaction_payment/{transaction_id}/{account_id}', [ReportController::class, 'report_account_transaction_payment']);
+    Route::get('report_account_transaction_payment_search/{id}/{account_id}', [ReportController::class, 'report_account_transaction_payment_search']);
 
 
     //Profit

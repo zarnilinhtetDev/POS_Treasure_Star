@@ -198,6 +198,7 @@ class InvoiceController extends Controller
                 }
             }
         } else if ($request->status == 'pos') {
+
             $setting = Setting::where('category', 'POS')->where('location', $request->branch)->first();
 
             if ($setting) {
@@ -209,7 +210,7 @@ class InvoiceController extends Controller
                     if ($transaction->id == $setting->transaction_id) {
                         $tran = Payment::where('transaction_id', $transaction->id)->get();
                         $payment = $tran->skip(1)->first();
-
+                        // dd($payment);
                         if ($payment) {
                             $payment->amount += $request->paid;
                             $payment->save();

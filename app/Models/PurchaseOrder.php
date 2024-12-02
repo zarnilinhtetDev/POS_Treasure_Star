@@ -20,4 +20,12 @@ class PurchaseOrder extends Model
     {
         return $this->belongsTo(Supplier::class, 'supplier_id');
     }
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
+    public function payable_transaction()
+    {
+        return $this->belongsTo(Transaction::class, 'payable_id');
+    }
 }

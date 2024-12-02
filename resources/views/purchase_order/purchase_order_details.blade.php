@@ -88,6 +88,8 @@
                                     <div class="input-group"><span style="font-weight:bolder"> Receiving Mode :&nbsp;
                                         </span><span style="font-weight:bolder">
                                             @if ($purchase_order->balance_due == 'Sale Return Invoice')
+                                                Sale Return Invoice
+                                            @elseif ($purchase_order->balance_due == 'Sale Return')
                                                 Sale Return
                                             @else
                                                 {{ $purchase_order->balance_due }}
