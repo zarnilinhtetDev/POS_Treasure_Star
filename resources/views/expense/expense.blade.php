@@ -220,13 +220,12 @@
                                             <div class="form-group">
                                                 <label for="date">Date<span class="text-danger">*</span></label>
                                                 <input type="date" class="form-control" id="date" required
-                                                    autofocus name="date">
+                                                    autofocus name="date" value="{{ date('Y-m-d') }}">
                                             </div>
 
 
                                             <div class="form-group">
-                                                <label for="amount">Description<span
-                                                        class="text-danger">*</span></label>
+                                                <label for="amount">Description</label>
                                                 <textarea class="form-control" id="description" placeholder="Enter description" autofocus name="description"
                                                     rows="5"></textarea>
                                             </div>

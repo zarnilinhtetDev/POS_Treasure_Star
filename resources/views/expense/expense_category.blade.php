@@ -135,11 +135,10 @@
                                                     placeholder="Enter name" required autofocus name="name">
                                             </div>
                                             <div class="form-group">
-                                                <label for="category">Category Descripton<span
-                                                        class="text-danger">*</span></label>
+                                                <label for="category">Category Descripton</label>
 
-                                                <textarea class="form-control" id="category" placeholder="Enter category description"  autofocus
-                                                    name="category" rows="3"></textarea>
+                                                <textarea class="form-control" id="category" placeholder="Enter category description" autofocus name="category"
+                                                    rows="3"></textarea>
                                             </div>
 
                                             @if (auth()->user()->is_admin == '1')

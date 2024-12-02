@@ -158,7 +158,7 @@
                                                             </a>
                                                         @else
                                                             <a
-                                                                href="{{ url('/report_account_transaction_payment', $account->id) }}">
+                                                                href="{{ url('/report_account_transaction', $account->id) }}">
                                                                 {{ $account->account_number }}
                                                             </a>
                                                         @endif
@@ -168,10 +168,10 @@
                                                     <td>{{ $account->account_type }}</td>
                                                     <td>{{ $account->account_bl_pl }}</td>
                                                     <td style="background-color: #C5F0C7">
-                                                        {{ number_format($accountDepositSums[$account->id]['depositInvoiceSum']) }}
+                                                        {{ number_format($accountDepositSums[$account->id]['depositInvoiceSum'] + $accountDepositSums[$account->id]['remainInvoice'] + $accountDepositSums[$account->id]['totalIn']) }}
                                                     </td>
                                                     <td style="background-color: #FBCCCC">
-                                                        {{ number_format($accountDepositSums[$account->id]['depositPurchaseOrderSum'] + $accountDepositSums[$account->id]['depositSaleReturnSum'] + $accountDepositSums[$account->id]['expense']) }}
+                                                        {{ number_format($accountDepositSums[$account->id]['depositPurchaseOrderSum'] + $accountDepositSums[$account->id]['depositSaleReturnSum'] + $accountDepositSums[$account->id]['expense'] + $accountDepositSums[$account->id]['remainPurchaseOrderSum'] + $accountDepositSums[$account->id]['PurchaseOrderSum'] + $accountDepositSums[$account->id]['totalOut']) }}
                                                     </td>
                                                 </tr>
                                             @endforeach

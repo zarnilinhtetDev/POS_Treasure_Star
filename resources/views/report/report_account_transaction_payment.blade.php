@@ -66,12 +66,24 @@
                             @endif
 
                             {{-- @dd($transaction); --}}
+
                             <h5 class="my-3"> Transaction
                                 Name -{{ $transaction->transaction_name }}</h5>
 
 
+                            {{-- <h5 class="mb-4">Amount:
+                                    {{ $TotalInvoice[$transaction->id] + $TotalDepositInvoice[$transaction->id] + $TotalRemainInvoice[$transaction->id] + $TotalDepositPoReturn[$transaction->id] + $TotalDepositPointOfSale[$transaction->id] - ($TotalDepositSaleReturnPos[$transaction->id] + $TotalPurchaseOrder[$transaction->id] + $TotalDepositPurchaseOrder[$transaction->id] + $TotalDepositSaleReturnInvoice[$transaction->id] + $TotalRemainPurchaseOrder[$transaction->id] + $TotalExpense[$transaction->id]) }}
+                                </h5> --}}
+                            {{-- <h5 class="mb-4">Amount:
+                                    {{ number_format($TotalInvoice[$transaction->id] + $TotalDepositInvoice[$transaction->id] + $TotalRemainInvoice[$transaction->id] + $TotalDepositPoReturn[$transaction->id] + $TotalDepositPointOfSale[$transaction->id] - ($TotalPurchaseOrder[$transaction->id] + $TotalDepositPurchaseOrder[$transaction->id] + $TotalDepositSaleReturnInvoice[$transaction->id] + $TotalDepositSaleReturn[$transaction->id] + $TotalExpense[$transaction->id] + $TotalRemainPurchaseOrder[$transaction->id])) }}
+                                </h5> --}}
+
+                            {{-- <h5 class="my-3"> Transaction
+                                Name -{{ $transaction->transaction_name }}</h5>
+--}}
+
                             <h5 class="mb-4">Amount:
-                                {{ number_format($total_deposit_invoices + $total_deposit_po_returns + $total_deposit_point_of_sales - ($total_deposit_purchase_orders + $total_deposit_sale_return_invoices + $total_deposit_sale_return_pos)) }}
+                                {{ number_format($total_invoices + $total_deposit_invoices + $total_remain_invoices + $total_deposit_po_returns + $total_deposit_point_of_sales + $totalIn - ($total_purchase_orders + $total_deposit_purchase_orders + $total_deposit_sale_return_invoices + $total_deposit_sale_return_pos + $total_expense + $total_remain_purchase_orders + $totalOut)) }}
                             </h5>
 
 
@@ -144,7 +156,7 @@
 
                             <!-- Nav tabs -->
 
-                            <div class="col-md-3 col-6 col-lg-2 mb-5">
+                            {{-- <div class="col-md-3 col-6 col-lg-2 mb-5">
                                 <select class="form-control shadow-sm p-2 bg-secondary text-white border-0 rounded-pill"
                                     id="tableSelect">
                                     <option value="payment" selected>Payment Table</option>
@@ -154,8 +166,9 @@
                                     <option value="pr">PO Return Table</option>
                                     <option value="sr-inv">Sale Return (Invoice) Table</option>
                                     <option value="sr-pos">Sale Return (POS) Table</option>
+                                    <option value="expense">Expense Table</option>
                                 </select>
-                            </div>
+                            </div> --}}
 
 
 
@@ -164,7 +177,7 @@
                                 <div class="tab-pane fade show active" id="payment" role="tabpanel"
                                     aria-labelledby="payment-tab">
                                     <div class="my-5 container-fluid">
-                                        <div class="row">
+                                        {{-- <div class="row">
                                             <div class="col-md-10">
                                                 <form
                                                     action="{{ url('report_account_transaction_payment_search', $id) }}"
@@ -172,13 +185,13 @@
                                                     <div class="row">
                                                         <div class="col-md-3 form-group">
                                                             <label for="start_date">Date From:</label>
-                                                            <input type="date" name="start_date"
-                                                                class="form-control" required>
+                                                            <input type="date" name="start_date" class="form-control"
+                                                                required>
                                                         </div>
                                                         <div class="col-md-3 form-group">
                                                             <label for="end_date">Date To:</label>
-                                                            <input type="date" name="end_date"
-                                                                class="form-control" required>
+                                                            <input type="date" name="end_date" class="form-control"
+                                                                required>
                                                         </div>
 
 
@@ -190,7 +203,7 @@
                                                     </div>
                                                 </form>
                                             </div>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                     <div class="card">
 
@@ -201,67 +214,292 @@
                                                         <tr>
                                                             <th>No</th>
                                                             <th>Account Name</th>
+                                                            <th>Transaction Name</th>
+                                                            <th>Source</th>
                                                             <th>Status</th>
                                                             <th>Amount</th>
+
                                                             <th>Description</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         @php
                                                             $no = '1';
+                                                            $total = 0;
                                                         @endphp
-                                                        @foreach ($accounts as $account)
-                                                            @foreach ($account->payment as $index => $payments)
-                                                                <tr>
-                                                                    <td>{{ $no }}</td>
-                                                                    <td>
-                                                                        @if ($payments->account_id == $account->id)
-                                                                            {{ $account->account_name }}
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>
 
-                                                                        {{ $payments->payment_status }}
-                                                                        @if ($index == 0)
-                                                                            (Invoice)
-                                                                        @elseif ($index == 1)
-                                                                            (POS)
-                                                                        @elseif ($index == 2)
-                                                                            (Purchase Order)
-                                                                        @elseif ($index == 3)
-                                                                            (Purchase Return)
-                                                                        @elseif ($index == 4)
-                                                                            (Sale Return Invoice)
-                                                                        @elseif ($index == 5)
-                                                                            (Sale Return POS)
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>
+                                                        @foreach ($payment as $index => $payments)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>
+                                                                    {{ $payments->account->account_name }}
+                                                                </td>
+                                                                <td>{{ $payments->transaction->transaction_name }}</td>
+                                                                <td>Add Payment</td>
+                                                                <td>
 
-                                                                        @if ($index == 0)
-                                                                            {{ number_format($total_deposit_invoices) }}
-                                                                        @elseif ($index == 1)
-                                                                            {{ number_format($total_deposit_point_of_sales) }}
-                                                                        @elseif ($index == 2)
-                                                                            {{ number_format($total_deposit_purchase_orders) }}
-                                                                        @elseif ($index == 3)
-                                                                            {{ number_format($total_deposit_po_returns) }}
-                                                                        @elseif ($index == 4)
-                                                                            {{ number_format($total_deposit_sale_return_invoices) }}
-                                                                        @elseif ($index == 5)
-                                                                            {{ number_format($total_deposit_sale_return_pos) }}
-                                                                        @endif
-                                                                    </td>
-                                                                    <td>{{ $payments->note ?? 'N/A' }}</td>
+                                                                    {{ $payments->payment_status }}
 
-                                                                </tr>
-                                                                @php
-                                                                    $no++;
-                                                                @endphp
-                                                            @endforeach
+
+                                                                </td>
+                                                                <td>
+                                                                    {{-- $TotalInvoice = [];
+                                                                            $TotalDepositInvoice = [];
+                                                                            $TotalRemainInvoice = [];
+                                                                            $TotalDepositPurchaseOrder = [];
+                                                                            $TotalPurchaseOrder = [];
+                                                                            $TotalRemainPurchaseOrder = [];
+                                                                            $TotalDepositSaleReturn = [];
+                                                                            $TotalDepositPointOfSale = [];
+                                                                            $TotalExpense = []; --}}
+
+                                                                    {{ number_format($payments->amount ?? 0, 2) }}
+                                                                </td>
+
+                                                                <td>{{ $payments->note ?? 'N/A' }}</td>
+
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                                $total += $payments->amount;
+                                                            @endphp
+                                                        @endforeach
+                                                        @foreach ($invoices as $invoice)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $account->account_name }}</td>
+                                                                <td>{{ $invoice->transaction->transaction_name }}</td>
+                                                                <td><a
+                                                                        href="{{ url('invoice_detail', $invoice->id) }}">{{ $invoice->invoice_no }}</a>
+                                                                </td>
+                                                                {{-- <td>{{ $invoice->invoice_no }}</td> --}}
+
+                                                                <td> IN</td>
+
+                                                                <td>{{ number_format($invoice->total) }}</td>
+
+                                                                <td>{{ $invocie->remark ?? 'N/A' }}</td>
+
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                                $total += $invoice->total;
+                                                            @endphp
+                                                        @endforeach
+                                                        @foreach ($deposit_invoices as $invoice)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $account->account_name }}</td>
+                                                                <td>{{ $invoice->transaction->transaction_name }}</td>
+                                                                {{-- <td>{{ $invoice->invoice_no }}</td> --}}
+                                                                <td><a
+                                                                        href="{{ url('invoice_detail', $invoice->id) }}">{{ $invoice->invoice_no }}</a>
+                                                                </td>
+                                                                <td> IN</td>
+
+                                                                <td>{{ number_format($invoice->deposit) }}</td>
+
+
+                                                                <td>{{ $invocie->remark ?? 'N/A' }}</td>
+
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                                $total += $invoice->deposit;
+                                                            @endphp
+                                                        @endforeach
+                                                        @foreach ($point_of_sales as $invoice)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $account->account_name }}</td>
+                                                                <td>{{ $invoice->transaction->transaction_name }}</td>
+                                                                {{-- <td>{{ $invoice->invoice_no }}</td> --}}
+                                                                <td><a
+                                                                        href="{{ url('invoice_detail', $invoice->id) }}">{{ $invoice->invoice_no }}</a>
+                                                                </td>
+                                                                <td> IN</td>
+
+                                                                <td>{{ number_format($invoice->deposit) }}</td>
+
+
+                                                                <td>{{ $invocie->remark ?? 'N/A' }}</td>
+
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                                $total += $invoice->deposit;
+                                                            @endphp
+                                                        @endforeach
+                                                        @foreach ($sale_return_pos as $invoice)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $account->account_name }}</td>
+                                                                <td>{{ $invoice->transaction->transaction_name }}</td>
+                                                                {{-- <td>{{ $invoice->invoice_no }}</td> --}}
+                                                                <td><a
+                                                                        href="{{ url('purchase_order_details', $invoice->id) }}">{{ $invoice->quote_no }}</a>
+                                                                </td>
+
+                                                                <td> OUT</td>
+
+                                                                <td>{{ number_format($invoice->deposit) }}</td>
+
+
+                                                                <td>{{ $invocie->remark ?? 'N/A' }}</td>
+
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                                $total += $invoice->deposit;
+                                                            @endphp
+                                                        @endforeach
+
+                                                        @foreach ($invoices_remain as $invoice)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $account->account_name }}</td>
+                                                                <td>{{ $invoice->transaction->transaction_name }}</td>
+                                                                {{-- <td>{{ $invoice->invoice_no }}</td> --}}
+                                                                <td><a
+                                                                        href="{{ url('invoice_detail', $invoice->id) }}">{{ $invoice->invoice_no }}</a>
+                                                                </td>
+                                                                <td> IN</td>
+
+                                                                <td>{{ number_format($invoice->remain_balance) }}</td>
+
+
+                                                                <td>{{ $invocie->remark ?? 'N/A' }}</td>
+
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                                $total += $invoice->remain_balance;
+                                                            @endphp
+                                                        @endforeach
+
+                                                        @foreach ($po_returns as $po_return)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $account->account_name }}</td>
+                                                                <td>{{ $po_return->transaction->transaction_name }}
+                                                                </td>
+                                                                <td><a
+                                                                        href="{{ url('invoice_detail', $po_return->id) }}">{{ $po_return->invoice_no }}</a>
+                                                                </td>
+                                                                <td>OUT</td>
+
+                                                                <td>{{ number_format($po_return->total) }}</td>
+
+                                                                <td>{{ $po_return->remark ?? 'N/A' }}</td>
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                                $total += $po_return->total;
+                                                            @endphp
+                                                        @endforeach
+                                                        @foreach ($purchase_orders as $po)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $account->account_name }}</td>
+                                                                <td>{{ $po->transaction->transaction_name }}</td>
+                                                                <td><a
+                                                                        href="{{ url('purchase_order_details', $po->id) }}">{{ $po->quote_no }}</a>
+                                                                </td>
+                                                                <td>OUT</td>
+
+                                                                <td>{{ number_format($po->total) }}</td>
+
+                                                                <td>{{ $po->remark ?? 'N/A' }}</td>
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                                $total += $po->total;
+                                                            @endphp
+                                                        @endforeach
+                                                        @foreach ($purchase_orders_remain as $po)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $account->account_name }}</td>
+                                                                <td>{{ $po->payable_transaction->transaction_name }}
+                                                                </td>
+                                                                <td><a
+                                                                        href="{{ url('purchase_order_details', $po->id) }}">{{ $po->quote_no }}</a>
+                                                                </td>
+                                                                <td>OUT</td>
+
+                                                                <td>{{ number_format($po->remain_balance) }}</td>
+
+                                                                <td>{{ $po->remark ?? 'N/A' }}</td>
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                                $total += $po->remain_balance;
+                                                            @endphp
+                                                        @endforeach
+                                                        @foreach ($purchase_orders_deposit as $po)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $account->account_name }}</td>
+                                                                <td>{{ $po->transaction->transaction_name }}</td>
+                                                                <td><a
+                                                                        href="{{ url('purchase_order_details', $po->id) }}">{{ $po->quote_no }}</a>
+                                                                </td>
+                                                                <td>OUT</td>
+
+                                                                <td>{{ number_format($po->deposit) }}</td>
+
+                                                                <td>{{ $po->remark ?? 'N/A' }}</td>
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                                $total += $po->deposit;
+                                                            @endphp
+                                                        @endforeach
+                                                        @foreach ($sale_return_invoices as $po)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $account->account_name }}</td>
+                                                                <td>{{ $po->transaction->transaction_name }}</td>
+                                                                <td><a
+                                                                        href="{{ url('purchase_order_details', $po->id) }}">{{ $po->quote_no }}</a>
+                                                                </td>
+                                                                <td>OUT</td>
+
+                                                                <td>{{ number_format($po->deposit) }}</td>
+
+                                                                <td>{{ $po->remark ?? 'N/A' }}</td>
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                                $total += $po->deposit;
+                                                            @endphp
+                                                        @endforeach
+
+                                                        @foreach ($expense as $exp)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $account->account_name }}</td>
+                                                                <td>{{ $exp->transaction->transaction_name }}</td>
+                                                                <td>Expense </td>
+                                                                <td>OUT</td>
+                                                                <td>{{ number_format($exp->amount) }}</td>
+
+                                                                <td>{{ $exp->description ?? 'N/A' }}</td>
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                                $total += $exp->amount;
+                                                            @endphp
                                                         @endforeach
 
                                                     </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td colspan="5" class="text-right">Total</td>
+                                                            <td>{{ number_format($total) }}</td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tfoot>
                                                 </table>
                                             </div>
                                         </div>
@@ -311,7 +549,7 @@
                                                         <tr>
                                                             <th>No</th>
                                                             <th>Invoice No.</th>
-                                                            <th>Location</th>
+                                                            {{-- <th>Location</th> --}}
                                                             <th>Deposit</th>
                                                             <th>Balance</th>
                                                             <th>Total</th>
@@ -327,24 +565,77 @@
                                                             <tr>
                                                                 <td>{{ $no }}</td>
                                                                 <td>{{ $invoice->invoice_no }}</td>
-                                                                <td>
-                                                                    @foreach ($warehouses as $warehouse)
-                                                                        @if ($warehouse->id == $invoice->branch)
-                                                                            {{ $warehouse->name }}
-                                                                        @endif
-                                                                    @endforeach
-                                                                </td>
+
                                                                 <td>{{ number_format($invoice->deposit) }}</td>
                                                                 <td>{{ number_format($invoice->remain_balance) }}</td>
 
                                                                 <td>{{ number_format($invoice->total) }}</td>
 
                                                                 @if ($invoice->total == $invoice->deposit)
-                                                                    <td>Paid</td>
+                                                                    <td> <span class="badge badge-success">Paid</span>
+                                                                    </td>
                                                                 @elseif($invoice->total > $invoice->deposit && $invoice->deposit > 0)
-                                                                    <td>Partial Paid</td>
+                                                                    <td><span class="badge badge-warning">Partial
+                                                                            Paid</span></td>
                                                                 @else
-                                                                    <td>Unpaid</td>
+                                                                    <td><span class="badge badge-danger">Unpaid</span>
+                                                                    </td>
+                                                                @endif
+                                                                <td>
+                                                                    {{ $invoice->invoice_date }}
+                                                                </td>
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                            @endphp
+                                                        @endforeach
+                                                        @foreach ($invoices_remain as $invoice)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $invoice->invoice_no }}</td>
+
+                                                                <td>{{ number_format($invoice->deposit) }}</td>
+                                                                <td>{{ number_format($invoice->remain_balance) }}</td>
+
+                                                                <td>{{ number_format($invoice->total) }}</td>
+
+                                                                @if ($invoice->total == $invoice->deposit)
+                                                                    <td> <span class="badge badge-success">Paid</span>
+                                                                    </td>
+                                                                @elseif($invoice->total > $invoice->deposit && $invoice->deposit > 0)
+                                                                    <td><span class="badge badge-warning">Partial
+                                                                            Paid</span></td>
+                                                                @else
+                                                                    <td><span class="badge badge-danger">Unpaid</span>
+                                                                    </td>
+                                                                @endif
+                                                                <td>
+                                                                    {{ $invoice->invoice_date }}
+                                                                </td>
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                            @endphp
+                                                        @endforeach
+                                                        @foreach ($deposit_invoices as $invoice)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $invoice->invoice_no }}</td>
+
+                                                                <td>{{ number_format($invoice->deposit) }}</td>
+                                                                <td>{{ number_format($invoice->remain_balance) }}</td>
+
+                                                                <td>{{ number_format($invoice->total) }}</td>
+
+                                                                @if ($invoice->total == $invoice->deposit)
+                                                                    <td> <span class="badge badge-success">Paid</span>
+                                                                    </td>
+                                                                @elseif($invoice->total > $invoice->deposit && $invoice->deposit > 0)
+                                                                    <td><span class="badge badge-warning">Partial
+                                                                            Paid</span></td>
+                                                                @else
+                                                                    <td><span class="badge badge-danger">Unpaid</span>
+                                                                    </td>
                                                                 @endif
                                                                 <td>
                                                                     {{ $invoice->invoice_date }}
@@ -486,7 +777,7 @@
                                                         <tr>
                                                             <th>No</th>
                                                             <th>PO No.</th>
-                                                            <th>Location</th>
+                                                            {{-- <th>Location</th> --}}
                                                             <th>Deposit</th>
                                                             <th>Balance</th>
                                                             <th>Total</th>
@@ -501,13 +792,59 @@
                                                             <tr>
                                                                 <td>{{ $no }}</td>
                                                                 <td>{{ $po->quote_no }}</td>
-                                                                <td>
+                                                                {{-- <td>
                                                                     @foreach ($warehouses as $warehouse)
                                                                         @if ($warehouse->id == $po->branch)
                                                                             {{ $warehouse->name }}
                                                                         @endif
                                                                     @endforeach
+                                                                </td> --}}
+                                                                <td>{{ number_format($po->remain_balance) }}</td>
+                                                                <td>{{ number_format($po->deposit) }}</td>
+                                                                <td>{{ number_format($po->total) }}</td>
+
+                                                                <td>
+                                                                    {{ $po->po_date }}
                                                                 </td>
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                            @endphp
+                                                        @endforeach
+                                                        @foreach ($purchase_orders_deposit as $po)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $po->quote_no }}</td>
+                                                                {{-- <td>
+                                                                    @foreach ($warehouses as $warehouse)
+                                                                        @if ($warehouse->id == $po->branch)
+                                                                            {{ $warehouse->name }}
+                                                                        @endif
+                                                                    @endforeach
+                                                                </td> --}}
+                                                                <td>{{ number_format($po->remain_balance) }}</td>
+                                                                <td>{{ number_format($po->deposit) }}</td>
+                                                                <td>{{ number_format($po->total) }}</td>
+
+                                                                <td>
+                                                                    {{ $po->po_date }}
+                                                                </td>
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                            @endphp
+                                                        @endforeach
+                                                        @foreach ($purchase_orders_remain as $po)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $po->quote_no }}</td>
+                                                                {{-- <td>
+                                                                    @foreach ($warehouses as $warehouse)
+                                                                        @if ($warehouse->id == $po->branch)
+                                                                            {{ $warehouse->name }}
+                                                                        @endif
+                                                                    @endforeach
+                                                                </td> --}}
                                                                 <td>{{ number_format($po->remain_balance) }}</td>
                                                                 <td>{{ number_format($po->deposit) }}</td>
                                                                 <td>{{ number_format($po->total) }}</td>
@@ -827,8 +1164,9 @@
                 let startDate = $('#start_date').val();
                 let endDate = $('#end_date').val();
                 let transactionId = {{ $transaction->id }};
+                let accountId = {{ $account->id }};
                 $.ajax({
-                    url: "{{ route('account_invoice_search', ['id' => $transaction->id]) }}",
+                    url: "{{ route('account_invoice_search', ['id' => $transaction->id, 'account_id' => $account->id]) }}",
                     type: 'GET',
                     data: {
                         start_date: $('input[name="start_date"]').val(),
