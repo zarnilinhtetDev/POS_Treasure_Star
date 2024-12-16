@@ -1212,7 +1212,7 @@
                                                                 <td></td>
                                                                 <td></td>
                                                             </tr>
-                                                            <tr>
+                                                            {{-- <tr>
                                                                 <td>
                                                                     <div class="form-group">
                                                                         <div class="form-check">
@@ -1235,8 +1235,8 @@
                                                                 </td>
                                                                 <td></td>
                                                                 <td></td>
-                                                            </tr>
-                                                            <tr>
+                                                            </tr> --}}
+                                                            {{-- <tr>
                                                                 <td>
                                                                     <div class="form-group">
                                                                         <div class="form-check">
@@ -1260,7 +1260,7 @@
                                                                 </td>
                                                                 <td></td>
                                                                 <td></td>
-                                                            </tr>
+                                                            </tr> --}}
                                                             <tr>
                                                                 <td>
                                                                     <div class="form-group">

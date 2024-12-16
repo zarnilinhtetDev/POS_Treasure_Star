@@ -279,14 +279,14 @@
                         </a>
                     </li>
                 @endif
-                @if (in_array('Accounting Report', $userPermissions) || auth()->user()->is_admin == '1')
+                {{-- @if (in_array('Accounting Report', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
                         <a href="{{ url('accounting_report') }}" class="nav-link">
                             <i class="text-white fa-solid fa-file-invoice nav-icon"></i>
                             <p class="pl-3 text-white">
                                 Accounting Report </p>
                         </a>
-                        {{-- <ul class="nav nav-treeview">
+                        <ul class="nav nav-treeview">
 
                             <li class="nav-item">
                                 <a href="{{ url('general_ledger') }}" class="nav-link">
@@ -307,9 +307,9 @@
                                 </a>
                             </li>
 
-                        </ul> --}}
+                        </ul>
                     </li>
-                @endif
+                @endif --}}
                 @if (in_array('Report', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
                         <a href="{{ url('report') }}" class="nav-link">
@@ -400,7 +400,7 @@
 
                 {{-- Accounting Start --}}
 
-                @if (in_array('Accounting', $userPermissions) || auth()->user()->is_admin == '1')
+                {{-- @if (in_array('Accounting', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
                         <a href="#" class="nav-link">
                             <i class="text-white fa-solid fa-calculator nav-icon"></i>
@@ -429,7 +429,7 @@
                             </li>
                         </ul>
                     </li>
-                @endif
+                @endif --}}
                 {{-- Accounting End --}}
 
                 @if (in_array('User', $userPermissions) || auth()->user()->is_admin == '1')
