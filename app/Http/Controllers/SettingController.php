@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\PurchaseOrder;
 use App\Models\Setting;
+use App\Models\Warehouse;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use App\Models\PurchaseOrder;
 
 class SettingController extends Controller
 {
@@ -28,7 +29,8 @@ class SettingController extends Controller
         $setting = Setting::find($id);
 
         $transactions = Transaction::latest()->get();
-        return view('setting.setting_edit', compact('setting', 'transactions'));
+        $branches = Warehouse::latest()->get();
+        return view('setting.setting_edit', compact('setting', 'transactions', 'branches'));
     }
     public function update(Request $request, $id)
     {
@@ -45,7 +47,8 @@ class SettingController extends Controller
 
         $settings = Setting::latest()->get();
         $transactions = Transaction::latest()->get();
-        return view('setting.setting', compact('settings', 'transactions'));
+        $branches = Warehouse::all();
+        return view('setting.setting', compact('settings', 'transactions', 'branches'));
     }
 
 

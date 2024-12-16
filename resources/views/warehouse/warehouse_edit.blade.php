@@ -7,7 +7,8 @@
             <!-- Left navbar links -->
             <ul class="navbar-nav col-md-6">
                 <li class="nav-item">
-                    <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+                    <a class="nav-link text-white" data-widget="pushmenu" href="#" role="button"><i
+                            class="fas fa-bars"></i></a>
                 </li>
 
                 <li class="nav-item">
@@ -23,7 +24,8 @@
 
 
                 <div class="btn-group">
-                    <button type="button" class="btn dropdown-toggle text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <button type="button" class="btn dropdown-toggle text-white" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
                         {{ auth()->user()->name }}
                     </button>
                     <div class="dropdown-menu ">
@@ -84,25 +86,30 @@
 
                                             <div class="form-group">
                                                 <label for="name">Name <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="name" placeholder="Enter Warehouse Name" required autofocus name="name" value="{{ $warehouse->name }}">
+                                                <input type="text" class="form-control" id="name"
+                                                    placeholder="Enter Warehouse Name" required autofocus name="name"
+                                                    value="{{ $warehouse->name }}">
                                                 @error('name')
-                                                <p class="text-danger">{{ $message }}</p>
-
+                                                    <p class="text-danger">{{ $message }}</p>
                                                 @enderror
                                             </div>
                                             <div class="form-group">
-                                                <label for="crc">Phone Number <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="shopname" placeholder="Enter Phone Number" name="phone_number" value="{{ $warehouse->phone_number }}">
+                                                <label for="crc">Phone Number </label>
+                                                <input type="text" class="form-control" id="shopname"
+                                                    placeholder="Enter Phone Number" name="phone_number"
+                                                    value="{{ $warehouse->phone_number }}">
                                                 @error('phone_number')
-                                                <p class="text-danger">{{ $message }}</p>
+                                                    <p class="text-danger">{{ $message }}</p>
                                                 @enderror
                                             </div>
 
                                             <div class="form-group">
-                                                <label for="phno">Address <span class="text-danger">*</span></label>
-                                                <input type="text" class="form-control" id="address" placeholder="Enter Address" name="address" required value="{{ $warehouse->address }}">
+                                                <label for="phno">Address </label>
+                                                <input type="text" class="form-control" id="address"
+                                                    placeholder="Enter Address" name="address"
+                                                    value="{{ $warehouse->address }}">
                                                 @error('address')
-                                                <p class="text-danger">{{ $message }}</p>
+                                                    <p class="text-danger">{{ $message }}</p>
                                                 @enderror
                                             </div>
                                         </div>

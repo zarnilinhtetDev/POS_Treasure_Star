@@ -18,6 +18,6 @@ class Setting extends Model
     }
     public function warehouse()
     {
-        return $this->belongsTo(Warehouse::class, 'branch_id', 'id');
+        return $this->belongsTo(Warehouse::class, 'location', 'id');
     }
 }

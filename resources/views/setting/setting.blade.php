@@ -115,11 +115,28 @@
                                                             <option value="Purchase Order">Purchase Order</option>
                                                             <option value="Purchase Order Return">Purchase Order Return
                                                             </option>
+                                                            <option value="Payable (Purchase Order)">Payable (Purchase
+                                                                Order)</option>
+                                                            <option value="Receivable (Invoice)">Receivable (Invoice)
+                                                            </option>
+                                                            <option value="Expense">Expense
+                                                            </option>
                                                             {{-- <option value="Account Receivable">Account Receivable
                                                             </option> --}}
                                                         </select>
                                                     </div>
-
+                                                    <div class="form-group">
+                                                        <label for="phno">Location <span
+                                                                class="text-danger">*</span></label>
+                                                        <select class="form-control" name="location" id="location">
+                                                            <option value="" selected disabled>Choose Location
+                                                            </option>
+                                                            @foreach ($branches as $branch)
+                                                                <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                                </option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
                                                     <div class="form-group">
                                                         <label for="phno">Transaction Name <span
                                                                 class="text-danger">*</span></label>
@@ -164,6 +181,7 @@
                                                 <th>No.</th>
 
                                                 <th> Category Name</th>
+                                                <th>Location</th>
 
                                                 <th>Transaction Name</th>
 
@@ -182,6 +200,7 @@
 
 
                                                     <td>{{ $setting->category }}</td>
+                                                    <td>{{ $setting->warehouse->name ?? '' }}</td>
 
 
 
@@ -218,5 +237,28 @@
     {{-- <script src="{{ asset('backend/js/jquery-3.6.0.js') }}"></script> --}}
     <script src="{{ asset('plugins/jquery/jquery.min.js ') }}"></script>
 
+    <script>
+        $(document).ready(function() {
+            $('#location').on('change', function() {
+
+
+                const selectedBranch = $(this).val();
+                const account = document.getElementById('transaction');
+                // Clear the doctor select options
+                account.innerHTML = '<option value="">Select Transaction</option>';
+
+                // Filter and add the doctors based on the selected branch
+                @foreach ($transactions as $tran)
+                    if (selectedBranch === '{{ $tran->location }}') {
+                        const option = document.createElement('option');
+                        option.value = '{{ $tran->id }}';
+                        option.textContent = '{{ $tran->transaction_name }}';
+                        account.appendChild(option);
+                    }
+                @endforeach
+            });
+            $('#location').trigger('change');
+        });
+    </script>
 
     @include('layouts.footer')

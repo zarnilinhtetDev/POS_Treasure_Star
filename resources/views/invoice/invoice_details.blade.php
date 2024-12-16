@@ -150,7 +150,7 @@
                                             @foreach ($sells as $sell)
                                                 <tr>
                                                     <td>{{ $no }}</td>
-                                                    <td>{{ $sell->product_name }}</td>
+                                                    <td>{{ $sell->part_number }}</td>
                                                     <td>{{ $sell->description }}</td>
                                                     <td>{{ $sell->product_qty }}</td>
                                                     <td>{{ $sell->unit }}</td>

@@ -160,7 +160,7 @@ Route::middleware('auth')->group(function () {
     Route::post('expense_store', [ExpenseController::class, 'expenseStore']);
     Route::get('expense_edit/{expense}', [ExpenseController::class, 'edit']);
     Route::post('expense_update/{expense}', [ExpenseController::class, 'update']);
-    Route::get('expense_delete/{expense}', [ExpenseController::class, 'delete'])->middleware('isBranchManager');
+    Route::get('expense_delete/{expense}', [ExpenseController::class, 'delete']);
     Route::get('get_part_data-unit', [ExpenseController::class, 'get_part_data_unit'])->name('get.part.data-unit');
 
     Route::get('expense_category', [ExpenseCategoryController::class, 'index']);
@@ -182,6 +182,15 @@ Route::middleware('auth')->group(function () {
     Route::post('/suspended', [InvoiceController::class, 'suspended'])->name('suspended');
     Route::get('/suspend_delete/{id}', [InvoiceController::class, 'suspend_delete']);
 
+    //Accounting report
+    Route::get('accounting_report', [ReportController::class, 'accounting_report']);
+    Route::get('accounting_report/{id}', [ReportController::class, 'accounting_report_with_branch']);
+    Route::get('general_ledger/{id}', [ReportController::class, 'general_ledger']);
+    Route::get('balance_sheet/{id}', [ReportController::class, 'balancesheet']);
+    Route::get('profit_loss/{id}', [ReportController::class, 'profitloss']);
+    Route::get('general_ledger_search/{id}', [ReportController::class, 'general_ledger_search']);
+    Route::get('balance_sheet_search/{id}', [ReportController::class, 'balancesheet_search']);
+    Route::get('profit_loss_search/{id}', [ReportController::class, 'profitloss_search']);
 
     //report
     Route::get('report_expense', [ReportController::class, 'reportExpense']);
@@ -212,14 +221,9 @@ Route::middleware('auth')->group(function () {
     Route::get('sale_return_search', [InvoiceController::class, 'sale_return_search']);
     Route::get('report_pos_receipt/{invoice}', [ReportController::class, 'pos_receipt']);
     Route::get('report_invoice_details/{invoice}', [ReportController::class, 'report_invoice_detail']);
-    Route::get('general_ledger', [ReportController::class, 'general_ledger']);
-    Route::get('balance_sheet', [ReportController::class, 'balancesheet']);
-    Route::get('profit_loss', [ReportController::class, 'profitloss']);
-    Route::get('general_ledger_search', [ReportController::class, 'general_ledger_search']);
-    Route::get('balance_sheet_search', [ReportController::class, 'balancesheet_search']);
-    Route::get('profit_loss_search', [ReportController::class, 'profitloss_search']);
-    Route::get('report_account_transaction_payment/{id}', [ReportController::class, 'report_account_transaction_payment']);
-    Route::get('report_account_transaction_payment_search/{id}', [ReportController::class, 'report_account_transaction_payment_search']);
+    Route::get('report_account_transaction/{id}', [ReportController::class, 'report_account_transactions']);
+    Route::get('report_account_transaction_payment/{transaction_id}/{account_id}', [ReportController::class, 'report_account_transaction_payment']);
+    Route::get('report_account_transaction_payment_search/{id}/{account_id}', [ReportController::class, 'report_account_transaction_payment_search']);
 
 
     //Profit
@@ -267,6 +271,7 @@ Route::middleware('auth')->group(function () {
 
     //Account
     Route::get('/accountManagement', [AccountController::class, 'accountManagement'])->name('finance#accountManagement');
+    Route::get('/accountManagement/{branch_id?}', [AccountController::class, 'accountManagement'])->name('accounts');
     Route::post('account_register', [AccountController::class, 'account_register']);
     Route::get('account_edit/{id}', [AccountController::class, 'account_edit'])->name('account_edit');
     Route::post('account_update/{id}', [AccountController::class, 'account_update']);
@@ -274,6 +279,7 @@ Route::middleware('auth')->group(function () {
 
     //Transaction
     Route::get('/transactionManagement', [TransactionController::class, 'transactionManagement'])->name('finance#transactionManagement');
+    Route::get('/transactionManagement/{branch_id?}', [TransactionController::class, 'transactionManagement'])->name('transactions');
     Route::post('transaction_register', [
         TransactionController::class,
         'transaction_register'

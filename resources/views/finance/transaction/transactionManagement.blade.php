@@ -39,7 +39,8 @@
                                         </div>
                                         <div class="col-sm-6">
                                             <ol class="breadcrumb float-sm-right">
-                                                <li class="breadcrumb-item"><a href="{{ url('/dashboard') }}">Dashboard</a></li>
+                                                <li class="breadcrumb-item"><a
+                                                        href="{{ url('/dashboard') }}">Dashboard</a></li>
                                                 <li class="breadcrumb-item active">Transaction</li>
                                             </ol>
                                         </div>
@@ -50,7 +51,8 @@
                             <div class="container-fluid mb-4 mr-auto">
                                 <div class="row">
                                     <div class="col-md-12 text-end">
-                                        <button type="button" class="btn btn-default text-white" data-toggle="modal" data-target="#modal-lg" style="background-color: #007BFF">
+                                        <button type="button" class="btn btn-default text-white" data-toggle="modal"
+                                            data-target="#modal-lg" style="background-color: #007BFF">
                                             Transaction Register
                                         </button>
                                     </div>
@@ -63,31 +65,48 @@
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <h4 class="modal-title">Transaction Register</h4>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <button type="button" class="close" data-dismiss="modal"
+                                                aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>
                                         </div>
                                         <div class="modal-body">
                                             <form action="{{ url('/transaction_register') }}" method="POST">
                                                 @csrf
+                                                <div class="form-group">
+                                                    <label for="phno">Location <span
+                                                            class="text-danger">*</span></label>
+                                                    <select class="form-control" name="location" required
+                                                        id="location">
+                                                        <option value="" selected disabled>Choose Location
+                                                        </option>
+                                                        @foreach ($branches as $branch)
+                                                            <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
 
                                                 <div class="form-group">
-                                                    <label for="accounts_id">Account Name <span style="color: red;">&nbsp;*</span></label>
-                                                    <select name="account_id" class="form-control" id="account_id" required>
+                                                    <label for="accounts_id">Account Name <span
+                                                            style="color: red;">&nbsp;*</span></label>
+                                                    <select name="account_id" class="form-control" id="account_id"
+                                                        required>
                                                         <option value="">Select Account</option>
 
                                                         @foreach ($account as $accounts)
-                                                        <option value="{{ $accounts->id }}">
-                                                            {{ $accounts->account_name }}
-                                                        </option>
+                                                            <option value="{{ $accounts->id }}">
+                                                                {{ $accounts->account_name }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                     @error('account_id')
-                                                    <span class="text-danger">{{ $message }}</span>
+                                                        <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
                                                 <div class="form-group" style="display: none">
-                                                    <label for="status">Status<span style="color: red;">&nbsp;*</span></label>
+                                                    <label for="status">Status<span
+                                                            style="color: red;">&nbsp;*</span></label>
                                                     <select name="status" class="form-control" id="status" required>
                                                         {{-- <option value="">Choose One</option> --}}
 
@@ -99,32 +118,40 @@
                                                         </option>
                                                     </select>
                                                     @error('status')
-                                                    <span class="text-danger">{{ $message }}</span>
+                                                        <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
                                                 <div class="form-group" style="display: none;">
-                                                    <label for="transaction_code">Opening Amount<span style="color: red;">&nbsp;*</span></label>
-                                                    <input type="text" class="form-control" id="transaction_code" name="transaction_code" value="0" required>
+                                                    <label for="transaction_code">Opening Amount<span
+                                                            style="color: red;">&nbsp;*</span></label>
+                                                    <input type="text" class="form-control" id="transaction_code"
+                                                        name="transaction_code" value="0" required>
                                                     @error('transaction_code')
-                                                    <span class="text-danger">{{ $message }}</span>
+                                                        <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="transaction_name">Name<span style="color: red;">&nbsp;*</span></label>
-                                                    <input type="text" class="form-control" id="transaction_name" name="transaction_name" placeholder="Enter Transaction Name" required value="">
+                                                    <label for="transaction_name">Name<span
+                                                            style="color: red;">&nbsp;*</span></label>
+                                                    <input type="text" class="form-control" id="transaction_name"
+                                                        name="transaction_name" placeholder="Enter Transaction Name"
+                                                        required value="">
                                                     @error('transaction_name')
-                                                    <span class="text-danger">{{ $message }}</span>
+                                                        <span class="text-danger">{{ $message }}</span>
                                                     @enderror
                                                 </div>
                                                 <div class="form-group" style="display:none">
                                                     <label>Descriptions</label>
-                                                    <textarea class="form-control" rows="3" placeholder="Enter ..." style="border-color:#6B7280" name="description" value="no need"></textarea>
+                                                    <textarea class="form-control" rows="3" placeholder="Enter ..." style="border-color:#6B7280" name="description"
+                                                        value="no need"></textarea>
                                                 </div>
 
                                                 <!-- /.card-body -->
                                                 <div class="modal-footer justify-content-between">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                                    <button type="submit" class="btn btn-primary" style="background-color: #007BFF">Register</button>
+                                                    <button type="button" class="btn btn-default"
+                                                        data-dismiss="modal">Close</button>
+                                                    <button type="submit" class="btn btn-primary"
+                                                        style="background-color: #007BFF">Register</button>
                                                 </div>
                                             </form>
                                         </div>
@@ -136,23 +163,47 @@
 
 
                             @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('success') }}
-                            </div>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    {{ session('success') }}
+                                </div>
                             @endif
                             @if (session('deleteStatus'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ session('deleteStatus') }}
-                            </div>
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    {{ session('deleteStatus') }}
+                                </div>
                             @endif
                             @if (session('updateStatus'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                                {{ session('updateStatus') }}
-                            </div>
+                                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                    {{ session('updateStatus') }}
+                                </div>
                             @endif
                             <div class="card">
-                                <div class="card-header">
-                                    <h3 class="card-title">Transaction Table</h3>
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h3 class="card-title">Transactions</h3>
+                                    <div class="dropdown ml-auto mr-5">
+                                        <!-- Dropdown Menu HTML -->
+                                        @if (auth()->user()->is_admin == '1' || Auth::user()->type == 'Admin')
+                                            <div id="branchDropdown" class="dropdown ml-auto"
+                                                style="display:inline-block; margin-left: 10px;">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button"
+                                                    id="dropdownMenuButton" data-toggle="dropdown"
+                                                    aria-haspopup="true" aria-expanded="false">
+                                                    {{ $currentBranchName }}
+                                                </button>
+                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                    <a href="{{ url('transactionManagement') }}"
+                                                        class="dropdown-item">All
+                                                        Accounts</a>
+                                                    @foreach ($branch_drop as $drop)
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('transactions', $drop->id) }}">{{ $drop->name }}</a>
+                                                    @endforeach
+                                                </div>
+                                            </div>
+                                        @endif
+
+
+                                    </div>
                                 </div>
                                 <!-- /.card-header -->
                                 <div class="card-body">
@@ -165,6 +216,7 @@
 
 
                                                 <th>Name</th>
+                                                <th>Location</th>
                                                 <th>Amount</th>
 
                                                 <th>Action</th>
@@ -172,65 +224,67 @@
                                         </thead>
                                         <tbody>
                                             @php
-                                            $no = '1';
+                                                $no = '1';
                                             @endphp
                                             @foreach ($transaction as $transactions)
-                                            <tr>
-                                                <td>{{ $no }}</td>
-                                                <td>{{ $transactions->account->account_name }}</td>
+                                                <tr>
+                                                    <td>{{ $no }}</td>
+                                                    <td>{{ $transactions->account->account_name }}</td>
 
 
 
-                                                <td>{{ $transactions->transaction_name }}</td>
+                                                    <td>{{ $transactions->transaction_name }}</td>
+                                                    <td>{{ $transactions->warehouse->name ?? '' }}</td>
+                                                    <td>
 
-                                                <td>
 
-                                                    <!-- {{ isset($diff[$transactions->id]) ? $diff[$transactions->id] : 0 }} -->
-                                                    {{ isset($diff[$transactions->id]) ? $diff[$transactions->id] : 0 }}
-                                                </td>
-                                                </td>
+                                                        {{ isset($diff[$transactions->id]) ? number_format(abs($diff[$transactions->id])) : 0 }}
+                                                    </td>
+                                                    </td>
 
-                                                <td>
-                                                <div class="row">
-                                                    <a href="{{ route('finance#transactionManagementEdit', $transactions->id) }}"
-                                                        title="Transaction Edit" class="mx-2 btn btn-success"><i
-                                                            class="fa-solid fa-pen-to-square"></i></a>
-                                                    <a href="{{ url('transaction_delete', $transactions->id) }}"
-                                                        class="btn btn-danger"
-                                                        onclick="return confirm('Are you sure want to delete this transaction ?')"><i
-                                                            class="fa-solid fa-trash"></i></a>
-                                                            
-                                              
-                                                   
-                                                        <a href="{{ url('payment', $transactions->id) }}" class="btn btn-warning ml-2">Add Payment</a>
-                                                </td>
-                                                </div>
-                                            </td>
-                                            </tr>
-                                            @php
-                                            $no++;
-                                            @endphp
-                                            @endforeach
-                                        </tbody>
+                                                    <td>
+                                                        <div class="row">
+                                                            <a href="{{ route('finance#transactionManagementEdit', $transactions->id) }}"
+                                                                title="Transaction Edit"
+                                                                class="mx-2 btn btn-success"><i
+                                                                    class="fa-solid fa-pen-to-square"></i></a>
+                                                            <a href="{{ url('transaction_delete', $transactions->id) }}"
+                                                                class="btn btn-danger"
+                                                                onclick="return confirm('Are you sure want to delete this transaction ?')"><i
+                                                                    class="fa-solid fa-trash"></i></a>
 
 
 
-
-                                    </table>
+                                                            <a href="{{ url('payment', $transactions->id) }}"
+                                                                class="btn btn-warning ml-2">Add Payment</a>
+                                                    </td>
                                 </div>
-                                <!-- /.card-body -->
+                                </td>
+                                </tr>
+                                @php
+                                    $no++;
+                                @endphp
+                                @endforeach
+                                </tbody>
+
+
+
+
+                                </table>
                             </div>
-                            <!-- /.card -->
+                            <!-- /.card-body -->
                         </div>
-                        <!-- /.col -->
+                        <!-- /.card -->
                     </div>
-                    <!-- /.row -->
+                    <!-- /.col -->
                 </div>
-
-            </section>
-           
-
+                <!-- /.row -->
         </div>
+
+        </section>
+
+
+    </div>
     </div>
 
     </section>
@@ -260,7 +314,29 @@
     <!-- AdminLTE App -->
     <script src="{{ asset('dist/js/adminlte.min.js') }}"></script>
 
+    <script>
+        $(document).ready(function() {
+            $('#location').on('change', function() {
 
+
+                const selectedBranch = $(this).val();
+                const account = document.getElementById('account_id');
+                // Clear the doctor select options
+                account.innerHTML = '<option value="">Select Account</option>';
+
+                // Filter and add the doctors based on the selected branch
+                @foreach ($account as $accounts)
+                    if (selectedBranch === '{{ $accounts->location }}') {
+                        const option = document.createElement('option');
+                        option.value = '{{ $accounts->id }}';
+                        option.textContent = '{{ $accounts->account_name }}';
+                        account.appendChild(option);
+                    }
+                @endforeach
+            });
+            $('#location').trigger('change');
+        });
+    </script>
 
     <script>
         $(function() {
@@ -277,4 +353,3 @@
 </body>
 
 </html>
-       

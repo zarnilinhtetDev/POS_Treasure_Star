@@ -834,7 +834,7 @@
                         let value = parseFloat($(this).val()) || 0;
                         total += value;
                     });
-                    $('#paid').val(total.toFixed(2));
+                    $('#paid').val(total);
                     paidFunction();
                 }
 
@@ -842,7 +842,7 @@
                     let paid = parseFloat($('#paid').val()) || 0;
                     let total_p = parseFloat($('#total_total').val()) || 0;
                     let balance = total_p - paid;
-                    $('#balance').val(balance.toFixed(2));
+                    $('#balance').val(balance);
                 }
 
 
@@ -878,7 +878,7 @@
             </div>
         </div>
                 </td>
-              
+
             </tr>`;
 
                         $('#trContainer').append(newRow);
@@ -1085,7 +1085,7 @@
 
                 let newTotal = new_total - extra_discount;
 
-                $('#total').val(newTotal.toFixed(2));
+                $('#total').val(newTotal);
             });
         });
     </script>

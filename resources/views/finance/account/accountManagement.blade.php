@@ -113,6 +113,18 @@
                                                     <span class="text-danger">{{ $message }}</span>
                                                 @enderror
                                             </div>
+                                            <div class="form-group">
+                                                <label for="phno">Location <span
+                                                        class="text-danger">*</span></label>
+                                                <select class="form-control" name="location" required>
+                                                    <option value="" selected disabled>Choose Location
+                                                    </option>
+                                                    @foreach ($branches as $branch)
+                                                        <option value="{{ $branch->id }}">{{ $branch->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
                                             <button type="button" class="btn btn-default"
                                                 data-dismiss="modal">Close</button>
                                             <button type="submit" class="btn btn-primary">Save </button>
@@ -128,8 +140,31 @@
                 <!-- /.modal -->
                 <div class="mt-3 col-md-12">
                     <div class="card ">
-                        <div class="card-header">
-                            <h3 class="card-title">Account Management Table</h3>
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h3 class="card-title">Accounts</h3>
+                            <div class="dropdown ml-auto mr-5">
+                                <!-- Dropdown Menu HTML -->
+                                @if (auth()->user()->is_admin == '1' || Auth::user()->type == 'Admin')
+                                    <div id="branchDropdown" class="dropdown ml-auto"
+                                        style="display:inline-block; margin-left: 10px;">
+                                        <button class="btn btn-secondary dropdown-toggle" type="button"
+                                            id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false">
+                                            {{ $currentBranchName }}
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                            <a href="{{ url('accountManagement') }}" class="dropdown-item">All
+                                                Accounts</a>
+                                            @foreach ($branch_drop as $drop)
+                                                <a class="dropdown-item"
+                                                    href="{{ route('accounts', $drop->id) }}">{{ $drop->name }}</a>
+                                            @endforeach
+                                        </div>
+                                    </div>
+                                @endif
+
+
+                            </div>
                         </div>
                         <!-- /.card-header -->
                         <div class="card-body">
@@ -140,6 +175,7 @@
                                         <th>No.</th>
                                         <th>Account Number</th>
                                         <th>Account Name</th>
+                                        <th>Location</th>
                                         <th>Type</th>
                                         <th>BL/PL</th>
                                         <th>Action</th>
@@ -154,6 +190,7 @@
                                             <td>{{ $no }}</td>
                                             <td>{{ $account->account_number }}</td>
                                             <td>{{ $account->account_name }}</td>
+                                            <td>{{ $account->warehouse->name ?? ' ' }}</td>
                                             <td>{{ $account->account_type }}</td>
                                             <td>{{ $account->account_bl_pl }}</td>
                                             <td>

@@ -169,6 +169,7 @@
                                     <option value="pr">PO Return Table</option>
                                     <option value="sr-inv">Sale Return (Invoice) Table</option>
                                     <option value="sr-pos">Sale Return (POS) Table</option>
+                                    <option value="expense">Expense Table</option>
                                 </select>
                             </div>
 
@@ -222,15 +223,30 @@
                                                                         (Sale Return Invoice)
                                                                     @elseif ($index == 5)
                                                                         (Sale Return POS)
+                                                                    @elseif($index == 6)
+                                                                        (Receivable Invoice)
+                                                                    @elseif($index == 7)
+                                                                        (Payable Purchase Order)
+                                                                    @elseif($index == 8)
+                                                                        (Expense)
                                                                     @endif
                                                                 </td>
-                                                                <td>{{ number_format($payments->amount) }}</td>
+                                                                <td>{{ $payments->amount }}</td>
                                                                 <td>{{ $payments->note ?? 'N/A' }}</td>
                                                                 <td>
                                                                     <a href="{{ url('transaction_payment_edit', $payments->id) }}"
                                                                         class="btn btn-success"><i
                                                                             class="fa-solid fa-pen-to-square"></i></a>
-                                                                    @if ($index == 0 || $index == 1 || $index == 2 || $index == 3 || $index == 4 || $index == 5)
+                                                                    @if (
+                                                                        $index == 0 ||
+                                                                            $index == 1 ||
+                                                                            $index == 2 ||
+                                                                            $index == 3 ||
+                                                                            $index == 4 ||
+                                                                            $index == 5 ||
+                                                                            $index == 6 ||
+                                                                            $index == 7 ||
+                                                                            $index == 8)
                                                                     @else
                                                                         <a href="{{ url('transaction_delete_payment', $payments->id) }}"
                                                                             class="btn btn-danger"
@@ -309,7 +325,9 @@
                                                         @foreach ($invoices as $invoice)
                                                             <tr>
                                                                 <td>{{ $no }}</td>
-                                                                <td>{{ $invoice->invoice_no }}</td>
+                                                                <td><a
+                                                                        href="{{ url('invoice_detail', $invoice->id) }}">{{ $invoice->invoice_no }}</a>
+                                                                </td>
                                                                 <td>
                                                                     @foreach ($warehouses as $warehouse)
                                                                         @if ($warehouse->id == $invoice->branch)
@@ -483,7 +501,9 @@
                                                         @foreach ($purchase_orders as $po)
                                                             <tr>
                                                                 <td>{{ $no }}</td>
-                                                                <td>{{ $po->quote_no }}</td>
+                                                                <td><a
+                                                                        href="{{ url('purchase_order_details', $po->id) }}">{{ $po->quote_no }}</a>
+                                                                </td>
                                                                 <td>
                                                                     @foreach ($warehouses as $warehouse)
                                                                         @if ($warehouse->id == $po->branch)
@@ -715,6 +735,88 @@
                                         <div class="card-body">
                                             <div class="table-responsive">
                                                 <table id="example7" class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>Sale Return No.</th>
+                                                            <th>Location</th>
+                                                            <th>Deposit</th>
+                                                            <th>Balance</th>
+                                                            <th>Total</th>
+                                                            <th>Date</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @php
+                                                            $no = '1';
+                                                        @endphp
+                                                        @foreach ($sale_return_pos as $sr_pos)
+                                                            <tr>
+                                                                <td>{{ $no }}</td>
+                                                                <td>{{ $sr_pos->quote_no }}</td>
+                                                                <td>
+                                                                    @foreach ($warehouses as $warehouse)
+                                                                        @if ($warehouse->id == $sr_pos->branch)
+                                                                            {{ $warehouse->name }}
+                                                                        @endif
+                                                                    @endforeach
+                                                                </td>
+
+                                                                <td>{{ number_format($sr_pos->deposit) }}</td>
+                                                                <td>{{ number_format($sr_pos->remain_balance) }}</td>
+                                                                <td>{{ number_format($sr_pos->total) }}</td>
+
+                                                                <td>
+                                                                    {{ $sr_pos->po_date }}
+                                                                </td>
+                                                            </tr>
+                                                            @php
+                                                                $no++;
+                                                            @endphp
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- /.card-body -->
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="expense" role="tabpanel" aria-labelledby="expense">
+
+                                    <div class="my-5 container-fluid">
+                                        <div class="row">
+                                            <div class="col-md-10">
+                                                <form id="saleReturnPosSearchForm" method="get">
+                                                    <div class="row">
+                                                        <div class="col-md-3 form-group">
+                                                            <label for="start_date">Date From:</label>
+                                                            <input type="date" name="start_date"
+                                                                id="sr_pos_start_date" class="form-control" required>
+                                                        </div>
+                                                        <div class="col-md-3 form-group">
+                                                            <label for="end_date">Date To:</label>
+                                                            <input type="date" name="end_date"
+                                                                id="sr_pos_end_date" class="form-control" required>
+                                                        </div>
+                                                        <!-- Add your existing branch selection code here -->
+
+                                                        <div class="col-md-2 form-group">
+                                                            <label for="">&nbsp;</label>
+                                                            <input type="submit" class="btn btn-primary form-control"
+                                                                value="Search" id="saleReturnPosSearchButton"
+                                                                style="background-color: #218838">
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card">
+
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table id="example8" class="table table-bordered table-striped">
                                                     <thead>
                                                         <tr>
                                                             <th>No</th>
@@ -1162,6 +1264,13 @@
                 "pageLength": 30,
             });
         });
+        $(function() {
+            $("#example8").DataTable({
+                "lengthChange": false,
+                "autoWidth": false,
+                "pageLength": 30,
+            });
+        })
     </script>
 
 

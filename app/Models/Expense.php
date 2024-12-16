@@ -10,4 +10,8 @@ class Expense extends Model
 {
     use HasFactory, SoftDeletes;
     protected $guarded = [];
+    public function transaction()
+    {
+        return $this->belongsTo(Transaction::class);
+    }
 }

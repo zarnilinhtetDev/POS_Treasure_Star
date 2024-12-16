@@ -1217,6 +1217,55 @@
                                                                     <div class="form-group">
                                                                         <div class="form-check">
                                                                             <input class="form-check-input"
+                                                                                type="checkbox" id="accounq"
+                                                                                name="permission[]" value="Accounting"
+                                                                                @if (in_array('Accounting', $permissions)) checked @endif>
+                                                                            <label class="form-check-label"
+                                                                                for="permission">
+                                                                                Accounting
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+
+                                                                </td>
+                                                                <td>
+
+                                                                </td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="form-group">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox" id="accounq"
+                                                                                name="permission[]"
+                                                                                value="Accounting Report"
+                                                                                @if (in_array('Accounting Report', $permissions)) checked @endif>
+                                                                            <label class="form-check-label"
+                                                                                for="permission">
+                                                                                Accounting Report
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+
+                                                                </td>
+                                                                <td>
+
+                                                                </td>
+                                                                <td></td>
+                                                                <td></td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="form-group">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input"
                                                                                 type="checkbox" id="permission-user"
                                                                                 name="permission[]" value="User"
                                                                                 @if (in_array('User', $permissions)) checked @endif>

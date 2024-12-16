@@ -95,38 +95,75 @@
                                                     </option>
                                                     </option>
                                                 </select>
-                                                <input type="hidden" name="account_bl_pl" id="bl_pl"
-                                                    value="{{ $account->account_bl_pl }}">
-                                                @error('type')
-                                                    <span class="text-danger">{{ $message }}</span>
-                                                @enderror
                                             </div>
-                                            <div class="modal-footer justify-content-between">
-                                                <a href="{{ route('finance#accountManagement') }}"><button
-                                                        type="button" class="btn btn-dark">Back</button></a>
-                                                <button type="submit" class="btn btn-primary">update </button>
+                                            <div class="form-group">
+                                                <label for="phno">Location <span
+                                                        class="text-danger">*</span></label>
+                                                <select class="form-control" name="location" required>
+                                                    <option value="" selected disabled>Choose Location
+                                                    </option>
+                                                    @foreach ($branches as $branch)
+                                                        <option value="{{ $branch->id }}"
+                                                            @if ($branch->id == $account->location) selected @endif>
+                                                            {{ $branch->name }}
+                                                        </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
+                                            <input type="hidden" name="account_bl_pl" id="bl_pl"
+                                                value="{{ $account->account_bl_pl }}">
+                                            @error('type')
+                                                <span class="text-danger">{{ $message }}</span>
+                                            @enderror
                                         </div>
-                                    </form>
+                                        <div class="modal-footer justify-content-between">
+                                            <a href="{{ route('finance#accountManagement') }}"><button type="button"
+                                                    class="btn btn-dark">Back</button></a>
+                                            <button type="submit" class="btn btn-primary">update </button>
+                                        </div>
                                 </div>
+                                </form>
                             </div>
-
                         </div>
+
                     </div>
-                    {{-- Modal End --}}
-                </section>
-
-
-            </section>
-
         </div>
+        {{-- Modal End --}}
+        </section>
+
+
+        </section>
+
+    </div>
 
 
 
     </div>
 
 
+    <script>
+        $(document).ready(function() {
+            $('#location').on('change', function() {
 
+
+                const selectedBranch = $(this).val();
+                const account = document.getElementById('account_id');
+                // Clear the doctor select options
+                account.innerHTML = '<option value="">Select Account</option>';
+
+                // Filter and add the doctors based on the selected branch
+                @foreach ($accounts as $account)
+                    if (selectedBranch === '{{ $account->location }}') {
+                        const option = document.createElement('option');
+                        option.value = '{{ $account->id }}';
+                        option.textContent = '{{ $account->account_name }}';
+                        account.appendChild(option);
+                    }
+                @endforeach
+            });
+            $('#location').trigger('change');
+        });
+    </script>
 
     <script>
         const homeRadio = document.getElementById('home');

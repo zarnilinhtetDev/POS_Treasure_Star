@@ -281,12 +281,12 @@
                 @endif
                 @if (in_array('Accounting Report', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
-                        <a href="{{ url('report') }}" class="nav-link">
+                        <a href="{{ url('accounting_report') }}" class="nav-link">
                             <i class="text-white fa-solid fa-file-invoice nav-icon"></i>
                             <p class="pl-3 text-white">
-                                Accounting Report </p><i class="text-white right fas fa-angle-left"></i>
+                                Accounting Report </p>
                         </a>
-                        <ul class="nav nav-treeview">
+                        {{-- <ul class="nav nav-treeview">
 
                             <li class="nav-item">
                                 <a href="{{ url('general_ledger') }}" class="nav-link">
@@ -307,7 +307,7 @@
                                 </a>
                             </li>
 
-                        </ul>
+                        </ul> --}}
                     </li>
                 @endif
                 @if (in_array('Report', $userPermissions) || auth()->user()->is_admin == '1')
@@ -399,34 +399,37 @@
 
 
                 {{-- Accounting Start --}}
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="text-white fa-solid fa-calculator nav-icon"></i>
-                        <p class="pl-3 text-white">
-                            Accounting </p><i class="text-white right fas fa-angle-left"></i>
-                    </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="{{ route('finance#accountManagement') }}" class="nav-link">
-                                <i class="text-white far fa-circle nav-icon"></i>
-                                <p class="text-white">Account</p>
-                            </a>
-                        </li>
 
-                        <li class="nav-item">
-                            <a href="{{ route('finance#transactionManagement') }}" class="nav-link">
-                                <i class="text-white far fa-circle nav-icon"></i>
-                                <p class="text-white">Transaction</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url('setting') }}" class="nav-link">
-                                <i class="text-white far fa-circle nav-icon"></i>
-                                <p class="text-white">Setting</p>
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+                @if (in_array('Accounting', $userPermissions) || auth()->user()->is_admin == '1')
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">
+                            <i class="text-white fa-solid fa-calculator nav-icon"></i>
+                            <p class="pl-3 text-white">
+                                Accounting </p><i class="text-white right fas fa-angle-left"></i>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ route('finance#accountManagement') }}" class="nav-link">
+                                    <i class="text-white far fa-circle nav-icon"></i>
+                                    <p class="text-white">Account</p>
+                                </a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a href="{{ route('finance#transactionManagement') }}" class="nav-link">
+                                    <i class="text-white far fa-circle nav-icon"></i>
+                                    <p class="text-white">Transaction</p>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ url('setting') }}" class="nav-link">
+                                    <i class="text-white far fa-circle nav-icon"></i>
+                                    <p class="text-white">Setting</p>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                @endif
                 {{-- Accounting End --}}
 
                 @if (in_array('User', $userPermissions) || auth()->user()->is_admin == '1')

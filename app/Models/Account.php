@@ -18,11 +18,15 @@ class Account extends Model
     }
     public function transaction()
     {
-        return $this->hasMany(Transaction::class);
+        return $this->hasMany(Transaction::class, 'account_id', 'id');
     }
 
     public function payment()
     {
         return $this->hasMany(Payment::class, 'account_id');
+    }
+    public function warehouse()
+    {
+        return $this->belongsTo(Warehouse::class,  'location', 'id');
     }
 }

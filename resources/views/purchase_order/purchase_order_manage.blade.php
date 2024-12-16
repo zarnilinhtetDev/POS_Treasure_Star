@@ -145,7 +145,7 @@
                                                 </td>
 
 
-                                                <td>{{ number_format($pos->total ?? 0, 2) }}</td>
+                                                <td>{{ number_format($pos->total ?? 0) }}</td>
                                                 <td>
 
                                                     @if (in_array('Purchase Order Details', $choosePermission) || auth()->user()->is_admin == '1')
