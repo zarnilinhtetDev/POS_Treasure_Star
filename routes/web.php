@@ -22,6 +22,8 @@ use App\Http\Controllers\ProfitController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserTypeController;
+use App\Http\Controllers\MakePaymentController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -110,6 +112,10 @@ Route::middleware('auth')->group(function () {
     Route::get('invoice_detail/{invoice}', [InvoiceController::class, 'invoice_detail'])->name('invoice_detail');
     Route::get('invoice_receipt_print/{invoice}', [InvoiceController::class, 'invoice_receipt_print'])->name('invoice_receipt_print');
     Route::get('daily_sales', [InvoiceController::class, 'daily_sales'])->name('daily_sales');
+    Route::get('make_payment/{invoice}', [MakePaymentController::class, 'index'])->name('make_payment');
+    Route::post('make_payment_store/{invoice}', [MakePaymentController::class, 'payment_store'])->name('make_payment_store');
+    Route::get('invoice_voucher/{make_payment}', [MakePaymentController::class, 'voucherView'])->name('invoice_voucher');
+
 
     //Quotation
     Route::get('quotation', [InvoiceController::class, 'quotation']);

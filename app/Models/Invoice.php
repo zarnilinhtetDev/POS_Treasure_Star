@@ -27,4 +27,9 @@ class Invoice extends Model
     {
         return $this->belongsTo(Transaction::class, 'transaction_id');
     }
+
+    public function make_payments()
+    {
+        return $this->hasMany(MakePayment::class, 'invoice_id');
+    }
 }

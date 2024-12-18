@@ -1178,4 +1178,5 @@ class InvoiceController extends Controller
 
         // return redirect('/quotation')->with('success', 'Quotation Deleted Successful!');
     }
+
 }

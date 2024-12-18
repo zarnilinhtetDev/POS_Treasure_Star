@@ -150,6 +150,11 @@
                                                 @endif
                                                 <td>{{ $invoice->invoice_date }}</td>
                                                 <td>
+                                                    @if (in_array('Invoice Payment', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ url('make_payment', $invoice->id) }}"
+                                                            class="btn btn-warning btn-sm text-white mb-1"><i
+                                                                class="fa-solid fa-money-check-dollar"></i></a>
+                                                    @endif
 
                                                     @if (in_array('Invoice Details', $choosePermission) || auth()->user()->is_admin == '1')
                                                         <a href="{{ url('/invoice_receipt_print', $invoice->id) }}"
