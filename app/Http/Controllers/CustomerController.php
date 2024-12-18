@@ -122,4 +122,15 @@ class CustomerController extends Controller
             return redirect()->back()->with('error', 'Error: ' . $e->getMessage());
         }
     }
+
+    public function customerDue(Request $request){
+
+        $date = $request->date;
+        if($date){
+            $invoices = Invoice::where('remain_balance', '!=' , '0')->where('overdue_date','<',$date)->latest()->get();
+        }else{
+            $invoices = Invoice::where('remain_balance', '!=' , '0')->latest()->get();
+        }
+        return view('customer.customer_due',compact('invoices'));
+    }
 }
