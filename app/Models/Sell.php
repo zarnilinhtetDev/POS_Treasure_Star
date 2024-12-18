@@ -10,4 +10,9 @@ class Sell extends Model
 {
     use HasFactory;
     use SoftDeletes;
+
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'item_id');
+    }
 }

@@ -21,4 +21,9 @@ class Item extends Model
     {
         return $this->belongsTo(Warehouse::class);
     }
+
+    public function sells()
+    {
+        return $this->hasMany(Sell::class , 'item-id');
+    }
 }
