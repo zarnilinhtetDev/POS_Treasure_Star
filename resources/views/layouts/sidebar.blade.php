@@ -66,6 +66,12 @@
                     </li>
                 @endif
 
+                <li class="nav-item">
+
+                    <a href="{{ url('/customer_due') }}" class="nav-link"> <i class="text-white fa-solid fa-bell nav-icon"></i>
+                        <p class="pl-3 text-white">Customer Due</p>
+                    </a>
+                </li>
 
                 @if (in_array('POS', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
