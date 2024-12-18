@@ -142,6 +142,7 @@
                                             <th>လက်ကားစျေး</th>
                                             <th>Total Amount (လက်လီ)</th>
                                             <th>Total Amount (လက်ကား)</th>
+                                            <th>Total Profit (လက်လီ)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -150,6 +151,7 @@
                                             $totalWholesalePrice = 0;
                                             $totalRetailAmount = 0;
                                             $totalWholesaleAmount = 0;
+                                            $totalRetailProfit = 0;
                                         @endphp
                                         @foreach ($items as $item)
                                             @php
@@ -171,6 +173,9 @@
                                                         (float) $item['total_quantity'] *
                                                         (float) $item['wholesale_price'];
                                                 }
+
+                                                $retailProfit = (float) $item['retail_price'] - (float) $item['buy_price']; 
+                                                $totalRetailProfit += $retailProfit;
                                             @endphp
                                             <tr>
                                                 <td>{{ $item['item_name'] }}</td>
@@ -211,6 +216,9 @@
 
 
                                                 </td>
+
+                                                <td>{{$retailProfit}}</td>
+
                                             </tr>
                                         @endforeach
                                     </tbody>
@@ -224,6 +232,8 @@
                                             <td>{{ number_format($totalWholesalePrice ?? 0, 2) }}</td>
                                             <td>{{ number_format($totalRetailAmount ?? 0, 2) }}</td>
                                             <td>{{ number_format($totalWholesaleAmount ?? 0, 2) }}</td>
+                                            <td>{{ number_format($totalRetailProfit ?? 0, 2) }}</td>
+
                                         </tr>
                                     </tfoot>
                                 </table>

@@ -203,10 +203,11 @@ class ReportController extends Controller
                 'warehouses.name as warehouse_name',
                 DB::raw('SUM(items.quantity) AS total_quantity'),
                 'items.retail_price',
-                'items.wholesale_price'
+                'items.wholesale_price',
+                'items.buy_price' //
             )
             ->join('warehouses', 'items.warehouse_id', '=', 'warehouses.id')
-            ->groupBy('items.item_name', 'items.item_type', 'warehouses.id', 'items.retail_price', 'items.wholesale_price');
+            ->groupBy('items.item_name', 'items.item_type', 'warehouses.id', 'items.retail_price', 'items.wholesale_price', 'items.buy_price');
 
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
@@ -226,6 +227,7 @@ class ReportController extends Controller
                     'warehouse_quantities' => [],
                     'retail_price' => $item->retail_price,
                     'wholesale_price' => $item->wholesale_price,
+                    'buy_price' => $item->buy_price,
                 ];
             }
             $groupedItems[$itemId]['total_quantity'] += $item->total_quantity;
@@ -254,10 +256,11 @@ class ReportController extends Controller
                 'warehouses.name as warehouse_name',
                 DB::raw('SUM(items.quantity) AS total_quantity'),
                 'items.retail_price',
-                'items.wholesale_price'
+                'items.wholesale_price',
+                'items.buy_price' //
             )
             ->join('warehouses', 'items.warehouse_id', '=', 'warehouses.id')
-            ->groupBy('items.item_name', 'items.item_type', 'warehouses.id', 'items.retail_price', 'items.wholesale_price');
+            ->groupBy('items.item_name', 'items.item_type', 'warehouses.id', 'items.retail_price', 'items.wholesale_price', 'items.buy_price');
 
 
         // Date filter
@@ -287,6 +290,7 @@ class ReportController extends Controller
                     'warehouse_quantities' => [],
                     'retail_price' => $item->retail_price,
                     'wholesale_price' => $item->wholesale_price,
+                    'buy_price' => $item->buy_price,
                 ];
             }
             $groupedItems[$itemId]['total_quantity'] += $item->total_quantity;
