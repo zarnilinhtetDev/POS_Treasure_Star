@@ -274,12 +274,14 @@ class InvoiceController extends Controller
             $result = new Sell();
             $result->invoiceid = $last_id;
             $result->customer_id = $request->customer_id;
+            $result->item_id = $request->item_id[$i]; //add new column
             $result->description = $request->part_description[$i];
             $result->part_number = $request->part_number[$i];
             $result->product_qty = $request->product_qty[$i];
             $result->discount = $request->discount[$i];
             $result->product_price = $request->product_price[$i];
             $result->retail_price = $request->retail_price[$i];
+            $result->buy_price = $request->buy_price[$i]; //add new column
             $result->exp_date = $request->exp_date[$i];
             $result->unit = $request->item_unit[$i];
             $result->warehouse = $request->warehouse[$i];
