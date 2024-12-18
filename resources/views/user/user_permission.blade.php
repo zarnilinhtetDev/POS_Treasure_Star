@@ -474,6 +474,19 @@
                                                                         </div>
 
                                                                     </div>
+                                                                    <div class="form-group">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                id="permission-customer-due"
+                                                                                name="permission[]" value="Customer Due"
+                                                                                @if (in_array('Customer Due', $permissions)) checked @endif>
+                                                                            <label class="form-check-label"
+                                                                                for="permission">
+                                                                                Customer Due
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -1751,12 +1764,14 @@
             $('#permission-customer').change(function() {
                 var isChecked = $(this).is(':checked');
                 if (isChecked) {
+                    $('#permission-customer-due').prop('checked', true);
                     $('#permission-customer-other-1').prop('checked', true);
                     $('#permission-customer-other-2').prop('checked', true);
                     $('#permission-customer-other-3').prop('checked', true);
                     $('#permission-customer-other-4').prop('checked', true);
                     $('#permission-customer-other-5').prop('checked', true);
                 } else {
+                    $('#permission-customer-due').prop('checked', false);
                     $('#permission-customer-other-1').prop('checked', false);
                     $('#permission-customer-other-2').prop('checked', false);
                     $('#permission-customer-other-3').prop('checked', false);
