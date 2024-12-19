@@ -128,8 +128,59 @@
                             <!-- /.card-header -->
                             <div class="card-body">
 
+                                <table id="example1" class="table table-bordered table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Item Name</th>
+                                            @foreach ($warehouses as $warehouse)
+                                                <th>{{ $warehouse->name }}</th>
+                                            @endforeach
+                                            <th>Total Quantity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @php
+                                            $groupedSells = [];
+                                        @endphp
+                                        @foreach ($invoices as $invoice)
+                                            @foreach ($invoice->sells as $sell)
+                                                @php
+                                                    if (!isset($groupedSells[$sell->item_id])) {
+                                                        $groupedSells[$sell->item_id] = [
+                                                            'product_name' => $sell->part_number,
+                                                            'quantities' => array_fill(0, count($warehouses), 0),
+                                                        ];
+                                                    }
 
+                                                    $warehouseIndex = $warehouses->search(
+                                                        fn($w) => $w->id == $sell->warehouse,
+                                                    );
+                                                    if (
+                                                        $warehouseIndex !== false &&
+                                                        $sell->stock_and_service != 'Service'
+                                                    ) {
+                                                        $groupedSells[$sell->item_id]['quantities'][$warehouseIndex] +=
+                                                            $sell->product_qty;
+                                                    }
+                                                @endphp
+                                            @endforeach
+                                        @endforeach
 
+                                        @foreach ($groupedSells as $sellData)
+                                            <tr>
+                                                <td>{{ $sellData['product_name'] }}</td>
+                                                @php
+                                                    $totalQuantity = array_sum($sellData['quantities']);
+                                                @endphp
+                                                @foreach ($sellData['quantities'] as $quantity)
+                                                    <td>{{ $quantity }}</td>
+                                                @endforeach
+                                                <td>{{ $totalQuantity }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                                {{--
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>
                                         <tr>
@@ -174,7 +225,9 @@
                                                         (float) $item['wholesale_price'];
                                                 }
 
-                                                $retailProfit = (float) $item['retail_price'] - (float) $item['buy_price']; 
+                                                $retailProfit =
+                                                    ((float) $item['retail_price'] - (float) $item['buy_price']) *
+                                                    (float) $item['total_quantity'];
                                                 $totalRetailProfit += $retailProfit;
                                             @endphp
                                             <tr>
@@ -217,7 +270,7 @@
 
                                                 </td>
 
-                                                <td>{{$retailProfit}}</td>
+                                                <td>{{ number_format($retailProfit ?? 0, 2) }}</td>
 
                                             </tr>
                                         @endforeach
@@ -236,7 +289,7 @@
 
                                         </tr>
                                     </tfoot>
-                                </table>
+                                </table> --}}
 
                             </div>
                             <!-- /.card-body -->
@@ -280,7 +333,7 @@
                 "lengthChange": false,
 
                 "autoWidth": false,
-                "pageLength": 30,
+                "pageLength": 10,
             }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
         });
     </script>

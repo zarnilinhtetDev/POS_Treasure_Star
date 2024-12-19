@@ -193,6 +193,7 @@ class ReportController extends Controller
         foreach ($warehouses as $key => $ware) {
             $warehouse_name[$key] = $ware->name;
         }
+        $today = Carbon::today();
 
         $query = DB::table('items')
             ->whereNull('items.deleted_at')
@@ -204,7 +205,7 @@ class ReportController extends Controller
                 DB::raw('SUM(items.quantity) AS total_quantity'),
                 'items.retail_price',
                 'items.wholesale_price',
-                'items.buy_price' 
+                'items.buy_price'
             )
             ->join('warehouses', 'items.warehouse_id', '=', 'warehouses.id')
             ->groupBy('items.item_name', 'items.item_type', 'warehouses.id', 'items.retail_price', 'items.wholesale_price', 'items.buy_price');
@@ -213,8 +214,14 @@ class ReportController extends Controller
 
         if (auth()->user()->is_admin == '1') {
             $items = $query->get();
+            $invoices = Invoice::whereIn('status', ['Invoice', 'pos'])
+                ->whereDate('created_at', $today)
+                ->get();
         } else {
             $items = $query->whereIn('warehouses.id', $warehousePermission)->get();
+            $invoices = Invoice::whereIn('status', ['Invoice', 'pos'])
+                ->whereDate('created_at', $today)
+                ->whereIn('branch', $warehousePermission)->get();
         }
         $groupedItems = [];
         foreach ($items as $item) {
@@ -236,7 +243,7 @@ class ReportController extends Controller
 
         $items = collect($groupedItems)->values();
 
-        return view('report.report_item', compact('items', 'warehouse_name', 'warehouses'));
+        return view('report.report_item', compact('items', 'warehouse_name', 'warehouses', 'invoices'));
     }
 
     public function monthly_item_search(Request $request)
@@ -275,9 +282,18 @@ class ReportController extends Controller
 
         if (auth()->user()->is_admin == '1') {
             $items = $query->get();
+            $invoices = Invoice::whereIn('status', ['Invoice', 'pos'])
+                ->whereDate('invoice_date', '>=', $start_date)
+                ->whereDate('invoice_date', '<=', $end_date)
+                ->get();
         } else {
             $items = $query->whereIn('warehouses.id', $warehousePermission)->get();
+            $invoices = Invoice::whereIn('status', ['Invoice', 'pos'])
+                ->whereDate('invoice_date', '>=', $start_date)
+                ->whereDate('invoice_date', '<=', $end_date)
+                ->whereIn('branch', $warehousePermission)->get();
         }
+
 
         $groupedItems = [];
         foreach ($items as $item) {
@@ -299,7 +315,7 @@ class ReportController extends Controller
 
         $items = collect($groupedItems)->values();
 
-        return view('report.report_item', compact('items', 'warehouse_name', 'warehouses'));
+        return view('report.report_item', compact('items', 'warehouse_name', 'warehouses', 'invoices'));
     }
 
 
