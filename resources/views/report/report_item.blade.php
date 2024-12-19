@@ -136,9 +136,9 @@
                                                 <th>{{ $warehouse->name }}</th>
                                             @endforeach
                                             <th>Total Quantity</th>
-                                            <th>Wholesale Price</th>
-                                            <th>Retail Price</th>
-                                            <th>Purchase Price</th>
+                                            <th>Total Wholesale Price</th>
+                                            <th>Total Retail Price</th>
+                                            <th>Total Purchase Price</th>
                                             <th>Profit</th>
                                         </tr>
                                     </thead>
