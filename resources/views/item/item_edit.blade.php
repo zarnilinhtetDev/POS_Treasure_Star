@@ -136,8 +136,8 @@
                                             placeholder="Enter Item Name" value="{{ $items->item_name }}" required>
                                     </div>
 
-                                    <div class="form-group col-md-6">
-                                        <label for="item_image">Item Image</label>
+                                    <div class="form-group col-md-3">
+                                        <label for="item_image">Item Image 1</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">
@@ -152,6 +152,26 @@
                                         </div>
                                         <span class="text-danger">Old: {{ $items->item_image }}</span>
                                         @error('item_image')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+                                        <label for="item_image_2">Item Image 2</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <img id="imagePreview2"
+                                                        src="{{ asset('item_images/' . $items->item_image_2) }}"
+                                                        style="max-width: 50px; max-height: 50px;"
+                                                        alt="Item Image Preview 2">
+                                                </span>
+                                            </div>
+                                            <input type="file" class="form-control" id="item_image_2" name="item_image_2"
+                                                accept="image/*" onchange="previewImage2(event)">
+                                        </div>
+                                        <span class="text-danger">Old: {{ $items->item_image_2 }}</span>
+                                        @error('item_image_2')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -349,6 +369,15 @@
             var reader = new FileReader();
             reader.onload = function() {
                 var output = document.getElementById('imagePreview');
+                output.src = reader.result; // Set the image source to the base64 encoded string
+            };
+            reader.readAsDataURL(event.target.files[0]); // Read the file as a data URL
+        }
+
+        function previewImage2(event) {
+            var reader = new FileReader();
+            reader.onload = function() {
+                var output = document.getElementById('imagePreview2');
                 output.src = reader.result; // Set the image source to the base64 encoded string
             };
             reader.readAsDataURL(event.target.files[0]); // Read the file as a data URL

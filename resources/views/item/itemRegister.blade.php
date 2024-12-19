@@ -106,8 +106,8 @@
                                             placeholder="Enter Item Name" value="{{ old('item_name') }}" required>
                                     </div>
 
-                                    <div class="form-group col-md-6">
-                                        <label for="item_image">Item Image</label>
+                                    <div class="form-group col-md-3">
+                                        <label for="item_image">Item Image 1</label>
                                         <div class="input-group">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">
@@ -120,6 +120,24 @@
                                                 accept="image/*" onchange="previewImage(event)">
                                         </div>
                                         @error('item_image')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-3">
+                                        <label for="item_image_2">Item Image 2</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <img id="imagePreview2" src="#"
+                                                        style="max-width: 50px; max-height: 50px; display: none;"
+                                                        alt="Item Image Preview 2">
+                                                </span>
+                                            </div>
+                                            <input type="file" class="form-control" id="item_image_2" name="item_image_2"
+                                                accept="image/*" onchange="previewImage2(event)">
+                                        </div>
+                                        @error('item_image_2')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -389,6 +407,18 @@
             };
             if (event.target.files.length > 0) {
                 reader.readAsDataURL(event.target.files[0]); // Read the file as a data URL
+            }
+        }
+
+        function previewImage2(event) {
+            var reader2 = new FileReader();
+            reader2.onload = function() {
+                var output = document.getElementById('imagePreview2');
+                output.src = reader2.result; // Set the source of the image preview
+                output.style.display = 'inline'; // Make the image visible
+            };
+            if (event.target.files.length > 0) {
+                reader2.readAsDataURL(event.target.files[0]); // Read the file as a data URL
             }
         }
     </script>

@@ -276,7 +276,8 @@
                                             <thead>
                                                 <tr>
                                                     <th>No.</th>
-                                                    <th>Item Image</th>
+                                                    <th>Item Image 1</th>
+                                                    <th>Item Image 2</th>
                                                     <th>Item Name</th>
                                                     <th>Category</th>
                                                     <th>Location</th>
@@ -302,6 +303,15 @@
                                                             <a href="{{ asset($item->item_image ? 'item_images/' . $item->item_image : 'img/default.png') }}"
                                                                 target="_blank" id="logoLink">
                                                                 <img src="{{ asset($item->item_image ? 'item_images/' . $item->item_image : 'img/default.png') }}"
+                                                                    id="logoPreview" class="img-thumbnail"
+                                                                    style="max-width: 150px; max-height: 100px;"
+                                                                    alt="Item Image Preview">
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                            <a href="{{ asset($item->item_image_2 ? 'item_images/' . $item->item_image_2 : 'img/default.png') }}"
+                                                                target="_blank" id="logoLink">
+                                                                <img src="{{ asset($item->item_image_2 ? 'item_images/' . $item->item_image_2 : 'img/default.png') }}"
                                                                     id="logoPreview" class="img-thumbnail"
                                                                     style="max-width: 150px; max-height: 100px;"
                                                                     alt="Item Image Preview">

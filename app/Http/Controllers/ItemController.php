@@ -116,7 +116,8 @@ class ItemController extends Controller
     {
         $validate = $request->validate([
             'item_unit' => 'required',
-            'item_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:600',
+            'item_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+            'item_image_2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
         ], [
             'item_unit.required' => 'Please Select Unit',
         ]);
@@ -155,6 +156,17 @@ class ItemController extends Controller
             $image->move(public_path('item_images'), $imagename);
             $items->item_image = $imagename;
         }
+
+        //add second image 
+        $image2 = $request->file('item_image_2');
+        if ($image2) {
+            $imagename2 = time() . 'img2.' . $image2->getClientOriginalExtension();
+            $image2->move(public_path('item_images'), $imagename2);
+            $items->item_image_2 = $imagename2;
+        }
+
+        // dd($imagename , '-', $imagename2);
+
         $items->warehouse_id = $request->warehouse_id;
         $items->save();
         return redirect(url('items'))->with('success', 'Item Register is Successfully');
@@ -176,7 +188,8 @@ class ItemController extends Controller
         $item = Item::find($id);
 
         $request->validate([
-            'item_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:600',
+            'item_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+            'item_image_2' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
         ]);
 
         $image = $request->file('item_image');
@@ -188,7 +201,20 @@ class ItemController extends Controller
             $image->move(public_path('item_images'), $imagename);
             $item->item_image = $imagename;
         }
-        $item->update($request->except('item_image'));
+
+        //second image
+        $image2 = $request->file('item_image_2');
+        // dd($image2);
+        if ($image2) {
+            if ($item->item_image_2 && file_exists(public_path('item_images/' . $item->item_image_2))) {
+                unlink(public_path('item_images/' . $item->item_image_2));
+            }
+            $imagename2 = time() . 'img2.' . $image2->getClientOriginalExtension();
+            $image2->move(public_path('item_images'), $imagename2);
+            $item->item_image_2 = $imagename2;
+        }
+
+        $item->update($request->except(['item_image','item_image_2']));
         $item->warehouse_id = $request->warehouse_id;
         $item->save();
 
@@ -201,6 +227,10 @@ class ItemController extends Controller
         if ($item) {
             if ($item->item_image && file_exists(public_path('item_images/' . $item->item_image))) {
                 unlink(public_path('item_images/' . $item->item_image));
+            }
+
+            if ($item->item_image_2 && file_exists(public_path('item_images/' . $item->item_image_2))) {
+                unlink(public_path('item_images/' . $item->item_image_2));
             }
             $item->delete();
 
