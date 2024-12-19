@@ -136,12 +136,21 @@
                                                 <th>{{ $warehouse->name }}</th>
                                             @endforeach
                                             <th>Total Quantity</th>
+                                            <th>Wholesale Price</th>
+                                            <th>Retail Price</th>
+                                            <th>Purchase Price</th>
+                                            <th>Profit</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @php
                                             $groupedSells = [];
+                                            $totalWholesalePrice = 0;
+                                            $totalRetailPrice = 0;
+                                            $totalPurchasePrice = 0;
+                                            $totalProfit = 0;
                                         @endphp
+
                                         @foreach ($invoices as $invoice)
                                             @foreach ($invoice->sells as $sell)
                                                 @php
@@ -149,18 +158,25 @@
                                                         $groupedSells[$sell->item_id] = [
                                                             'product_name' => $sell->part_number,
                                                             'quantities' => array_fill(0, count($warehouses), 0),
+                                                            'profit' => 0,
                                                         ];
                                                     }
 
                                                     $warehouseIndex = $warehouses->search(
                                                         fn($w) => $w->id == $sell->warehouse,
                                                     );
+
                                                     if (
                                                         $warehouseIndex !== false &&
                                                         $sell->stock_and_service != 'Service'
                                                     ) {
                                                         $groupedSells[$sell->item_id]['quantities'][$warehouseIndex] +=
                                                             $sell->product_qty;
+
+                                                        $profitPerSell =
+                                                            ($sell->retail_price - $sell->buy_price) *
+                                                            $sell->product_qty;
+                                                        $groupedSells[$sell->item_id]['profit'] += $profitPerSell;
                                                     }
                                                 @endphp
                                             @endforeach
@@ -171,15 +187,29 @@
                                                 <td>{{ $sellData['product_name'] }}</td>
                                                 @php
                                                     $totalQuantity = array_sum($sellData['quantities']);
+                                                    $wholesalePrice = $sell->product_price * $totalQuantity;
+                                                    $retailPrice = $sell->retail_price * $totalQuantity;
+                                                    $purchasePrice = $sell->buy_price * $totalQuantity;
+
+                                                    $totalWholesalePrice += $wholesalePrice;
+                                                    $totalRetailPrice += $retailPrice;
+                                                    $totalPurchasePrice += $purchasePrice;
+                                                    $totalProfit += $sellData['profit'];
                                                 @endphp
                                                 @foreach ($sellData['quantities'] as $quantity)
                                                     <td>{{ $quantity }}</td>
                                                 @endforeach
                                                 <td>{{ $totalQuantity }}</td>
+                                                <td>{{ number_format($wholesalePrice, 2) }}</td>
+                                                <td>{{ number_format($retailPrice, 2) }}</td>
+                                                <td>{{ number_format($purchasePrice, 2) }}</td>
+                                                <td>{{ number_format($sellData['profit'], 2) }}</td>
                                             </tr>
                                         @endforeach
                                     </tbody>
+
                                 </table>
+
                                 {{--
                                 <table id="example1" class="table table-bordered table-striped">
                                     <thead>

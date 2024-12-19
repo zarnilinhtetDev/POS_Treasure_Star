@@ -194,7 +194,7 @@
                         @endphp
                         {{-- End Permission --}}
 
-                        <div class="ml-2 col row d-flex">
+                        {{-- <div class="ml-2 col row d-flex">
                             <form action="{{ route('file-update-import') }}" method="POST"
                                 enctype="multipart/form-data">
                                 @csrf
@@ -242,7 +242,7 @@
 
 
                             </form>
-                        </div>
+                        </div> --}}
                     </div>
 
 
@@ -514,6 +514,31 @@
         });
 
 
+        // $(document).ready(function() {
+        //     new DataTable('#example1', {
+        //         "lengthChange": false,
+        //         "paging": false,
+        //         "pageLength": 100,
+        //         "searching": false,
+        //         "dom": 'Bfrtip',
+        //         "buttons": [{
+        //             extend: 'excelHtml5',
+        //             text: 'Change Price Excel',
+        //             exportOptions: {
+        //                 modifier: {
+        //                     selected: null,
+        //                     search: 'applied',
+        //                 },
+        //                 columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        //             }
+        //         }],
+        //         "language": {
+        //             "info": "",
+        //             "infoEmpty": "",
+        //             "infoFiltered": ""
+        //         }
+        //     });
+        // });
         $(document).ready(function() {
             new DataTable('#example1', {
                 "lengthChange": false,
@@ -521,17 +546,7 @@
                 "pageLength": 100,
                 "searching": false,
                 "dom": 'Bfrtip',
-                "buttons": [{
-                    extend: 'excelHtml5',
-                    text: 'Change Price Excel',
-                    exportOptions: {
-                        modifier: {
-                            selected: null,
-                            search: 'applied',
-                        },
-                        columns: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-                    }
-                }],
+                "buttons": [],
                 "language": {
                     "info": "",
                     "infoEmpty": "",
