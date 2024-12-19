@@ -799,6 +799,8 @@
                         location: Selectedlocation,
                     },
                     success: function(data) {
+                        console.log(data);
+                        row.find('.item_id').val(data.id);
                         itemNameInput.val(data.wholesale_price);
                         partDesc.val(data.descriptions);
                         exp_date.val(data.expired_date);

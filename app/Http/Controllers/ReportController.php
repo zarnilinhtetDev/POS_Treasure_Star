@@ -204,7 +204,7 @@ class ReportController extends Controller
                 DB::raw('SUM(items.quantity) AS total_quantity'),
                 'items.retail_price',
                 'items.wholesale_price',
-                'items.buy_price' //
+                'items.buy_price' 
             )
             ->join('warehouses', 'items.warehouse_id', '=', 'warehouses.id')
             ->groupBy('items.item_name', 'items.item_type', 'warehouses.id', 'items.retail_price', 'items.wholesale_price', 'items.buy_price');
