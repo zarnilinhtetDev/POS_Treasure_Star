@@ -542,6 +542,8 @@
 
                                                 <tbody id="showitem123">
                                                     <tr>
+                                                        <input type="hidden" name="item_id[]" id="item_id-0"
+                                                            class="item_id">
                                                         {{-- <input type='hidden' name='sale_by' id="sale_by"
                                                             value="{{ auth()->user()->name }}" class="form-control"> --}}
                                                         <input type="hidden" class="form-control barcode typeahead"
@@ -578,7 +580,8 @@
                                                         <td class="wholesale_td"><input type="text"
                                                                 class="form-control price" name="product_price[]"
                                                                 id="price-0" autocomplete="off" value="0">
-                                                        </td>
+                                                        </td> <input type="hidden" name="buy_price[]"
+                                                            id="buy_price-0" class="buy_price">
 
                                                         <td class="retail_td"><input type="text"
                                                                 class="form-control retail_price"
@@ -939,6 +942,7 @@
                     var $description0 = $("#description-0");
                     var $expDate0 = $("#exp_date-0");
                     var $barcode0 = $("#barcode-0");
+                    var $item_id0 = $("#item_id-0");
                     var $price0 = $("#price-0");
                     var $itemUnit0 = $("#item_unit-0");
                     var $retailPrice0 = $("#retail_price-0");
@@ -955,6 +959,7 @@
                     function handleSuccess(data) {
                         var item = data['item'];
                         $itemName0.val(item['item_name']);
+                        $item_id0.val(item['id']);
                         $description0.val(item['descriptions']);
                         $expDate0.val(item['expired_date']);
                         $barcode0.val(item['barcode']);
@@ -1092,6 +1097,9 @@
                         let newRow = '<tr>' +
 
                             '<td class="text-center">' + (rowCount + 1) + '</td>' +
+                            '<input type="hidden" name="item_id[]" id="item_id-' + count + '" class="item_id" value="' +
+                            item['id'] + '">' +
+
                             '<td style="display:none"><input type="hidden" class="form-control barcode typeahead" name="barcode[]" id="barcode-' +
                             count + '" autocomplete="off" value="' + item['barcode'] + '"></td>' +
                             '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="item_name-' +
@@ -1106,6 +1114,7 @@
                             count +
                             '" autocomplete ="off"  value="' + item['item_unit'] +
                             '" required> </td>' +
+                            '<input type="hidden" name="buy_price[]" id="buy_price-' + count + '" class="buy_price">' +
                             '<td class="wholesale_td"><input type="text" class="form-control price" name="product_price[]" id="price-' +
                             count + '" autocomplete="off" value="' + (item['wholesale_price'] ?? 0) +
                             '"></td>' +
@@ -1196,7 +1205,7 @@
             </div>
         </div>
                 </td>
-               
+
             </tr>`;
 
                             $('#trContainer').append(newRow);

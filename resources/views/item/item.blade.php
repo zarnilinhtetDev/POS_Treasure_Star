@@ -460,6 +460,15 @@
                                     '{{ asset('img/default.png') }}') +
                                 '" class="img-thumbnail" style="max-width: 150px; max-height: 100px;" alt="Item Image Preview">' +
                                 '</a></td>';
+                            rows += '<td><a href="' + (item.item_image_2 ?
+                                    '{{ asset('item_images') }}/' + item.item_image_2 :
+                                    '{{ asset('img/default.png') }}') +
+                                '" target="_blank" id="logoLink">' +
+                                '<img src="' + (item.item_image_2 ?
+                                    '{{ asset('item_images') }}/' + item.item_image_2 :
+                                    '{{ asset('img/default.png') }}') +
+                                '" class="img-thumbnail" style="max-width: 150px; max-height: 100px;" alt="Item Image Preview">' +
+                                '</a></td>';
                             rows += '<td>' + item.item_name + '</td>';
                             rows += '<td>' + item.category + '</td>';
                             rows += '<td>' + (item.warehouse ? item.warehouse.name :

@@ -35,7 +35,7 @@ class ReportController extends Controller
         $today = Carbon::today();
         $warehousePermission = auth()->user()->level ? json_decode(auth()->user()->level) : [];
 
-        $invoicesQuery = Invoice::whereDate('created_at', $today)
+        $invoicesQuery = Invoice::whereDate('invoice_date', $today)
             ->where('status', 'invoice')
             ->where('balance_due', 'Invoice');
 
@@ -215,12 +215,12 @@ class ReportController extends Controller
         if (auth()->user()->is_admin == '1') {
             $items = $query->get();
             $invoices = Invoice::whereIn('status', ['Invoice', 'pos'])
-                ->whereDate('created_at', $today)
+                ->whereDate('invoice_date', $today)
                 ->get();
         } else {
             $items = $query->whereIn('warehouses.id', $warehousePermission)->get();
             $invoices = Invoice::whereIn('status', ['Invoice', 'pos'])
-                ->whereDate('created_at', $today)
+                ->whereDate('invoice_date', $today)
                 ->whereIn('branch', $warehousePermission)->get();
         }
         $groupedItems = [];

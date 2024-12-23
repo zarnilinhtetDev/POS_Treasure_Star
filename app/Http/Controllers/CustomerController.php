@@ -123,14 +123,15 @@ class CustomerController extends Controller
         }
     }
 
-    public function customerDue(Request $request){
+    public function customerDue(Request $request)
+    {
 
         $date = $request->date;
-        if($date){
-            $invoices = Invoice::where('remain_balance', '!=' , '0')->where('overdue_date','<',$date)->latest()->get();
-        }else{
-            $invoices = Invoice::where('remain_balance', '!=' , '0')->latest()->get();
+        if ($date) {
+            $invoices = Invoice::where('status', 'invoice')->where('remain_balance', '!=', '0')->where('overdue_date', '<', $date)->latest()->get();
+        } else {
+            $invoices = Invoice::where('status', 'invoice')->where('remain_balance', '!=', '0')->latest()->get();
         }
-        return view('customer.customer_due',compact('invoices'));
+        return view('customer.customer_due', compact('invoices'));
     }
 }

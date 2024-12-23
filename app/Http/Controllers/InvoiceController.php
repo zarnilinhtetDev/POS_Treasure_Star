@@ -647,6 +647,7 @@ class InvoiceController extends Controller
         if ($request->input('part_number')) {
             foreach ($request->input('part_number') as $key => $partNumber) {
                 $sellsData[] = [
+                    'item_id' => $request->input('item_id')[$key],
                     'description' => $request->input('part_description')[$key],
                     'part_number' => $partNumber,
                     'product_qty' => $request->input('product_qty')[$key],
@@ -747,8 +748,9 @@ class InvoiceController extends Controller
                 continue;
             }
         }
+        // dd($invoice);
 
-        $setting = Setting::where('category', 'Invoice')->where('location', $invoice->location)->first();
+        $setting = Setting::where('category', 'Invoice')->where('location', $invoices->branch)->first();
 
         if ($setting) {
             $invoice->transaction_id = $setting->transaction_id ?? null;
@@ -1180,5 +1182,4 @@ class InvoiceController extends Controller
 
         // return redirect('/quotation')->with('success', 'Quotation Deleted Successful!');
     }
-
 }

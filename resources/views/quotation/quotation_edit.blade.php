@@ -311,6 +311,8 @@
                                                                 name="part_number[]" value="{{ $sell->part_number }}"
                                                                 placeholder="{{ trans('Enter Part Number') }}"
                                                                 id='productname-0' autocomplete="off">
+                                                            <input type="hidden" name="item_id[]" id="item_id-0"
+                                                                class="item_id" value="{{ $sell->item_id }}">
                                                             {{-- </div> --}}
                                                             {{-- </div> --}}
                                                         </td>
@@ -602,6 +604,7 @@
 
             function updateItemName(item_name, row, cuz_name) {
                 let itemNameInput = row.find('.price');
+                let itemId = row.find('.item_id');
                 let partDesc = row.find('.description');
                 let exp_date = row.find('.exp_date');
                 let item_unit = row.find('.item_unit');
@@ -619,6 +622,7 @@
                     },
                     success: function(data) {
                         itemNameInput.val(data.wholesale_price);
+                        itemId.val(data.id);
                         partDesc.val(data.descriptions);
                         exp_date.val(data.expired_date);
                         item_unit.val(data.item_unit);
@@ -642,6 +646,8 @@
                 let rowCount = $("#showitem123 tr").length;
                 let newRow = '<tr>' +
                     '<td class="text-center">' + (rowCount + 1) + '</td>' +
+                    '<input type="hidden" name="item_id[]" id="item_id-' + count + '" class="item_id">' +
+                    '</td>' +
                     '<td style="display:none"><input type="hidden" class="form-control barcode typeahead" name="barcode[]" id="barcode-' +
                     count + '" autocomplete="off"></td>' +
                     '<td>' +

@@ -96,9 +96,10 @@
 
                 <a href="{{ url('pos_register') }}" class="text-white btn btn-primary" style="border-radius:10px;"
                     id="print3"><i class="fa-solid fa-circle-plus"></i> POS Register</a>
-
-                <a id="test" href="{{ url('pos') }}" class="btn btn-danger" style="border-radius:10px;"><i
-                        class="fa-solid fa-backward text-white"></i> Back</a>
+                <a id="test" class="btn btn-danger" style="border-radius:10px;" onclick="window.history.back()"
+                    style="border-radius:10px;"><i class="fa-solid fa-backward text-white"></i> Back</a>
+                {{-- <a id="test" href="{{ url('pos') }}" class="btn btn-danger" style="border-radius:10px;"><i
+                        class="fa-solid fa-backward text-white"></i> Back</a> --}}
             </div>
         </div>
         @foreach ($profile as $pic)

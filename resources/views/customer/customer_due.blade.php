@@ -75,7 +75,7 @@
                     </div>
 
                     <div class="row ml-2">
-                        <div class="mr-auto col"> 
+                        <div class="mr-auto col">
                             <button type="button" class="mr-auto btn btn-danger" id="due-alert">Due Alert</button>
                         </div>
                     </div>
@@ -152,35 +152,36 @@
                                                 @else
                                                     <td><span class="badge badge-danger">Unpaid</span></td>
                                                 @endif
-                                                <td class="@if($invoice->overdue_date < $today) bg-danger @endif">{{ $invoice->overdue_date }}</td>
+                                                <td class="@if ($invoice->overdue_date < $today) bg-danger @endif">
+                                                    {{ $invoice->overdue_date }}</td>
                                                 <!-- <td>
 
                                                     @if (in_array('Invoice Details', $choosePermission) || auth()->user()->is_admin == '1')
-                                                        <a href="{{ url('/invoice_receipt_print', $invoice->id) }}"
+<a href="{{ url('/invoice_receipt_print', $invoice->id) }}"
                                                             class="btn btn-info btn-sm"><i
                                                                 class="fa-solid fa-print"></i></a>
 
                                                         <a href="{{ url('/invoice_detail', $invoice->id) }}"
                                                             class="btn btn-primary btn-sm"><i
                                                                 class="fa-solid fa-eye"></i></a>
-                                                    @endif
+@endif
 
                                                     @if (in_array('Invoice Edit', $choosePermission) || auth()->user()->is_admin == '1')
-                                                        @if ($invoice->status == 'invoice')
-                                                            <a href="{{ url('invoice_edit', $invoice->id) }}"
+@if ($invoice->status == 'invoice')
+<a href="{{ url('invoice_edit', $invoice->id) }}"
                                                                 class="btn btn-success btn-sm"><i
                                                                     class="fa-solid fa-pen-to-square"></i></a>
-                                                        @else
-                                                        @endif
-                                                    @endif
+@else
+@endif
+@endif
 
 
                                                     @if (in_array('Invoice Delete', $choosePermission) || auth()->user()->is_admin == '1')
-                                                        <a href="{{ url('invoice_delete', $invoice->id) }}"
+<a href="{{ url('invoice_delete', $invoice->id) }}"
                                                             class="btn btn-danger btn-sm"
                                                             onclick="return confirm('Are you sure you want to delete this Invoice ?')"><i
                                                                 class="fa-solid fa-trash"></i></a>
-                                                    @endif
+@endif
 
                                                 </td> -->
 
@@ -255,12 +256,12 @@
 
 
     <script>
-        $(document).on('click','#due-alert',function(){
+        $(document).on('click', '#due-alert', function() {
             let date = new Date().toISOString().split('T')[0];
             let url = window.location.href;
             $.ajax({
-                url : url,
-                method : 'GET' ,
+                url: url,
+                method: 'GET',
                 data: {
                     date: date,
                 },
@@ -269,14 +270,14 @@
                 },
                 success: function(response) {
 
-                     // Destroy the DataTable instance
+                    // Destroy the DataTable instance
                     if ($.fn.DataTable.isDataTable('#example1')) {
                         $('#example1').DataTable().destroy();
                     }
 
                     $('.invoice-data').html($(response).find('.invoice-data').html());
 
-                     // Reinitialize the DataTable
+                    // Reinitialize the DataTable
                     $("#example1").DataTable({
                         "responsive": true,
                         "lengthChange": false,

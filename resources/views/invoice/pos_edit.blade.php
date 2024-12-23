@@ -371,7 +371,8 @@
                                                                     placeholder="{{ trans('Enter Part Number') }}"
                                                                     id='item_name-0' autocomplete="off">
                                                             </td>
-
+                                                            <input type="hidden" name="item_id[]" id="item_id-0"
+                                                                class="item_id" value="{{ $sell->item_id }}">
                                                             <td><input type="text"
                                                                     class="form-control description typeahead"
                                                                     value="{{ $sell->description }}"
@@ -966,6 +967,8 @@
                         let rowCount = $("#showitem123 tr").length;
                         let newRow = '<tr>' +
                             '<td class="text-center">' + (rowCount + 1) + '</td>' +
+                            '<input type="hidden" name="item_id[]" id="item_id-' + count + '" class="item_id" value="' +
+                            item['id'] + '">' +
                             '<td style="display:none"><input type="hidden" class="form-control barcode typeahead" name="barcode[]" id="barcode-' +
                             count + '" autocomplete="off" value="' + item['barcode'] + '"></td>' +
                             '<td><input type="text" class="form-control productname typeahead" name="part_number[]" id="item_name-' +
@@ -1068,7 +1071,7 @@
             </div>
         </div>
                 </td>
-               
+
             </tr>`;
 
                             $('#trContainer').append(newRow);
