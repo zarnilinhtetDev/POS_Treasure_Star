@@ -44,7 +44,7 @@
             }
 
             body {
-                font-size: 20px;
+                font-size: 12px;
                 padding: 0;
                 margin: 0;
                 /* color: #76453B; */
@@ -71,7 +71,7 @@
 
             table td,
             table th {
-                font-size: 17px;
+                font-size: 12px;
                 padding: 2px;
                 line-height: 1;
                 /* color: #76453B; */
@@ -98,7 +98,7 @@
             }
 
             .change_font {
-                font-size: 17px;
+                font-size: 14px;
             }
         }
     </style>
@@ -134,13 +134,14 @@
         <table class="text-center" style="width: 100%; border-collapse: collapse;">
             <thead>
                 <tr>
-                    <th style="border: 1px solid black; width: 5%;">SR.<br>No.</th>
-                    <th style="border: 1px solid black; width: 15%;">Product<br>Code</th>
-                    <th style="border: 1px solid black; width: 10%;">Design</th>
-                    <th style="border: 1px solid black;">Description</th>
-                    <th style="border: 1px solid black; width: 5%;">Qty</th>
-                    <th style="border: 1px solid black; width: 15%;">Unit Price</th>
-                    <th style="border: 1px solid black; width: 15%;">Total</th>
+                    <th style="border-left: 2px solid black; border: 2px solid black; width: 5%;">SR.<br>No.</th>
+                    <th style="border-left: 2px solid black; border: 2px solid black; width: 15%;">Product<br>Code
+                    </th>
+                    <th style="border-left: 2px solid black; border: 2px solid black; width: 10%;">Design</th>
+                    <th style="border-left: 2px solid black; border: 2px solid black;">Description</th>
+                    <th style="border-left: 2px solid black; border: 2px solid black; width: 5%;">Qty</th>
+                    <th style="border-left: 2px solid black; border: 2px solid black; width: 15%;">Unit Price</th>
+                    <th style="border-left: 2px solid black; border: 2px solid black; width: 15%;">Total</th>
                 </tr>
             </thead>
             <tbody>
@@ -151,13 +152,33 @@
                 @endphp
                 @foreach ($sells as $sell)
                     <tr>
-                        <td>{{ $no }}</td>
-                        <td>{{ $sell->part_number }}</td>
-                        <td></td>
-                        <td>{{ $sell->description }}</td>
-                        <td>{{ $sell->product_qty }}</td>
-
-                        <td>
+                        <td
+                            style="border-left: 2px solid black; border-right: 2px solid black; border-top: none; border-bottom: none;">
+                            {{ $no }}
+                        </td>
+                        <td
+                            style="border-left: 2px solid black; border-right: 2px solid black; border-top: none; border-bottom: none;">
+                            {{ $sell->part_number }}
+                        </td>
+                        <td
+                            style="border-left: 2px solid black; border-right: 2px solid black; border-top: none; border-bottom: none;">
+                            <a href="{{ asset($sell->item->item_image ? 'item_images/' . $sell->item->item_image : 'img/default.png') }}"
+                                target="_blank" id="logoLink">
+                                <img src="{{ asset($sell->item->item_image ? 'item_images/' . $sell->item->item_image : 'img/default.png') }}"
+                                    id="logoPreview" class="img-thumbnail" style="max-width: 80px; max-height: 100px;"
+                                    alt="Item Image Preview">
+                            </a>
+                        </td>
+                        <td
+                            style="border-left: 2px solid black; border-right: 2px solid black; border-top: none; border-bottom: none;">
+                            {{ $sell->description }}
+                        </td>
+                        <td
+                            style="border-left: 2px solid black; border-right: 2px solid black; border-top: none; border-bottom: none;">
+                            {{ $sell->product_qty }}
+                        </td>
+                        <td
+                            style="border-left: 2px solid black; border-right: 2px solid black; border-top: none; border-bottom: none;">
                             @if ($invoice->sale_price_category == 'Default')
                                 @if ($invoice->type == 'Whole Sale')
                                     {{ number_format($sell->product_price) }}
@@ -172,8 +193,8 @@
                                 {{ number_format($sell->retail_price) }}
                             @endif
                         </td>
-
-                        <td>
+                        <td
+                            style="border-left: 2px solid black; border-right: 2px solid black; border-top: none; border-bottom: none;">
                             <span class="currenty"></span>
                             <span class='ttlText'>
                                 @if ($invoice->sale_price_category == 'Default')
@@ -192,69 +213,86 @@
                             </span>
                         </td>
                     </tr>
-
                     @php
                         $no++;
                         $itemDiscount += $sell->discount;
                     @endphp
                 @endforeach
-
-
-                <!-- Repeat other rows here -->
             </tbody>
+
+            <tfoot>
+                <tr>
+                    <td colspan="7"
+                        style="border-bottom: 2px solid black; border-top: none; border-left: none; border-right: none;">
+                    </td>
+                </tr>
+            </tfoot>
+
+
         </table>
+
         <div class="d-flex justify-content-between change_font">
             <div class="mt-3">
                 <p>
                     <i><strong>**HAVE A NICE DAY**</strong></i><br>
-                    <span>CASH:</span><br>
-                    <span>BANK:</span><br>
-                    <span>CARD:</span><br>
-                    <span>OTHER:</span>
+                    <span style="font-weight: bold;">CASH:</span><br>
+                    <span style="font-weight: bold;">BANK:</span><br>
+                    <span style="font-weight: bold;">CARD:</span><br>
+                    <span style="font-weight: bold;">OTHER:</span>
                 </p>
             </div>
             <div class="me-5 no-print">
-                <span>SUB
+                <span style="font-weight: bold;">SUB
                     TOTAL:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {{ number_format($invoice->sub_total) }}
                     &nbsp;&nbsp;</span><br>
-                <span>DISCOUNT:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span
+                    style="font-weight: bold;">DISCOUNT:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {{ number_format($invoice->discount_total) }}&nbsp;&nbsp;</span><br>
-                <span>TAX:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span
+                    style="font-weight: bold;">TAX:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {{ number_format($invoice->sub_total) }}&nbsp;&nbsp;</span><br>
-                <span>PAID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span
+                    style="font-weight: bold;">PAID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {{ number_format($invoice->deposit) }}&nbsp;&nbsp;</span><br>
-                <span>BALANCE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <span
+                    style="font-weight: bold;">BALANCE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {{ number_format($invoice->remain_balance) }}&nbsp;&nbsp;</span>
             </div>
-            <div class="me-3 print" style="display: none">
-                <span>SUB
-                    TOTAL:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15,000</span><br>
-                <span>DISCOUNT:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15,000</span><br>
-                <span>TAX:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15,000</span><br>
-                <span>PAID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15,000</span><br>
-                <span>BALANCE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;15,000</span>
+            <div class="me-5 print" style="display: none">
+                <span style="font-weight: bold;">SUB
+                    TOTAL:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ number_format($invoice->sub_total) }}</span><br>
+                <span
+                    style="font-weight: bold;">DISCOUNT:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    {{ number_format($invoice->discount_total) }}</span><br>
+                <span
+                    style="font-weight: bold;">TAX:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    {{ number_format($invoice->sub_total) }}</span><br>
+                <span
+                    style="font-weight: bold;">PAID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ number_format($invoice->deposit) }}</span><br>
+                <span
+                    style="font-weight: bold;">BALANCE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ number_format($invoice->remain_balance) }}</span>
             </div>
         </div>
-        <table style="width: 100%;" class="change_font">
-            <thead style="border: 1px solid black;">
+        <table style="width: 100%;height: 40px;" class="change_font">
+            <thead style="border: 2px solid black;">
                 <tr>
-                    <th>Balance Payment due date: {{ $invoice->overdue_date104.. }}</th>
-                    <th style="width: 35%;border-left: 1px solid black">GRAND TOTAL:Kyats</th>
+                    <th>Balance Payment due date: {{ $invoice->overdue_date }}</th>
+                    <th style="width: 35%;border-left: 2px solid black">GRAND TOTAL:Kyats</th>
                 </tr>
             </thead>
         </table>
         <div class="d-flex justify-content-between change_font">
-            <div class="mt-5">
-                <span>Customer Signature</span>
+            <div class="mt-3">
+                <strong>Customer Signature</strong>
             </div>
             <div class="">
-                <span>
+                <strong>
                     <h6>FOR TREASURE STAR</h6>
-                </span><br>
-                <span>
+                </strong><br>
+                <strong style="margin-top: -30px;display: block;">
                     <p>Authorized Signature</p>
-                </span>
+                </strong>
             </div>
         </div>
         <div class="mt-2 row">

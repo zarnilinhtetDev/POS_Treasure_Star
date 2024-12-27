@@ -157,7 +157,7 @@ class ItemController extends Controller
             $items->item_image = $imagename;
         }
 
-        //add second image 
+        //add second image
         $image2 = $request->file('item_image_2');
         if ($image2) {
             $imagename2 = time() . 'img2.' . $image2->getClientOriginalExtension();
@@ -214,7 +214,7 @@ class ItemController extends Controller
             $item->item_image_2 = $imagename2;
         }
 
-        $item->update($request->except(['item_image','item_image_2']));
+        $item->update($request->except(['item_image', 'item_image_2']));
         $item->warehouse_id = $request->warehouse_id;
         $item->save();
 
@@ -224,6 +224,13 @@ class ItemController extends Controller
     {
         $item = Item::find($id);
 
+        $invoiceExists = Invoice::where('item_id', $id)->exists();
+
+        if ($invoiceExists) {
+            return redirect(url('items'))->with('error', 'Item cannot be deleted as it is associated with an invoice.');
+        }
+
+
         if ($item) {
             if ($item->item_image && file_exists(public_path('item_images/' . $item->item_image))) {
                 unlink(public_path('item_images/' . $item->item_image));
@@ -232,6 +239,7 @@ class ItemController extends Controller
             if ($item->item_image_2 && file_exists(public_path('item_images/' . $item->item_image_2))) {
                 unlink(public_path('item_images/' . $item->item_image_2));
             }
+
             $item->delete();
 
             return redirect(url('items'))->with('delete', 'Item Deleted Successfully');
@@ -239,6 +247,7 @@ class ItemController extends Controller
 
         return redirect(url('items'))->with('error', 'Item Not Found');
     }
+
 
     public function inout($id)
     {
