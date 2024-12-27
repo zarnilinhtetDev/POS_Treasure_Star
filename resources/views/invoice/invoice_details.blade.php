@@ -107,27 +107,52 @@
 <body>
     <div class="container custom-container">
         <!-- Invoice Header -->
-        <div class="invoice-header d-flex justify-content-center align-items-center flex-column">
-            <div>
-                <img src="{{ asset('images/treasure.png') }}" alt="Company Logo" style="height: 80px;">
-            </div>
-            <div class="text-center">
-                <p>
-                    No.127(B),West Shwe Gone Dine Rd,Bahan Township ,Yangon, Myanmar. <br>
-                    Tel : 95-9776127384,09-778494052 <br>
-                    E-mail : treasurestar.co@gmail.com
-                </p>
-            </div>
-        </div>
+
+
+
+
+        @foreach ($profile as $pic)
+            @if ($invoice->branch == $pic->branch)
+                {{-- <div class="row" style="margin-top: 30px;">
+                    <h4 class="text-center fw-bold">{{ $pic->name }}</h4>
+
+                    <p class="text-center fw-bold" style="font-size: 14px;">
+                        {{ $pic->address }}
+                        <br>
+                        {{ $pic->phno1 ? $pic->phno1 : $pic->phno2 }}
+
+                    </p>
+                </div> --}}
+
+                <div class="invoice-header d-flex justify-content-center align-items-center flex-column">
+                    <div>
+                        <img src="{{ asset('logos/' . ($pic->logos ?? '')) }}" alt="Company Logo" style="height: 80px;">
+                    </div>
+                    <div class="text-center">
+                        <p>
+                            {{ $pic->address ?? '' }} <br>
+                            Tel : {{ $pic->phno1 ?? '' }} @if (isset($pic->phno2))
+                                ,
+                                {{ $pic->phno2 ?? '' }}
+                            @endif <br>
+                            E-mail : {{ $pic->email ?? '' }}
+                        </p>
+                    </div>
+                </div>
+            @endif
+        @endforeach
+
+
+
         <div class="d-flex justify-content-between">
             <div class="">
-                <span>Name :</span><br>
-                <span>Address :</span><br>
-                <span>Tel :</span>
+                <span>Name : {{ $invoice->customer_name }}</span><br>
+                <span>Address : {{ $invoice->address }}</span><br>
+                <span>Tel : {{ $invoice->phno }}</span>
             </div>
             <div class="">
                 <span>Delivery Date :</span><br>
-                <span>Invoice No :</span>
+                <span>Invoice No : {{ $invoice->invoice_no }}</span>
             </div>
         </div>
 
@@ -251,7 +276,8 @@
                     {{ number_format($invoice->discount_total) }}&nbsp;&nbsp;</span><br>
                 <span
                     style="font-weight: bold;">TAX:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {{ number_format($invoice->sub_total) }}&nbsp;&nbsp;</span><br>
+                    0
+                    &nbsp;&nbsp;</span><br>
                 <span
                     style="font-weight: bold;">PAID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {{ number_format($invoice->deposit) }}&nbsp;&nbsp;</span><br>
@@ -267,7 +293,7 @@
                     {{ number_format($invoice->discount_total) }}</span><br>
                 <span
                     style="font-weight: bold;">TAX:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {{ number_format($invoice->sub_total) }}</span><br>
+                    0</span><br>
                 <span
                     style="font-weight: bold;">PAID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ number_format($invoice->deposit) }}</span><br>
                 <span
@@ -278,7 +304,8 @@
             <thead style="border: 2px solid black;">
                 <tr>
                     <th>Balance Payment due date: {{ $invoice->overdue_date }}</th>
-                    <th style="width: 35%;border-left: 2px solid black">GRAND TOTAL:Kyats</th>
+                    <th style="width: 35%;border-left: 2px solid black">GRAND TOTAL:
+                        {{ number_format($invoice->total) }}Kyats</th>
                 </tr>
             </thead>
         </table>
