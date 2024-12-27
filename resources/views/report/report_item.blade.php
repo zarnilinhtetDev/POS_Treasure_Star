@@ -229,10 +229,12 @@
                                         @foreach ($groupedSells as $sell)
                                             <tr>
                                                 <td>
-                                                    <a
+                                                    {{-- <a
                                                         href="{{ url('report_item_show', ['part_number' => $sell['part_number']]) }}">
                                                         {{ $sell['part_number'] }}
-                                                    </a>
+                                                    </a> --}}
+                                                        {{ $sell['part_number'] }}
+
                                                 </td>
                                                 @foreach ($warehouses as $warehouse)
                                                     <td>
