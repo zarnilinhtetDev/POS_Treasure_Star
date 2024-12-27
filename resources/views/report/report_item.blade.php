@@ -157,7 +157,7 @@
 
                                     @endphp
                                     <tbody>
-                                        @php
+                                        {{-- @php
                                             $groupedSells = [];
 
                                             foreach ($invoices as $invoice) {
@@ -188,44 +188,76 @@
                                             }
                                             $no = 1;
                                             $totalAmountprice = 0;
-                                        @endphp
+                                        @endphp --}}
+                                        @php
+                                            $groupedSells = [];
 
+                                            foreach ($invoices as $invoice) {
+                                                foreach ($invoice->sells as $sell) {
+                                                    $partNumber = $sell->part_number;
+                                                    $warehouseId = $sell->warehouse;
+
+                                                    if (!isset($groupedSells[$partNumber])) {
+                                                        $groupedSells[$partNumber] = [
+                                                            'part_number' => $partNumber,
+                                                            'warehouses' => [],
+                                                            'total_qty' => 0,
+                                                            'total_buyprice' => 0,
+                                                            'total_wholesale_price' => 0,
+                                                            'total_retail_price' => 0,
+                                                        ];
+                                                    }
+
+                                                    if (
+                                                        !isset($groupedSells[$partNumber]['warehouses'][$warehouseId])
+                                                    ) {
+                                                        $groupedSells[$partNumber]['warehouses'][$warehouseId] = 0;
+                                                    }
+
+                                                    $groupedSells[$partNumber]['warehouses'][$warehouseId] +=
+                                                        $sell->product_qty;
+                                                    $groupedSells[$partNumber]['total_qty'] += $sell->product_qty;
+                                                    $groupedSells[$partNumber]['total_buyprice'] +=
+                                                        $sell->buy_price * $sell->product_qty;
+                                                    $groupedSells[$partNumber]['total_wholesale_price'] +=
+                                                        $sell->product_price * $sell->product_qty;
+                                                    $groupedSells[$partNumber]['total_retail_price'] +=
+                                                        $sell->retail_price * $sell->product_qty;
+                                                }
+                                            }
+                                        @endphp
                                         @foreach ($groupedSells as $sell)
                                             <tr>
-                                                <td>{{ $no }}</td>
-                                                <td> <a
+                                                <td>
+                                                    <a
                                                         href="{{ url('report_item_show', ['part_number' => $sell['part_number']]) }}">
                                                         {{ $sell['part_number'] }}
-                                                    </a></td>
-                                                <td>{{ $sell['product_qty'] }}</td>
-                                                <td>{{ number_format($sell['wholesale_price']) }}</td>
-
-                                                <td>{{ number_format($sell['total_price']) }}</td>
-                                                <td>{{ number_format($sell['total_buyprice']) }}</td>
-                                                <td>{{ number_format($sell['total_buyprice'] - $sell['total_price']) }}
+                                                    </a>
+                                                </td>
+                                                @foreach ($warehouses as $warehouse)
+                                                    <td>
+                                                        {{ $sell['warehouses'][$warehouse->id] ?? 0 }}
+                                                    </td>
+                                                @endforeach
+                                                <td>{{ number_format($sell['total_qty']) }}</td>
+                                                <td>{{ number_format($sell['total_wholesale_price'], 2) }}</td>
+                                                <td>{{ number_format($sell['total_retail_price'], 2) }}</td>
+                                                <td>{{ number_format($sell['total_buyprice'], 2) }}</td>
+                                                <td>{{ number_format($sell['total_retail_price'] - $sell['total_buyprice'], 2) }}
                                                 </td>
                                             </tr>
-                                            @php
-                                                $no++;
-                                                $totalAmountprice += $sell['total_price'];
-                                                $totalAmountbuyprice += $sell['total_buyprice'];
-                                                $totalAmountwholesaleprice += $sell['wholesale_price'];
-                                                $totalAmountprofit += $sell['total_buyprice'] - $sell['total_price'];
-                                            @endphp
                                         @endforeach
-
 
 
                                     </tbody>
                                     <tfoot>
-                                        <tr></tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td>{{ number_format($totalAmountwholesaleprice) }}</td>
-                                        <td>{{ number_format($totalAmountprice) }}</td>
-                                        <td>{{ number_format($totalAmountbuyprice) }}</td>
-                                        <td>{{ number_format($totalAmountprofit) }}</td>
+                                        <tr>
+                                            <td colspan="{{ count($warehouses) + 2 }}" class="text-right">
+                                                Total</td>
+                                            <td>{{ number_format($totalAmountwholesaleprice) }}</td>
+                                            <td>{{ number_format($totalAmountprice) }}</td>
+                                            <td>{{ number_format($totalAmountbuyprice) }}</td>
+                                            <td>{{ number_format($totalAmountprofit) }}</td>
                                         </tr>
                                     </tfoot>
                                     {{-- @foreach ($invoices as $invoice)
