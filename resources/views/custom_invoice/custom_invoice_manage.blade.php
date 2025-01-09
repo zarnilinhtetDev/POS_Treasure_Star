@@ -156,7 +156,7 @@
                                                                 class="fa-solid fa-money-check-dollar"></i></a>
                                                     @endif --}}
 
-                                                    @if (in_array('Invoice Details', $choosePermission) || auth()->user()->is_admin == '1')
+                                                    @if (in_array('Custom Invoice Details', $choosePermission) || auth()->user()->is_admin == '1')
                                                         <a href="{{ url('/custom_invoice_receipt_print', $invoice->id) }}"
                                                             class="btn btn-info btn-sm"><i
                                                                 class="fa-solid fa-print"></i></a>
@@ -166,7 +166,7 @@
                                                                 class="fa-solid fa-eye"></i></a>
                                                     @endif
 
-                                                    @if (in_array('Invoice Edit', $choosePermission) || auth()->user()->is_admin == '1')
+                                                    @if (in_array('Custom Invoice Edit', $choosePermission) || auth()->user()->is_admin == '1')
                                                         @if ($invoice->status == 'invoice')
                                                             <a href="{{ url('custom_invoice_edit', $invoice->id) }}"
                                                                 class="btn btn-success btn-sm"><i
@@ -176,7 +176,7 @@
                                                     @endif
 
 
-                                                    @if (in_array('Invoice Delete', $choosePermission) || auth()->user()->is_admin == '1')
+                                                    @if (in_array('Custom Invoice Delete', $choosePermission) || auth()->user()->is_admin == '1')
                                                         <a href="{{ url('custom_invoice_delete', $invoice->id) }}"
                                                             class="btn btn-danger btn-sm"
                                                             onclick="return confirm('Are you sure you want to delete this Invoice ?')"><i

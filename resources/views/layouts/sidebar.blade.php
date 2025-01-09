@@ -146,7 +146,7 @@
                                     <p class="text-white">Custom Invoice Manage</p>
                                 </a>
                             </li>
-                            @if (in_array('Invoice Register', $userPermissions) || auth()->user()->is_admin == '1')
+                            @if (in_array('Custom Invoice Register', $userPermissions) || auth()->user()->is_admin == '1')
                                 <li class="nav-item">
                                     <a href="{{ url('custom_invoice_reg') }}" class="nav-link">
                                         <i class="text-white far fa-circle nav-icon"></i>

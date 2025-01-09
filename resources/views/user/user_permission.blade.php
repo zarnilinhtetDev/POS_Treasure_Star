@@ -479,7 +479,8 @@
                                                                             <input class="form-check-input"
                                                                                 type="checkbox"
                                                                                 id="permission-customer-due"
-                                                                                name="permission[]" value="Customer Due"
+                                                                                name="permission[]"
+                                                                                value="Customer Due"
                                                                                 @if (in_array('Customer Due', $permissions)) checked @endif>
                                                                             <label class="form-check-label"
                                                                                 for="permission">
@@ -661,6 +662,90 @@
                                                                             </label>
                                                                         </div>
                                                                     </div>
+                                                                </td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>
+                                                                    <div class="form-group">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                id="permission-cinvoice"
+                                                                                name="permission[]"
+                                                                                value="Custom Invoice"
+                                                                                @if (in_array('Custom Invoice', $permissions)) checked @endif>
+                                                                            <label class="form-check-label"
+                                                                                for="permission">
+                                                                                Custom Invoice
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="form-group">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                id="permission-cinvoice-other-1"
+                                                                                name="permission[]"
+                                                                                value="Custom Invoice Register"
+                                                                                @if (in_array('Custom Invoice Register', $permissions)) checked @endif>
+                                                                            <label class="form-check-label"
+                                                                                for="permission">
+                                                                                Issue Customer Invoice
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="form-group">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                id="permission-cinvoice-other-2"
+                                                                                name="permission[]"
+                                                                                value="Custom Invoice Edit"
+                                                                                @if (in_array('Custom Invoice Edit', $permissions)) checked @endif>
+                                                                            <label class="form-check-label"
+                                                                                for="permission">
+                                                                                Custom Invoice Edit
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="form-group">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                id="permission-cinvoice-other-3"
+                                                                                name="permission[]"
+                                                                                value="Custom Invoice Delete"
+                                                                                @if (in_array('Custom Invoice Delete', $permissions)) checked @endif>
+                                                                            <label class="form-check-label"
+                                                                                for="permission">
+                                                                                Custom Invoice Delete
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <div class="form-group">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                id="permission-cinvoice-other-4"
+                                                                                name="permission[]"
+                                                                                value="Custom Invoice Details"
+                                                                                @if (in_array('Custom Invoice Details', $permissions)) checked @endif>
+                                                                            <label class="form-check-label"
+                                                                                for="permission">
+                                                                                Custom Invoice Details
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
+
+
                                                                 </td>
                                                             </tr>
                                                             <tr>
@@ -1826,6 +1911,24 @@
                     $('#permission-invoice-other-3').prop('checked', false);
                     $('#permission-invoice-other-4').prop('checked', false);
                     $('#permission-invoice-other-5').prop('checked', false);
+                }
+            });
+        });
+        $(document).ready(function() {
+            $('#permission-cinvoice').change(function() {
+                var isChecked = $(this).is(':checked');
+                if (isChecked) {
+                    $('#permission-cinvoice-other-1').prop('checked', true);
+                    $('#permission-cinvoice-other-2').prop('checked', true);
+                    $('#permission-cinvoice-other-3').prop('checked', true);
+                    $('#permission-cinvoice-other-4').prop('checked', true);
+                    $('#permission-cinvoice-other-5').prop('checked', true);
+                } else {
+                    $('#permission-cinvoice-other-1').prop('checked', false);
+                    $('#permission-cinvoice-other-2').prop('checked', false);
+                    $('#permission-cinvoice-other-3').prop('checked', false);
+                    $('#permission-cinvoice-other-4').prop('checked', false);
+                    $('#permission-cinvoice-other-5').prop('checked', false);
                 }
             });
         });
