@@ -1,28 +1,29 @@
 <?php
 
-use App\Http\Controllers\AccountController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UnitController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\InOutController;
+use App\Http\Controllers\ProfitController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\FinanceController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\UserTypeController;
 use App\Http\Controllers\WarehouseController;
+use App\Http\Controllers\MakePaymentController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserProfileController;
+use App\Http\Controllers\CustomInvoiceController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\ExpenseCategoryController;
-use App\Http\Controllers\FinanceController;
-use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\ProfitController;
-use App\Http\Controllers\SettingController;
-use App\Http\Controllers\TransactionController;
-use App\Http\Controllers\UserTypeController;
-use App\Http\Controllers\MakePaymentController;
 
 
 /*
@@ -116,6 +117,17 @@ Route::middleware('auth')->group(function () {
     Route::post('make_payment_store/{invoice}', [MakePaymentController::class, 'payment_store'])->name('make_payment_store');
     Route::get('invoice_voucher/{make_payment}', [MakePaymentController::class, 'voucherView'])->name('invoice_voucher');
 
+
+    //Custom Invoice
+
+    Route::get('custom_invoice', [CustomInvoiceController::class, 'custom_invoice']);
+    Route::get('custom_invoice_reg', [CustomInvoiceController::class, 'invoice_register']);
+    Route::post('custom_invoice_store', [CustomInvoiceController::class, 'invoice_store']);
+    Route::get('custom_invoice_delete/{id}', [CustomInvoiceController::class, 'invoice_delete']);
+    Route::get('custom_invoice_edit/{id}', [CustomInvoiceController::class, 'invoice_edit']);
+    Route::post('custom_invoice_update/{id}', [CustomInvoiceController::class, 'invoice_update']);
+    Route::get('custom_invoice_detail/{invoice}', [CustomInvoiceController::class, 'invoice_detail']);
+    Route::get('custom_invoice_receipt_print/{invoice}', [CustomInvoiceController::class, 'invoice_print']);
 
     //Quotation
     Route::get('quotation', [InvoiceController::class, 'quotation']);
