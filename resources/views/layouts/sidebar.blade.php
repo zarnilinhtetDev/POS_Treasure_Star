@@ -68,7 +68,8 @@
 
                 @if (in_array('Customer Due', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
-                        <a href="{{ url('/customer_due') }}" class="nav-link"> <i class="text-white fa-solid fa-bell nav-icon"></i>
+                        <a href="{{ url('/customer_due') }}" class="nav-link"> <i
+                                class="text-white fa-solid fa-bell nav-icon"></i>
                             <p class="pl-3 text-white">Customer Due</p>
                         </a>
                     </li>
@@ -130,7 +131,32 @@
                         </ul>
                     </li>
                 @endif
-
+                @if (in_array('Custom Invoice', $userPermissions) || auth()->user()->is_admin == '1')
+                    <li class="nav-item">
+                        <a href="{{ url('/custom_invoice') }}" class="nav-link">
+                            <i class="fa-solid nav-icon fa-file-invoice text-white"></i>
+                            <p class="pl-3 text-white">
+                                Custom Invoice
+                            </p><i class="text-white right fas fa-angle-left"></i>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            <li class="nav-item">
+                                <a href="{{ url('custom_invoice') }}" class="nav-link">
+                                    <i class="text-white far fa-circle nav-icon"></i>
+                                    <p class="text-white">Custom Invoice Manage</p>
+                                </a>
+                            </li>
+                            @if (in_array('Custom Invoice Register', $userPermissions) || auth()->user()->is_admin == '1')
+                                <li class="nav-item">
+                                    <a href="{{ url('custom_invoice_reg') }}" class="nav-link">
+                                        <i class="text-white far fa-circle nav-icon"></i>
+                                        <p class="text-white">Issue Custom Invoice</p>
+                                    </a>
+                                </li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
                 @if (in_array('Quotation', $userPermissions) || auth()->user()->is_admin == '1')
                     <li class="nav-item">
                         <a href="{{ url('/quotation') }}" class="nav-link">
