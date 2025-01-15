@@ -21,7 +21,7 @@ class CustomInvoiceController extends Controller
     }
     public function invoice_register()
     {
-        $totalInvoices = CustomInvoice::where('status', 'custom_invoice')->count();
+        $totalInvoices = CustomInvoice::where('status', 'invoice')->count();
         $invoice_no = "Custom Inv - " . ($totalInvoices + 1);
         $units = Unit::all();
         $warehouses = Warehouse::select('name', 'id')->get();
