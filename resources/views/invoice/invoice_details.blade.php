@@ -243,20 +243,20 @@
             </div>
             <div class="me-5 no-print">
                 <span style="font-weight: bold;">SUB
-                    TOTAL:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    TOTAL:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {{ number_format($invoice->sub_total) }}
                     &nbsp;&nbsp;</span><br>
                 <span
-                    style="font-weight: bold;">DISCOUNT:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    style="font-weight: bold;">DISCOUNT:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {{ number_format($invoice->discount_total) }}&nbsp;&nbsp;</span><br>
                 <span
                     style="font-weight: bold;">TAX:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {{ number_format($invoice->sub_total) }}&nbsp;&nbsp;</span><br>
                 <span
-                    style="font-weight: bold;">PAID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    style="font-weight: bold;">PAID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {{ number_format($invoice->deposit) }}&nbsp;&nbsp;</span><br>
                 <span
-                    style="font-weight: bold;">BALANCE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    style="font-weight: bold;">BALANCE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {{ number_format($invoice->remain_balance) }}&nbsp;&nbsp;</span>
             </div>
             <div class="me-5 print" style="display: none">
@@ -266,10 +266,10 @@
                     style="font-weight: bold;">DISCOUNT:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {{ number_format($invoice->discount_total) }}</span><br>
                 <span
-                    style="font-weight: bold;">TAX:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    style="font-weight: bold;">TAX:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {{ number_format($invoice->sub_total) }}</span><br>
                 <span
-                    style="font-weight: bold;">PAID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ number_format($invoice->deposit) }}</span><br>
+                    style="font-weight: bold;">PAID:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ number_format($invoice->deposit) }}</span><br>
                 <span
                     style="font-weight: bold;">BALANCE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ number_format($invoice->remain_balance) }}</span>
             </div>
@@ -278,7 +278,8 @@
             <thead style="border: 2px solid black;">
                 <tr>
                     <th>Balance Payment due date: {{ $invoice->overdue_date }}</th>
-                    <th style="width: 35%;border-left: 2px solid black">GRAND TOTAL:Kyats</th>
+                    <th style="width: 35%;border-left: 2px solid black">GRAND
+                        TOTAL: {{ number_format($invoice->total) }}</th>
                 </tr>
             </thead>
         </table>
@@ -288,8 +289,8 @@
             </div>
             <div class="">
                 <strong>
-                    <h6>FOR TREASURE STAR</h6>
-                </strong><br>
+                    <h6 class="fw-bold">FOR TREASURE STAR</h6>
+                </strong><br><br>
                 <strong style="margin-top: -30px;display: block;">
                     <p>Authorized Signature</p>
                 </strong>
@@ -299,16 +300,21 @@
             <div class="col-10">
                 <span style="text-decoration: underline;color: blue;">Tems & Conditions</span> <br>
                 <span>
-                    <p class="ms-5 footer">1. 5% deduction on the diamond item invoice value at
+                    <p class="ms-s footer">1. 5% deduction on the diamond item invoice value at
                         the
                         time of exchange. <br>
-                        စိန်ထည်ပစ္စည်းများကို ပြန်လဲလျှင် မူလပစ္စည်းအတိုင်းမူလဈေး၏ 5% လျှော့၍လက်ခံပါမည်။ <br>
+                        &nbsp;&nbsp;&nbsp; စိန်ထည်ပစ္စည်းများကို ပြန်လဲလျှင် မူလပစ္စည်းအတိုင်းမူလဈေး၏ 5%
+                        လျှော့၍လက်ခံပါမည်။ <br>
                         2. 10% deduction on the diamond item invoice value at the time of cash-back/buy-back. <br>
-                        စိန်ထည်ပစ္စည်းများကို ပြန်သွင်းလျှင် မူလ ပစ္စည်းအတိုင်းမူလဈေး၏ 10% လျှော့၍လက်ခံပါမည်။ <br>
+                        &nbsp;&nbsp;&nbsp;စိန်ထည်ပစ္စည်းများကို ပြန်သွင်းလျှင် မူလ ပစ္စည်းအတိုင်းမူလဈေး၏ 10%
+                        လျှော့၍လက်ခံပါမည်။ <br>
                         3. 10% deduction on the stone item invoice value at the time of exchange. <br>
-                        ကျောက်ထည်ပစ္စည်းများကို ပြန်လဲလျှင် မူလပစ္စည်းအတိုင်းမူလဈေး၏ 10% လျှော့၍လက်ခံပါမည်။ <br>
+                        &nbsp;&nbsp;&nbsp;ကျောက်ထည်ပစ္စည်းများကို ပြန်လဲလျှင် မူလပစ္စည်းအတိုင်းမူလဈေး၏ 10%
+                        လျှော့၍လက်ခံပါမည်။
+                        <br>
                         4. 15% deduction on the stone item invoice value at the time of cash-back/buy-back. <br>
-                        ကျောက်ထည်ပစ္စည်းများကို ပြန်သွင်းလျှင် မူလပစ္စည်းအတိုင်းမူလဈေး၏ 15% လျှော့၍လက်ခံပါမည်။ <br>
+                        &nbsp;&nbsp;&nbsp;ကျောက်ထည်ပစ္စည်းများကို ပြန်သွင်းလျှင် မူလပစ္စည်းအတိုင်းမူလဈေး၏ 15%
+                        လျှော့၍လက်ခံပါမည်။ <br>
                     </p>
                 </span>
             </div>

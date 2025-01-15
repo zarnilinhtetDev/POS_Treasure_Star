@@ -472,7 +472,8 @@
                                                                 id="productname-0" autocomplete="off">
                                                             {{-- </div> --}}
                                                             {{-- </div> --}}
-                                                            <input type="hidden" name="item_id[]" id="item_id-0" class="item_id">
+                                                            <input type="hidden" name="item_id[]" id="item_id-0"
+                                                                class="item_id">
                                                         </td>
 
                                                         <td><input type="text"
@@ -498,7 +499,8 @@
                                                                 class="form-control retail_price"
                                                                 name="retail_price[]" id="retail_price-0"
                                                                 autocomplete="off" value="0">
-                                                            <input type="hidden" name="buy_price[]" id="buy_price-0" class="buy_price">
+                                                            <input type="hidden" name="buy_price[]" id="buy_price-0"
+                                                                class="buy_price">
                                                         </td>
                                                         <td><input type="text" class="form-control vat "
                                                                 name="discount[]" id="vat-0" value="0"
@@ -663,10 +665,15 @@
                                                             class="col-md-2 payment_method">
                                                             <div class="input-group">
                                                                 <select name="payment_method[]" id="payment_method"
-                                                                    class="form-control" required>
-                                                                    <option value="Cash">Cash</option>
-                                                                    <option value="K Pay">K Pay</option>
-                                                                    <option value="Wave">Wave</option>
+                                                                    class="form-control" required>Kyats
+                                                                    US$
+                                                                    Yen
+                                                                    Baht
+                                                                    Other
+                                                                    <option value="Kyats">Kyats</option>
+                                                                    <option value="US($)">US($)</option>
+                                                                    <option value="Yen">Yen</option>
+                                                                    <option value="Baht">Baht</option>
                                                                     <option value="Others">Others</option>
                                                                 </select>
                                                                 <div class="input-group-append">
@@ -830,7 +837,7 @@
                     '<td>' +
                     '<input type="text" class="form-control productname typeahead item_name" name="part_number[]" id="productname-' +
                     count + '" autocomplete="off" placeholder="Enter Part Number">' +
-                    '<input type="hidden" name="item_id[]" id="item_id-'+count+'" class="item_id">'+
+                    '<input type="hidden" name="item_id[]" id="item_id-' + count + '" class="item_id">' +
                     '</td>' +
                     '<td><input type="text" class="form-control description typeahead" name="part_description[]"  id="description-' +
                     count + '" autocomplete="off"></td>' +
@@ -843,7 +850,8 @@
 
                     '<td class="wholesale_td"><input type="text" class="form-control price" name="product_price[]" value="0" id="price-' +
                     count + '"   autocomplete="off"></td>' +
-                    '<input type="hidden" name="buy_price[]" id="buy_price-'+count+'" class="buy_price">'+
+                    '<input type="hidden" name="buy_price[]" id="buy_price-' + count +
+                    '" class="buy_price">' +
                     '<td class="retail_td"><input type="text" class="form-control retail_price" name="retail_price[]" value="0" id="retail_price-' +
                     count + '"   autocomplete="off"></td>' +
                     '<td><input type="text" class="form-control vat" name="discount[]" value="0" id="vat-' +
@@ -925,10 +933,11 @@
 
                       <div class="input-group">
             <select name="payment_method[]" class="form-control" required>
-                <option value="Cash">Cash</option>
-                <option value="K Pay">K Pay</option>
-                <option value="Wave">Wave</option>
-                <option value="Others">Others</option>
+                <option value="Kyats">Kyats</option>
+                                                                    <option value="US($)">US($)</option>
+                                                                    <option value="Yen">Yen</option>
+                                                                    <option value="Baht">Baht</option>
+                                                                    <option value="Others">Others</option>
             </select>
             <div class="input-group-append">
                 <button type="button" class="removeRow btn btn-danger">

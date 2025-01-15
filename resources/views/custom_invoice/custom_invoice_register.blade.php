@@ -674,9 +674,10 @@
                                                             <div class="input-group">
                                                                 <select name="payment_method[]" id="payment_method"
                                                                     class="form-control" required>
-                                                                    <option value="Cash">Cash</option>
-                                                                    <option value="K Pay">K Pay</option>
-                                                                    <option value="Wave">Wave</option>
+                                                                    <option value="Kyats">Kyats</option>
+                                                                    <option value="US($)">US($)</option>
+                                                                    <option value="Yen">Yen</option>
+                                                                    <option value="Baht">Baht</option>
                                                                     <option value="Others">Others</option>
                                                                 </select>
                                                                 <div class="input-group-append">
@@ -940,10 +941,11 @@
 
                       <div class="input-group">
             <select name="payment_method[]" class="form-control" required>
-                <option value="Cash">Cash</option>
-                <option value="K Pay">K Pay</option>
-                <option value="Wave">Wave</option>
-                <option value="Others">Others</option>
+              <option value="Kyats">Kyats</option>
+                                                                    <option value="US($)">US($)</option>
+                                                                    <option value="Yen">Yen</option>
+                                                                    <option value="Baht">Baht</option>
+                                                                    <option value="Others">Others</option>
             </select>
             <div class="input-group-append">
                 <button type="button" class="removeRow btn btn-danger">
