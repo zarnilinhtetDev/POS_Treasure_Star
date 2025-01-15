@@ -90,13 +90,12 @@
                         </button>
                     </div>
                 @endif
-                
+
                 <div class="container-fluid">
                     <div class="row justify-content-center d-flex">
                         <div class="card col-8">
 
-                            <form action="{{ url('make_payment_store', $invoice->id) }}" method="POST"
-                                class="p-5">
+                            <form action="{{ url('make_payment_store', $invoice->id) }}" method="POST" class="p-5">
                                 @csrf
                                 <div class="row mb-4">
 
@@ -118,7 +117,8 @@
                                     </div>
 
                                     <div class="col-md-4 form-group">
-                                        <input type="hidden" name="remain_balance" value="{{$invoice->remain_balance}}">
+                                        <input type="hidden" name="remain_balance"
+                                            value="{{ $invoice->remain_balance }}">
                                         <button type="button" class="btn btn-primary" style="width: 100%">
                                             Remaining Balance -
                                             {{ number_format($invoice->remain_balance) }}
@@ -130,8 +130,7 @@
                                         <label for="invoice_no">Invoice Number <span
                                                 class="text-danger">*</span></label>
                                         <input type="text" class="form-control" id="invoice_no"
-                                            value="{{ $invoice->invoice_no }}" name="invoice_no" required
-                                            readonly>
+                                            value="{{ $invoice->invoice_no }}" name="invoice_no" required readonly>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="payment_date">Payment Date<span class="text-danger">*</span></label>
@@ -147,9 +146,10 @@
                                         <select class="form-control" name="payment_method" id="payment_method-0"
                                             required>
                                             <option value="" disabled selected>Select payment method</option>
-                                            <option value="Cash">Cash</option>
-                                            <option value="K Pay">K Pay</option>
-                                            <option value="Wave">Wave</option>
+                                            <option value="Kyats">Kyats</option>
+                                            <option value="US($)">US($)</option>
+                                            <option value="Yen">Yen</option>
+                                            <option value="Baht">Baht</option>
                                             <option value="Others">Others</option>
                                         </select>
                                     </div>
@@ -203,7 +203,8 @@
                                                 <td>{{ $payment->note }}</td>
                                                 <td>{{ $payment->payment_date }}</td>
                                                 <td>
-                                                    <a href="{{url('invoice_voucher',$payment->id)}}" class="btn btn-primary">Print</a>
+                                                    <a href="{{ url('invoice_voucher', $payment->id) }}"
+                                                        class="btn btn-primary">Print</a>
                                                 </td>
                                             </tr>
                                         @endforeach
