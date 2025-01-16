@@ -340,27 +340,32 @@
                                     <tbody>
                                         <tr>
                                             <td>1.</td>
-                                            <td>Cash</td>
-                                            <td>{{ number_format($totalCash ?? 0, 2) }}</td>
+                                            <td>Kyats</td>
+                                            <td>{{ number_format($totalKyats ?? 0, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td>2.</td>
-                                            <td>K Pay</td>
-                                            <td>{{ number_format($totalKbz ?? 0, 2) }}</td>
+                                            <td>US($)</td>
+                                            <td>{{ number_format($totalUs ?? 0, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td>3.</td>
-                                            <td>Wave</td>
-                                            <td>{{ number_format($totalCB ?? 0, 2) }}</td>
+                                            <td>Yen</td>
+                                            <td>{{ number_format($totalYen ?? 0, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td>4.</td>
+                                            <td>Baht</td>
+                                            <td>{{ number_format($totalBaht ?? 0, 2) }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>5.</td>
                                             <td>Other</td>
                                             <td>{{ number_format($totalOther ?? 0, 2) }}</td>
                                         </tr>
                                         <tr>
                                             <td colspan="2" style="text-align:right">Total</td>
-                                            <td>{{ number_format($totalCash + $totalKbz + $totalCB + $totalOther ?? 0, 2) }}
+                                            <td>{{ number_format($totalKyats + $totalUs + $totalYen + $totalBaht + $totalOther ?? 0, 2) }}
                                             </td>
                                         </tr>
                                     </tbody>

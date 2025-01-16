@@ -567,15 +567,19 @@
                                                         <div class="input-group">
                                                             <select name="payment_method[]" id="payment_method"
                                                                 class="form-control" required>
-                                                                <option value="Cash"
-                                                                    {{ $payment->payment_method === 'Cash' ? 'selected' : '' }}>
-                                                                    Cash</option>
-                                                                <option value="K Pay"
-                                                                    {{ $payment->payment_method === 'K Pay' ? 'selected' : '' }}>
-                                                                    K Pay</option>
-                                                                <option value="Wave"
-                                                                    {{ $payment->payment_method === 'Wave' ? 'selected' : '' }}>
-                                                                    Wave</option>
+                                                                <option value="Kyats"
+                                                                    @if ($payment->payment_method === 'Kyats') selected @endif>
+                                                                    Kyats</option>
+                                                                <option value="US($)"
+                                                                    @if ($payment->payment_method === 'US($)') selected @endif>
+                                                                    US($)</option>
+                                                                <option value="Yen"
+                                                                    @if ($payment->payment_method === 'Yen') selected @endif>
+                                                                    Yen</option>
+                                                                <option value="Baht"
+                                                                    @if ($payment->payment_method === 'Baht') selected @endif>
+                                                                    Baht</option>
+
                                                                 <option value="Others"
                                                                     {{ $payment->payment_method === 'Others' ? 'selected' : '' }}>
                                                                     Others</option>
@@ -612,9 +616,10 @@
                                                         <div class="input-group">
                                                             <select name="payment_method[]" id="payment_method"
                                                                 class="form-control" required>
-                                                                <option value="Cash">Cash</option>
-                                                                <option value="K Pay">K Pay</option>
-                                                                <option value="Wave">Wave</option>
+                                                                <option value="Kyats">Kyats</option>
+                                                                <option value="US($)">US($)</option>
+                                                                <option value="Yen">Yen</option>
+                                                                <option value="Baht">Baht</option>
                                                                 <option value="Others">Others</option>
                                                             </select>
                                                             <div class="input-group-append">
@@ -866,10 +871,11 @@
                 <td align="left" colspan="1" class="col-md-2">
                    <div class="input-group">
             <select name="payment_method[]" class="form-control" required>
-                <option value="Cash">Cash</option>
-                <option value="K Pay">K Pay</option>
-                <option value="Wave">Wave</option>
-                <option value="Others">Others</option>
+              <option value="Kyats">Kyats</option>
+                                                                    <option value="US($)">US($)</option>
+                                                                    <option value="Yen">Yen</option>
+                                                                    <option value="Baht">Baht</option>
+                                                                    <option value="Others">Others</option>
             </select>
             <div class="input-group-append">
                 <button type="button" class="removeRow btn btn-danger">

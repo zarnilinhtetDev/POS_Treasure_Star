@@ -55,17 +55,25 @@ class ReportController extends Controller
         $invoicePaymentMethod = InvoicePaymentMethod::whereIn('invoice_id', $invoiceIds)->get();
 
         $total = $invoices->sum('total');
-        $totalCash = $invoicePaymentMethod->where('payment_method', 'Cash')->sum('payment_amount');
-        $totalKbz = $invoicePaymentMethod->where('payment_method', 'K Pay')->sum('payment_amount');
-        $totalCB = $invoicePaymentMethod->where('payment_method', 'Wave')->sum('payment_amount');
-        $totalOther = $invoicePaymentMethod->where('payment_method', 'Others')->sum('payment_amount');
+        $totalKyats =
+            $invoicePaymentMethod->where('payment_method', 'Kyats')->sum('payment_amount');
+        $totalUs =
+            $invoicePaymentMethod->where('payment_method', 'US($)')->sum('payment_amount');
+        $totalYen =
+            $invoicePaymentMethod->where('payment_method', 'Yen')->sum('payment_amount');
+        $totalBaht =
+            $invoicePaymentMethod->where('payment_method', 'Baht')->sum('payment_amount');
+        $totalOther =
+            $invoicePaymentMethod->where('payment_method', 'Others')->sum('payment_amount');
+        $search_total =
+            $invoicePaymentMethod->sum('payment_amount');
 
         $branchs = Warehouse::all();
         $branchNames = $branchs->pluck('name', 'id');
 
         $currentBranchName = $branch ? $branchNames[$branch] : 'All Invoices';
 
-        return view('report.report_invoice', compact('invoices', 'total', 'totalCash', 'totalKbz', 'totalCB', 'totalOther', 'branch', 'branchs', 'currentBranchName'));
+        return view('report.report_invoice', compact('invoices', 'total', 'totalKyats', 'totalUs', 'totalYen', 'totalBaht', 'totalOther', 'branch', 'branchs', 'currentBranchName'));
     }
 
 
@@ -146,10 +154,17 @@ class ReportController extends Controller
         $paymentMethods = PurchaseOrderPaymentMethod::whereIn('po_id', $pos->pluck('id'))
             ->get();
 
-        $totalCash = $paymentMethods->where('payment_method', 'Cash')->sum('payment_amount');
-        $totalKbz = $paymentMethods->where('payment_method', 'K Pay')->sum('payment_amount');
-        $totalCB = $paymentMethods->where('payment_method', 'Wave')->sum('payment_amount');
-        $totalOther = $paymentMethods->where('payment_method', 'Others')->sum('payment_amount');
+
+        $totalKyats =
+            $paymentMethods->where('payment_method', 'Kyats')->sum('payment_amount');
+        $totalUs =
+            $paymentMethods->where('payment_method', 'US($)')->sum('payment_amount');
+        $totalYen =
+            $paymentMethods->where('payment_method', 'Yen')->sum('payment_amount');
+        $totalBaht =
+            $paymentMethods->where('payment_method', 'Baht')->sum('payment_amount');
+        $totalOther =
+            $paymentMethods->where('payment_method', 'Others')->sum('payment_amount');
         $search_total = $paymentMethods->sum('payment_amount');
 
         $branchs = Warehouse::all();
@@ -158,9 +173,10 @@ class ReportController extends Controller
             'pos',
             'search_total',
             'branchs',
-            'totalCash',
-            'totalKbz',
-            'totalCB',
+            'totalKyats',
+            'totalUs',
+            'totalYen',
+            'totalBaht',
             'totalOther',
             'currentBranchName'
         ));
@@ -343,13 +359,18 @@ class ReportController extends Controller
 
         $invoiceIds = $search_invoices->pluck('id');
         $invoicePaymentMethods = InvoicePaymentMethod::whereIn('invoice_id', $invoiceIds)->get();
-        $totalCash = $invoicePaymentMethods->where('payment_method', 'Cash')->sum('payment_amount');
-        $totalKbz = $invoicePaymentMethods->where('payment_method', 'K Pay')->sum('payment_amount');
-        $totalCB = $invoicePaymentMethods->where('payment_method', 'Wave')->sum('payment_amount');
-        $totalOther = $invoicePaymentMethods->where('payment_method', 'Others')->sum('payment_amount');
-
-        $search_total = $search_invoices->sum('total');
-
+        $totalKyats =
+            $invoicePaymentMethods->where('payment_method', 'Kyats')->sum('payment_amount');
+        $totalUs =
+            $invoicePaymentMethods->where('payment_method', 'US($)')->sum('payment_amount');
+        $totalYen =
+            $invoicePaymentMethods->where('payment_method', 'Yen')->sum('payment_amount');
+        $totalBaht =
+            $invoicePaymentMethods->where('payment_method', 'Baht')->sum('payment_amount');
+        $totalOther =
+            $invoicePaymentMethods->where('payment_method', 'Others')->sum('payment_amount');
+        $search_total =
+            $invoicePaymentMethods->sum('payment_amount');
         $branchs = Warehouse::all();
         $branchNames = $branchs->pluck('name', 'id');
 
@@ -360,9 +381,10 @@ class ReportController extends Controller
             'search_invoices',
             'search_total',
             'branchs',
-            'totalCash',
-            'totalKbz',
-            'totalCB',
+            'totalKyats',
+            'totalUs',
+            'totalYen',
+            'totalBaht',
             'totalOther',
             'currentBranchName'
         ));
@@ -491,19 +513,26 @@ class ReportController extends Controller
 
         $paymentMethods = PurchaseOrderPaymentMethod::whereIn('po_id', $pos->pluck('id'))->get();
 
-        $totalCash = $paymentMethods->where('payment_method', 'Cash')->sum('payment_amount');
-        $totalKbz = $paymentMethods->where('payment_method', 'K Pay')->sum('payment_amount');
-        $totalCB = $paymentMethods->where('payment_method', 'Wave')->sum('payment_amount');
-        $totalOther = $paymentMethods->where('payment_method', 'Others')->sum('payment_amount');
+        $totalKyats =
+            $paymentMethods->where('payment_method', 'Kyats')->sum('payment_amount');
+        $totalUs =
+            $paymentMethods->where('payment_method', 'US($)')->sum('payment_amount');
+        $totalYen =
+            $paymentMethods->where('payment_method', 'Yen')->sum('payment_amount');
+        $totalBaht =
+            $paymentMethods->where('payment_method', 'Baht')->sum('payment_amount');
+        $totalOther =
+            $paymentMethods->where('payment_method', 'Others')->sum('payment_amount');
         $search_total = $paymentMethods->sum('payment_amount');
 
         return view('report.report_po', compact(
             'pos',
             'search_total',
             'branchs',
-            'totalCash',
-            'totalKbz',
-            'totalCB',
+            'totalKyats',
+            'totalUs',
+            'totalYen',
+            'totalBaht',
             'totalOther',
             'currentBranchName'
         ));
@@ -585,12 +614,18 @@ class ReportController extends Controller
         $branchNames = $branchs->pluck('name', 'id');
         $currentBranchName = $branch ? $branchNames[$branch] : 'All POS';
 
-        $totalCash = $invoicePaymentMethods->where('payment_method', 'Cash')->sum('payment_amount');
-        $totalKbz = $invoicePaymentMethods->where('payment_method', 'K Pay')->sum('payment_amount');
-        $totalCB = $invoicePaymentMethods->where('payment_method', 'Wave')->sum('payment_amount');
-        $totalOther = $invoicePaymentMethods->where('payment_method', 'Others')->sum('payment_amount');
+        $totalKyats =
+            $invoicePaymentMethods->where('payment_method', 'Kyats')->sum('payment_amount');
+        $totalUs =
+            $invoicePaymentMethods->where('payment_method', 'US($)')->sum('payment_amount');
+        $totalYen =
+            $invoicePaymentMethods->where('payment_method', 'Yen')->sum('payment_amount');
+        $totalBaht =
+            $invoicePaymentMethods->where('payment_method', 'Baht')->sum('payment_amount');
+        $totalOther =
+            $invoicePaymentMethods->where('payment_method', 'Others')->sum('payment_amount');
 
-        return view('report.report_pos', compact('pos_data', 'total', 'sale_totals', 'branchs', 'totalCash', 'totalKbz', 'totalCB', 'totalOther', 'currentBranchName'));
+        return view('report.report_pos', compact('pos_data', 'total', 'sale_totals', 'branchs', 'totalKyats', 'totalUs', 'totalYen', 'totalBaht', 'totalOther', 'currentBranchName'));
     }
 
     public function monthly_pos_search(Request $request)
@@ -640,12 +675,18 @@ class ReportController extends Controller
         $branchs = Warehouse::all();
 
 
-        $totalCash = $invoicePaymentMethods->where('payment_method', 'Cash')->sum('payment_amount');
-        $totalKbz = $invoicePaymentMethods->where('payment_method', 'K Pay')->sum('payment_amount');
-        $totalCB = $invoicePaymentMethods->where('payment_method', 'Wave')->sum('payment_amount');
-        $totalOther = $invoicePaymentMethods->where('payment_method', 'Others')->sum('payment_amount');
+        $totalKyats =
+            $invoicePaymentMethods->where('payment_method', 'Kyats')->sum('payment_amount');
+        $totalUs =
+            $invoicePaymentMethods->where('payment_method', 'US($)')->sum('payment_amount');
+        $totalYen =
+            $invoicePaymentMethods->where('payment_method', 'Yen')->sum('payment_amount');
+        $totalBaht =
+            $invoicePaymentMethods->where('payment_method', 'Baht')->sum('payment_amount');
+        $totalOther =
+            $invoicePaymentMethods->where('payment_method', 'Others')->sum('payment_amount');
 
-        return view('report.report_pos', compact('search_pos', 'search_total', 'sale_totals', 'branchs', 'totalCash', 'totalKbz', 'totalCB', 'totalOther', 'currentBranchName'));
+        return view('report.report_pos', compact('search_pos', 'search_total', 'sale_totals', 'branchs', 'totalKyats', 'totalUs', 'totalYen', 'totalBaht', 'totalOther', 'currentBranchName'));
     }
 
 

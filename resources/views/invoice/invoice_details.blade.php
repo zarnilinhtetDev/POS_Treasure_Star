@@ -230,8 +230,44 @@
 
 
         </table>
+        <table style="width: 100%; border-collapse: collapse;" class="my-2">
+            <thead>
+                <tr>
+                    <th style="width:65%">**HAVE A NICE DAY**</th>
+                    <th style="width: 25%;">SUBTOTAL:
+                    </th>
+                    <th>{{ number_format($invoice->sub_total) }}</th>
+                </tr>
+                <tr>
+                    <th style="width:65%">CASH:</th>
 
-        <div class="d-flex justify-content-between change_font">
+                    <th style="width: 25%;">DISCOUNT:
+                    </th>
+                    <th>{{ number_format($invoice->discount_total) }}</th>
+                </tr>
+                <tr>
+                    <th style="width:65%">BANK:</th>
+
+                    <th style="width: 25%;">TAX:
+                    </th>
+                    <th>{{ number_format(0) }}</th>
+                </tr>
+                <tr>
+                    <th style="width:65%">CARD:</th>
+                    <th style="width: 25%;">DEPOSIT:
+                    </th>
+                    <th>{{ number_format($invoice->deposit) }}</th>
+                </tr>
+                <tr>
+                    <th style="width:65%">OTHER:</th>
+                    <th style="width: 25%;">BALANCE:
+                    </th>
+                    <th>{{ number_format($invoice->remain_balance) }}</th>
+                </tr>
+
+            </thead>
+        </table>
+        {{-- <div class="d-flex justify-content-between change_font">
             <div class="mt-3">
                 <p>
                     <i><strong>**HAVE A NICE DAY**</strong></i><br>
@@ -273,7 +309,7 @@
                 <span
                     style="font-weight: bold;">BALANCE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ number_format($invoice->remain_balance) }}</span>
             </div>
-        </div>
+        </div> --}}
         <table style="width: 100%;height: 40px;" class="change_font">
             <thead style="border: 2px solid black;">
                 <tr>

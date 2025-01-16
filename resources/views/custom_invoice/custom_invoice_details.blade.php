@@ -236,77 +236,58 @@
 
 
         </table>
+        <table style="width: 100%; border-collapse: collapse;" class="my-2">
+            <thead>
+                <tr>
+                    <th style="width:65%">**HAVE A NICE DAY**</th>
+                    <th style="width: 25%;">SUBTOTAL:
+                    </th>
+                    <th>{{ number_format($invoice->sub_total) }}</th>
+                </tr>
+                <tr>
+                    <th style="width:65%"></th>
 
-        <div class="d-flex justify-content-between change_font">
-            <div class="col-md-6">
-                <p>
-                    <i><strong>**HAVE A NICE DAY**</strong></i><br>
-                    <span style="font-weight: bold;">CASH:</span><br>
-                    <span style="font-weight: bold;">BANK:</span><br>
-                    <span style="font-weight: bold;">CARD:</span><br>
-                    <span style="font-weight: bold;">OTHER:</span>
-                </p>
-            </div>
-            <div class="me-5 no-print">
-                <span style="font-weight: bold;">SUB
-                    TOTAL
-                    :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {{ number_format($invoice->sub_total) }}
-                    &nbsp;&nbsp;</span><br>
-                <span style="font-weight: bold;">LABOUR
-                    CHARGES
-                    :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {{ number_format($invoice->sub_total) }}
-                    &nbsp;&nbsp;</span>&nbsp;&nbsp;</span><br>
-                <span style="font-weight: bold;">PLATING
-                    CHARGES
-                    :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {{ number_format($invoice->sub_total) }}
-                    &nbsp;&nbsp;</span><br>
-                <span style="font-weight: bold;">DISCOUNT
-                    :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {{ number_format($invoice->discount_total) }}&nbsp;&nbsp;</span><br>
-                <span style="font-weight: bold;">TAX
-                    :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    0</span> <br>
-                <span style="font-weight: bold;">DEPOSIT :
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {{ number_format($invoice->deposit) }}&nbsp;&nbsp;</span><br>
-                <span style="font-weight: bold;">BALANCE
-                    :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {{ number_format($invoice->remain_balance) }}&nbsp;&nbsp;</span>
-            </div>
-            {{-- <div class="col-md-4"></div>
-            <div class="col-md-2">
-                <span class="fw-bold col-md-4">SUB TOTAL</span> <span class="col-md-3">:</span> <span
-                    class="fw-bold col-md-3">{{ number_format($invoice->sub_total) }}</span><br><span
-                    class="fw-bold col-md-4">LABOUR CHARGES</span> <span class="col-md-3">:</span> <span
-                    class="fw-bold col-md-3">{{ number_format($invoice->sub_total) }}</span><br><span
-                    class="fw-bold col-md-4">PLATING CHARGES</span> <span class="col-md-3">:</span> <span
-                    class="fw-bold col-md-3">{{ number_format($invoice->sub_total) }}</span><br>
-            </div> --}}
+                    <th style="width: 25%;">LABOUR CHARGES:
+                    </th>
+                    <th>{{ number_format(0) }}</th>
+                </tr>
+                <tr>
+                    <th style="width:65%"></th>
+                    <th style="width: 25%;">LABOUR CHARGES:
+                    </th>
+                    <th>{{ number_format(0) }}</th>
+                </tr>
+                <tr>
+                    <th style="width:65%">CASH:</th>
 
-            <div class="me-5 print" style="display: none">
-                <span style="font-weight: bold;">SUB
-                    TOTAL
-                    :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ number_format($invoice->sub_total) }}</span><br><span
-                    style="font-weight: bold;">LABOUR CHARGES
-                    :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ number_format($invoice->sub_total) }}</span><br><span
-                    style="font-weight: bold;">PLATING CHARGES
-                    :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ number_format($invoice->sub_total) }}</span><br>
-                <span style="font-weight: bold;">DISCOUNT
-                    :
-                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {{ number_format($invoice->discount_total) }}</span><br>
-                <span style="font-weight: bold;">TAX
-                    :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    {{ number_format($invoice->tax) }}</span><br>
-                <span style="font-weight: bold;">DEPOSIT
-                    :&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ number_format($invoice->deposit) }}</span><br>
-                <span
-                    style="font-weight: bold;">BALANCE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ number_format($invoice->remain_balance) }}</span>
-            </div>
-        </div>
+                    <th style="width: 25%;">DISCOUNT:
+                    </th>
+                    <th>{{ number_format($invoice->discount_total) }}</th>
+                </tr>
+                <tr>
+                    <th style="width:65%">BANK:</th>
+
+                    <th style="width: 25%;">TAX:
+                    </th>
+                    <th>{{ number_format(0) }}</th>
+                </tr>
+                <tr>
+                    <th style="width:65%">CARD:</th>
+                    <th style="width: 25%;">DEPOSIT:
+                    </th>
+                    <th>{{ number_format($invoice->deposit) }}</th>
+                </tr>
+                <tr>
+                    <th style="width:65%">OTHER:</th>
+                    <th style="width: 25%;">BALANCE:
+                    </th>
+                    <th>{{ number_format($invoice->remain_balance) }}</th>
+                </tr>
+            </thead>
+        </table>
+
+
+
         <table style="width: 100%;height: 40px;" class="change_font">
             <thead style="border: 2px solid black;">
                 <tr>
@@ -341,7 +322,8 @@
                         &nbsp;&nbsp;&nbsp;အပ်ထည်များ ပြန်သွင်း/ပြန်လဲလျှင် အသားတင်ရွှေနှင့်စိန်ကို
                         ပေါက်ဈေးအတိုင်းတွက်ချက်ပေးပါမည်။ <br>
 
-                        2. 5% deduction on the diamond item market price value at the time of cash-back/buy-back.<br>
+                        2. 5% deduction on the diamond item market price value at the time of
+                        cash-back/buy-back.<br>
 
                         &nbsp;&nbsp;စိန်ထည်ပစ္စည်းများကို ပြန်သွင်းလျှင် ပေါက်ဈေးအတိုင်းတွက်ချက်ပေးသောဈေး၏ 5%
                         လျှော့၍လက်ခံပါမည်။<br>

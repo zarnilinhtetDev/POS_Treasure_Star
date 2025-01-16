@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\CustomMakePayment;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\UnitController;
@@ -24,7 +25,7 @@ use App\Http\Controllers\UserProfileController;
 use App\Http\Controllers\CustomInvoiceController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\ExpenseCategoryController;
-
+use App\Http\Controllers\CustomMakePaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -128,6 +129,10 @@ Route::middleware('auth')->group(function () {
     Route::post('custom_invoice_update/{id}', [CustomInvoiceController::class, 'invoice_update']);
     Route::get('custom_invoice_detail/{invoice}', [CustomInvoiceController::class, 'invoice_detail']);
     Route::get('custom_invoice_receipt_print/{invoice}', [CustomInvoiceController::class, 'invoice_print']);
+    Route::get('custom_make_payment/{invoice}', [CustomMakePaymentController::class, 'index'])->name('custom_make_payment');
+    Route::post('custom_make_payment_store/{invoice}', [CustomMakePaymentController::class, 'payment_store'])->name('make_payment_store');
+    Route::get('custom_invoice_voucher/{make_payment}', [CustomMakePaymentController::class, 'voucherView'])->name('invoice_voucher');
+
 
     //Quotation
     Route::get('quotation', [InvoiceController::class, 'quotation']);

@@ -53,7 +53,7 @@
                     <div class="container-fluid">
                         <div class="mb-2 row">
                             <div class="col-sm-6">
-                                <h1>Invoice</h1>
+                                <h1>Custom Invoice</h1>
                             </div>
                             <div class="col-sm-6">
                                 <ol class="breadcrumb float-sm-right">
@@ -150,11 +150,11 @@
                                                 @endif
                                                 <td>{{ $invoice->invoice_date }}</td>
                                                 <td>
-                                                    {{-- @if (in_array('Invoice Payment', $choosePermission) || auth()->user()->is_admin == '1')
-                                                        <a href="{{ url('make_payment', $invoice->id) }}"
+                                                    @if (in_array('Custom Invoice Payment', $choosePermission) || auth()->user()->is_admin == '1')
+                                                        <a href="{{ url('custom_make_payment', $invoice->id) }}"
                                                             class="btn btn-warning btn-sm text-white mb-1"><i
                                                                 class="fa-solid fa-money-check-dollar"></i></a>
-                                                    @endif --}}
+                                                    @endif
 
                                                     @if (in_array('Custom Invoice Details', $choosePermission) || auth()->user()->is_admin == '1')
                                                         <a href="{{ url('/custom_invoice_receipt_print', $invoice->id) }}"

@@ -744,6 +744,20 @@
                                                                             </label>
                                                                         </div>
                                                                     </div>
+                                                                    <div class="form-group">
+                                                                        <div class="form-check">
+                                                                            <input class="form-check-input"
+                                                                                type="checkbox"
+                                                                                id="permission-cinvoice-other-5"
+                                                                                name="permission[]"
+                                                                                value="Custom Invoice Payment"
+                                                                                @if (in_array('Custom Invoice Payment', $permissions)) checked @endif>
+                                                                            <label class="form-check-label"
+                                                                                for="permission">
+                                                                                Make Payment
+                                                                            </label>
+                                                                        </div>
+                                                                    </div>
 
 
                                                                 </td>
@@ -1923,12 +1937,14 @@
                     $('#permission-cinvoice-other-3').prop('checked', true);
                     $('#permission-cinvoice-other-4').prop('checked', true);
                     $('#permission-cinvoice-other-5').prop('checked', true);
+                    $('#permission-cinvoice-other-6').prop('checked', true);
                 } else {
                     $('#permission-cinvoice-other-1').prop('checked', false);
                     $('#permission-cinvoice-other-2').prop('checked', false);
                     $('#permission-cinvoice-other-3').prop('checked', false);
                     $('#permission-cinvoice-other-4').prop('checked', false);
                     $('#permission-cinvoice-other-5').prop('checked', false);
+                    $('#permission-cinvoice-other-6').prop('checked', false);
                 }
             });
         });
